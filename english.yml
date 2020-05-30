@@ -1,0 +1,50 @@
+InputIsWrong: '&cYour input is incorrect! Click here on the text to get more information!'
+NoPermission: '&cYou have no rights!'
+NoPlayerExist: '&cThe player is not online or does not exist!'
+NoNumber: '&cThe argument &f%arg% &cmust be a whole number.'
+RunTask:
+  Title: '&c&oAttention!'
+  SubTitle: '&c&nPlease confirm the rules with &f/dsgvo'
+  FadeIn: 10
+  Stay: 300
+  FadeOut: 10
+  Messages:
+  - §d======§c======§e======§7[§bMyHome&4Rules§7]§e======§c======§d======
+  - §bTo enable a pleasant climate on the server,
+  - §bcertain rules must be observed. §c/regeln~click@RUN_COMMAND@/rules~hover@SHOW_TEXT@Hover.Message.LineThree
+  - §bThe DSGVO guidelines can be found at §c/dsgvolink~click@RUN_COMMAND@/dsgvolink~hover@SHOW_TEXT@Hover.Message.LineTwo
+  - §bYou can get news and updates via §c/forum~click@RUN_COMMAND@/forum~hover@SHOW_TEXT@Hover.Message.LineFour §bnachlesen.
+  - §2-----------------------------------------------------
+  - §0<
+  - §6=====§2Click §2here§6======>>> §4§l§o/dsgvo~click@RUN_COMMAND@/dsgvo~hover@SHOW_TEXT@Hover.Message.LineSix §6<<<======§2Click §2here§6=====
+  - §0<
+  - §2-----------------------------------------------------
+  Kick: '&cYou must accept the rules & DSGVO before you can continue playing.'
+Hover:
+  Message:
+    LineTwo: '&eClick here to execute the command &c/dsgvolink &edirectly.~!~&e This will take you to the DSGVO guidelines.'
+    LineThree: '&eClick here to execute the command &c/rules &edirectly.~!~&eThis will redirect you to the actual rules.'
+    LineFour: '&eClick here to be redirected to the forum.~!~&There you can find all updates, news and~!~&discussions, and even vote on topics.'
+    LineSix: '&eClick here to confirm the rules.'
+    Base: '&eClick here to view the rules on the website.'
+CmdRules:
+  Base:
+  - §eAll rules you will find §chere~click@OPEN_URL@https://de.wikipedia.org/wiki/Regel_(Richtlinie)~hover@SHOW_TEXT@Hover.Message.Base
+  Info:
+    Headline: '&e==========&7[&bMyHome&4Rules&7]&e=========='
+    Next: '&e&nnext page &e==>'
+    Past: '&e<== &nlast page'
+    accept: '&c/rules accept &f| The basic command to accept the rules'
+    info: '&c/rules info &f| The info command'
+    reload: '&c/rules reload &f| Reloads the yaml files and MySQL.'
+    revoke: '&c/rules revoke &f| Revokes the DSGVO'
+  Accept:
+    Accepting: '&6You accepted the rules! Have fun on the server.'
+    AlreadyAccepted: '&eYou have already accepted the rules & DSGVO on &6%time%.'
+  Reload:
+    Success: '&aYaml files were reloaded.'
+    Error: '&cAn error was found! See console!'
+  Revoke:
+    NoAccept: '&cYou have not accepted the rules & DSGVO. Therefore you can not revoke them!'
+    Warning: '&c&oAttention! &r&cBy revoking the rules & DSGVO, you will not only be kicked from the server, but the operators of the server reserve the right to delete or otherwise process all your ingame valuables or similar. You give up all rights regarding this! Please confirm with &f/rules revoked confirm&c.'
+    Kick: '&cYou have revoked the rules & DSGVO. This means that you have given up all rights to earned and purchased items. &bWe wish you all the best on your path through life anyway!'

@@ -1,0 +1,23 @@
+name: MyHomeRules
+main: main.java.me.avankziar.myhomerules.spigot.MyHomeRules
+version: 1
+author: Avankziar
+api-version: 1.15
+description: A Rules accepting Plugin
+commands:
+  rules:
+    description: A rule command
+permissions:
+  mhr.cmd.rules.accept:
+    description: Enable to accept the server rules with /rules accept, or the custom command in the config.
+    default: true
+  mhr.cmd.rules.info:
+    description: Enable to show all command description, where you have the right.
+    default: true
+  mhr.cmd.rules.reload:
+    description: Enable to reload the yamls and the mysql from the plugin.
+    default: false
+  mhr.cmd.rules.revoke:
+    description: Enable to revoke the rules, while kick from the server.
+    default: false
+  

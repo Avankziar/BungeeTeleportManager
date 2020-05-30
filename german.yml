@@ -1,0 +1,50 @@
+InputIsWrong: '&cDeine Eingabe ist fehlerhaft! Klicke hier auf den Text, um weitere Infos zu bekommen!'
+NoPermission: '&cDu hast dafür keine Rechte!'
+NoPlayerExist: '&cDer Spieler ist nicht online oder existiert nicht!'
+NoNumber: '&cDas Argument &f%arg% &cmuss eine ganze Zahl sein.'
+RunTask:
+  Title: '&c&oAchtung!'
+  SubTitle: '&c&nBitte bestätige die Regeln mit &f/dsgvo'
+  FadeIn: 10
+  Stay: 300
+  FadeOut: 10
+  Messages:
+  - §d======§c======§e======§7[§bMyHome&4Rules§7]§e======§c======§d======
+  - §bUm ein angenehmes Klima auf dem Server zu ermöglichen,
+  - §bmüssen gewisse Regeln eingehalten werden. §c/regeln~click@RUN_COMMAND@/rules~hover@SHOW_TEXT@Hover.Message.LineThree
+  - §bDie DSGVO Richtlinien findest du unter §c/dsgvolink~click@RUN_COMMAND@/dsgvolink~hover@SHOW_TEXT@Hover.Message.LineTwo
+  - §bNeuigkeiten und Nachrichten kannst du per §c/forum~click@RUN_COMMAND@/forum~hover@SHOW_TEXT@Hover.Message.LineFour §bnachlesen.
+  - §2-----------------------------------------------------
+  - §0<
+  - §6=====§2Klick §2hier§6======>>> §4§l§o/dsgvo~click@RUN_COMMAND@/dsgvo~hover@SHOW_TEXT@Hover.Message.LineSix §6<<<======§2Klick §2hier§6=====
+  - §0<
+  - §2-----------------------------------------------------
+  Kick: '&cDu musst die Regeln & DSGVO akzeptieren bevor du weiterspielen kannst.'
+Hover:
+  Message:
+    LineTwo: '&eKlicke hier um den Befehl &c/dsgvolink &edirekt auszuführen.~!~&eDieses leitet dich dann zu den DSGVO Richtlinien weiter.'
+    LineThree: '&eKlicke hier um den Befehl &c/regeln &edirekt auszuführen.~!~&eDieses leitet dich dann zu den eigentlichen Regeln weiter.'
+    LineFour: '&eKlicke hier für die Weiterleitung zum Forum.~!~&eDort kannst du alle Updates, Neuigkeiten und~!~&eDisskusionen finden, und sogar über Themen abstimmen.'
+    LineSix: '&eKlicke hier zum Bestätigen der Regeln.'
+    Base: '&eKlicke hier zum Aufrufen der Regeln auf der Webseite.'
+CmdRules:
+  Base:
+  - §eAlle Regeln findest du §chier~click@OPEN_URL@https://de.wikipedia.org/wiki/Regel_(Richtlinie)~hover@SHOW_TEXT@Hover.Message.Base
+  Info:
+    Headline: '&e==========&7[&bMyHome&4Rules&7]&e=========='
+    Next: '&e&nnächste Seite &e==>'
+    Past: '&e<== &nvorherige Seite'
+    accept: '&c/rules accept &f| Der Grundbefehl zum akzeptieren der Regeln'
+    info: '&c/rules info &f| Der Infobefehl'
+    reload: '&c/rules reload &f| Lädt die Yaml-Dateien und MySQL neu.'
+    revoke: '&c/rules revoke &f| Widerruft die DSGVO'
+  Accept:
+    Accepting: '&6Du hast die Regeln akzeptiert! Noch viel Spaß auf dem Server.'
+    AlreadyAccepted: '&eDu hast die Regeln & DSGVO schon am &6%time% &eakzeptiert.'
+  Reload:
+    Success: '&aYaml-Dateien wurden neu geladen.'
+    Error: '&cEs wurde ein Fehler gefunden! Siehe Konsole!'
+  Revoke:
+    NoAccept: '&cDu hast die Regeln & DSGVO nicht akzeptiert. Somit kannst du sie auch nicht widerrufen!'
+    Warning: '&c&oAchtung! &r&cDurch das Widerrufen der Regeln & DSGVO, wirst du nicht nur vom Server gekickt, sondern die Betreiber des Servers behalten sich das Recht vor, all deine Ingame Wertgegenstände oder Ähnliches, zu löschen oder andersweitig zu verarbeiten. Du gibst somit alle Rechte dies bezüglich auf! Bitte bestätige mit &f/rules widerrufen bestätigen&c.'
+    Kick: '&cDu hast die Regeln & DSGVO widerrufen. Damit hast du alle Rechte auf erspielte und gekaufte Gegenstände aufgegeben. &bWir wünschen dir trotzdem alles Gute auf deinem Lebensweg!'
