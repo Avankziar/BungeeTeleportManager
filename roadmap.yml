@@ -1,0 +1,29 @@
+BungeeTeleportManager Build 1 =======================================================================================================================
+- BungeeCord ready
+- Mysql ready
+- +/back | Teleportiert dich zu deinem letzten Rückkehrpunkt | bhprtw.cmd.back
+- +/deathback | Telportiert dich zu deinem Todespunkt. Danach wird dieser gelöscht. | bhprtw.cmd.deathback
+- +/tpa <Spielername> | Schickt eine Teleportanfrage an den Spieler um sich zu Ihm zu teleportieren | bhprtw.cmd.tpa
+- +/tpahere <Spielername> | Schickt eine Teleportanfrage an den Spieler um ihn zu sich selbst zu teleportieren | bhprtw.cmd.tpahere
+- +/tpaccept <Spielername> | Akzeptiert eine Teleportanfrage an den Spieler (Man kann einfach den Text im Chat dafür anklicken) | bhprtw.cmd.tpaccept
+- +/tpdeny <Spielername> | Lehnt eine Teleportanfrage vom Spieler ab. (Man kann per Textklick ablehnen) | bhprtw.cmd.tpdeny
+- +/tptoggle | Toggle ob man Teleportanfragen automatisch ablehnt. | bhpertw.cmd.tptoggle
+- +/tpcancel | Bricht alle Teleportanfragen von oder zu einem selbst ab | bhprtw.cmd.tpcancel
+- +/tp <Spielername> | Man teleportiert sich zu einen Spieler ohne Anfrage | bhprtw.cmd.tp
+- +/tphere <Spielername> | Man teleportiert den Spieler ohne Anfrage zu sich | bhprtw.cmd.tphere
+- +/tpall | Teleportiert alle Spieler zu sich ohne Anfrage | bhprtw.cmd.tpall
+- +/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch] | Teleportiert sich direkt zu den Koordinaten | bhprtw.cmd.tppos
+- +/warcreate <WarpName> | Erstellet ein Warp. | bhprtw.cmd.warpcreate
+- +/warpremove <Warpname> | Löscht einen Warp | bhrptw.cmd.warpremove
+- +/warplist [Seitezahl] | Zeigt 50 Warp pro Seite an mit ClickEvent | bhprtw.cmd.warplist
+- +/warp <Warpname> | Warp zu dem Warp | bhprtw.cmd.warp
+- +/warpinfo <Warpname> | Alle Infos zum Warp | bhprtw.cmd.warpinfo
+- +/warpsetname <warpname> <neuer name> | Setzt ein neuer Name für den name | bhprtw.cmd.warpsetname
+- +/warpsetposition <warpname> | Setzt eine Neue Position für den Warp | bhprtw.cmd.warpsetposition
+- +/warpsetowner <warpname> <Spielername> | Setzt ein neuen Spieler oder die Void als Owner | bhprtw.cmd.setowner
+- +/warpsetpermission <warpname> <Permission> | Setzt eine neue Permission für den Warp | bhprtw.cmd.setpermission
+- +/warpsetpassword <warpname> <Password> | Setzt ein neues Passsword | bhprtw.cmd.setpassword
+- +/warpsetprice <warpname> <price> | Setzt ein neuen price | bhprtw.cmd.setprice
+- +/warphidden <warpname> | Versteck den Warp oder legt ihn offen. | bhprtw.cmd.hidden
+- +/warpaddmember <warpname> <Spielername> | Fügt ein Spieler als Mitglied hinzu | bhprtw.cmd.addmember
+- +/warpremovemember <warpname> <Spielername> | Entfernt einen Spieler als Mitglied | bhprtw.cmd.removemember

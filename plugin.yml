@@ -1,23 +1,133 @@
-name: MyHomeRules
-main: main.java.me.avankziar.myhomerules.spigot.MyHomeRules
+name: BungeeTeleportManager
+main: main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager
 version: 1
 author: Avankziar
 api-version: 1.15
-description: A Rules accepting Plugin
+description: A Home, Portal, Respawn, Teleport and Warp plugin
 commands:
-  rules:
-    description: A rule command
+  back:
+    description: The back command
+  deathback:
+    description: The deathback command
+  tpa:
+    description: The tpa command
+  tpahere:
+    description: The tpahere command
+  tpaccept:
+    description: The tpaccept command
+  tpdeny:
+    description: The tpdeny command
+  tptoggle:
+    description: The tptoggle command
+  tpcancel:
+    description: The tpcancel command
+  tp:
+    description: The tp command
+  tphere:
+    description: The tphere command
+  tpall:
+    description: The tpall command
+  tppos:
+    description: The tppos command
+  warpcreate:
+    description: The warpcreate command
+  warpremove:
+    description: The warpremove command
+  warplist:
+    description: The warplist command
+  warp:
+    description: The warp command
+  warpinfo:
+    description: The warpinfo command
+  warpsetname:
+    description: The warpsetname command
+  warpsetposition:
+    description: The warpsetposition command
+  warpsetowner:
+    description: The warpsetowner command
+  warpsetpermission:
+    description: The warpsetpermission command
+  warpsetpassword:
+    description: The warpsetpassword command
+  warpsetprice:
+    description: The warpsetprice command
+  warpaddmember:
+    description: The warpaddmember command
+  warpremovemember:
+    description: The warpremovemember command
 permissions:
-  mhr.cmd.rules.accept:
-    description: Enable to accept the server rules with /rules accept, or the custom command in the config.
-    default: true
-  mhr.cmd.rules.info:
-    description: Enable to show all command description, where you have the right.
-    default: true
-  mhr.cmd.rules.reload:
-    description: Enable to reload the yamls and the mysql from the plugin.
+  bhprtw.cmd.back:
+    description: Enable to /back
     default: false
-  mhr.cmd.rules.revoke:
-    description: Enable to revoke the rules, while kick from the server.
+  bhprtw.cmd.tpa:
+    description: Enable to /tpa
     default: false
-  
+  bhprtw.cmd.tpahere:
+    description: Enable to /tpahere
+    default: false
+  bhprtw.cmd.tpaccept:
+    description: Enable to /tpaccept
+    default: false
+  bhprtw.cmd.tpdeny:
+    description: Enable to /tpdeny
+    default: false
+  bhprtw.cmd.tpcancel:
+    description: Enable to /tpcancel
+    default: false
+  bhprtw.cmd.tptoggle:
+    description: Enable to /tptoggle
+    default: false
+  bhprtw.cmd.tp:
+    description: Enable to /tp
+    default: false
+  bhprtw.cmd.tphere:
+    description: Enable to /tphere
+    default: false
+  bhprtw.cmd.tpall:
+    description: Enable to /tpall
+    default: false
+  bhprtw.cmd.tppos:
+    description: Enable to /tppos
+    default: false
+  bhprtw.cmd.warpcreate:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warpremove:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warplist:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warp:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warpinfo:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warpsetname:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warpsetposition:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warpsetowner:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warpsetpermission:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warpsetpassword:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warpsetprice:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warphidden:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warpaddmember:
+    description: Enable to /warp
+    default: false
+  bhprtw.cmd.warpremovemember:
+    description: Enable to /warp
+    default: false
