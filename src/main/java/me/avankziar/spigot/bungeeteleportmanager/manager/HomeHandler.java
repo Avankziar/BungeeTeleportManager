@@ -3,6 +3,8 @@ package main.java.me.avankziar.spigot.bungeeteleportmanager.manager;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.bukkit.entity.Player;
@@ -10,7 +12,9 @@ import org.bukkit.entity.Player;
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 public class HomeHandler
 {
@@ -46,24 +50,63 @@ public class HomeHandler
         player.sendPluginMessage(plugin, StringValues.HOME_TOBUNGEE, stream.toByteArray());
 	}
 	
-	public boolean compareHomeAmount(Player player)
+	public boolean compareHomeAmount(Player player, boolean message)
 	{
-		if(!compareGlobalHomes(player))
+		if(plugin.getYamlHandler().get().getBoolean("UseGlobalPermissionLevel", false))
 		{
-			return false;
+			if(compareGlobalHomes(player, message) >= 0 )
+			{
+				return false;
+			}
+		}		
+		if(plugin.getYamlHandler().get().getBoolean("UseServerPermissionLevel", false))
+		{
+			if(compareServerHomes(player, message) >= 0)
+			{
+				return false;
+			}
 		}
-		if(!compareServerHomes(player))
+		if(plugin.getYamlHandler().get().getBoolean("UseWorldPermissionLevel", false))
 		{
-			return false;
-		}
-		if(!compareWorldHomes(player))
-		{
-			return false;
+			if(compareWorldHomes(player, message) >= 0)
+			{
+				return false;
+			}
 		}
 		return true;
 	}
 	
-	public boolean compareGlobalHomes(Player player)
+	public int compareHome(Player player, boolean message)
+	{
+		int i = 0;
+		if(plugin.getYamlHandler().get().getBoolean("UseGlobalPermissionLevel", false))
+		{
+			i = compareGlobalHomes(player, message);
+			if(i > 0)
+			{
+				return i;
+			}
+		}
+		if(plugin.getYamlHandler().get().getBoolean("UseServerPermissionLevel", false))
+		{
+			i = compareServerHomes(player, message);
+			if(i > 0)
+			{
+				return i;
+			}
+		}
+		if(plugin.getYamlHandler().get().getBoolean("UseWorldPermissionLevel", false))
+		{
+			i = compareWorldHomes(player, message);
+			if(i > 0)
+			{
+				return i;
+			}
+		}
+		return i;
+	}
+	
+	public int compareGlobalHomes(Player player, boolean message)
 	{
 		int globalLimit = 0;
 		int globalHomeCount = plugin.getMysqlHandler().countWhereID(
@@ -71,9 +114,9 @@ public class HomeHandler
 				player.getUniqueId().toString());
 		if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_GLOBAL+"*"))
 		{
-			return true;
+			return -1;
 		}
-		for(int i = 500; i > 0; i--)
+		for(int i = 500; i >= 0; i--)
 		{
 			if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_GLOBAL+i))
 			{
@@ -81,39 +124,50 @@ public class HomeHandler
 				break;
 			}
 		}
-		if(globalHomeCount >= globalLimit)
+		if(globalHomeCount >= globalLimit || globalLimit == 0)
 		{
-			return false;
+			if(message)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesGlobal")
+						.replace("%amount%", String.valueOf(globalLimit))));
+			}
+			return (globalHomeCount-globalLimit);
 		}
-		return true;
+		return -1;
 	}
 	
-	public boolean compareServerHomes(Player player)
+	public int compareServerHomes(Player player, boolean message)
 	{
 		String server = plugin.getYamlHandler().get().getString("ServerName");
 		String serverCluster = plugin.getYamlHandler().get().getString("ServerCluster");
-		boolean clusterBeforeServer = plugin.getYamlHandler().get().getBoolean("ServerClusterBeforeServer", false);
+		boolean clusterBeforeServer = plugin.getYamlHandler().get().getBoolean("ServerClusterActive", false);
 		int serverLimit = 0;
 		
 		if(clusterBeforeServer)
 		{
-			List<String> clusterlist = plugin.getYamlHandler().get().getStringList("ServerClusterServerList");
-			Object[] objects = clusterlist.toArray();
-			String where = "`player_uuid` = ? AND (`server` = ? ";
-			for(int i = 0; i < clusterlist.size(); i++)
+			List<String> clusterlist = plugin.getYamlHandler().get().getStringList("ServerClusterList");
+			if(clusterlist == null)
 			{
-				where += "OR `server` = ? ";
+				clusterlist = new ArrayList<>();
 			}
-			where += ")";
+			clusterlist.add(server);
+			clusterlist.add(player.getUniqueId().toString());
+			Object[] o = clusterlist.toArray();
+			String where = "(";
+			for(int i = 2; i < clusterlist.size(); i++)
+			{
+				where += "`server` = ? OR ";
+			}
+			where += "`server` = ?) AND `player_uuid` = ?";
 			int serverHomeCount = plugin.getMysqlHandler().countWhereID(
 					MysqlHandler.Type.HOMES, where,
-					player.getUniqueId().toString(), objects);
+					o);
 			if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_SERVER+"*")
 					|| player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_SERVER+serverCluster+".*"))
 			{
-				return true;
+				return -1;
 			}
-			for(int i = 500; i > 0; i--)
+			for(int i = 500; i >= 0; i--)
 			{
 				if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_SERVER+serverCluster+"."+i))
 				{
@@ -121,9 +175,14 @@ public class HomeHandler
 					break;
 				}
 			}
-			if(serverHomeCount >= serverLimit)
+			if(serverHomeCount >= serverLimit || serverLimit == 0)
 			{
-				return false;
+				if(message)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesServerCluster")
+							.replace("%amount%", String.valueOf(serverLimit))));
+				}
+				return (serverHomeCount-serverLimit);
 			}
 		} else {
 			int serverHomeCount = plugin.getMysqlHandler().countWhereID(
@@ -132,9 +191,9 @@ public class HomeHandler
 			if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_SERVER+"*")
 					|| player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_SERVER+server+".*"))
 			{
-				return true;
+				return -1;
 			}
-			for(int i = 500; i > 0; i--)
+			for(int i = 500; i >= 0; i--)
 			{
 				if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_SERVER+server+"."+i))
 				{
@@ -142,38 +201,144 @@ public class HomeHandler
 					break;
 				}
 			}
-			if(serverHomeCount >= serverLimit)
+			if(serverHomeCount >= serverLimit || serverLimit == 0)
 			{
-				return false;
+				if(message)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesServer")
+							.replace("%amount%", String.valueOf(serverLimit))));
+				}
+				return (serverHomeCount-serverLimit);
 			}
 		}
-		return true;
+		return -1;
 	}
 	
-	public boolean compareWorldHomes(Player player)
+	public int compareWorldHomes(Player player, boolean message)
 	{
 		String world = player.getLocation().getWorld().getName();
+		boolean clusterActive = plugin.getYamlHandler().get().getBoolean("WorldClusterActive", false);
 		int worldLimit = 0;
-		int worldHomeCount = plugin.getMysqlHandler().countWhereID(
-				MysqlHandler.Type.HOMES, "`player_uuid` = ? AND `world` = ?",
-				player.getUniqueId().toString(), world);
-		if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_WORLD+"*")
-				|| player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_WORLD+world+".*"))
+		if(clusterActive)
 		{
-			return true;
-		}
-		for(int i = 500; i > 0; i--)
-		{
-			if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_SERVER+world+"."+i))
+			List<String> clusterlist = plugin.getYamlHandler().get().getStringList("WorldClusterList");
+			if(clusterlist == null)
 			{
-				worldLimit = i;
-				break;
+				clusterlist = new ArrayList<>();
 			}
-		}
-		if(worldHomeCount >= worldLimit)
+			List<String> list = new ArrayList<>();
+			String cluster = "";
+			for(String clusters : clusterlist)
+			{
+				List<String> worldclusterlist = plugin.getYamlHandler().get().getStringList(clusters);
+				for(String worlds: worldclusterlist)
+				{
+					if(worlds.equals(world))
+					{
+						cluster = clusters;
+						list = worldclusterlist;
+						break;
+					}
+				}
+			}
+			list.add(world);
+			list.add(player.getUniqueId().toString());
+			Object[] o = list.toArray();
+			String where = "(";
+			for(int i = 2; i < list.size(); i++)
+			{
+				where += "`world` = ? OR ";
+			}
+			where += "`world` = ?) AND `player_uuid` = ?";
+			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
+					MysqlHandler.Type.HOMES, where, o);
+			if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_WORLD+"*")
+					|| player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_WORLD+cluster+".*"))
+			{
+				return -1;
+			}
+			for(int i = 500; i >= 0; i--)
+			{
+				if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_WORLD+cluster+"."+i))
+				{
+					worldLimit = i;
+					break;
+				}
+			}
+			if(worldHomeCount >= worldLimit || worldLimit == 0)
+			{
+				if(message)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesWorld")
+							.replace("%amount%", String.valueOf(worldLimit))));
+				}
+				return(worldHomeCount-worldLimit);
+			}
+			return -1;
+		} else
 		{
-			return false;
+			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
+					MysqlHandler.Type.HOMES, "`player_uuid` = ? AND `world` = ?",
+					player.getUniqueId().toString(), world);
+			if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_WORLD+"*")
+					|| player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_WORLD+world+".*"))
+			{
+				return -1;
+			}
+			for(int i = 500; i >= 0; i--)
+			{
+				if(player.hasPermission(StringValues.PERM_HOME_COUNTHOMES_WORLD+world+"."+i))
+				{
+					worldLimit = i;
+					break;
+				}
+			}
+			if(worldHomeCount >= worldLimit || worldLimit == 0)
+			{
+				if(message)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesWorld")
+							.replace("%amount%", String.valueOf(worldLimit))));
+				}
+				return(worldHomeCount-worldLimit);
+			}
+			return -1;
 		}
-		return true;
+	}
+	
+	public LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> mapping(
+			Home home,
+			LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map,
+			BaseComponent bct)
+	{
+		if(map.containsKey(home.getLocation().getServer()))
+		{
+			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = map.get(home.getLocation().getServer());
+			if(mapmap.containsKey(home.getLocation().getWordName()))
+			{
+				ArrayList<BaseComponent> bc = mapmap.get(home.getLocation().getWordName());
+				bc.add(bct);
+				mapmap.replace(home.getLocation().getWordName(), bc);
+				map.replace(home.getLocation().getServer(), mapmap);
+				return map;
+			} else
+			{
+				ArrayList<BaseComponent> bc = new ArrayList<>();
+				bc.add(ChatApi.tctl("  &e"+home.getLocation().getWordName()+": "));
+				bc.add(bct);
+				mapmap.put(home.getLocation().getWordName(), bc);
+				map.replace(home.getLocation().getServer(), mapmap);
+				return map;
+			}
+		} else
+		{
+			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = new LinkedHashMap<String, ArrayList<BaseComponent>>();
+			ArrayList<BaseComponent> bc = new ArrayList<>();
+			bc.add(ChatApi.tctl("  &e"+home.getLocation().getWordName()+": "));
+			bc.add(bct);
+			mapmap.put(home.getLocation().getWordName(), bc);
+			map.put(home.getLocation().getServer(), mapmap);
+			return map;
+		}
 	}
 }

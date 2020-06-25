@@ -42,6 +42,17 @@ public class MultipleCommandExecutor implements CommandExecutor
 			{
 				plugin.getCommandHelper().btm(player, Integer.parseInt(args[0])); //Info Command
 				return true;
+			} else if(args[0].equalsIgnoreCase("reload"))
+			{
+				if(!player.hasPermission(StringValues.PERM_RELOAD))
+				{
+					///Du hast dafür keine Rechte!
+					player.spigot().sendMessage(ChatApi.tctl(
+							plugin.getYamlHandler().getL().getString("NoPermission")));
+					return false;
+				}
+				plugin.getCommandHelper().reload(player);
+				return true;
 			}
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
@@ -116,11 +127,11 @@ public class MultipleCommandExecutor implements CommandExecutor
 			}
 			plugin.getTeleportHelper().tpDeny(player, args);
 			return true;
-		} else if(cmd.getName().equalsIgnoreCase("tpcancel"))
+		} else if(cmd.getName().equalsIgnoreCase("tpaquit"))
 		{
 			if (!(sender instanceof Player)) 
 			{
-				BungeeTeleportManager.log.info("/tpcancel is only for Player!");
+				BungeeTeleportManager.log.info("/tpaquit is only for Player!");
 				return false;
 			}
 			Player player = (Player) sender;
@@ -133,11 +144,11 @@ public class MultipleCommandExecutor implements CommandExecutor
 			}
 			plugin.getTeleportHelper().tpCancel(player, args);
 			return true;
-		} else if(cmd.getName().equalsIgnoreCase("tptoggle"))
+		} else if(cmd.getName().equalsIgnoreCase("tpatoggle"))
 		{
 			if (!(sender instanceof Player)) 
 			{
-				BungeeTeleportManager.log.info("/tptoggle is only for Player!");
+				BungeeTeleportManager.log.info("/tpatoggle is only for Player!");
 				return false;
 			}
 			Player player = (Player) sender;
@@ -270,7 +281,8 @@ public class MultipleCommandExecutor implements CommandExecutor
 			}
 			plugin.getHomeHelper().homeCreate(player, args);
 			return true;
-		} else if(cmd.getName().equalsIgnoreCase("homeremove"))
+		} else if(cmd.getName().equalsIgnoreCase("homeremove")
+				|| cmd.getName().equalsIgnoreCase("delhome"))
 		{
 			if (!(sender instanceof Player)) 
 			{
@@ -287,6 +299,23 @@ public class MultipleCommandExecutor implements CommandExecutor
 			}
 			plugin.getHomeHelper().homeRemove(player, args);
 			return true;
+		} else if(cmd.getName().equalsIgnoreCase("homesdeleteserverworld"))
+		{
+			if (!(sender instanceof Player)) 
+			{
+				BungeeTeleportManager.log.info("homesdeleteserverworld is only for Player!");
+				return false;
+			}
+			Player player = (Player) sender;
+			if(!player.hasPermission(StringValues.PERM_HOME_HOMESDELETESERVERWOLRD))
+			{
+				///Du hast dafür keine Rechte!
+				player.spigot().sendMessage(ChatApi.tctl(
+						plugin.getYamlHandler().getL().getString("NoPermission")));
+				return false;
+			}
+			plugin.getHomeHelper().homesDeleteServerWorld(player, args);
+			return true;
 		} else if(cmd.getName().equalsIgnoreCase("home"))
 		{
 			if (!(sender instanceof Player)) 
@@ -295,7 +324,7 @@ public class MultipleCommandExecutor implements CommandExecutor
 				return false;
 			}
 			Player player = (Player) sender;
-			if(!player.hasPermission(StringValues.PERM_HOME_HOME))
+			if(!player.hasPermission(StringValues.PERM_HOME_SELF))
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
@@ -312,7 +341,7 @@ public class MultipleCommandExecutor implements CommandExecutor
 				return false;
 			}
 			Player player = (Player) sender;
-			if(!player.hasPermission(StringValues.PERM_HOME_HOMES))
+			if(!player.hasPermission(StringValues.PERM_HOMES_SELF))
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
@@ -405,6 +434,23 @@ public class MultipleCommandExecutor implements CommandExecutor
 				return false;
 			}
 			plugin.getWarpHelper().warpTo(player, args);
+			return true;
+		} else if(cmd.getName().equalsIgnoreCase("warps"))
+		{
+			if (!(sender instanceof Player)) 
+			{
+				BungeeTeleportManager.log.info("/warps is only for Player!");
+				return false;
+			}
+			Player player = (Player) sender;
+			if(!player.hasPermission(StringValues.PERM_WARP_WARPS))
+			{
+				///Du hast dafür keine Rechte!
+				player.spigot().sendMessage(ChatApi.tctl(
+						plugin.getYamlHandler().getL().getString("NoPermission")));
+				return false;
+			}
+			plugin.getWarpHelper().warps(player, args);
 			return true;
 		} else if(cmd.getName().equalsIgnoreCase("warpinfo"))
 		{
@@ -580,6 +626,40 @@ public class MultipleCommandExecutor implements CommandExecutor
 				plugin.getWarpHelper().warpRemoveMember(player, args);
 				return true;
 			}
+		} else if(cmd.getName().equalsIgnoreCase("warpaddblacklist"))
+		{
+			if (!(sender instanceof Player)) 
+			{
+				BungeeTeleportManager.log.info("/warpaddblacklist is only for Player!");
+				return false;
+			}
+			Player player = (Player) sender;
+			if(!player.hasPermission(StringValues.PERM_WARP_ADDBLACKLIST))
+			{
+				///Du hast dafür keine Rechte!
+				player.spigot().sendMessage(ChatApi.tctl(
+						plugin.getYamlHandler().getL().getString("NoPermission")));
+				return false;
+			}
+			plugin.getWarpHelper().warpAddBlacklist(player, args);
+			return true;
+		} else if(cmd.getName().equalsIgnoreCase("warpremoveblacklist"))
+		{
+			if (!(sender instanceof Player)) 
+			{
+				BungeeTeleportManager.log.info("/warpremoveblacklist is only for Player!");
+				return false;
+			}
+			Player player = (Player) sender;
+			if(!player.hasPermission(StringValues.PERM_WARP_ADDBLACKLIST))
+			{
+				///Du hast dafür keine Rechte!
+				player.spigot().sendMessage(ChatApi.tctl(
+						plugin.getYamlHandler().getL().getString("NoPermission")));
+				return false;
+			}
+			plugin.getWarpHelper().warpRemoveBlacklist(player, args);
+			return true;
 		}
 		return false;
 	}

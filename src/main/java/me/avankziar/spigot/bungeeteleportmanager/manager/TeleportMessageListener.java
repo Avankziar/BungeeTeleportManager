@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.me.avankziar.bungee.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.general.object.Teleport;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
@@ -41,10 +42,11 @@ public class TeleportMessageListener implements PluginMessageListener
             		String fromName = in.readUTF();
             		String toName = in.readUTF();
             		Teleport.Type type = Teleport.Type.valueOf(in.readUTF());
+            		boolean isToggled = in.readBoolean();
             		Player from = plugin.getServer().getPlayer(fromName);
             		if(from != null)
             		{
-            			if(!from.hasPermission(StringValues.PERM_BYPASS_TELEPORT))
+            			if(!from.hasPermission(StringValues.PERM_BYPASS_TELEPORT_COST))
             			{
             				double price = plugin.getYamlHandler().get().getDouble("CostPerTeleportRequest", 0.0);
                     		if(price > 0.0)
@@ -54,7 +56,7 @@ public class TeleportMessageListener implements PluginMessageListener
                     				if(!plugin.getEco().has(fromName, price))
                     				{
                     					from.sendMessage(
-                                				plugin.getYamlHandler().getL().getString("Economy.NoEnoughBalance"));
+                    							ChatApi.tl(plugin.getYamlHandler().getL().getString("Economy.NoEnoughBalance")));
                     					return;
                     				}
                     				if(!plugin.getEco().withdrawPlayer(fromName, price).transactionSuccess())
@@ -90,6 +92,11 @@ public class TeleportMessageListener implements PluginMessageListener
                     		}
             			}
             		}
+            		if(isToggled)
+            		{
+            			from.sendMessage(
+                				ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerHasToggled")));
+            		}
             		if(type == Teleport.Type.TPTO)
             		{
             			Teleport teleport = new Teleport(
@@ -105,11 +112,12 @@ public class TeleportMessageListener implements PluginMessageListener
             					type);
             			plugin.getTeleportHandler().tpSendInvite(player, teleport);
             		}
+            		return;
             	} else if(task.equals(StringValues.TP_OCCUPIED))
             	{
             		String fromName = in.readUTF();
             		plugin.getServer().getPlayer(fromName).sendMessage(
-            				plugin.getYamlHandler().getL().getString("CmdTp.HasAlreadyRequest"));
+            				ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.HasAlreadyRequest")));
             		return;
             	} else if(task.equals(StringValues.TP_PLAYERTOPLAYER))
             	{
@@ -130,12 +138,20 @@ public class TeleportMessageListener implements PluginMessageListener
 									if(targets != null)
 									{
 										senders.teleport(targets.getLocation());
-										senders.sendMessage(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
-												.replace("%fromplayer%", senders.getName())
-												.replace("%toplayer%", targets.getName()));
-										targets.sendMessage(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
-												.replace("%fromplayer%", senders.getName())
-												.replace("%toplayer%", targets.getName()));
+										if(senders.hasPermission(StringValues.PERM_BYPASS_TELEPORT_SILENT))
+										{
+											senders.sendMessage(
+													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
+													.replace("%playerfrom%", senders.getName())
+													.replace("%playerto%", targets.getName())));
+										}										
+										if(targets.hasPermission(StringValues.PERM_BYPASS_TELEPORT_SILENT))
+										{
+											targets.sendMessage(
+													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
+													.replace("%playerfrom%", senders.getName())
+													.replace("%playerto%", targets.getName())));
+										}
 										cancel();
 									}
 								}
@@ -153,8 +169,8 @@ public class TeleportMessageListener implements PluginMessageListener
             		String playerName = in.readUTF();
             		String otherPlayerName = in.readUTF();
             		plugin.getServer().getPlayer(playerName).sendMessage(
-            				plugin.getYamlHandler().getL().getString("CmdTp.ServerQuitMessage")
-            				.replace("%player%", otherPlayerName));
+            				ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.ServerQuitMessage")
+            				.replace("%player%", otherPlayerName)));
             		return;
             	} else if(task.equals(StringValues.TP_PLAYERTOPOSITION))
             	{
@@ -169,6 +185,7 @@ public class TeleportMessageListener implements PluginMessageListener
                 	new BukkitRunnable()
 					{
             			int i = 0;
+            			Location loc = new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
 						@Override
 						public void run()
 						{
@@ -176,17 +193,24 @@ public class TeleportMessageListener implements PluginMessageListener
 							{
 								if(plugin.getServer().getPlayer(playerName).isOnline())
 								{
-									Player player = plugin.getServer().getPlayer(playerName);
-									if(Bukkit.getWorld(worldName) == null)
+									if(loc != null) //Eventuell prüfen ob loc sicher ist.
 									{
+										Player player = plugin.getServer().getPlayer(playerName);
+										if(Bukkit.getWorld(worldName) == null)
+										{
+											player.sendMessage(
+													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.WorldNotFound")
+															.replace("%world%", worldName)));
+											cancel();
+										}
+										player.teleport(loc);
+										player.sendMessage(
+												ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PositionTeleport")
+												.replace("%server%", serverName)
+												.replace("%world%", worldName)
+												.replace("%coords%", x+" "+y+" "+z+" | "+yaw+" "+pitch)));
 										cancel();
 									}
-									player.teleport(new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch));
-									player.sendMessage(plugin.getYamlHandler().getL().getString("CmdTp.PositionTeleport")
-											.replace("%server%", serverName)
-											.replace("%world%", worldName)
-											.replace("%coords%", x+" "+y+" "+z+" | "+yaw+" "+pitch));
-									cancel();
 								}
 							}
 							i++;
@@ -201,19 +225,19 @@ public class TeleportMessageListener implements PluginMessageListener
             	{
             		String playerName = in.readUTF();
             		plugin.getServer().getPlayer(playerName).sendMessage(
-            				plugin.getYamlHandler().getL().getString("CmdTp.ForbiddenServer"));
+            				ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.ForbiddenServer")));
             		return;
             	} else if(task.equals(StringValues.TP_FORBIDDENWORLD))
             	{
             		String playerName = in.readUTF();
             		plugin.getServer().getPlayer(playerName).sendMessage(
-            				plugin.getYamlHandler().getL().getString("CmdTp.ForbiddenWorld"));
+            				ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.ForbiddenWorld")));
             		return;
             	} else if(task.equals(StringValues.TP_TOGGLED))
             	{
             		String playerName = in.readUTF();
             		plugin.getServer().getPlayer(playerName).sendMessage(
-            				plugin.getYamlHandler().getL().getString("CmdTp.PlayerIsToggle"));
+            				ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerIsToggle")));
             		return;
             	}
             } catch (IOException e) 

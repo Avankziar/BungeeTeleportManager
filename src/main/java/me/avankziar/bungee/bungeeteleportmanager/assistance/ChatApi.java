@@ -147,7 +147,7 @@ public class ChatApi
 			{
 				String[] function = word.split(sepb);
 				newtc = ChatApi.tctl(function[0].replace(sepspace, " ")+" ");
-				if(function.length >= 2)
+				if(function.length == 2)
 				{
 					if(function[1].contains(idhover))
 					{

@@ -7,12 +7,12 @@ import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 
+import main.java.me.avankziar.bungee.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.general.object.Teleport;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.BungeeBridge;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 
 public class TeleportHandler
@@ -59,7 +59,7 @@ public class TeleportHandler
 			out.writeUTF(StringValues.TP_SENDTEXTCOMPONENT);
 			out.writeUTF(fromName);
 			out.writeUTF(toName);
-			out.writeUTF(BungeeBridge.generateMessage(BungeeBridge.generateTextComponent(message)));
+			out.writeUTF(message);
 			out.writeBoolean(returnplayeronline);
 			out.writeUTF(returnmessage);
 		} catch (IOException e) {
@@ -81,6 +81,7 @@ public class TeleportHandler
 			out.writeUTF(teleport.getFromName());
 			out.writeUTF(teleport.getToName());
 			out.writeUTF(teleport.getType().toString());
+			out.writeBoolean(player.hasPermission(StringValues.PERM_BYPASS_TELEPORT_TPATOGGLE));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -121,6 +122,7 @@ public class TeleportHandler
 			out.writeUTF(StringValues.TP_CANCELINVITE);
 			out.writeUTF(teleport.getFromName());
 			out.writeUTF(teleport.getToName());
+			out.writeInt(runTask);
 			out.writeBoolean(sendMessage);
 			out.writeUTF(messageFrom);
 			out.writeUTF(messageTo);
@@ -215,7 +217,7 @@ public class TeleportHandler
         player.sendPluginMessage(plugin, StringValues.TP_TOBUNGEE, stream.toByteArray());
     }
 	
-	public void sendTpAll(Player player)
+	public void sendTpAll(Player player, boolean isSpecific, String server, String world)
 	{
 		if(!plugin.isBungee())
 		{
@@ -226,6 +228,9 @@ public class TeleportHandler
         try {
 			out.writeUTF(StringValues.TP_ALL);
 			out.writeUTF(player.getName());
+			out.writeBoolean(isSpecific);
+			out.writeUTF(server);
+			out.writeUTF(world);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -237,7 +242,9 @@ public class TeleportHandler
 		if(!plugin.isBungee())
 		{
 			return;
-		}		
+		}
+		String errormessage = plugin.getYamlHandler().getL().getString("CmdTp.ServerNotFound")
+				.replace("%server%", sl.getServer());
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(stream);
         try {
@@ -250,6 +257,7 @@ public class TeleportHandler
 			out.writeDouble(sl.getZ());
 			out.writeFloat(sl.getYaw());
 			out.writeFloat(sl.getPitch());
+			out.writeUTF(errormessage);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -311,11 +319,28 @@ public class TeleportHandler
 	
 	public void tpSendInvite(Player player, Teleport teleport)
 	{
-		String message = plugin.getYamlHandler().getL().getString("CmdTp.SendAccept", "").replace("%player%", player.getName());
-		sendMessage(player, teleport.getFromName(), teleport.getToName(), message,
-				true, plugin.getYamlHandler().getL().getString("NoPlayerExist", ""));
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.SendRequest")
+				.replace("%target%", teleport.getToName())));
+		if(teleport.getType() == Teleport.Type.TPTO)
+		{
+			sendMessage(player, teleport.getFromName(), teleport.getToName(), 
+					plugin.getYamlHandler().getL().getString("CmdTp.SendAcceptTPA", "")
+					.replace("%player%", player.getName()),
+					true, plugin.getYamlHandler().getL().getString("NoPlayerExist", ""));
+		} else if(teleport.getType() == Teleport.Type.TPHERE)
+		{
+			sendMessage(player, teleport.getFromName(), teleport.getToName(), 
+					plugin.getYamlHandler().getL().getString("CmdTp.SendAcceptTPAHere", "")
+					.replace("%player%", player.getName()),
+					true, plugin.getYamlHandler().getL().getString("NoPlayerExist", ""));
+		}
 		sendTextComponent(player, teleport.getFromName(), teleport.getToName(),
-				plugin.getYamlHandler().getL().getString("CmdTp.Icons", "").replace("%player%", player.getName()), false, "");
+				plugin.getYamlHandler().getL().getString("CmdTp.IconsI", "")
+				.replace("%player%", player.getName())
+				+" &f| "
+				+plugin.getYamlHandler().getL().getString("CmdTp.IconsII", "")
+				.replace("%player%", player.getName()),
+				false, "");
 		sendObject(player, teleport);
 		sendCancelInvite(player, teleport, plugin.getYamlHandler().get().getInt("CancelInviteRun",15), true,
 				plugin.getYamlHandler().getL().getString("CmdTp.InviteRunOut").replace("%player%", teleport.getToName()),
@@ -324,6 +349,7 @@ public class TeleportHandler
 	
 	public void tpAccept(Player player, Teleport teleport)
 	{
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.RequestInProgress")));
 		sendAccept(player, teleport,
 				plugin.getYamlHandler().getL().getString("CmdTp.NoPending"));
 	}
@@ -351,28 +377,31 @@ public class TeleportHandler
 			back.setToggle(false);
 			plugin.getMysqlHandler().updateData(MysqlHandler.Type.BACK, back, "`player_uuid` = ?", back.getUuid().toString());
 			plugin.getBackHandler().sendBackObject(player, back);
-			player.sendMessage(plugin.getYamlHandler().getL().getString("CmdTp.ToggleOff"));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.ToggleOff")));
 		} else
 		{
 			back.setToggle(true);
 			plugin.getMysqlHandler().updateData(MysqlHandler.Type.BACK, back, "`player_uuid` = ?", back.getUuid().toString());
 			plugin.getBackHandler().sendBackObject(player, back);
-			player.sendMessage(plugin.getYamlHandler().getL().getString("CmdTp.ToggleOn"));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.ToggleOn")));
 		}
 	}
 	
 	public void tpForce(Player player, Teleport teleport)
 	{
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.RequestInProgress")));
 		sendForceObject(player, teleport, plugin.getYamlHandler().getL().getString("NoPlayerExist", ""));
 	}
 	
-	public void tpAll(Player player)
+	public void tpAll(Player player, boolean isSpecific, String server, String world)
 	{
-		sendTpAll(player);
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.RequestInProgress")));
+		sendTpAll(player, isSpecific, server, world);
 	}
 	
 	public void tpPos(Player player, ServerLocation sl)
 	{
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.RequestInProgress")));
 		sendTpPos(player, sl);
 	}
 }

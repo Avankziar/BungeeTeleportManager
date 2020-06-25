@@ -46,6 +46,7 @@ public class HomeMessageListener implements PluginMessageListener
                 	new BukkitRunnable()
 					{
             			int i = 0;
+            			Location loc = new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
 						@Override
 						public void run()
 						{
@@ -53,22 +54,27 @@ public class HomeMessageListener implements PluginMessageListener
 							{
 								if(plugin.getServer().getPlayer(playerName).isOnline())
 								{
-									Player player = plugin.getServer().getPlayer(playerName);
-									if(Bukkit.getWorld(worldName) == null)
+									if(loc != null)
 									{
+										Player player = plugin.getServer().getPlayer(playerName);
+										if(Bukkit.getWorld(worldName) == null)
+										{
+											cancel();
+											return;
+										}
+										player.teleport(loc);
+										player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeTo")
+												.replace("%home%", homeName)));
 										cancel();
 										return;
-									}
-									player.teleport(new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch));
-									player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeTo")
-											.replace("%home%", homeName)));
-									cancel();
+									}									
 								}
 							}
 							i++;
 							if(i >= 100)
 							{
 								cancel();
+								return;
 							}
 						}
 					}.runTaskTimer(plugin, 1L, 2L);

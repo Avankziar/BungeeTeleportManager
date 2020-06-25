@@ -81,6 +81,7 @@ public interface TableIII
 		        preparedStatement.setString(1, b.getUuid().toString());
 		        preparedStatement.setString(2, b.getName());
 		        preparedStatement.setString(3, Utility.getLocation(b.getLocation()));
+		        preparedStatement.setBoolean(4, b.isToggle());
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
@@ -394,7 +395,7 @@ public interface TableIII
 		return null;
 	}
 	
-	default ArrayList<Back> getTopIII(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
+	default ArrayList<Back> getTopIII(BungeeTeleportManager plugin, String orderByColumn, boolean desc, int start, int end)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -402,9 +403,17 @@ public interface TableIII
 		if (conn != null) 
 		{
 			try 
-			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameIII 
-						+ "` ORDER BY "+orderByColumn+" DESC LIMIT "+start+", "+end;
+			{	
+				String sql = "";
+				if(desc)
+				{
+					sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameIII 
+							+ "` ORDER BY "+orderByColumn+" DESC LIMIT "+start+", "+end;
+				} else
+				{
+					sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameIII 
+							+ "` ORDER BY "+orderByColumn+" ASC LIMIT "+start+", "+end;
+				}
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();

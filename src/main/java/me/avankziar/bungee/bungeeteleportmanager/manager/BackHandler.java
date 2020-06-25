@@ -17,6 +17,7 @@ public class BackHandler
 	public BackHandler()
 	{
 		backLocations = new HashMap<>();
+		deathBackLocations = new HashMap<>();
 	}
 
 	public HashMap<String,Back> getBackLocations()

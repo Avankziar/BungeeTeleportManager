@@ -75,9 +75,19 @@ public interface TableV
 			try 
 			{
 				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameV 
-						+ "`(`warpname`, `server`, `world`, `x`, `y`, `z`, `yaw`, `pitch`"
-						+ " `hidden`, `owner`, `permission`, `password`, `member`, `price`) " 
-						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+						+ "`(`warpname`, `server`, `world`, `x`, `y`, `z`, `yaw`, `pitch`,"
+						+ " `hidden`, `owner`, `permission`, `password`, `member`, `blacklist`, `price`) " 
+						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				String m = null;
+				if(w.getMember() != null)
+				{
+					m = String.join(";", w.getMember());
+				}
+				String b = null;
+				if(w.getBlacklist() != null)
+				{
+					b = String.join(";", w.getBlacklist());
+				}
 				preparedStatement = conn.prepareStatement(sql);
 				preparedStatement.setString(1, w.getName());
 		        preparedStatement.setString(2, w.getLocation().getServer());
@@ -91,8 +101,9 @@ public interface TableV
 		        preparedStatement.setString(10, w.getOwner());
 		        preparedStatement.setString(11, w.getPermission());
 		        preparedStatement.setString(12, w.getPassword());
-		        preparedStatement.setString(13, String.join(";", w.getMember()));
-		        preparedStatement.setDouble(14, w.getPrice());
+		        preparedStatement.setString(13, m);
+		        preparedStatement.setString(14, b);
+		        preparedStatement.setDouble(15, w.getPrice());
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
@@ -137,8 +148,25 @@ public interface TableV
 				String data = "UPDATE `" + plugin.getMysqlHandler().tableNameV
 						+ "` SET `warpname` = ?, `server` = ?, `world` = ?,"
 						+ " `x` = ?, `y` = ?, `z` = ?, `yaw` = ?, `pitch` = ?,"
-						+ " `hidden` = ?, `owner` = ?, `permission` = ?, `password` = ?, `member` = ?, `price` = ?" 
+						+ " `hidden` = ?, `owner` = ?, `permission` = ?, `password` = ?, `member` = ?,"
+						+ " `blacklist` = ?, `price` = ?" 
 						+ " WHERE "+whereColumn;
+				String m = null;
+				if(w.getMember() != null)
+				{
+					if(!w.getMember().isEmpty())
+					{
+						m = String.join(";", w.getMember());
+					}
+				}
+				String b = null;
+				if(w.getBlacklist() != null)
+				{
+					if(!w.getBlacklist().isEmpty())
+					{
+						b = String.join(";", w.getBlacklist());
+					}					
+				}
 				preparedStatement = conn.prepareStatement(data);
 				preparedStatement.setString(1, w.getName());
 		        preparedStatement.setString(2, w.getLocation().getServer());
@@ -152,10 +180,11 @@ public interface TableV
 		        preparedStatement.setString(10, w.getOwner());
 		        preparedStatement.setString(11, w.getPermission());
 		        preparedStatement.setString(12, w.getPassword());
-		        preparedStatement.setString(13, String.join(";", w.getMember()));
-		        preparedStatement.setDouble(14, w.getPrice());
+		        preparedStatement.setString(13, m);
+		        preparedStatement.setString(14, b);
+		        preparedStatement.setDouble(15, w.getPrice());
 		        
-		        int i = 15;
+		        int i = 16;
 		        for(Object o : whereObject)
 		        {
 		        	preparedStatement.setObject(i, o);
@@ -203,20 +232,31 @@ public interface TableV
 		        result = preparedStatement.executeQuery();
 		        while (result.next()) 
 		        {
+		        	ArrayList<String> m = new ArrayList<>();
+					if(result.getString("member") != null)
+					{
+						m = new ArrayList<String>(Arrays.asList(result.getString("member").split(";")));
+					}
+					ArrayList<String> b = new ArrayList<>();
+					if(result.getString("blacklist") != null)
+					{
+						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
+					}
 		        	return new Warp(result.getString("warpname"),
 		        			new ServerLocation(
 		        					result.getString("server"),
 		        					result.getString("world"),
 		        					result.getDouble("x"),
 		        					result.getDouble("y"),
-		        					result.getDouble("y"),
+		        					result.getDouble("z"),
 		        					result.getFloat("yaw"),
 		        					result.getFloat("pitch")),
 		        			result.getBoolean("hidden"),
 		        			result.getString("owner"),
 		        			result.getString("permission"),
 		        			result.getString("password"),
-		        			new ArrayList<String>(Arrays.asList(result.getString("member").split(";"))),
+		        			m,
+		        			b,
 		        			result.getDouble("price"));
 		        }
 		    } catch (SQLException e) 
@@ -392,20 +432,31 @@ public interface TableV
 		        ArrayList<Warp> list = new ArrayList<Warp>();
 		        while (result.next()) 
 		        {
+		        	ArrayList<String> m = new ArrayList<>();
+					if(result.getString("member") != null)
+					{
+						m = new ArrayList<String>(Arrays.asList(result.getString("member").split(";")));
+					}
+					ArrayList<String> b = new ArrayList<>();
+					if(result.getString("blacklist") != null)
+					{
+						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
+					}
 		        	Warp w = new Warp(result.getString("warpname"),
 		        			new ServerLocation(
 		        					result.getString("server"),
 		        					result.getString("world"),
 		        					result.getDouble("x"),
 		        					result.getDouble("y"),
-		        					result.getDouble("y"),
+		        					result.getDouble("z"),
 		        					result.getFloat("yaw"),
 		        					result.getFloat("pitch")),
 		        			result.getBoolean("hidden"),
 		        			result.getString("owner"),
 		        			result.getString("permission"),
 		        			result.getString("password"),
-		        			new ArrayList<String>(Arrays.asList(result.getString("member").split(";"))),
+		        			m,
+		        			b,
 		        			result.getDouble("price"));
 		        	list.add(w);
 		        }
@@ -434,7 +485,7 @@ public interface TableV
 		return null;
 	}
 	
-	default ArrayList<Object> getTopV(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
+	default ArrayList<Object> getTopV(BungeeTeleportManager plugin, String orderByColumn, boolean desc, int start, int end)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -442,29 +493,49 @@ public interface TableV
 		if (conn != null) 
 		{
 			try 
-			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameV 
-						+ "` ORDER BY "+orderByColumn+" DESC LIMIT "+start+", "+end;
+			{
+				String sql = "";
+				if(desc)
+				{
+					sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameV 
+							+ "` ORDER BY "+orderByColumn+" DESC LIMIT "+start+", "+end;
+				} else
+				{
+					sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameV 
+							+ "` ORDER BY "+orderByColumn+" ASC LIMIT "+start+", "+end;
+				}
+				
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
 		        ArrayList<Object> list = new ArrayList<Object>();
 		        while (result.next()) 
 		        {
+		        	ArrayList<String> m = new ArrayList<>();
+					if(result.getString("member") != null)
+					{
+						m = new ArrayList<String>(Arrays.asList(result.getString("member").split(";")));
+					}
+					ArrayList<String> b = new ArrayList<>();
+					if(result.getString("blacklist") != null)
+					{
+						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
+					}
 		        	Warp w = new Warp(result.getString("warpname"),
 		        			new ServerLocation(
 		        					result.getString("server"),
 		        					result.getString("world"),
 		        					result.getDouble("x"),
 		        					result.getDouble("y"),
-		        					result.getDouble("y"),
+		        					result.getDouble("z"),
 		        					result.getFloat("yaw"),
 		        					result.getFloat("pitch")),
 		        			result.getBoolean("hidden"),
 		        			result.getString("owner"),
 		        			result.getString("permission"),
 		        			result.getString("password"),
-		        			new ArrayList<String>(Arrays.asList(result.getString("member").split(";"))),
+		        			m,
+		        			b,
 		        			result.getDouble("price"));
 		        	list.add(w);
 		        }

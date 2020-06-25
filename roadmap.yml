@@ -1,29 +1,69 @@
+Build 2 =========================================================================================================================
+- /tpaignore <Spielername> | Ignoriert den Spieler für Tpas.
+- /tpaignorelist [Seitenzahl] [Spielername] | List für TpaIgnore.
+
 BungeeTeleportManager Build 1 =======================================================================================================================
 - BungeeCord ready
 - Mysql ready
-- +/back | Teleportiert dich zu deinem letzten Rückkehrpunkt | bhprtw.cmd.back
-- +/deathback | Telportiert dich zu deinem Todespunkt. Danach wird dieser gelöscht. | bhprtw.cmd.deathback
-- +/tpa <Spielername> | Schickt eine Teleportanfrage an den Spieler um sich zu Ihm zu teleportieren | bhprtw.cmd.tpa
-- +/tpahere <Spielername> | Schickt eine Teleportanfrage an den Spieler um ihn zu sich selbst zu teleportieren | bhprtw.cmd.tpahere
-- +/tpaccept <Spielername> | Akzeptiert eine Teleportanfrage an den Spieler (Man kann einfach den Text im Chat dafür anklicken) | bhprtw.cmd.tpaccept
-- +/tpdeny <Spielername> | Lehnt eine Teleportanfrage vom Spieler ab. (Man kann per Textklick ablehnen) | bhprtw.cmd.tpdeny
+- +/btm | Info Befehl | btm.cmd.btm
+- +/btm reload | Lädt alle Yaml-Datein neu. | btm.cmd.btm.reload
+- +/back | Teleportiert dich zu deinem letzten Rückkehrpunkt | btm.cmd.back.back
+- +/deathback | Telportiert dich zu deinem Todespunkt. Danach wird dieser gelöscht. | btm.cmd.deathback
+- +/homecreate <Homename> | Erstellt ein Home (Es kann auch /sethome genutzt werden) | btm.cmd.user.home.create
+- +/homeremove <Homename> | Löscht ein Home | btm.cmd.user.home.remove
+- +/homesdeleteserverworld <Server> <Welt> | Löscht alle Home die auf dem Server und dieser Welt ist. | btm.cmd.homesdeleteserverworld
+- +/home <Homename> [Spielername] | Teleportiert dich zum Home. Mit weiterem Argument, kann man sich zu dem Home des Spielers tp. | btm.cmd.home
+- +/homes [Spielername] | Zeigt dir deine Homes an. Mit weiterem Argument zeigt es die Homes des Spielers an. | btm.cmd.homes.self & btm.cmd.homes.other
+- +/homelist [Seitenzahl] | Zeigt alle Homes an, mit Spielernamen und ClickEvent. | btm.cmd.homelist
+- +/tpa <Spielername> | Schickt eine Teleportanfrage an den Spieler um sich zu Ihm zu teleportieren | btm.cmd.tpa
+- +/tpahere <Spielername> | Schickt eine Teleportanfrage an den Spieler um ihn zu sich selbst zu teleportieren | btm.cmd.tpahere
+- +/tpaccept <Spielername> | Akzeptiert eine Teleportanfrage an den Spieler (Man kann einfach den Text im Chat dafür anklicken) | btm.cmd.tpaccept
+- +/tpdeny <Spielername> | Lehnt eine Teleportanfrage vom Spieler ab. (Man kann per Textklick ablehnen) | btm.cmd.tpdeny
 - +/tptoggle | Toggle ob man Teleportanfragen automatisch ablehnt. | bhpertw.cmd.tptoggle
-- +/tpcancel | Bricht alle Teleportanfragen von oder zu einem selbst ab | bhprtw.cmd.tpcancel
-- +/tp <Spielername> | Man teleportiert sich zu einen Spieler ohne Anfrage | bhprtw.cmd.tp
-- +/tphere <Spielername> | Man teleportiert den Spieler ohne Anfrage zu sich | bhprtw.cmd.tphere
-- +/tpall | Teleportiert alle Spieler zu sich ohne Anfrage | bhprtw.cmd.tpall
-- +/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch] | Teleportiert sich direkt zu den Koordinaten | bhprtw.cmd.tppos
-- +/warcreate <WarpName> | Erstellet ein Warp. | bhprtw.cmd.warpcreate
+- +/tpquit | Bricht alle Teleportanfragen von oder zu einem selbst ab | btm.cmd.tpcancel
+- +/tp <Spielername> | Man teleportiert sich zu einen Spieler ohne Anfrage | btm.cmd.tp
+- +/tphere <Spielername> | Man teleportiert den Spieler ohne Anfrage zu sich | btm.cmd.tphere
+- +/tpall [Server] [Welt] | Teleportiert alle Spieler zu sich ohne Anfrage. Eventuell mit Server und Welt Angabe. | btm.cmd.tpall
+- +/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch] | Teleportiert sich direkt zu den Koordinaten | btm.cmd.tppos
+- +/warcreate <WarpName> | Erstellet ein Warp. | btm.cmd.warpcreate
 - +/warpremove <Warpname> | Löscht einen Warp | bhrptw.cmd.warpremove
-- +/warplist [Seitezahl] | Zeigt 50 Warp pro Seite an mit ClickEvent | bhprtw.cmd.warplist
-- +/warp <Warpname> | Warp zu dem Warp | bhprtw.cmd.warp
-- +/warpinfo <Warpname> | Alle Infos zum Warp | bhprtw.cmd.warpinfo
-- +/warpsetname <warpname> <neuer name> | Setzt ein neuer Name für den name | bhprtw.cmd.warpsetname
-- +/warpsetposition <warpname> | Setzt eine Neue Position für den Warp | bhprtw.cmd.warpsetposition
-- +/warpsetowner <warpname> <Spielername> | Setzt ein neuen Spieler oder die Void als Owner | bhprtw.cmd.setowner
-- +/warpsetpermission <warpname> <Permission> | Setzt eine neue Permission für den Warp | bhprtw.cmd.setpermission
-- +/warpsetpassword <warpname> <Password> | Setzt ein neues Passsword | bhprtw.cmd.setpassword
-- +/warpsetprice <warpname> <price> | Setzt ein neuen price | bhprtw.cmd.setprice
-- +/warphidden <warpname> | Versteck den Warp oder legt ihn offen. | bhprtw.cmd.hidden
-- +/warpaddmember <warpname> <Spielername> | Fügt ein Spieler als Mitglied hinzu | bhprtw.cmd.addmember
-- +/warpremovemember <warpname> <Spielername> | Entfernt einen Spieler als Mitglied | bhprtw.cmd.removemember
+- +/warplist [Seitezahl] | Zeigt 50 Warp pro Seite an mit ClickEvent | btm.cmd.warplist
+- +/warps [SeitenZahl] | Zeigt deine Warps an. | btm.cmd.warps
+- +/warp <Warpname>  <Spielername> | Warp zu dem Warp. Mit zusatz Argument, schickt man den Spieler zum Warp. | btm.cmd.warp & btm.bypass.warp.other
+- +/warpinfo <Warpname> | Alle Infos zum Warp | btm.cmd.warpinfo
+- +/warpsetname <warpname> <neuer name> | Setzt ein neuer Name für den name | btm.cmd.warpsetname
+- +/warpsetposition <warpname> | Setzt eine Neue Position für den Warp | btm.cmd.warpsetposition
+- +/warpsetowner <warpname> <Spielername> | Setzt ein neuen Spieler oder die Void als Owner | btm.cmd.setowner
+- +/warpsetpermission <warpname> <Permission> | Setzt eine neue Permission für den Warp | btm.cmd.setpermission
+- +/warpsetpassword <warpname> <Password> | Setzt ein neues Passsword | btm.cmd.setpassword
+- +/warpsetprice <warpname> <price> | Setzt ein neuen price | btm.cmd.setprice
+- +/warphidden <warpname> | Versteck den Warp oder legt ihn offen. | btm.cmd.hidden
+- +/warpaddmember <warpname> <Spielername> | Fügt ein Spieler als Mitglied hinzu | btm.cmd.addmember
+- +/warpremovemember <warpname> <Spielername> | Entfernt einen Spieler als Mitglied | btm.cmd.removemember
+- +/warpaddblacklist <warpname> <Spielername> | Fügt ein Spieler der blacklist hinzu | btm.cmd.addblacklist
+- +/warpremoveblacklist <warpname> <Spielername> | Entfernt einen Spieler von der blackliste | btm.cmd.removeblacklist
+- +Perms:
+  -+ btm.cmd.staff.home.homes.other | /homes <Seitenzahl> <Spielername>
+  -+ btm.cmd.staff.home.home.other | /home <Home> <Spielername>
+  -+ btm.count.home.world.<worldname|worldclustername>.<Zahl>
+  -+ btm.count.home.server.<servername|serverclustername>.<zahl>
+  -+ btm.count.home.global.<zahl>
+  -+ btm.count.warp.world.<worldname|worldclustername>.<Zahl>
+  -+ btm.count.warp.server.<servername|serverclustername>.<zahl>
+  -+ btm.count.warp.global.<zahl>
+  -+ btm.bypass.back.cost | Bypass für die Kosten für back
+  -+ btm.bypass.home.admin | Bypass für admins bezüglich Homes
+  -+ btm.bypass.home.toomany | Bypass um mehr homes zu haben und zu nutzten als man sollte
+  -+ btm.bypass.home.cost | Bypass für die Kosten zur Erstellung und nutzung der Homes
+  -+ btm.bypass.home.forbidden | Bypass für um in verbotenen Welten & Server trotzdem Homes setzten zu können
+  -+ btm.bypass.teleport.admin | Bypass für Admins bezüglich teleports
+  -+ btm.bypass.teleport.tpatoggle | Bypass für den /tpatoggle um trotzdem eine Anfrage an den Spieler zu stellen
+  -+ btm.bypass.teleport.cost | Bypass für den Kosten bezüglich der Nutztung von TpA
+  -+ btm.bypass.teleport.forbidden | Bypass um in verbotenen Welten & Server trotzdem Tpa senden zu können.
+  -+ btm.bypass.warp.admin | Bypass für admins bezüglich Warps
+  -+ btm.bypass.warp.blacklist | Bypass um durch Blacklisten durch zu kommen, wenn man draufsteht
+  -+ btm.bypass.warp.toomany | Bypass um Warps trotzdem erstellen und nutzten zu können wenn man schon zu viele hat
+  -+ btm.bypass.warp.cost | Bypass für die Kosten zur Erstellung und benutztung von Warps
+  -+ btm.bypass.warp.forbidden | Bypass um in verbotenen Welten & Server trotzdem Warps erstellen zu können.
+  -+ btm.bypass.warp.other | Bypass um andere mit /warp <Warpname> <Spielername> zu warps teleportieren zu können.
+=====================================================================================================================

@@ -114,7 +114,8 @@ public class BungeeBridge
 					if(function[1].contains(idhover))
 					{
 						String[] at = function[1].split(sepw);
-						ChatApi.hoverEvent(newtc,HoverEvent.Action.valueOf(at[1]), at[2]);
+						ChatApi.hoverEvent(newtc,HoverEvent.Action.valueOf(at[1]),
+								BungeeTeleportManager.getPlugin().getYamlHandler().getL().getString(at[2]));
 					}
 					if(function[1].contains(idclick))
 					{
@@ -127,11 +128,13 @@ public class BungeeBridge
 					if(function[1].contains(idhover))
 					{
 						String[] at = function[1].split(sepw);
-						ChatApi.hoverEvent(newtc,HoverEvent.Action.valueOf(at[1]), at[2]);
+						ChatApi.hoverEvent(newtc,HoverEvent.Action.valueOf(at[1]), 
+								BungeeTeleportManager.getPlugin().getYamlHandler().getL().getString(at[2]));
 					} else if(function[2].contains(idhover))
 					{
 						String[] at = function[2].split(sepw);
-						ChatApi.hoverEvent(newtc,HoverEvent.Action.valueOf(at[1]), at[2]);
+						ChatApi.hoverEvent(newtc,HoverEvent.Action.valueOf(at[1]), 
+								BungeeTeleportManager.getPlugin().getYamlHandler().getL().getString(at[2]));
 					}
 					if(function[1].contains(idclick))
 					{

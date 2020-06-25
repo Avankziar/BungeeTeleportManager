@@ -47,16 +47,31 @@ public class BackMessageListener implements PluginMessageListener
             		new BukkitRunnable()
 					{
             			int i = 0;
+            			Location loc = new Location(plugin.getServer().getWorld(worldname), x, y, z, yaw, pitch);
 						@Override
 						public void run()
 						{
 							if(plugin.getServer().getPlayer(playername) != null)
 							{
-								if(plugin.getServer().getPlayer(playername).isOnline())
+								Player player = plugin.getServer().getPlayer(playername);
+								if(loc != null)
 								{
-									Player player = plugin.getServer().getPlayer(playername);
-									player.teleport(new Location(plugin.getServer().getWorld(worldname), x, y, z, yaw, pitch));
-									cancel();
+									if(player.isOnline())
+									{
+										player.teleport(loc);
+										if(plugin.getBackHelper().cooldown.containsKey(player))
+										{
+											plugin.getBackHelper().cooldown.replace(
+													player, System.currentTimeMillis()+
+													1000L*plugin.getYamlHandler().get().getLong("BackCooldown", 10));
+										} else
+										{
+											plugin.getBackHelper().cooldown.put(
+													player, System.currentTimeMillis()+
+													1000L*plugin.getYamlHandler().get().getLong("BackCooldown", 10));
+										}
+										cancel();
+									}
 								}
 							}
 							i++;
@@ -65,7 +80,7 @@ public class BackMessageListener implements PluginMessageListener
 								cancel();
 							}
 						}
-					}.runTaskTimer(plugin, 1L, 2L);
+					}.runTaskTimer(plugin, 5L, 5L);
             	    return;
             	} else if(task.equals(StringValues.BACK_REQUESTNEWBACK))
             	{

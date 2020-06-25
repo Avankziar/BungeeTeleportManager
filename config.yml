@@ -1,13 +1,27 @@
 Language: 'English'
-Prefix: '&7[&dBuHoPoReTeWa&7] &r'
-ForbiddenServer: false #If true, so will the server sending the bungeecord the list of forbiddenServer/World for Teleports
+Prefix: '&7[&dBungeeTeleportManager&7] &r'
 Bungee: true
 ServerName: 'hub'
+
+UseGlobalPermissionLevel: true #If you wish, that the plugin use the permission level from global
+UseServerPermissionLevel: true #If you wish, that the plugin use the permission level from server
+UseWorldPermissionLevel: true #If you wish, that the plugin use the permission level from world
+
+ServerClusterActive: false
 ServerCluster: 'economyrange' #If you wish, thats multiple Server have the same perm for homes and warps
-ServerClusterBeforeServer: false
-ServerClusterServerList:
+ServerClusterList:
 - hub
-MustConfirmWarpWhereYouPayForIt: false
+WorldClusterActive: false
+WorldClusterList:
+- hubCluster
+- farmweltCluster
+hubCluster:
+- hubWorld
+- hubNether
+farmweltCluster:
+- farmworld_1
+- farmworld_2
+
 Mysql:
   Status: false
   Host: '127.0.0.1'
@@ -18,41 +32,49 @@ Mysql:
   VerifyServerCertificate: false
   User: 'admin'
   Password: 'not_0123456789'
-  TableNameI: 'bhprtwHomes'
-  TableNameII: 'bhprtwPortals'
-  TableNameIII: 'bhprtwBack'
-  TableNameIV: 'bhprtwRespawnPoints'
-  TableNameV: 'bhprtwWarps'
-
-CommandArgumentLanguage: 'english' #english, german, both
+  TableNameI: 'btmHomes'
+  TableNameII: 'btmPortals'
+  TableNameIII: 'btmBack'
+  TableNameIV: 'btmRespawnPoints'
+  TableNameV: 'btmWarps'
 
 isHomesActive: true
 isPortalsActive: true
-isRespawnPoint: true
+isRespawnPointActive: true
 isTeleportsActive: true
 isWarpsActive: true
 
-CancelInviteRun: 15 #Scheduler nach wieviel sekunden die Anfrage ausläuft
+CancelInviteRun: 15 #Scheduler after how many seconds the tp request run out.
 
-CostPerBack: 100.0
+BackCooldown: 5 #Second cooldown
+
+DeleteDeathBackAfterUsing: true #Delete DeathBack if it is true
+
+CostPerBackRequest: 100.0
 CostPerHomeTeleport: 100.0
 CostPerHomeCreate: 1000.0
 CostPerTeleportRequest: 100.0
-CostPerCreateWarp: 9142.0
+CostPerWarpCreate: 9142.0
+MustConfirmWarpWhereYouPayForIt: true
+NotifyPlayerWhenUseHome: false  #TODO
+NotifyPlayerWhenUseTPA: false  #TODO
 
 ForbiddenServerHome:
 - hub
 ForbiddenWorldHome:
-- hubsworld
-ForbiddenServerTeleport: #For tpa and tpahere
-- hub
-ForbiddenWorldTeleport: #For tpa and tpahere
 - hubsworld
 ForbiddenServerWarp: #For the Creation
 - hub
 ForbiddenWorldWarp: #For the Creation
 - hubsworld
 
+UploadForbiddenTeleportList: false #If true, so will the server sending the bungeecord the list of forbiddenServer/World for Teleports
+ForbiddenServerTeleport: #For tpa and tpahere
+- hub
+ForbiddenWorldTeleport: #For tpa and tpahere
+- hubsworld
+
+# DO NOT CHANGE THINGS BELOW!
 # => <origin+message>~click@SUGGEST_COMMAND@/blubb~hover@SHOW_TEXT@messagepath
 # => click@SUGGEST_COMMAND@/blubb
 # => hover@SHOW_TEXTt@textpath

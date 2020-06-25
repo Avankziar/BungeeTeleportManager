@@ -1,9 +1,5 @@
 package main.java.me.avankziar.spigot.bungeeteleportmanager.handler;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
@@ -25,28 +21,10 @@ public class AdvanceEconomyHandler
 	{
 		if(sc)
 		{
-			Bukkit.getPluginManager().callEvent(new de.secretcraft.economy.spigot.events.EconomyLoggerEvent(
-					LocalDateTime.now(), 
-					fromUUID,
-					fromName, 
-					toUUID, 
-					toName,
-					orderer, 
-					price, 
-					de.secretcraft.economy.spigot.events.EconomyLoggerEvent.Type.valueOf(type),
-					comment));
+			AdvanceEconomySC.EconomyLogger(fromUUID, fromName, toUUID, toName, orderer, price, type, comment);
 		} else
 		{
-			Bukkit.getPluginManager().callEvent(new main.java.me.avankziar.advanceeconomy.spigot.events.EconomyLoggerEvent(
-					LocalDateTime.now(), 
-					fromUUID,
-					fromName, 
-					toUUID, 
-					toName,
-					orderer, 
-					price, 
-					main.java.me.avankziar.advanceeconomy.spigot.events.EconomyLoggerEvent.Type.valueOf(type),
-					comment));
+			AdvanceEconomyNormal.EconomyLogger(fromUUID, fromName, toUUID, toName, orderer, price, type, comment);
 		}
 	}
 	
@@ -54,18 +32,10 @@ public class AdvanceEconomyHandler
 	{
 		if(sc)
 		{
-			Bukkit.getPluginManager().callEvent(new de.secretcraft.economy.spigot.events.TrendLoggerEvent(
-					LocalDate.now(),
-					player.getUniqueId().toString(), 
-					price, 
-					plugin.getEco().getBalance(player)));
+			AdvanceEconomySC.TrendLogger(plugin, player, price);
 		} else
 		{
-			Bukkit.getPluginManager().callEvent(new main.java.me.avankziar.advanceeconomy.spigot.events.TrendLoggerEvent(
-					LocalDate.now(),
-					player.getUniqueId().toString(), 
-					price, 
-					plugin.getEco().getBalance(player)));
+			AdvanceEconomyNormal.TrendLogger(plugin, player, price);
 		}
 	}
 }

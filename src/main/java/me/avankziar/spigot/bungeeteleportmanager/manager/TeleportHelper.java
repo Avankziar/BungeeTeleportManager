@@ -29,7 +29,7 @@ public class TeleportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 		}
 	}
 	
@@ -45,7 +45,7 @@ public class TeleportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 		}
 	}
 	
@@ -61,7 +61,7 @@ public class TeleportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 		}
 	}
 	
@@ -75,7 +75,7 @@ public class TeleportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 		}
 	}
 	
@@ -83,6 +83,11 @@ public class TeleportHelper
 	{
 		if(args.length == 1)
 		{
+			if(player.getName().equals(args[0]))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.TpaTooYourself")));
+				return;
+			}
 			Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
 					Utility.convertNameToUUID(args[0]), args[0], type);
 			plugin.getTeleportHandler().preTpSendInvite(player,tp);
@@ -91,7 +96,7 @@ public class TeleportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 		}
 	}
 	
@@ -99,6 +104,11 @@ public class TeleportHelper
 	{
 		if(args.length == 1)
 		{
+			if(player.getName().equals(args[0]))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.TpaTooYourself")));
+				return;
+			}
 			Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
 					Utility.convertNameToUUID(args[0]), args[0], type);
 			plugin.getTeleportHandler().tpForce(player,tp);
@@ -107,21 +117,24 @@ public class TeleportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 		}
 	}
 	
 	public void tpAll(Player player, String[] args, Teleport.Type type)
 	{
-		if(args.length == 1)
+		if(args.length == 0)
 		{
-			plugin.getTeleportHandler().tpAll(player);
+			plugin.getTeleportHandler().tpAll(player, false, "", "");
+		} else if(args.length == 2) 
+		{
+			plugin.getTeleportHandler().tpAll(player, true, args[0], args[1]);
 		} else
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 		}
 	}
 	
@@ -134,7 +147,7 @@ public class TeleportHelper
 			{
 				player.spigot().sendMessage(ChatApi.clickEvent(
 						plugin.getYamlHandler().getL().getString("InputIsWrong"),
-						ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+						ClickEvent.Action.RUN_COMMAND, "/btm"));
 				return;
 			}
 			sl = new ServerLocation(
@@ -150,7 +163,7 @@ public class TeleportHelper
 			{
 				player.spigot().sendMessage(ChatApi.clickEvent(
 						plugin.getYamlHandler().getL().getString("InputIsWrong"),
-						ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+						ClickEvent.Action.RUN_COMMAND, "/btm"));
 				return;
 			}
 			sl = new ServerLocation(
@@ -166,7 +179,7 @@ public class TeleportHelper
 			{
 				player.spigot().sendMessage(ChatApi.clickEvent(
 						plugin.getYamlHandler().getL().getString("InputIsWrong"),
-						ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+						ClickEvent.Action.RUN_COMMAND, "/btm"));
 				return;
 			}
 			sl = new ServerLocation(
@@ -183,7 +196,7 @@ public class TeleportHelper
 			{
 				player.spigot().sendMessage(ChatApi.clickEvent(
 						plugin.getYamlHandler().getL().getString("InputIsWrong"),
-						ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+						ClickEvent.Action.RUN_COMMAND, "/btm"));
 				return;
 			}
 			sl = new ServerLocation(
@@ -199,7 +212,7 @@ public class TeleportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 		}
 	}
 

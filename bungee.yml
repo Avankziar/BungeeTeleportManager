@@ -1,4 +1,4 @@
-name: BungeeTeleport
-main: main.java.me.avankziar.bungee.bungeeteleport.BungeeTeleportManager
+name: BungeeTeleportManager
+main: main.java.me.avankziar.bungee.bungeeteleportmanager.BungeeTeleportManager
 version: 1
 author: Avankziar

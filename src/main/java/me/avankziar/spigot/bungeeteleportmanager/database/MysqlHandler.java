@@ -203,7 +203,7 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 		return null;
 	}
 	
-	public ArrayList<?> getTop(Type type, String orderByColumn, int start, int end)
+	public ArrayList<?> getTop(Type type, String orderByColumn, boolean desc, int start, int end)
 	{
 		switch(type)
 		{
@@ -212,11 +212,11 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 		case PORTALS:
 			return TableII.super.getTopII(plugin, orderByColumn, start, end);
 		case BACK:
-			return TableIII.super.getTopIII(plugin, orderByColumn, start, end);
+			return TableIII.super.getTopIII(plugin, orderByColumn, desc, start, end);
 		case RESPAWNPOINTS:
 			return TableIV.super.getTopIV(plugin, orderByColumn, start, end);
 		case WARPS:
-			return TableV.super.getTopV(plugin, orderByColumn, start, end);
+			return TableV.super.getTopV(plugin, orderByColumn, desc, start, end);
 		}
 		return null;
 	}

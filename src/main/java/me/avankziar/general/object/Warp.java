@@ -12,17 +12,20 @@ public class Warp
 	private String password;
 	private ArrayList<String> member;
 	private double price;
+	private ArrayList<String> blacklist;
 	
 	public Warp(String name, ServerLocation location, boolean hidden,
 			String owner, String permission, String password,
-			ArrayList<String> member, double price)
+			ArrayList<String> member, ArrayList<String> blacklist, double price)
 	{
 		setName(name);
 		setLocation(location);
+		setOwner(owner);
 		setHidden(hidden);
 		setPermission(permission);
 		setPassword(password);
 		setMember(member);
+		setBlacklist(blacklist);
 		setPrice(price);
 	}
 
@@ -104,5 +107,15 @@ public class Warp
 	public void setPrice(double price)
 	{
 		this.price = price;
+	}
+
+	public ArrayList<String> getBlacklist()
+	{
+		return blacklist;
+	}
+
+	public void setBlacklist(ArrayList<String> blacklist)
+	{
+		this.blacklist = blacklist;
 	}
 }

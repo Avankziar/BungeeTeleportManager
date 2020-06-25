@@ -47,6 +47,7 @@ public class BackHandler
 			out.writeDouble(back.getLocation().getZ());
 			out.writeFloat(back.getLocation().getYaw());
 			out.writeFloat(back.getLocation().getPitch());
+			out.writeBoolean(back.isToggle());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -72,6 +73,7 @@ public class BackHandler
 			out.writeDouble(back.getLocation().getZ());
 			out.writeFloat(back.getLocation().getYaw());
 			out.writeFloat(back.getLocation().getPitch());
+			out.writeBoolean(back.isToggle());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -130,7 +132,7 @@ public class BackHandler
         player.sendPluginMessage(plugin, StringValues.BACK_TOBUNGEE, stream.toByteArray());
 	}
 	
-	public void sendPlayerDeathBack(Player player, Back back)
+	public void sendPlayerDeathBack(Player player, Back back, boolean deleteDeathBack)
 	{
 		if(!plugin.isBungee())
 		{
@@ -150,6 +152,7 @@ public class BackHandler
 			out.writeFloat(back.getLocation().getYaw());
 			out.writeFloat(back.getLocation().getPitch());
 			out.writeBoolean(back.isToggle());
+			out.writeBoolean(deleteDeathBack);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

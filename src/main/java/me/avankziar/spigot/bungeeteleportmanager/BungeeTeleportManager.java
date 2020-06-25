@@ -15,15 +15,19 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.BungeeBrid
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.commands.CommandHelper;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.commands.MultipleCommandExecutor;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.commands.TABCompletion;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlSetup;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.YamlHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.AdvanceEconomyHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.BackListener;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.CustomTeleportListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.ServerAndWordListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.BackHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.BackHelper;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.BackMessageListener;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.CustomHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.CustomMessageListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeHelper;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeMessageListener;
@@ -58,6 +62,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private boolean isWarp = false;
 	private BackHandler backHandler;
 	private BackHelper backHelper;
+	private CustomHandler customHandler;
 	private HomeHandler homeHandler;
 	private HomeHelper homeHelper;
 	private TeleportHandler teleportHandler;
@@ -73,6 +78,8 @@ public class BungeeTeleportManager extends JavaPlugin
 		log = getLogger();
 		yamlHandler = new YamlHandler(plugin);
 		utility = new Utility(plugin);
+		homes = new LinkedHashMap<String, ArrayList<String>>();
+		warps = new LinkedHashMap<String, ArrayList<String>>();
 		if (yamlHandler.get().getBoolean("Mysql.Status", false) == true)
 		{
 			mysqlHandler = new MysqlHandler(plugin);
@@ -83,12 +90,13 @@ public class BungeeTeleportManager extends JavaPlugin
 			Bukkit.getPluginManager().getPlugin(pluginName).getPluginLoader().disablePlugin(this);
 			return;
 		}
-		homes = new LinkedHashMap<String, ArrayList<String>>();
-		warps = new LinkedHashMap<String, ArrayList<String>>();
 		bungeeBridge = new BungeeBridge(plugin);
 		commandHelper = new CommandHelper(plugin);
 		backHelper = new BackHelper(plugin);
 		backHandler = new BackHandler(plugin);
+		customHandler = new CustomHandler(plugin);
+		homeHelper = new HomeHelper(plugin);
+		homeHandler = new HomeHandler(plugin);
 		teleportHelper = new TeleportHelper(plugin);
 		teleportHandler = new TeleportHandler(plugin);
 		warpHelper = new WarpHelper(plugin);
@@ -164,8 +172,13 @@ public class BungeeTeleportManager extends JavaPlugin
 		{
 			getCommand("sethome").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("homecreate").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("delhome").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("delhome").setTabCompleter(new TABCompletion());
 			getCommand("homeremove").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("homeremove").setTabCompleter(new TABCompletion());
+			getCommand("homesdeleteserverworld").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("home").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("home").setTabCompleter(new TABCompletion());
 			getCommand("homes").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("homelist").setExecutor(new MultipleCommandExecutor(plugin));
 		}
@@ -178,8 +191,8 @@ public class BungeeTeleportManager extends JavaPlugin
 			//Request editing
 			getCommand("tpaccept").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("tpdeny").setExecutor(new MultipleCommandExecutor(plugin));
-			getCommand("tpcancel").setExecutor(new MultipleCommandExecutor(plugin));
-			getCommand("tptoggle").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("tpaquit").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("tpatoggle").setExecutor(new MultipleCommandExecutor(plugin));
 			
 			//Send Request
 			getCommand("tpa").setExecutor(new MultipleCommandExecutor(plugin));
@@ -198,17 +211,22 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand("warpremove").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warplist").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warp").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("warp").setTabCompleter(new TABCompletion());
+			getCommand("warps").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warpinfo").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("warpinfo").setTabCompleter(new TABCompletion());
 			getCommand("warpsetname").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warpsetposition").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warpsetowner").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warpsetpermission").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warpsetpassword").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warpsetprice").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("warphidden").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warpaddmember").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warpremovemember").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("warpaddblacklist").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("warpremoveblacklist").setExecutor(new MultipleCommandExecutor(plugin));
 		}
-		//getCommand("money").setTabCompleter(new TABCompletion());
 	}
 	
 	public void ListenerSetup()
@@ -216,6 +234,8 @@ public class BungeeTeleportManager extends JavaPlugin
 		PluginManager pm = getServer().getPluginManager();
 		getServer().getMessenger().registerOutgoingPluginChannel(this, StringValues.BACK_TOBUNGEE);
 		getServer().getMessenger().registerIncomingPluginChannel(this, StringValues.BACK_TOSPIGOT, new BackMessageListener(this));
+		getServer().getMessenger().registerOutgoingPluginChannel(this, StringValues.CUSTOM_TOBUNGEE);
+		getServer().getMessenger().registerIncomingPluginChannel(this, StringValues.CUSTOM_TOSPIGOT, new CustomMessageListener(this));
 		getServer().getMessenger().registerOutgoingPluginChannel(this, StringValues.HOME_TOBUNGEE);
 		getServer().getMessenger().registerIncomingPluginChannel(this, StringValues.HOME_TOSPIGOT, new HomeMessageListener(this));
 		getServer().getMessenger().registerOutgoingPluginChannel(this, StringValues.TP_TOBUNGEE);
@@ -224,6 +244,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		getServer().getMessenger().registerIncomingPluginChannel(this, StringValues.WARP_TOSPIGOT, new WarpMessageListener(this));
 		pm.registerEvents(new BackListener(plugin), plugin);
 		pm.registerEvents(new ServerAndWordListener(plugin), plugin);
+		pm.registerEvents(new CustomTeleportListener(plugin), plugin);
 	}
 	
 	public boolean reload()
@@ -389,6 +410,11 @@ public class BungeeTeleportManager extends JavaPlugin
 	public BackHandler getBackHandler()
 	{
 		return backHandler;
+	}
+	
+	public CustomHandler getCustomHandler()
+	{
+		return customHandler;
 	}
 
 	public TeleportHelper getTeleportHelper()

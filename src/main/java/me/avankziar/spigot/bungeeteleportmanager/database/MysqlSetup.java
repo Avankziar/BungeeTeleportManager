@@ -30,18 +30,18 @@ public class MysqlSetup
 		{
 			return false;
 		}
-		if(!setupDatabaseII())
+		/*if(!setupDatabaseII())
 		{
 			return false;
-		}
+		}*/
 		if(!setupDatabaseIII())
 		{
 			return false;
 		}
-		if(!setupDatabaseIV())
+		/*if(!setupDatabaseIV())
 		{
 			return false;
-		}
+		}*/
 		if(!setupDatabaseV())
 		{
 			return false;
@@ -269,6 +269,7 @@ public class MysqlSetup
 		        		+ " permission text,"
 		        		+ " password text,"
 		        		+ " member longtext,"
+		        		+ " blacklist longtext,"
 		        		+ " price double DEFAULT '0.00');";
 		        query = conn.prepareStatement(data);
 		        query.execute();

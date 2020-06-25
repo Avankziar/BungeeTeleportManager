@@ -47,6 +47,7 @@ public class WarpMessageListener implements PluginMessageListener
                 	new BukkitRunnable()
 					{
             			int i = 0;
+            			Location loc = new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
 						@Override
 						public void run()
 						{
@@ -54,16 +55,20 @@ public class WarpMessageListener implements PluginMessageListener
 							{
 								if(plugin.getServer().getPlayer(playerName).isOnline())
 								{
-									Player player = plugin.getServer().getPlayer(playerName);
-									if(Bukkit.getWorld(worldName) == null)
+									if(loc != null)
 									{
+										Player player = plugin.getServer().getPlayer(playerName);
+										if(Bukkit.getWorld(worldName) == null)
+										{
+											cancel();
+											return;
+										}
+										player.teleport(loc);
+										player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.WarpTo")
+												.replace("%warp%", warpName)));
 										cancel();
 										return;
 									}
-									player.teleport(new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch));
-									player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.WarpTo")
-											.replace("%warp%", warpName)));
-									cancel();
 								}
 							}
 							i++;
@@ -77,8 +82,11 @@ public class WarpMessageListener implements PluginMessageListener
             	}
             } catch (IOException e) 
             {
-    			e.printStackTrace();
-    		}
+    			return;
+    		} catch(NullPointerException e)
+            {
+    			return;
+            }
 		}
 	}
 }

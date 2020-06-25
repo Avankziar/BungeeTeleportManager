@@ -7,7 +7,9 @@ import java.util.logging.Logger;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.listener.TeleportListener;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.BackHandler;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.BackMessageListener;
+import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.CustomMessageListener;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.HomeHandler;
+import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.HomeMessageListener;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.TeleportHandler;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.TeleportMessageListener;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.WarpHandler;
@@ -82,11 +84,15 @@ public class BungeeTeleportManager extends Plugin
 	{
 		PluginManager pm = getProxy().getPluginManager();
 		pm.registerListener(plugin, new BackMessageListener(plugin));
+		pm.registerListener(plugin, new CustomMessageListener(plugin));
+		pm.registerListener(plugin, new HomeMessageListener(plugin));
 		pm.registerListener(plugin, new TeleportMessageListener(plugin));
 		pm.registerListener(plugin, new TeleportListener(plugin));
 		pm.registerListener(plugin, new WarpMessageListener(plugin));
 		getProxy().registerChannel(StringValues.BACK_TOBUNGEE);
 		getProxy().registerChannel(StringValues.BACK_TOSPIGOT);
+		getProxy().registerChannel(StringValues.CUSTOM_TOBUNGEE);
+		getProxy().registerChannel(StringValues.CUSTOM_TOSPIGOT);
 		getProxy().registerChannel(StringValues.HOME_TOBUNGEE);
 		getProxy().registerChannel(StringValues.HOME_TOSPIGOT);
 		getProxy().registerChannel(StringValues.TP_TOBUNGEE);

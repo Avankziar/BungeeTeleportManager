@@ -17,13 +17,11 @@ import main.java.me.avankziar.general.object.Teleport;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.event.EventHandler;
 
 public class TeleportMessageListener implements Listener	
 {
 	private BungeeTeleportManager plugin;
-	private ScheduledTask runTask;
 	
 	public TeleportMessageListener(BungeeTeleportManager plugin)
 	{
@@ -53,9 +51,11 @@ public class TeleportMessageListener implements Listener
         	String fromName = in.readUTF();
         	String toName = in.readUTF();
         	String type = in.readUTF();
+        	boolean bypass = in.readBoolean();
         	if(plugin.getBackHandler().getBackLocations().get(toName) != null)
         	{
-        		if(plugin.getBackHandler().getBackLocations().get(toName).isToggle())
+        		if(plugin.getBackHandler().getBackLocations().get(toName).isToggle()
+        				&& !bypass)
         		{
         			ByteArrayOutputStream streamout = new ByteArrayOutputStream();
     		        DataOutputStream out = new DataOutputStream(streamout);
@@ -116,6 +116,15 @@ public class TeleportMessageListener implements Listener
     			    plugin.getProxy().getPlayer(fromName).getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
     			    return;
         		}
+        		boolean isToggled = false;
+        		if(plugin.getBackHandler().getBackLocations().get(toName) != null)
+        		{
+        			if(plugin.getBackHandler().getBackLocations().get(toName).isToggle()
+            				&& bypass)
+            		{
+            			isToggled = true;
+            		}
+        		}
         		ByteArrayOutputStream streamout = new ByteArrayOutputStream();
 		        DataOutputStream out = new DataOutputStream(streamout);
 		        try {
@@ -123,6 +132,7 @@ public class TeleportMessageListener implements Listener
 					out.writeUTF(fromName);
 					out.writeUTF(toName);
 					out.writeUTF(type);
+					out.writeBoolean(isToggled);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -184,24 +194,29 @@ public class TeleportMessageListener implements Listener
         	boolean sendMessage = in.readBoolean();
         	String messageFrom = in.readUTF();
         	String messageTo = in.readUTF();
-        	runTask = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+        	plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
     		{
     			@Override
     			public void run()
     			{
-    				if(!plugin.getTeleportHandler().getPendingTeleports().containsKey(fromName))
+    				if(plugin.getTeleportHandler().getPendingTeleports().containsKey(fromName))
     	        	{
-    	        		return;
+    					plugin.getTeleportHandler().getPendingTeleports().remove(fromName);
+        	        	if(sendMessage)
+        	        	{
+        	        		if(plugin.getProxy().getPlayer(fromName) != null)
+        	        		{
+        	        			plugin.getProxy().getPlayer(fromName).sendMessage(ChatApi.tctl(messageFrom));
+        	        		}
+        	        		if(plugin.getProxy().getPlayer(toName) != null)
+        	        		{
+        	        			plugin.getProxy().getPlayer(toName).sendMessage(ChatApi.tctl(messageTo));
+        	        		}
+        	            	
+        	        	}
     	        	}
-    	        	plugin.getTeleportHandler().getPendingTeleports().remove(fromName);
-    	        	if(sendMessage)
-    	        	{
-    	        		plugin.getProxy().getPlayer(fromName).sendMessage(ChatApi.tctl(messageFrom));
-    	            	plugin.getProxy().getPlayer(toName).sendMessage(ChatApi.tctl(messageTo));
-    	        	}
-    				plugin.getProxy().getScheduler().cancel(runTask);
     			}
-    		}, 1L*runTaskPeriod, TimeUnit.SECONDS);
+    		}, runTaskPeriod, TimeUnit.SECONDS);
         	return;
         } else if(task.equals(StringValues.TP_ACCEPT))
         {
@@ -221,7 +236,7 @@ public class TeleportMessageListener implements Listener
         	{
         		if(sendMessage)
         		{
-        			plugin.getProxy().getPlayer(fromName).sendMessage(ChatApi.tctl(errormessage));
+        			plugin.getProxy().getPlayer(toName).sendMessage(ChatApi.tctl(errormessage));
         			return;
         		}
         	}
@@ -247,6 +262,7 @@ public class TeleportMessageListener implements Listener
         	plugin.getTeleportHandler().getPendingTeleports().remove(fromName);
         	plugin.getTeleportHandler().getPendingTeleports().remove(
         			plugin.getTeleportHandler().getPendingTeleportValueToName(fromName));
+        	message = message.replace("%fromplayer%", fromName).replace("%toplayer%", toName);
     		plugin.getProxy().getPlayer(fromName).sendMessage(ChatApi.tctl(message));
     		plugin.getProxy().getPlayer(toName).sendMessage(ChatApi.tctl(message));
         	return;
@@ -265,7 +281,14 @@ public class TeleportMessageListener implements Listener
         } else if(task.equals(StringValues.TP_ALL))
         {
         	String fromName = in.readUTF();
-        	plugin.getTeleportHandler().preTeleportAllPlayerToOnePlayer(fromName);
+        	boolean isSpecific = in.readBoolean();
+        	if(isSpecific)
+        	{
+        		
+        	} else
+        	{
+        		plugin.getTeleportHandler().preTeleportAllPlayerToOnePlayer(fromName);
+        	}
         	return;
         } else if(task.equals(StringValues.TP_POS))
         {
@@ -277,21 +300,21 @@ public class TeleportMessageListener implements Listener
         	double z = in.readDouble();
         	float yaw = in.readFloat();
         	float pitch = in.readFloat();
+        	String errorServerNotFound = in.readUTF();
         	ServerLocation location = new ServerLocation(server, worldName, x, y, z, yaw, pitch);
-        	plugin.getTeleportHandler().teleportPlayerToPosition(playerName, location);
+        	plugin.getTeleportHandler().teleportPlayerToPosition(playerName, location, errorServerNotFound);
         	return;
         } else if(task.equals(StringValues.TP_SENDWORLD))
         {
         	String playerName = in.readUTF();
-        	String server = in.readUTF();
         	String worldName = in.readUTF();
-        	double x = in.readDouble();
-        	double y = in.readDouble();
-        	double z = in.readDouble();
-        	float yaw = in.readFloat();
-        	float pitch = in.readFloat();
-        	ServerLocation location = new ServerLocation(server, worldName, x, y, z, yaw, pitch);
-        	plugin.getTeleportHandler().teleportPlayerToPosition(playerName, location);
+        	if(plugin.getTeleportHandler().getPlayerWorld().containsKey(playerName))
+        	{
+        		plugin.getTeleportHandler().getPlayerWorld().replace(playerName, worldName);
+        	} else
+        	{
+        		plugin.getTeleportHandler().getPlayerWorld().put(playerName, worldName);
+        	}
         	return;
         } else if(task.equals(StringValues.TP_SENDLIST))
         {

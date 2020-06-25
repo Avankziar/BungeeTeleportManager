@@ -1,45 +1,70 @@
 package main.java.me.avankziar.spigot.bungeeteleportmanager.commands;
 
-import java.util.HashMap;
-
-import org.bukkit.command.CommandSender;
-
-import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
-
-
-public abstract class CommandModule
+public class CommandModule
 {
-	public String argument;
-	public String permission;
-    public int minArgs;
-    public int maxArgs;
-    public String alias;
-    public String commandSuggest;
+	private String argument;
+	private String permission;
+	private int minArgs;
+	private int maxArgs;
+	private String commandSuggest;
 
-	public CommandModule(String argument, String permission, HashMap<String, CommandModule> map, 
-    		int minArgs, int maxArgs, String alias, String commandSuggest)
+	public CommandModule(String argument, String permission, 
+    		int minArgs, int maxArgs, String commandSuggest)
     {
         this.argument = argument;
         this.permission = permission;
         this.minArgs = minArgs;
         this.maxArgs = maxArgs;
-        this.alias = alias;
         this.commandSuggest = commandSuggest;
-        if(BungeeTeleportManager.getPlugin().getYamlHandler().get().getString("CommandArgumentLanguage").equalsIgnoreCase("english"))
-        {
-        	map.put(argument, this);
-        } else if(BungeeTeleportManager.getPlugin().getYamlHandler().get().getString("CommandArgumentLanguage").equalsIgnoreCase("german"))
-		{
-			map.put(alias, this);
-		} else if(BungeeTeleportManager.getPlugin().getYamlHandler().get().getString("CommandArgumentLanguage").equalsIgnoreCase("both")) 
-		{
-			map.put(argument, this);
-			map.put(alias, this);
-		} else
-		{
-			map.put(argument, this);
-		}
     }
-    
-    public abstract void run(CommandSender sender, String[] args);
+
+	public String getArgument()
+	{
+		return argument;
+	}
+
+	public void setArgument(String argument)
+	{
+		this.argument = argument;
+	}
+
+	public String getPermission()
+	{
+		return permission;
+	}
+
+	public void setPermission(String permission)
+	{
+		this.permission = permission;
+	}
+
+	public int getMinArgs()
+	{
+		return minArgs;
+	}
+
+	public void setMinArgs(int minArgs)
+	{
+		this.minArgs = minArgs;
+	}
+
+	public int getMaxArgs()
+	{
+		return maxArgs;
+	}
+
+	public void setMaxArgs(int maxArgs)
+	{
+		this.maxArgs = maxArgs;
+	}
+
+	public String getCommandSuggest()
+	{
+		return commandSuggest;
+	}
+
+	public void setCommandSuggest(String commandSuggest)
+	{
+		this.commandSuggest = commandSuggest;
+	}
 }

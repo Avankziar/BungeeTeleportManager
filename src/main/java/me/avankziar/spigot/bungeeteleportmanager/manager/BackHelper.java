@@ -1,15 +1,20 @@
 package main.java.me.avankziar.spigot.bungeeteleportmanager.manager;
 
+import java.util.HashMap;
+
 import org.bukkit.entity.Player;
 
+import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 import net.md_5.bungee.api.chat.ClickEvent;
 
 public class BackHelper
 {
 	private BungeeTeleportManager plugin;
+	public HashMap<Player,Long> cooldown = new HashMap<>();
 	
 	public BackHelper(BungeeTeleportManager plugin)
 	{
@@ -20,7 +25,16 @@ public class BackHelper
 	{
 		if(args.length == 0)
 		{
-			if(!player.hasPermission(StringValues.PERM_BYPASS_BACK))
+			if(cooldown.containsKey(player))
+			{
+				if(cooldown.get(player) >= System.currentTimeMillis())
+				{
+					player.sendMessage(
+							ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.BackCooldown")));
+					return;
+				}
+			}
+			if(!player.hasPermission(StringValues.PERM_BYPASS_BACK_COST))
 			{
 				double price = plugin.getYamlHandler().get().getDouble("CostPerBackRequest", 0.0);
         		if(price > 0.0)
@@ -30,7 +44,7 @@ public class BackHelper
         				if(!plugin.getEco().has(player, price))
         				{
         					player.sendMessage(
-                    				plugin.getYamlHandler().getL().getString("Economy.NoEnoughBalance"));
+                    				ChatApi.tl(plugin.getYamlHandler().getL().getString("Economy.NoEnoughBalance")));
         					return;
         				}
         				if(!plugin.getEco().withdrawPlayer(player, price).transactionSuccess())
@@ -54,7 +68,11 @@ public class BackHelper
             		}
         		}
 			}
-			plugin.getBackHandler().sendPlayerBack(player, plugin.getBackHandler().getNewBack(player));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdBack.RequestInProgress")));
+			Back newback = plugin.getBackHandler().getNewBack(player);
+			plugin.getBackHandler().sendPlayerBack(player, newback);
+			plugin.getMysqlHandler().updateData(
+					MysqlHandler.Type.BACK, newback, "`player_uuid` = ?", newback.getUuid().toString());
 		} else
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
@@ -68,7 +86,10 @@ public class BackHelper
 	{
 		if(args.length == 0)
 		{
-			plugin.getBackHandler().sendPlayerDeathBack(player, plugin.getBackHandler().getNewBack(player));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdBack.RequestInProgress")));
+			boolean deleteDeathBackAfterUsing = plugin.getYamlHandler().get().getBoolean("DeleteDeathBackAfterUsing", true);
+			Back newback = plugin.getBackHandler().getNewBack(player);
+			plugin.getBackHandler().sendPlayerDeathBack(player, newback, deleteDeathBackAfterUsing);
 		} else
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!

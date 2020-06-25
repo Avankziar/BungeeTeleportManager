@@ -15,7 +15,7 @@ public class ServerLocation
 		setServer(server);
 		setWordName(worldName);
 		setX(x);
-		setY(yaw);
+		setY(y);
 		setZ(z);
 		setYaw(yaw);
 		setPitch(pitch);

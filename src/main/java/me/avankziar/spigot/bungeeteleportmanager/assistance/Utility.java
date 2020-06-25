@@ -4,14 +4,20 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 
 import main.java.me.avankziar.general.object.Back;
+import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.ServerLocation;
+import main.java.me.avankziar.general.object.StringValues;
+import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 
 public class Utility
 {
@@ -39,9 +45,9 @@ public class Utility
 	public static String convertUUIDToName(String uuid)
 	{
 		String name = null;
-		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.BACK, "player_uuid", uuid))
+		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.BACK, "player_uuid = ?", uuid))
 		{
-			name = ((Back) plugin.getMysqlHandler().getData(MysqlHandler.Type.BACK, "player_uuid", uuid)).getName();
+			name = ((Back) plugin.getMysqlHandler().getData(MysqlHandler.Type.BACK, "player_uuid = ?", uuid)).getName();
 			return name;
 		}
 		return null;
@@ -50,9 +56,9 @@ public class Utility
 	public static UUID convertNameToUUID(String playername)
 	{
 		UUID uuid = null;
-		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.BACK, "player_name", playername))
+		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.BACK, "player_name = ?", playername))
 		{
-			uuid = ((Back) plugin.getMysqlHandler().getData(MysqlHandler.Type.BACK, "player_name", playername)).getUuid();
+			uuid = ((Back) plugin.getMysqlHandler().getData(MysqlHandler.Type.BACK, "player_name = ?", playername)).getUuid();
 			return uuid;
 		}
 		return null;
@@ -128,7 +134,7 @@ public class Utility
 				Double.parseDouble(split[3]),
 				Double.parseDouble(split[4]),
 				Float.parseFloat(split[5]), 
-				Float.parseFloat(split[5]));
+				Float.parseFloat(split[6]));
 		return sl;
 	}
 	
@@ -137,14 +143,120 @@ public class Utility
 		return sl.getServer()+";"+sl.getWordName()+";"+sl.getX()+";"+sl.getY()+";"+sl.getZ()+";"+sl.getYaw()+";"+sl.getPitch();
 	}
 	
+	public static String getLocationV2(ServerLocation sl)
+	{
+		return "&c"+sl.getServer()+" &e"+sl.getWordName()+" &2| &a"+
+				round(sl.getX(),1)+" "+
+				round(sl.getY(),1)+" "+
+				round(sl.getZ(),1)+" &2| &d"+
+				round(sl.getYaw(),1)+" "+
+				round(sl.getPitch(),1)+"&r ";
+	}
+	
 	public static ServerLocation getLocation(Location loc)
 	{
-		ServerLocation sl = new ServerLocation(plugin.getYamlHandler().get().getString("ServerName"), loc.getWorld().getName(),
+		ServerLocation sl = new ServerLocation(
+				plugin.getYamlHandler().get().getString("ServerName"),
+				loc.getWorld().getName(),
 				loc.getX(),
 				loc.getY(),
 				loc.getZ(),
 				loc.getYaw(), 
 				loc.getPitch());
 		return sl;
+	}
+	
+	public void setHomesTabCompleter(Player player)
+	{
+		ArrayList<Home> home = ConvertHandler.convertListI(
+				plugin.getMysqlHandler().getList(MysqlHandler.Type.HOMES,
+						"`id`", true, 0,
+						plugin.getMysqlHandler().lastID(MysqlHandler.Type.HOMES),
+						"`player_uuid` = ?", player.getUniqueId().toString()));
+		ArrayList<String> homes = new ArrayList<>();
+		for(Home h : home) homes.add(h.getHomeName());	
+		if(BungeeTeleportManager.homes.containsKey(player.getName()))
+		{
+			BungeeTeleportManager.homes.replace(player.getName(), homes);
+		} else
+		{
+			BungeeTeleportManager.homes.put(player.getName(), homes);
+		}
+	}
+	
+	public void setWarpsTabCompleter(Player player)
+	{
+		ArrayList<Warp> warp = ConvertHandler.convertListV(
+				plugin.getMysqlHandler().getTop(MysqlHandler.Type.WARPS,
+						"`id`", true, 0,
+						plugin.getMysqlHandler().lastID(MysqlHandler.Type.WARPS)));
+		ArrayList<String> warps = new ArrayList<>();
+		for(Warp w : warp)
+		{
+			if(w.getBlacklist() != null)
+			{
+				if(w.getBlacklist().contains(player.getUniqueId().toString()))
+				{
+					continue;
+				}
+			}
+			if(w.isHidden())
+			{
+				if(w.getOwner() != null)
+				{
+					if(w.getOwner().equals(player.getUniqueId().toString()))
+					{
+						warps.add(w.getName());
+						continue;
+					}
+				}
+				if(player.hasPermission(StringValues.PERM_BYPASS_WARP))
+				{
+					warps.add(w.getName());
+					continue;
+				}
+				if(w.getMember() != null)
+				{
+					if(w.getMember().contains(player.getUniqueId().toString()))
+					{
+						warps.add(w.getName());
+						continue;
+					}
+				}
+			} else if(!w.isHidden())
+			{
+				if(w.getOwner() != null)
+				{
+					if(w.getOwner().equals(player.getUniqueId().toString()))
+					{
+						warps.add(w.getName());
+						continue;
+					}
+				}
+				if(w.getPermission() != null)
+				{
+					if(player.hasPermission(w.getPermission()))
+					{
+						warps.add(w.getName());
+						continue;
+					} else if(w.getMember().contains(player.getUniqueId().toString()))
+					{
+						warps.add(w.getName());
+						continue;
+					}
+				} else
+				{
+					warps.add(w.getName());
+					continue;
+				}
+			}
+		}
+		if(BungeeTeleportManager.warps.containsKey(player.getName()))
+		{
+			BungeeTeleportManager.warps.replace(player.getName(), warps);
+		} else
+		{
+			BungeeTeleportManager.warps.put(player.getName(), warps);
+		}
 	}
 }

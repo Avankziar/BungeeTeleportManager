@@ -5,10 +5,28 @@ author: Avankziar
 api-version: 1.15
 description: A Home, Portal, Respawn, Teleport and Warp plugin
 commands:
+  btm:
+    description: The btm command
   back:
     description: The back command
   deathback:
     description: The deathback command
+  homecreate:
+    description: The homecreate command
+  sethome:
+    description: The sethome command
+  homeremove:
+    description: The homeremove command
+  delhome:
+    description: The homeremove command
+  homesdeleteserverworld:
+    description: The homeremove command
+  home:
+    description: The home command
+  homes:
+    description: The homes command
+  homelist:
+    description: The homelist command
   tpa:
     description: The tpa command
   tpahere:
@@ -17,9 +35,9 @@ commands:
     description: The tpaccept command
   tpdeny:
     description: The tpdeny command
-  tptoggle:
-    description: The tptoggle command
-  tpcancel:
+  tpatoggle:
+    description: The tpatoggle command
+  tpaquit:
     description: The tpcancel command
   tp:
     description: The tp command
@@ -37,6 +55,8 @@ commands:
     description: The warplist command
   warp:
     description: The warp command
+  warps:
+    description: The warps command
   warpinfo:
     description: The warpinfo command
   warpsetname:
@@ -51,83 +71,146 @@ commands:
     description: The warpsetpassword command
   warpsetprice:
     description: The warpsetprice command
+  warphidden:
+    description: The warpsethidden command
   warpaddmember:
     description: The warpaddmember command
   warpremovemember:
     description: The warpremovemember command
+  warpaddblacklist:
+    description: The warpaddblacklist command
+  warpremoveblacklist:
+    description: The warpremoveblacklist command
 permissions:
-  bhprtw.cmd.back:
+  btm.cmd.btm:
+    description: Enable to /btm
+    default: true
+  btm.cmd.reload:
+    description: Enable to /btm reload
+    default: false
+  btm.cmd.back.back:
     description: Enable to /back
     default: false
-  bhprtw.cmd.tpa:
+  btm.cmd.back.deathback:
+    description: Enable to /deathback
+    default: false
+  btm.cmd.user.home.create:
+    description: Enable to /homecreate <home>
+    default: true
+  btm.cmd.user.home.remove:
+    description: Enable to /homeremove <home>
+    default: true
+  btm.cmd.user.home.homes.self:
+    description: Enable to /homes
+    default: true
+  btm.cmd.staff.home.homes.other:
+    description: Enable to /homes <pagenumber> <player>
+    default: false
+  btm.cmd.user.home.home.self:
+    description: Enable to /home <home>
+    default: true
+  btm.cmd.staff.home.home.other:
+    description: Enable to /home <home> <player>
+    default: false
+  btm.cmd.staff.home.home.list:
+    description: Enable to /homelist <home> <player>
+    default: false
+  btm.cmd.admin.home.homesdeleteserverworld:
+    description: Enable to /homesdeleteserverworld <Server> <World>
+    default: false
+  btm.count.home.world.world.5:
+    description: Declares the maximum number of homes the player may create in the world or the world cluster.
+    default: false
+  btm.count.home.server.servername.5:
+    description: Declares the maximum number of homes the player may create in the server or the server cluster.
+    default: false
+  btm.count.home.global.5:
+    description: Declares the maximum number of homes the player may create globally.
+    default: false
+  btm.cmd.user.tp.tpa:
     description: Enable to /tpa
     default: false
-  bhprtw.cmd.tpahere:
+  btm.cmd.user.tp.tpahere:
     description: Enable to /tpahere
     default: false
-  bhprtw.cmd.tpaccept:
+  btm.cmd.user.tp.tpaccept:
     description: Enable to /tpaccept
     default: false
-  bhprtw.cmd.tpdeny:
+  btm.cmd.user.tp.tpdeny:
     description: Enable to /tpdeny
     default: false
-  bhprtw.cmd.tpcancel:
-    description: Enable to /tpcancel
+  btm.cmd.user.tp.tpaquit:
+    description: Enable to /tpaquit
     default: false
-  bhprtw.cmd.tptoggle:
-    description: Enable to /tptoggle
+  btm.cmd.user.tp.tpatoggle:
+    description: Enable to /tpatoggle
     default: false
-  bhprtw.cmd.tp:
+  btm.cmd.staff.tp.tp:
     description: Enable to /tp
     default: false
-  bhprtw.cmd.tphere:
+  btm.cmd.staff.tp.tphere:
     description: Enable to /tphere
     default: false
-  bhprtw.cmd.tpall:
+  btm.cmd.admin.tp.tpall:
     description: Enable to /tpall
     default: false
-  bhprtw.cmd.tppos:
+  btm.cmd.staff.tp.tppos:
     description: Enable to /tppos
     default: false
-  bhprtw.cmd.warpcreate:
+  btm.cmd.user.warp.create:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warpremove:
+  btm.cmd.user.warp.remove:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warplist:
+  btm.cmd.user.warp.list:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warp:
+  btm.cmd.user.warp.warp:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warpinfo:
+  btm.cmd.user.warp.info:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warpsetname:
+  btm.cmd.user.warp.setname:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warpsetposition:
+  btm.cmd.user.warp.setposition:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warpsetowner:
+  btm.cmd.user.warp.setowner:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warpsetpermission:
+  btm.cmd.user.warp.setpermission:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warpsetpassword:
+  btm.cmd.user.warp.setpassword:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warpsetprice:
+  btm.cmd.user.warp.setprice:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warphidden:
+  btm.cmd.user.warp.hidden:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warpaddmember:
+  btm.cmd.user.warp.addmember:
     description: Enable to /warp
     default: false
-  bhprtw.cmd.warpremovemember:
+  btm.cmd.user.warp.removemember:
     description: Enable to /warp
+    default: false
+  btm.cmd.user.warp.addblacklist:
+    description: Enable to /warp
+    default: false
+  btm.cmd.user.warp.removeblacklist:
+    description: Enable to /warp
+    default: false
+  btm.count.warp.world.world.5:
+    description: Declares the maximum number of warps the player may create in the world or the world cluster.
+    default: false
+  btm.count.warp.server.servername.5:
+    description: Declares the maximum number of warps the player may create in the server or the server cluster.
+    default: false
+  btm.count.warp.global.5:
+    description: Declares the maximum number of warps the player may create globally.
     default: false

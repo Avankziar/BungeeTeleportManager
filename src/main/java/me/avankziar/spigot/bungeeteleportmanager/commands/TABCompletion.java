@@ -32,7 +32,9 @@ public class TABCompletion implements TabCompleter
 				{
 					for (String homeName : BungeeTeleportManager.homes.get(player.getName())) 
 					{
-						if (homeName.startsWith(args[0])) 
+						if (homeName.startsWith(args[0])
+								|| homeName.toLowerCase().startsWith(args[0])
+								 || homeName.toUpperCase().startsWith(args[0])) 
 						{
 							list.add(homeName);
 						}
@@ -41,15 +43,41 @@ public class TABCompletion implements TabCompleter
 					return list;
 				} else
 				{
-					list.addAll(BungeeTeleportManager.homes.get(player.getName()));
-					Collections.sort(list);
+					if(BungeeTeleportManager.homes.get(player.getName()) != null)
+					{
+						list.addAll(BungeeTeleportManager.homes.get(player.getName()));
+						Collections.sort(list);
+					}
 					return list;
 				}
-			} else
+			}
+		} else if (cmd.getName().equalsIgnoreCase("delhome")
+				|| cmd.getName().equalsIgnoreCase("homeremove"))
+		{
+			if(args.length == 1)
 			{
-				list.addAll(BungeeTeleportManager.homes.get(player.getName()));
-				Collections.sort(list);
-				return list;
+				if (!args[0].equals("")) 
+				{
+					for (String homeName : BungeeTeleportManager.homes.get(player.getName())) 
+					{
+						if (homeName.startsWith(args[0])
+								|| homeName.toLowerCase().startsWith(args[0])
+								 || homeName.toUpperCase().startsWith(args[0])) 
+						{
+							list.add(homeName);
+						}
+					}
+					Collections.sort(list);
+					return list;
+				} else
+				{
+					if(BungeeTeleportManager.homes.get(player.getName()) != null)
+					{
+						list.addAll(BungeeTeleportManager.homes.get(player.getName()));
+						Collections.sort(list);
+					}
+					return list;
+				}
 			}
 		} else if (cmd.getName().equalsIgnoreCase("warp")) 
 		{
@@ -59,7 +87,9 @@ public class TABCompletion implements TabCompleter
 				{
 					for (String warpName : BungeeTeleportManager.warps.get(player.getName())) 
 					{
-						if (warpName.startsWith(args[0])) 
+						if (warpName.startsWith(args[0])
+								|| warpName.toLowerCase().startsWith(args[0])
+								|| warpName.toUpperCase().startsWith(args[0])) 
 						{
 							list.add(warpName);
 						}
@@ -68,15 +98,40 @@ public class TABCompletion implements TabCompleter
 					return list;
 				} else
 				{
-					list.addAll(BungeeTeleportManager.warps.get(player.getName()));
-					Collections.sort(list);
+					if(BungeeTeleportManager.warps.get(player.getName()) != null)
+					{
+						list.addAll(BungeeTeleportManager.warps.get(player.getName()));
+						Collections.sort(list);
+					}
 					return list;
 				}
-			} else
+			}
+		} else if (cmd.getName().equalsIgnoreCase("warpinfo")) 
+		{
+			if(args.length == 1)
 			{
-				list.addAll(BungeeTeleportManager.warps.get(player.getName()));
-				Collections.sort(list);
-				return list;
+				if (!args[0].equals("")) 
+				{
+					for (String warpName : BungeeTeleportManager.warps.get(player.getName())) 
+					{
+						if (warpName.startsWith(args[0])
+								|| warpName.toLowerCase().startsWith(args[0])
+								|| warpName.toUpperCase().startsWith(args[0])) 
+						{
+							list.add(warpName);
+						}
+					}
+					Collections.sort(list);
+					return list;
+				} else
+				{
+					if(BungeeTeleportManager.warps.get(player.getName()) != null)
+					{
+						list.addAll(BungeeTeleportManager.warps.get(player.getName()));
+						Collections.sort(list);
+					}
+					return list;
+				}
 			}
 		}
 		return null;

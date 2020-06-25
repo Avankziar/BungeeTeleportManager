@@ -42,6 +42,7 @@ public class HomeMessageListener implements Listener
         if(task.equals(StringValues.HOME_PLAYERTOPOSITION))
         {
         	String playerName = in.readUTF();
+        	String homeName = in.readUTF();
         	String server = in.readUTF();
         	String worldName = in.readUTF();
         	double x = in.readDouble();
@@ -50,7 +51,7 @@ public class HomeMessageListener implements Listener
         	float yaw = in.readFloat();
         	float pitch = in.readFloat();
         	ServerLocation location = new ServerLocation(server, worldName, x, y, z, yaw, pitch);
-        	plugin.getHomeHandler().teleportPlayerToHome(playerName, location);
+        	plugin.getHomeHandler().teleportPlayerToHome(playerName, location, homeName);
         	return;
         }
         return;
