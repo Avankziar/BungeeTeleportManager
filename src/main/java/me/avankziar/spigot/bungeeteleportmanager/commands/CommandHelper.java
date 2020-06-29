@@ -44,6 +44,7 @@ public class CommandHelper
 		map.put(StringValues.CMD_TELEPORT_TPDENY, new CommandModule(StringValues.CMD_TELEPORT_TPDENY, StringValues.PERM_TELEPORT_TPDENY, 0, 0, StringValues.SUGGEST_TPDENY));
 		map.put(StringValues.CMD_TELEPORT_TPCANCEL, new CommandModule(StringValues.CMD_TELEPORT_TPCANCEL, StringValues.PERM_TELEPORT_TPCANCEL, 0, 0, StringValues.SUGGEST_TPCANCEL));
 		map.put(StringValues.CMD_TELEPORT_TPTOGGLE, new CommandModule(StringValues.CMD_TELEPORT_TPTOGGLE, StringValues.PERM_TELEPORT_TPTOGGLE, 0, 0, StringValues.SUGGEST_TPTOGGLE));
+		map.put(StringValues.CMD_TELEPORT_TPAIGNORE, new CommandModule(StringValues.CMD_TELEPORT_TPAIGNORE, StringValues.PERM_TELEPORT_TPAIGNORE, 0, 0, StringValues.SUGGEST_TPAIGNORE));
 		map.put(StringValues.CMD_TELEPORT_TP, new CommandModule(StringValues.CMD_TELEPORT_TP, StringValues.PERM_TELEPORT_TP, 0, 0, StringValues.SUGGEST_TP));
 		map.put(StringValues.CMD_TELEPORT_TPHERE, new CommandModule(StringValues.CMD_TELEPORT_TPHERE, StringValues.PERM_TELEPORT_TPHERE, 0, 0, StringValues.SUGGEST_TPHERE));
 		map.put(StringValues.CMD_TELEPORT_TPALL, new CommandModule(StringValues.CMD_TELEPORT_TPALL, StringValues.PERM_TELEPORT_TPALL, 0, 0, StringValues.SUGGEST_TPALL));

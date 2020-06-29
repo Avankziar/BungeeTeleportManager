@@ -9,6 +9,8 @@ import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Home;
@@ -166,6 +168,17 @@ public class Utility
 		return sl;
 	}
 	
+	public void setTpaPlayersTabCompleter(Player player)
+	{
+		ArrayList<Back> back = ConvertHandler.convertListIII(
+				plugin.getMysqlHandler().getTop(MysqlHandler.Type.BACK,
+						"`id`", true, 0,
+						plugin.getMysqlHandler().lastID(MysqlHandler.Type.BACK)));
+		ArrayList<String> backs = new ArrayList<>();
+		for(Back b : back) backs.add(b.getName());	
+		plugin.setMysqlPlayers(backs);
+	}
+	
 	public void setHomesTabCompleter(Player player)
 	{
 		ArrayList<Home> home = ConvertHandler.convertListI(
@@ -257,6 +270,34 @@ public class Utility
 		} else
 		{
 			BungeeTeleportManager.warps.put(player.getName(), warps);
+		}
+	}
+	
+	public void givesEffect(Player player)
+	{
+		if(plugin.getYamlHandler().get().getBoolean("GiveEffects", false))
+		{
+			if(plugin.getYamlHandler().get().get("Effectlist") != null)
+			{
+				for(String s : plugin.getYamlHandler().get().getStringList("Effectlist"))
+				{
+					String[] effect = s.split(";");
+					if(effect.length==3)
+					{
+						PotionEffect pe = null;
+						try
+						{
+							pe = new PotionEffect(PotionEffectType.getByName(effect[0]),
+									Integer.valueOf(effect[1]),
+									Integer.valueOf(effect[2]));
+						} catch(Exception e)
+						{
+							
+						}
+						player.addPotionEffect(pe);
+					}
+				}
+			}
 		}
 	}
 }

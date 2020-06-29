@@ -1,6 +1,6 @@
 name: BungeeTeleportManager
 main: main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager
-version: 1
+version: 2
 author: Avankziar
 api-version: 1.15
 description: A Home, Portal, Respawn, Teleport and Warp plugin
@@ -37,6 +37,8 @@ commands:
     description: The tpdeny command
   tpatoggle:
     description: The tpatoggle command
+  tpaignore:
+    description: The tpaignore command
   tpaquit:
     description: The tpcancel command
   tp:

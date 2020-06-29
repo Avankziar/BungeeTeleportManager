@@ -1,6 +1,7 @@
 InputIsWrong: '&cYour input is incorrect! Click here on the text to get more information!'
 NoPermission: '&You don not have the rights!'
 NoPlayerExist: '&cThe player is not online or does not exist!'
+PlayerDontExist: '&cThe player does not exist! (Upper and lower case not correct?)'
 NoNumber: '&cThe argument &f%arg% &must be an integer.'
 NoDouble: '&cThe argument &f%arg% &must be a floating point number!'
 IsNegativ: '&cThe argument &f%arg% &must be a positive number!'

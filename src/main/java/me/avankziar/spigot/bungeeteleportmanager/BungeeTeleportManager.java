@@ -71,6 +71,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private WarpHelper warpHelper;
 	public static LinkedHashMap<String, ArrayList<String>> homes;
 	public static LinkedHashMap<String, ArrayList<String>> warps;
+	private ArrayList<String> players;
 	
 	public void onEnable()
 	{
@@ -80,6 +81,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		utility = new Utility(plugin);
 		homes = new LinkedHashMap<String, ArrayList<String>>();
 		warps = new LinkedHashMap<String, ArrayList<String>>();
+		setMysqlPlayers(new ArrayList<String>());
 		if (yamlHandler.get().getBoolean("Mysql.Status", false) == true)
 		{
 			mysqlHandler = new MysqlHandler(plugin);
@@ -173,12 +175,12 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand("sethome").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("homecreate").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("delhome").setExecutor(new MultipleCommandExecutor(plugin));
-			getCommand("delhome").setTabCompleter(new TABCompletion());
+			getCommand("delhome").setTabCompleter(new TABCompletion(plugin));
 			getCommand("homeremove").setExecutor(new MultipleCommandExecutor(plugin));
-			getCommand("homeremove").setTabCompleter(new TABCompletion());
+			getCommand("homeremove").setTabCompleter(new TABCompletion(plugin));
 			getCommand("homesdeleteserverworld").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("home").setExecutor(new MultipleCommandExecutor(plugin));
-			getCommand("home").setTabCompleter(new TABCompletion());
+			getCommand("home").setTabCompleter(new TABCompletion(plugin));
 			getCommand("homes").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("homelist").setExecutor(new MultipleCommandExecutor(plugin));
 		}
@@ -193,14 +195,19 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand("tpdeny").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("tpaquit").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("tpatoggle").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("tpaignore").setExecutor(new MultipleCommandExecutor(plugin));
 			
 			//Send Request
 			getCommand("tpa").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("tpa").setTabCompleter(new TABCompletion(plugin));
 			getCommand("tpahere").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("tpahere").setTabCompleter(new TABCompletion(plugin));
 			
 			//Send Force Teleports
 			getCommand("tp").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("tp").setTabCompleter(new TABCompletion(plugin));
 			getCommand("tphere").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("tphere").setTabCompleter(new TABCompletion(plugin));
 			getCommand("tpall").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("tppos").setExecutor(new MultipleCommandExecutor(plugin));
 		}
@@ -211,10 +218,10 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand("warpremove").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warplist").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warp").setExecutor(new MultipleCommandExecutor(plugin));
-			getCommand("warp").setTabCompleter(new TABCompletion());
+			getCommand("warp").setTabCompleter(new TABCompletion(plugin));
 			getCommand("warps").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warpinfo").setExecutor(new MultipleCommandExecutor(plugin));
-			getCommand("warpinfo").setTabCompleter(new TABCompletion());
+			getCommand("warpinfo").setTabCompleter(new TABCompletion(plugin));
 			getCommand("warpsetname").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warpsetposition").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("warpsetowner").setExecutor(new MultipleCommandExecutor(plugin));
@@ -445,5 +452,15 @@ public class BungeeTeleportManager extends JavaPlugin
 	public HomeHelper getHomeHelper()
 	{
 		return homeHelper;
+	}
+
+	public ArrayList<String> getMysqlPlayers()
+	{
+		return players;
+	}
+
+	public void setMysqlPlayers(ArrayList<String> players)
+	{
+		this.players = players;
 	}
 }

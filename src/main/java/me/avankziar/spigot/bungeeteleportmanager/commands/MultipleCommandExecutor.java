@@ -161,6 +161,23 @@ public class MultipleCommandExecutor implements CommandExecutor
 			}
 			plugin.getTeleportHelper().tpToggle(player, args);
 			return true;
+		} else if(cmd.getName().equalsIgnoreCase("tpaignore"))
+		{
+			if (!(sender instanceof Player)) 
+			{
+				BungeeTeleportManager.log.info("/tpaignore is only for Player!");
+				return false;
+			}
+			Player player = (Player) sender;
+			if(!player.hasPermission(StringValues.PERM_TELEPORT_TPAIGNORE))
+			{
+				///Du hast dafür keine Rechte!
+				player.spigot().sendMessage(ChatApi.tctl(
+						plugin.getYamlHandler().getL().getString("NoPermission")));
+				return false;
+			}
+			plugin.getTeleportHelper().tpaIgnore(player, args);
+			return true;
 		} else if(cmd.getName().equalsIgnoreCase("tpa"))
 		{
 			if (!(sender instanceof Player)) 

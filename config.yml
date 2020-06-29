@@ -37,6 +37,7 @@ Mysql:
   TableNameIII: 'btmBack'
   TableNameIV: 'btmRespawnPoints'
   TableNameV: 'btmWarps'
+  TableNameVI: 'btmTeleportIgnored'
 
 isHomesActive: true
 isPortalsActive: true
@@ -44,9 +45,16 @@ isRespawnPointActive: true
 isTeleportsActive: true
 isWarpsActive: true
 
+TPJoinCooldown: 5 #In Seconds
+
+GiveEffects: true
+Effectlist:
+- FIRE_RESISTANCE;40;1
+
 CancelInviteRun: 15 #Scheduler after how many seconds the tp request run out.
 
 BackCooldown: 5 #Second cooldown
+TpAcceptCooldown: 3
 
 DeleteDeathBackAfterUsing: true #Delete DeathBack if it is true
 

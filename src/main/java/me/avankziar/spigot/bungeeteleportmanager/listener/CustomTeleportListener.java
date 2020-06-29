@@ -25,6 +25,7 @@ public class CustomTeleportListener implements Listener
 		{
 			return;
 		}
+		plugin.getUtility().givesEffect(event.getPlayer());
 		plugin.getCustomHandler().sendForceObject(event.getPlayer(),
 				new Teleport(event.getPlayer().getUniqueId(), event.getPlayer().getName(),
 						event.getToPlayerUUID(), event.getToPlayer(), Teleport.Type.TPTO), 
@@ -38,6 +39,7 @@ public class CustomTeleportListener implements Listener
 		{
 			return;
 		}
+		plugin.getUtility().givesEffect(event.getPlayer());
 		plugin.getCustomHandler().sendTpPos(event.getPlayer(), event.getServerlocation(), event.getMessage());
 	}
 }

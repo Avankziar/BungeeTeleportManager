@@ -659,6 +659,7 @@ public class WarpHelper
 		if(cooldown.containsKey(player)) cooldown.replace(player, System.currentTimeMillis()+1000L*3);
 		else cooldown.put(player, System.currentTimeMillis()+1000L*3);
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.RequestInProgress")));
+		plugin.getUtility().givesEffect(player);
 		plugin.getWarpHandler().sendPlayerToWarp(player, warp, playername);
 		return;
 	}

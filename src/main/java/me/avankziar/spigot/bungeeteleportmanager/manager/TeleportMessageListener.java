@@ -15,6 +15,7 @@ import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.general.object.Teleport;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.PlayerOnCooldownListener;
 
 public class TeleportMessageListener implements PluginMessageListener
 {
@@ -138,6 +139,10 @@ public class TeleportMessageListener implements PluginMessageListener
 									if(targets != null)
 									{
 										senders.teleport(targets.getLocation());
+										if(PlayerOnCooldownListener.playerCooldownlist.containsKey(senders))
+										{
+											PlayerOnCooldownListener.playerCooldownlist.replace(senders, System.currentTimeMillis());
+										}
 										if(senders.hasPermission(StringValues.PERM_BYPASS_TELEPORT_SILENT))
 										{
 											senders.sendMessage(
@@ -196,6 +201,10 @@ public class TeleportMessageListener implements PluginMessageListener
 									if(loc != null) //Eventuell prüfen ob loc sicher ist.
 									{
 										Player player = plugin.getServer().getPlayer(playerName);
+										if(PlayerOnCooldownListener.playerCooldownlist.containsKey(player))
+										{
+											PlayerOnCooldownListener.playerCooldownlist.replace(player, System.currentTimeMillis());
+										}
 										if(Bukkit.getWorld(worldName) == null)
 										{
 											player.sendMessage(

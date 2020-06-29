@@ -46,6 +46,10 @@ public class MysqlSetup
 		{
 			return false;
 		}
+		if(!setupDatabaseVI())
+		{
+			return false;
+		}
 		return true;
 	}
 	
@@ -271,6 +275,42 @@ public class MysqlSetup
 		        		+ " member longtext,"
 		        		+ " blacklist longtext,"
 		        		+ " price double DEFAULT '0.00');";
+		        query = conn.prepareStatement(data);
+		        query.execute();
+		      } catch (SQLException e) 
+		      {
+		        e.printStackTrace();
+		        BungeeTeleportManager.log.severe("Error creating tables! Error: " + e.getMessage());
+		        return false;
+		      } finally 
+		      {
+		    	  try 
+		    	  {
+		    		  if (query != null) 
+		    		  {
+		    			  query.close();
+		    		  }
+		    	  } catch (Exception e) 
+		    	  {
+		    		  e.printStackTrace();
+		    		  return false;
+		    	  }
+		      }
+		}
+		return true;
+	}
+	
+	public boolean setupDatabaseVI() 
+	{
+		if (conn != null) 
+		{
+			PreparedStatement query = null;
+		      try 
+		      {	        
+		        String data = "CREATE TABLE IF NOT EXISTS `" + plugin.getMysqlHandler().tableNameIII
+		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
+		        		+ " player_uuid char(36) NOT NULL,"
+		        		+ " ignore_uuid char(36) NOT NULL);";
 		        query = conn.prepareStatement(data);
 		        query.execute();
 		      } catch (SQLException e) 

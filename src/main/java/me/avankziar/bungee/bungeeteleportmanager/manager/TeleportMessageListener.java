@@ -52,6 +52,15 @@ public class TeleportMessageListener implements Listener
         	String toName = in.readUTF();
         	String type = in.readUTF();
         	boolean bypass = in.readBoolean();
+        	if(plugin.getProxy().getPlayer(toName) == null)
+        	{
+        		String error = in.readUTF();
+        		if(plugin.getProxy().getPlayer(fromName) != null)
+        		{
+        			plugin.getProxy().getPlayer(fromName).sendMessage(ChatApi.tctl(error));
+        		}
+        		return;
+        	}
         	if(plugin.getBackHandler().getBackLocations().get(toName) != null)
         	{
         		if(plugin.getBackHandler().getBackLocations().get(toName).isToggle()

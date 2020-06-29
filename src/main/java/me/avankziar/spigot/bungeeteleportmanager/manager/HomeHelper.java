@@ -239,6 +239,7 @@ public class HomeHelper
 			}
 		}
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.RequestInProgress")));
+		plugin.getUtility().givesEffect(player);
 		plugin.getHomeHandler().sendPlayerToHome(player, home);
 		return;
 	}

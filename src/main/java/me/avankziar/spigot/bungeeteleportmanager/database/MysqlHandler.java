@@ -8,12 +8,13 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.Table
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.TableIII;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.TableIV;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.TableV;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.TableVI;
 
-public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
+public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV, TableVI
 {
 	public enum Type
 	{
-		HOMES, PORTALS, BACK, RESPAWNPOINTS, WARPS;
+		HOMES, PORTALS, BACK, RESPAWNPOINTS, WARPS, TELEPORTIGNORE;
 	}
 	
 	private BungeeTeleportManager plugin;
@@ -22,6 +23,7 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 	public String tableNameIII; //Back
 	public String tableNameIV; //Respawn
 	public String tableNameV; //Warps
+	public String tableNameVI; //TeleportIgnore
 	
 	public MysqlHandler(BungeeTeleportManager plugin) 
 	{
@@ -56,6 +58,11 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 		{
 			return false;
 		}
+		tableNameVI = plugin.getYamlHandler().get().getString("Mysql.TableNameVI");
+		if(tableNameVI == null)
+		{
+			return false;
+		}
 		return true;
 	}
 	
@@ -73,6 +80,8 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 			return TableIV.super.existIV(plugin, whereColumn, whereObject);
 		case WARPS:
 			return TableV.super.existV(plugin, whereColumn, whereObject);
+		case TELEPORTIGNORE:
+			return TableVI.super.existVI(plugin, whereColumn, whereObject);
 		}
 		return false;
 	}
@@ -91,6 +100,8 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 			return TableIV.super.createIV(plugin, object);
 		case WARPS:
 			return TableV.super.createV(plugin, object);
+		case TELEPORTIGNORE:
+			return TableVI.super.createVI(plugin, object);
 		}
 		return false;
 	}
@@ -109,6 +120,8 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 			return TableIV.super.updateDataIV(plugin, object, whereColumn, whereObject);
 		case WARPS:
 			return TableV.super.updateDataV(plugin, object, whereColumn, whereObject);
+		case TELEPORTIGNORE:
+			return TableVI.super.updateDataVI(plugin, object, whereColumn, whereObject);
 		}
 		return false;
 	}
@@ -127,6 +140,8 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 			return TableIV.super.getDataIV(plugin, whereColumn, whereObject);
 		case WARPS:
 			return TableV.super.getDataV(plugin, whereColumn, whereObject);
+		case TELEPORTIGNORE:
+			return TableVI.super.getDataVI(plugin, whereColumn, whereObject);
 		}
 		return null;
 	}
@@ -145,6 +160,8 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 			return TableIV.super.deleteDataIV(plugin, whereColumn, whereObject);
 		case WARPS:
 			return TableV.super.deleteDataV(plugin, whereColumn, whereObject);
+		case TELEPORTIGNORE:
+			return TableVI.super.deleteDataVI(plugin, whereColumn, whereObject);
 		}
 		return false;
 	}
@@ -163,6 +180,8 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 			return TableIV.super.lastIDIV(plugin);
 		case WARPS:
 			return TableV.super.lastIDV(plugin);
+		case TELEPORTIGNORE:
+			return TableVI.super.lastIDVI(plugin);
 		}
 		return 0;
 	}
@@ -181,6 +200,8 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 			return TableIV.super.countWhereIDIV(plugin, whereColumn, whereObject);
 		case WARPS:
 			return TableV.super.countWhereIDV(plugin, whereColumn, whereObject);
+		case TELEPORTIGNORE:
+			return TableVI.super.countWhereIDVI(plugin, whereColumn, whereObject);
 		}
 		return 0;
 	}
@@ -199,6 +220,8 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 			return TableIV.super.getListIV(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		case WARPS:
 			return TableV.super.getListV(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+		case TELEPORTIGNORE:
+			return TableVI.super.getListVI(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		}
 		return null;
 	}
@@ -217,6 +240,8 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV
 			return TableIV.super.getTopIV(plugin, orderByColumn, start, end);
 		case WARPS:
 			return TableV.super.getTopV(plugin, orderByColumn, desc, start, end);
+		case TELEPORTIGNORE:
+			return TableVI.super.getTopVI(plugin, orderByColumn, desc, start, end);
 		}
 		return null;
 	}

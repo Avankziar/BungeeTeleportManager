@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.bukkit.entity.Player;
 
@@ -18,6 +19,7 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler
 public class TeleportHandler
 {
 	private BungeeTeleportManager plugin;
+	private HashMap<Player, Long> cooldown;
 
 	public TeleportHandler(BungeeTeleportManager plugin)
 	{
@@ -82,6 +84,7 @@ public class TeleportHandler
 			out.writeUTF(teleport.getToName());
 			out.writeUTF(teleport.getType().toString());
 			out.writeBoolean(player.hasPermission(StringValues.PERM_BYPASS_TELEPORT_TPATOGGLE));
+			out.writeUTF(plugin.getYamlHandler().getL().getString("NoPlayerExist"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -349,9 +352,22 @@ public class TeleportHandler
 	
 	public void tpAccept(Player player, Teleport teleport)
 	{
+		if(cooldown.containsKey(player) && cooldown.get(player) > System.currentTimeMillis())
+		{
+			return;
+		}
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.RequestInProgress")));
 		sendAccept(player, teleport,
 				plugin.getYamlHandler().getL().getString("CmdTp.NoPending"));
+		if(cooldown.containsKey(player))
+		{
+			cooldown.replace(player, System.currentTimeMillis()
+					+plugin.getYamlHandler().get().getInt("TpAcceptCooldown",3)*1000);
+		} else
+		{
+			cooldown.put(player, System.currentTimeMillis()
+					+plugin.getYamlHandler().get().getInt("TpAcceptCooldown",3)*1000);
+		}
 	}
 	
 	public void tpDeny(Player player, Teleport teleport)

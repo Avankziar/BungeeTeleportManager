@@ -1,13 +1,18 @@
 package main.java.me.avankziar.spigot.bungeeteleportmanager.manager;
 
+import java.util.UUID;
+
 import org.bukkit.entity.Player;
 
 import main.java.me.avankziar.general.object.ServerLocation;
+import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.general.object.Teleport;
+import main.java.me.avankziar.general.object.TeleportIgnore;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 import net.md_5.bungee.api.chat.ClickEvent;
 
 public class TeleportHelper
@@ -88,8 +93,32 @@ public class TeleportHelper
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.TpaTooYourself")));
 				return;
 			}
+			UUID uuid = Utility.convertNameToUUID(args[0]);
+			if(uuid == null)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+				return;
+			}
+			String name = Utility.convertUUIDToName(uuid.toString());
+			if(name == null)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+				return;
+			}
+			TeleportIgnore tpi = new TeleportIgnore(Utility.convertNameToUUID(args[0]), player.getUniqueId());
+			boolean ignore = plugin.getMysqlHandler().exist(MysqlHandler.Type.TELEPORTIGNORE,
+					"`player_uuid` = ? AND `ignore_uuid` = ?",
+					tpi.getUUID().toString(), tpi.getIgnoredUUID().toString());
+			if(ignore && !player.hasPermission(StringValues.PERM_BYPASS_TELEPORT_TPATOGGLE))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.Ignored")));
+				return;
+			} else if(ignore && player.hasPermission(StringValues.PERM_BYPASS_TELEPORT_TPATOGGLE))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.IgnoredBypass")));
+			}
 			Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
-					Utility.convertNameToUUID(args[0]), args[0], type);
+					uuid, name, type);
 			plugin.getTeleportHandler().preTpSendInvite(player,tp);
 		} else
 		{
@@ -109,8 +138,20 @@ public class TeleportHelper
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.TpaTooYourself")));
 				return;
 			}
+			UUID uuid = Utility.convertNameToUUID(args[0]);
+			if(uuid == null)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+				return;
+			}
+			String name = Utility.convertUUIDToName(uuid.toString());
+			if(name == null)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+				return;
+			}
 			Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
-					Utility.convertNameToUUID(args[0]), args[0], type);
+					uuid, name, type);
 			plugin.getTeleportHandler().tpForce(player,tp);
 		} else
 		{
@@ -215,5 +256,37 @@ public class TeleportHelper
 					ClickEvent.Action.RUN_COMMAND, "/btm"));
 		}
 	}
-
+	
+	public void tpaIgnore(Player player, String[] args)
+	{
+		if(args.length != 1)
+		{
+			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+			player.spigot().sendMessage(ChatApi.clickEvent(
+					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
+		}
+		TeleportIgnore tpi = new TeleportIgnore(player.getUniqueId(), Utility.convertNameToUUID(args[0]));
+		if(tpi.getIgnoredUUID() == null)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+			return;
+		}
+		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.TELEPORTIGNORE,
+				"`player_uuid` = ? AND `ignore_uuid` = ?",
+				tpi.getUUID().toString(), tpi.getIgnoredUUID().toString()))
+		{
+			plugin.getMysqlHandler().deleteData(MysqlHandler.Type.TELEPORTIGNORE,
+					"`player_uuid` = ? AND `ignore_uuid` = ?",
+					tpi.getUUID().toString(), tpi.getIgnoredUUID().toString());
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.IgnoreDelete")
+					.replace("%target%", args[0])));
+		} else
+		{
+			plugin.getMysqlHandler().create(MysqlHandler.Type.TELEPORTIGNORE, tpi);
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.IgnoreCreate")
+					.replace("%target%", args[0])));
+		}
+		return;
+	}
 }

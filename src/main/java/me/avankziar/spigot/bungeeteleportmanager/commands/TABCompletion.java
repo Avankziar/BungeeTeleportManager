@@ -14,9 +14,11 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager
 
 public class TABCompletion implements TabCompleter
 {	
-	public TABCompletion()
+	private BungeeTeleportManager plugin;
+	
+	public TABCompletion(BungeeTeleportManager plugin)
 	{
-		
+		this.plugin = plugin;
 	}
 	
 	@Override
@@ -128,6 +130,34 @@ public class TABCompletion implements TabCompleter
 					if(BungeeTeleportManager.warps.get(player.getName()) != null)
 					{
 						list.addAll(BungeeTeleportManager.warps.get(player.getName()));
+						Collections.sort(list);
+					}
+					return list;
+				}
+			}
+		} else if (cmd.getName().equalsIgnoreCase("tpa") || cmd.getName().equalsIgnoreCase("tpahere")
+				|| cmd.getName().equalsIgnoreCase("tp") || cmd.getName().equalsIgnoreCase("tphere")) 
+		{
+			if(args.length == 1)
+			{
+				if (!args[0].equals("")) 
+				{
+					for (String name : plugin.getMysqlPlayers()) 
+					{
+						if (name.startsWith(args[0])
+								|| name.toLowerCase().startsWith(args[0])
+								|| name.toUpperCase().startsWith(args[0])) 
+						{
+							list.add(name);
+						}
+					}
+					Collections.sort(list);
+					return list;
+				} else
+				{
+					if(plugin.getMysqlPlayers() != null)
+					{
+						list.addAll(plugin.getMysqlPlayers());
 						Collections.sort(list);
 					}
 					return list;
