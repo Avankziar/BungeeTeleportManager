@@ -62,7 +62,15 @@ public class HomeMessageListener implements PluginMessageListener
 											cancel();
 											return;
 										}
-										player.teleport(loc);
+										new BukkitRunnable()
+										{
+											@Override
+											public void run()
+											{
+												player.teleport(loc);
+											}
+										}.runTask(plugin);
+										
 										player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeTo")
 												.replace("%home%", homeName)));
 										cancel();
@@ -77,7 +85,7 @@ public class HomeMessageListener implements PluginMessageListener
 								return;
 							}
 						}
-					}.runTaskTimer(plugin, 1L, 2L);
+					}.runTaskTimerAsynchronously(plugin, 1L, 2L);
             		return;
             	}
             } catch (IOException e) 

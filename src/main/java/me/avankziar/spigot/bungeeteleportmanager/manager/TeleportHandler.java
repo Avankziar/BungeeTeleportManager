@@ -24,6 +24,7 @@ public class TeleportHandler
 	public TeleportHandler(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
+		cooldown = new HashMap<>();
 	}
 	
 	public void sendMessage(Player player, String fromName, String toName, String message,
@@ -352,9 +353,12 @@ public class TeleportHandler
 	
 	public void tpAccept(Player player, Teleport teleport)
 	{
-		if(cooldown.containsKey(player) && cooldown.get(player) > System.currentTimeMillis())
+		if(cooldown.containsKey(player))
 		{
-			return;
+			if(cooldown.get(player) > System.currentTimeMillis())
+			{
+				return;
+			}
 		}
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.RequestInProgress")));
 		sendAccept(player, teleport,

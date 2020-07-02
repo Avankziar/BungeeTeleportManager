@@ -54,7 +54,8 @@ CmdBtm:
   tpdeny: '&c/tpadeny <Spielername> &f| Lehnt die TPA vom Spieler ab. (Klickbar im Chat)'
   tpaquit: '&c/tpaquit &f| Bricht alle TPA ab.'
   tpatoggle: '&c/tpatoggle &f| Wechselt die automatische Ablehnung aller TPAs.'
-  tpaignore: '&c/tpaignore &f| Toggelt ob man die Tpas den angegebenen Spieler sofort ablehnt oder nicht.'
+  tpaignore: '&c/tpaignore &f| Toggelt ob man die Tpas vom angegebenen Spieler sofort ablehnt oder nicht.'
+  tpaignorelist: '&c/tpaignorelist &f| Zeigt alle ignorierten Spieler an.'
   tp: '&c/tp <Spielername> &f| Teleportiert dich ohne Anfrage zu dem Spieler.'
   tphere: '&c/tphere <Spielername> &f| Teleportiert den Spieler ohne Anfrage zu dir.'
   tpall: '&c/tpall &f| Teleportiert alle Spieler auf allen Servern ohne Anfrage zu dir.'
@@ -134,6 +135,7 @@ CmdTp:
   IgnoreDelete: '&eDie Teleportanfragen des Spielers &f%target% &awerden von dir nun nicht mehr ignoriert!'
   Ignored: '&cDer Spieler ignoriert deine Teleportanfrage!'
   IgnoredBypass: '&eDer Spieler &cignoriert &edeine Teleportanfrage, jedoch wirst du trotzdem weitergeleitet!'
+  IgnoreList: '&eDeine TpaIgnorierungsliste: &r'
 CmdWarp:
   WarpTo: '&aDu wurdest zum Warppunkt &f%warp% &ateleportiert.'
   RequestInProgress: '&eDer Warpteleport wird bearbeitet!'

@@ -5,7 +5,7 @@ public class StringValues
 	final public static String
 	//Btm 
 	CMD_BTM = "btm",
-	CMD_RELOAD = "btm reload",
+	CMD_RELOAD = "btm_reload",
 	
 	PERM_BTM = "btm.cmd.btm",
 	PERM_RELOAD = "btm.cmd.reload",
@@ -110,6 +110,7 @@ public class StringValues
 	CMD_TELEPORT_TPCANCEL = "tpaquit",
 	CMD_TELEPORT_TPTOGGLE = "tpatoggle",
 	CMD_TELEPORT_TPAIGNORE = "tpaignore",
+	CMD_TELEPORT_TPAIGNORELIST = "tpaignorelist",
 	CMD_TELEPORT_TP = "tp",
 	CMD_TELEPORT_TPHERE = "tphere",
 	CMD_TELEPORT_TPALL = "tpall",
@@ -123,6 +124,7 @@ public class StringValues
 	PERM_TELEPORT_TPCANCEL = "btm.cmd.user.tp.tpaquit",
 	PERM_TELEPORT_TPTOGGLE = "btm.cmd.user.tp.tpatoggle",
 	PERM_TELEPORT_TPAIGNORE = "btm.cmd.user.tp.tpaignore",
+	PERM_TELEPORT_TPAIGNORELIST = "btm.cmd.user.tp.tpaignorelist",
 	PERM_TELEPORT_TP = "btm.cmd.staff.tp.tp",
 	PERM_TELEPORT_TPHERE = "btm.cmd.staff.tp.tphere",
 	PERM_TELEPORT_TPALL = "btm.cmd.admin.tp.tpall",
@@ -136,6 +138,7 @@ public class StringValues
 	SUGGEST_TPCANCEL = "/tpaquit",
 	SUGGEST_TPTOGGLE = "/tpatoggle",
 	SUGGEST_TPAIGNORE = "/tpaignore <player>",
+	SUGGEST_TPAIGNORELIST = "/tpaignorelist",
 	SUGGEST_TP = "/tp",
 	SUGGEST_TPHERE = "/tphere",
 	SUGGEST_TPALL = "/tpall",

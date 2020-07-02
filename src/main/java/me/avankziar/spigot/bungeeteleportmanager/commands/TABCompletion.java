@@ -136,7 +136,8 @@ public class TABCompletion implements TabCompleter
 				}
 			}
 		} else if (cmd.getName().equalsIgnoreCase("tpa") || cmd.getName().equalsIgnoreCase("tpahere")
-				|| cmd.getName().equalsIgnoreCase("tp") || cmd.getName().equalsIgnoreCase("tphere")) 
+				|| cmd.getName().equalsIgnoreCase("tp") || cmd.getName().equalsIgnoreCase("tphere")
+				|| cmd.getName().equalsIgnoreCase("tpaignore")) 
 		{
 			if(args.length == 1)
 			{

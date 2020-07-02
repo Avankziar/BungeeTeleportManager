@@ -22,6 +22,7 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.database.YamlHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.AdvanceEconomyHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.BackListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.CustomTeleportListener;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.PlayerOnCooldownListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.ServerAndWordListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.BackHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.BackHelper;
@@ -111,6 +112,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		CommandSetup();
 		ListenerSetup();
 		setupBstats();
+		plugin.getUtility().setTpaPlayersTabCompleter();
 	}
 	
 	public void onDisable()
@@ -196,6 +198,8 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand("tpaquit").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("tpatoggle").setExecutor(new MultipleCommandExecutor(plugin));
 			getCommand("tpaignore").setExecutor(new MultipleCommandExecutor(plugin));
+			getCommand("tpaignore").setTabCompleter(new TABCompletion(plugin));
+			getCommand("tpaignorelist").setExecutor(new MultipleCommandExecutor(plugin));
 			
 			//Send Request
 			getCommand("tpa").setExecutor(new MultipleCommandExecutor(plugin));
@@ -252,6 +256,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		pm.registerEvents(new BackListener(plugin), plugin);
 		pm.registerEvents(new ServerAndWordListener(plugin), plugin);
 		pm.registerEvents(new CustomTeleportListener(plugin), plugin);
+		pm.registerEvents(new PlayerOnCooldownListener(plugin), plugin);
 	}
 	
 	public boolean reload()

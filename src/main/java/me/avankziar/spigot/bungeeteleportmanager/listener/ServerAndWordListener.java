@@ -38,7 +38,16 @@ public class ServerAndWordListener implements Listener
 						"world");
 			}
 		}
-		plugin.getUtility().setTpaPlayersTabCompleter(player);
+		if(player.hasPlayedBefore())
+		{
+			if(player.getPlayerTime() < 1000L*2)
+			{
+				plugin.getUtility().setTpaPlayersTabCompleter();
+			}
+		} else
+		{
+			plugin.getUtility().setTpaPlayersTabCompleter();
+		}
 		plugin.getUtility().setHomesTabCompleter(player);
 		plugin.getUtility().setWarpsTabCompleter(player);
 	}

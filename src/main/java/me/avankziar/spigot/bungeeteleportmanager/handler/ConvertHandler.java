@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Home;
+import main.java.me.avankziar.general.object.TeleportIgnore;
 import main.java.me.avankziar.general.object.Warp;
 
 public class ConvertHandler
@@ -48,6 +49,22 @@ public class ConvertHandler
 			if(o instanceof Warp)
 			{
 				el.add((Warp) o);
+			} else
+			{
+				return null;
+			}
+		}
+		return el;
+	}
+	
+	public static ArrayList<TeleportIgnore> convertListVI(ArrayList<?> list)
+	{
+		ArrayList<TeleportIgnore> el = new ArrayList<>();
+		for(Object o : list)
+		{
+			if(o instanceof TeleportIgnore)
+			{
+				el.add((TeleportIgnore) o);
 			} else
 			{
 				return null;

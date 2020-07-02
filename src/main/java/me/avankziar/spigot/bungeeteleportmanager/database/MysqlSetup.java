@@ -307,7 +307,7 @@ public class MysqlSetup
 			PreparedStatement query = null;
 		      try 
 		      {	        
-		        String data = "CREATE TABLE IF NOT EXISTS `" + plugin.getMysqlHandler().tableNameIII
+		        String data = "CREATE TABLE IF NOT EXISTS `" + plugin.getMysqlHandler().tableNameVI
 		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		        		+ " player_uuid char(36) NOT NULL,"
 		        		+ " ignore_uuid char(36) NOT NULL);";

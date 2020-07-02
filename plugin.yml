@@ -39,6 +39,8 @@ commands:
     description: The tpatoggle command
   tpaignore:
     description: The tpaignore command
+  tpaignorelist:
+    description: The tpaignore command
   tpaquit:
     description: The tpcancel command
   tp:

@@ -54,12 +54,14 @@ public class HomeHelper
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.ForbiddenHomeWorld")));
 			return;
 		}
+		boolean exist = false;
 		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.HOMES,
 				"`player_uuid` = ? AND `home_name` = ?", player.getUniqueId().toString(), homeName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeNameAlreadyExist")
-					.replace("%home%", homeName)));
-			return;
+			exist = true;
+			//player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeNameAlreadyExist")
+			//		.replace("%home%", homeName)));
+			//return;
 		}
 		if(!plugin.getHomeHandler().compareHomeAmount(player, true))
 		{
@@ -99,7 +101,14 @@ public class HomeHelper
 				}
 			}
 		}
-		plugin.getMysqlHandler().create(MysqlHandler.Type.HOMES, home);
+		if(exist)
+		{
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.HOMES, home,
+					"`player_uuid` = ? AND `home_name` = ?", player.getUniqueId().toString(), homeName);
+		} else
+		{
+			plugin.getMysqlHandler().create(MysqlHandler.Type.HOMES, home);
+		}
 		player.spigot().sendMessage(ChatApi.tctl(
 				plugin.getYamlHandler().getL().getString("CmdHome.HomeCreate")
 				.replace("%name%", homeName)));

@@ -11,6 +11,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Home;
@@ -168,109 +169,132 @@ public class Utility
 		return sl;
 	}
 	
-	public void setTpaPlayersTabCompleter(Player player)
+	public void setTpaPlayersTabCompleter()
 	{
-		ArrayList<Back> back = ConvertHandler.convertListIII(
-				plugin.getMysqlHandler().getTop(MysqlHandler.Type.BACK,
-						"`id`", true, 0,
-						plugin.getMysqlHandler().lastID(MysqlHandler.Type.BACK)));
-		ArrayList<String> backs = new ArrayList<>();
-		for(Back b : back) backs.add(b.getName());	
-		plugin.setMysqlPlayers(backs);
+		new BukkitRunnable()
+		{
+			
+			@Override
+			public void run()
+			{
+				ArrayList<Back> back = ConvertHandler.convertListIII(
+						plugin.getMysqlHandler().getTop(MysqlHandler.Type.BACK,
+								"`id`", true, 0,
+								plugin.getMysqlHandler().lastID(MysqlHandler.Type.BACK)));
+				ArrayList<String> backs = new ArrayList<>();
+				for(Back b : back) backs.add(b.getName());	
+				plugin.setMysqlPlayers(backs);
+			}
+		}.runTaskAsynchronously(plugin);
+		
 	}
 	
 	public void setHomesTabCompleter(Player player)
 	{
-		ArrayList<Home> home = ConvertHandler.convertListI(
-				plugin.getMysqlHandler().getList(MysqlHandler.Type.HOMES,
-						"`id`", true, 0,
-						plugin.getMysqlHandler().lastID(MysqlHandler.Type.HOMES),
-						"`player_uuid` = ?", player.getUniqueId().toString()));
-		ArrayList<String> homes = new ArrayList<>();
-		for(Home h : home) homes.add(h.getHomeName());	
-		if(BungeeTeleportManager.homes.containsKey(player.getName()))
+		new BukkitRunnable()
 		{
-			BungeeTeleportManager.homes.replace(player.getName(), homes);
-		} else
-		{
-			BungeeTeleportManager.homes.put(player.getName(), homes);
-		}
+			@Override
+			public void run()
+			{
+				ArrayList<Home> home = ConvertHandler.convertListI(
+						plugin.getMysqlHandler().getList(MysqlHandler.Type.HOMES,
+								"`id`", true, 0,
+								plugin.getMysqlHandler().lastID(MysqlHandler.Type.HOMES),
+								"`player_uuid` = ?", player.getUniqueId().toString()));
+				ArrayList<String> homes = new ArrayList<>();
+				for(Home h : home) homes.add(h.getHomeName());	
+				if(BungeeTeleportManager.homes.containsKey(player.getName()))
+				{
+					BungeeTeleportManager.homes.replace(player.getName(), homes);
+				} else
+				{
+					BungeeTeleportManager.homes.put(player.getName(), homes);
+				}
+			}
+		}.runTaskAsynchronously(plugin);
 	}
 	
 	public void setWarpsTabCompleter(Player player)
 	{
-		ArrayList<Warp> warp = ConvertHandler.convertListV(
-				plugin.getMysqlHandler().getTop(MysqlHandler.Type.WARPS,
-						"`id`", true, 0,
-						plugin.getMysqlHandler().lastID(MysqlHandler.Type.WARPS)));
-		ArrayList<String> warps = new ArrayList<>();
-		for(Warp w : warp)
+		new BukkitRunnable()
 		{
-			if(w.getBlacklist() != null)
+			@Override
+			public void run()
 			{
-				if(w.getBlacklist().contains(player.getUniqueId().toString()))
+				ArrayList<Warp> warp = ConvertHandler.convertListV(
+						plugin.getMysqlHandler().getTop(MysqlHandler.Type.WARPS,
+								"`id`", true, 0,
+								plugin.getMysqlHandler().lastID(MysqlHandler.Type.WARPS)));
+				ArrayList<String> warps = new ArrayList<>();
+				for(Warp w : warp)
 				{
-					continue;
-				}
-			}
-			if(w.isHidden())
-			{
-				if(w.getOwner() != null)
-				{
-					if(w.getOwner().equals(player.getUniqueId().toString()))
+					if(w.getBlacklist() != null)
 					{
-						warps.add(w.getName());
-						continue;
+						if(w.getBlacklist().contains(player.getUniqueId().toString()))
+						{
+							continue;
+						}
+					}
+					if(w.isHidden())
+					{
+						if(w.getOwner() != null)
+						{
+							if(w.getOwner().equals(player.getUniqueId().toString()))
+							{
+								warps.add(w.getName());
+								continue;
+							}
+						}
+						if(player.hasPermission(StringValues.PERM_BYPASS_WARP))
+						{
+							warps.add(w.getName());
+							continue;
+						}
+						if(w.getMember() != null)
+						{
+							if(w.getMember().contains(player.getUniqueId().toString()))
+							{
+								warps.add(w.getName());
+								continue;
+							}
+						}
+					} else if(!w.isHidden())
+					{
+						if(w.getOwner() != null)
+						{
+							if(w.getOwner().equals(player.getUniqueId().toString()))
+							{
+								warps.add(w.getName());
+								continue;
+							}
+						}
+						if(w.getPermission() != null)
+						{
+							if(player.hasPermission(w.getPermission()))
+							{
+								warps.add(w.getName());
+								continue;
+							} else if(w.getMember().contains(player.getUniqueId().toString()))
+							{
+								warps.add(w.getName());
+								continue;
+							}
+						} else
+						{
+							warps.add(w.getName());
+							continue;
+						}
 					}
 				}
-				if(player.hasPermission(StringValues.PERM_BYPASS_WARP))
+				if(BungeeTeleportManager.warps.containsKey(player.getName()))
 				{
-					warps.add(w.getName());
-					continue;
-				}
-				if(w.getMember() != null)
-				{
-					if(w.getMember().contains(player.getUniqueId().toString()))
-					{
-						warps.add(w.getName());
-						continue;
-					}
-				}
-			} else if(!w.isHidden())
-			{
-				if(w.getOwner() != null)
-				{
-					if(w.getOwner().equals(player.getUniqueId().toString()))
-					{
-						warps.add(w.getName());
-						continue;
-					}
-				}
-				if(w.getPermission() != null)
-				{
-					if(player.hasPermission(w.getPermission()))
-					{
-						warps.add(w.getName());
-						continue;
-					} else if(w.getMember().contains(player.getUniqueId().toString()))
-					{
-						warps.add(w.getName());
-						continue;
-					}
+					BungeeTeleportManager.warps.replace(player.getName(), warps);
 				} else
 				{
-					warps.add(w.getName());
-					continue;
+					BungeeTeleportManager.warps.put(player.getName(), warps);
 				}
 			}
-		}
-		if(BungeeTeleportManager.warps.containsKey(player.getName()))
-		{
-			BungeeTeleportManager.warps.replace(player.getName(), warps);
-		} else
-		{
-			BungeeTeleportManager.warps.put(player.getName(), warps);
-		}
+		}.runTaskAsynchronously(plugin);
 	}
 	
 	public void givesEffect(Player player)

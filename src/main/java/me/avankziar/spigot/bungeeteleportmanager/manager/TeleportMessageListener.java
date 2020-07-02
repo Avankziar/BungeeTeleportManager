@@ -138,7 +138,15 @@ public class TeleportMessageListener implements PluginMessageListener
 									Player targets = plugin.getServer().getPlayer(target);
 									if(targets != null)
 									{
-										senders.teleport(targets.getLocation());
+										new BukkitRunnable()
+										{
+											@Override
+											public void run()
+											{
+												senders.teleport(targets.getLocation());
+											}
+										}.runTask(plugin);
+										
 										if(PlayerOnCooldownListener.playerCooldownlist.containsKey(senders))
 										{
 											PlayerOnCooldownListener.playerCooldownlist.replace(senders, System.currentTimeMillis());
@@ -167,7 +175,7 @@ public class TeleportMessageListener implements PluginMessageListener
 								cancel();
 							}
 						}
-					}.runTaskTimer(plugin, 1L, 2L);
+					}.runTaskTimerAsynchronously(plugin, 1L, 2L);
             	    return;
             	} else if(task.equals(StringValues.TP_SERVERQUITMESSAGE))
             	{
@@ -212,7 +220,15 @@ public class TeleportMessageListener implements PluginMessageListener
 															.replace("%world%", worldName)));
 											cancel();
 										}
-										player.teleport(loc);
+										new BukkitRunnable()
+										{
+											@Override
+											public void run()
+											{
+												player.teleport(loc);
+											}
+										}.runTask(plugin);
+										
 										player.sendMessage(
 												ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PositionTeleport")
 												.replace("%server%", serverName)
@@ -228,7 +244,7 @@ public class TeleportMessageListener implements PluginMessageListener
 								cancel();
 							}
 						}
-					}.runTaskTimer(plugin, 1L, 2L);
+					}.runTaskTimerAsynchronously(plugin, 1L, 2L);
             		return;
             	} else if(task.equals(StringValues.TP_FORBIDDENSERVER))
             	{

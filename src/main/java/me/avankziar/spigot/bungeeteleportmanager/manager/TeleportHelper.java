@@ -1,5 +1,6 @@
 package main.java.me.avankziar.spigot.bungeeteleportmanager.manager;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
@@ -13,6 +14,7 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 import net.md_5.bungee.api.chat.ClickEvent;
 
 public class TeleportHelper
@@ -265,6 +267,7 @@ public class TeleportHelper
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getL().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, "/btm"));
+			return;
 		}
 		TeleportIgnore tpi = new TeleportIgnore(player.getUniqueId(), Utility.convertNameToUUID(args[0]));
 		if(tpi.getIgnoredUUID() == null)
@@ -287,6 +290,33 @@ public class TeleportHelper
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.IgnoreCreate")
 					.replace("%target%", args[0])));
 		}
+		return;
+	}
+	
+	public void tpaIgnoreList(Player player, String[] args)
+	{
+		if(args.length != 0)
+		{
+			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+			player.spigot().sendMessage(ChatApi.clickEvent(
+					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
+			return;
+		}
+		int last = plugin.getMysqlHandler().lastID(MysqlHandler.Type.TELEPORTIGNORE);
+		ArrayList<TeleportIgnore> list = ConvertHandler.convertListVI(plugin.getMysqlHandler().getList(
+				MysqlHandler.Type.TELEPORTIGNORE, "`id`", true, 0, last,
+				"`player_uuid` = ?",player.getUniqueId().toString()));
+		String msg = plugin.getYamlHandler().getL().getString("CmdTp.IgnoreList");
+		for(TeleportIgnore tpi : list)
+		{
+			String name = Utility.convertUUIDToName(tpi.getIgnoredUUID().toString());
+			if(name != null)
+			{
+				msg += name+" &9| ";
+			}
+		}
+		player.sendMessage(ChatApi.tl(msg));
 		return;
 	}
 }

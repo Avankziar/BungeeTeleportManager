@@ -54,21 +54,22 @@ public class HomeHandler
 	{
 		if(plugin.getYamlHandler().get().getBoolean("UseGlobalPermissionLevel", false))
 		{
-			if(compareGlobalHomes(player, message) >= 0 )
+			// Vorher >= 0, jetzt nur bei den Homes, dadurch dass man mit /homecreate, das home neu setzten sollen kann.
+			if(compareGlobalHomes(player, message) > 0 )
 			{
 				return false;
 			}
 		}		
 		if(plugin.getYamlHandler().get().getBoolean("UseServerPermissionLevel", false))
 		{
-			if(compareServerHomes(player, message) >= 0)
+			if(compareServerHomes(player, message) > 0)
 			{
 				return false;
 			}
 		}
 		if(plugin.getYamlHandler().get().getBoolean("UseWorldPermissionLevel", false))
 		{
-			if(compareWorldHomes(player, message) >= 0)
+			if(compareWorldHomes(player, message) > 0)
 			{
 				return false;
 			}

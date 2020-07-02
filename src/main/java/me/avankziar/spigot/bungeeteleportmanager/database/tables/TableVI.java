@@ -21,7 +21,7 @@ public interface TableVI
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameIV 
+				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameVI 
 						+ "` WHERE "+whereColumn+" LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -73,7 +73,7 @@ public interface TableVI
 		if (conn != null) {
 			try 
 			{
-				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameIV 
+				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameVI 
 						+ "`(`player_uuid`, `ignore_uuid`) " 
 						+ "VALUES(?, ?)";
 				preparedStatement = conn.prepareStatement(sql);
@@ -120,7 +120,7 @@ public interface TableVI
 		{
 			try 
 			{
-				String data = "UPDATE `" + plugin.getMysqlHandler().tableNameIV
+				String data = "UPDATE `" + plugin.getMysqlHandler().tableNameVI
 						+ "` SET `player_uuid` = ?, `ignore_uuid` = ?" 
 						+ " WHERE "+whereColumn;
 				preparedStatement = conn.prepareStatement(data);
@@ -162,7 +162,7 @@ public interface TableVI
 		{
 			try 
 			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameIV 
+				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameVI 
 						+ "` WHERE "+whereColumn+" LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -209,7 +209,7 @@ public interface TableVI
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		try 
 		{
-			String sql = "DELETE FROM `" + plugin.getMysqlHandler().tableNameIV + "` WHERE "+whereColumn;
+			String sql = "DELETE FROM `" + plugin.getMysqlHandler().tableNameVI + "` WHERE "+whereColumn;
 			preparedStatement = conn.prepareStatement(sql);
 			int i = 1;
 	        for(Object o : whereObject)
@@ -245,7 +245,7 @@ public interface TableVI
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameIV + "` ORDER BY `id` DESC LIMIT 1";
+				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameVI + "` ORDER BY `id` DESC LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
@@ -287,7 +287,7 @@ public interface TableVI
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameIV
+				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameVI
 						+ "` WHERE "+whereColumn
 						+ " ORDER BY `id` DESC";
 		        preparedStatement = conn.prepareStatement(sql);
@@ -339,7 +339,7 @@ public interface TableVI
 		{
 			try 
 			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameIV 
+				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameVI 
 						+ "` WHERE "+whereColumn+" ORDER BY "+orderByColumn+" DESC LIMIT "+start+", "+end;
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -394,11 +394,11 @@ public interface TableVI
 				String sql = "";
 				if(desc)
 				{
-					sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameIV 
+					sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameVI 
 							+ "` ORDER BY "+orderByColumn+" DESC LIMIT "+start+", "+end;
 				} else
 				{
-					sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameIV 
+					sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameVI 
 							+ "` ORDER BY "+orderByColumn+" ASC LIMIT "+start+", "+end;
 				}
 				

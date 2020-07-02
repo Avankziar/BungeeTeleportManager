@@ -69,17 +69,38 @@ public class BungeeBridge
 			{
 				message += sepb+idhover+sepw+he.getAction().toString()+sepw;
 				int hei = 0;
-				for(BaseComponent hebc : he.getValue())
+				/*for(Content hebc : he.getContents())
 				{
-					if(he.getValue().length-1==hei)
+					if(hebc instanceof ContentText)
 					{
-						message += hebc.toLegacyText().replace(" ", sepspace);
-					} else
+						if(((ContentText) hebc).getValue() instanceof BaseComponent[])
+						{
+							BaseComponent[] bcc = (BaseComponent[]) ((ContentText) hebc).getValue();
+							for(BaseComponent bacc : bcc)
+							{
+								message += bacc.toLegacyText().replace(" ", sepspace)+"~!~";
+							}
+						} else if(((ContentText) hebc).getValue() instanceof String)
+						{
+							message += ((ContentText) hebc).getValue();
+						}
+					} else if(hebc instanceof ContentItem)
 					{
-						message += hebc.toLegacyText().replace(" ", sepspace)+"~!~";
+						//message += ((ContentItem) hebc).getTag().se
+					} else if(hebc instanceof ContentEntity)
+					{
+						message += ((ContentEntity) hebc).getName().toLegacyText();
 					}
-					hei++;
+				}*/
+				for(BaseComponent hebc : he.getValue())
+				if(he.getValue().length-1==hei)
+				{
+					message += hebc.toLegacyText().replace(" ", sepspace);
+				} else
+				{
+					message += hebc.toLegacyText().replace(" ", sepspace)+"~!~";
 				}
+				hei++;
 			}
 			if(ce != null)
 			{

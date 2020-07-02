@@ -1,10 +1,13 @@
 Build 3 =========================================================================================================================
-- /tpaignore <Spielername> | Ignoriert den Spieler für Tpas.
-- /tpaignorelist [Seitenzahl] [Spielername] | List für TpaIgnore.
+
 
 Build 2 =========================================================================================================================
-- Mögliche Effektvergabe durch die Config bei /home, /warp, /back und /deathback
-- TpAccept Cooldown per Config
+- +Mögliche Effektvergabe durch die Config bei /home, /warp, /back und /deathback
+- +TpAccept Cooldown per Config
+- +/tpaignore <Spielername> | Ignoriert den Spieler für Tpas.
+- +/tpaignorelist [Seitenzahl] [Spielername] | List für TpaIgnore.
+- +/sethome home, Überschreibt den Home, aber nur, wenn man noch homes frei hat, oder bei 0 ist.
+- +Async "teleport".
 
 BungeeTeleportManager Build 1 =======================================================================================================================
 - BungeeCord ready

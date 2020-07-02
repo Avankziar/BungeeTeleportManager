@@ -24,7 +24,7 @@ public class CommandHelper
 		this.plugin = plugin;
 		map = new LinkedHashMap<>();
 		map.put(StringValues.CMD_BTM, new CommandModule(StringValues.CMD_BTM, StringValues.PERM_BTM, 0, 0, StringValues.SUGGEST_BTM));
-		map.put(StringValues.CMD_RELOAD, new CommandModule(StringValues.CMD_RELOAD, StringValues.PERM_RELOAD, 0, 0, StringValues.SUGGEST_RELOAD));
+		map.put("reload", new CommandModule("reload", StringValues.PERM_RELOAD, 0, 0, StringValues.SUGGEST_RELOAD));
 		
 		map.put(StringValues.CMD_BACK, new CommandModule(StringValues.CMD_BACK, StringValues.PERM_BACK, 0, 0, StringValues.SUGGEST_BACK));
 		map.put(StringValues.CMD_DEATHBACK, new CommandModule(StringValues.CMD_DEATHBACK, StringValues.PERM_DEATHBACK, 0, 0, StringValues.SUGGEST_DEATHBACK));
@@ -45,6 +45,7 @@ public class CommandHelper
 		map.put(StringValues.CMD_TELEPORT_TPCANCEL, new CommandModule(StringValues.CMD_TELEPORT_TPCANCEL, StringValues.PERM_TELEPORT_TPCANCEL, 0, 0, StringValues.SUGGEST_TPCANCEL));
 		map.put(StringValues.CMD_TELEPORT_TPTOGGLE, new CommandModule(StringValues.CMD_TELEPORT_TPTOGGLE, StringValues.PERM_TELEPORT_TPTOGGLE, 0, 0, StringValues.SUGGEST_TPTOGGLE));
 		map.put(StringValues.CMD_TELEPORT_TPAIGNORE, new CommandModule(StringValues.CMD_TELEPORT_TPAIGNORE, StringValues.PERM_TELEPORT_TPAIGNORE, 0, 0, StringValues.SUGGEST_TPAIGNORE));
+		map.put(StringValues.CMD_TELEPORT_TPAIGNORELIST, new CommandModule(StringValues.CMD_TELEPORT_TPAIGNORELIST, StringValues.PERM_TELEPORT_TPAIGNORELIST, 0, 0, StringValues.SUGGEST_TPAIGNORELIST));
 		map.put(StringValues.CMD_TELEPORT_TP, new CommandModule(StringValues.CMD_TELEPORT_TP, StringValues.PERM_TELEPORT_TP, 0, 0, StringValues.SUGGEST_TP));
 		map.put(StringValues.CMD_TELEPORT_TPHERE, new CommandModule(StringValues.CMD_TELEPORT_TPHERE, StringValues.PERM_TELEPORT_TPHERE, 0, 0, StringValues.SUGGEST_TPHERE));
 		map.put(StringValues.CMD_TELEPORT_TPALL, new CommandModule(StringValues.CMD_TELEPORT_TPALL, StringValues.PERM_TELEPORT_TPALL, 0, 0, StringValues.SUGGEST_TPALL));
