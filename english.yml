@@ -93,6 +93,7 @@ CmdHome:
   TooManyHomesToUse: '&cYou have &f%amount% &cHomes too much! Please delete &f%amount% &cHomes to teleport to your homes! &f/homes &cTo view your homes.'
   YouHaveNoHomes: '&cYou do not own any homes!'
   HomeCreate: '&aYou created the home with the name &f%name%&a!'
+  HomeNewSet: '&aYou reseted the home with the name &f%name%&a!'
   HomeNotExist: '&cThe Home does not exist!'
   HomeDelete: '&eYou have deleted the home with the name &f%name%&c!'
   HomeServerWorldDelete: '&you have &deleted all homes in the world &f%world% &the server &f%server% &deleted! &cDeleted data count = &f%amount%!'

@@ -63,7 +63,7 @@ public class HomeHelper
 			//		.replace("%home%", homeName)));
 			//return;
 		}
-		if(!plugin.getHomeHandler().compareHomeAmount(player, true))
+		if(!plugin.getHomeHandler().compareHomeAmount(player, true, exist))
 		{
 			return;
 		}
@@ -105,13 +105,16 @@ public class HomeHelper
 		{
 			plugin.getMysqlHandler().updateData(MysqlHandler.Type.HOMES, home,
 					"`player_uuid` = ? AND `home_name` = ?", player.getUniqueId().toString(), homeName);
+			player.spigot().sendMessage(ChatApi.tctl(
+					plugin.getYamlHandler().getL().getString("CmdHome.HomeNewSet")
+					.replace("%name%", homeName)));
 		} else
 		{
 			plugin.getMysqlHandler().create(MysqlHandler.Type.HOMES, home);
+			player.spigot().sendMessage(ChatApi.tctl(
+					plugin.getYamlHandler().getL().getString("CmdHome.HomeCreate")
+					.replace("%name%", homeName)));
 		}
-		player.spigot().sendMessage(ChatApi.tctl(
-				plugin.getYamlHandler().getL().getString("CmdHome.HomeCreate")
-				.replace("%name%", homeName)));
 		plugin.getUtility().setHomesTabCompleter(player);
 		return;
 	}
