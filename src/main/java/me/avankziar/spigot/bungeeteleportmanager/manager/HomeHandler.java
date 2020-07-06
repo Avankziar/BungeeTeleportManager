@@ -58,10 +58,13 @@ public class HomeHandler
 			int i = compareGlobalHomes(player, message, exist);
 			if(i == 0 && exist)
 			{
-				return true;
-			} else
+				return false;
+			} else if(i < 0)
 			{
 				return false;
+			} else
+			{
+				return true;
 			}
 		}		
 		if(plugin.getYamlHandler().get().getBoolean("UseServerPermissionLevel", false))
@@ -69,10 +72,13 @@ public class HomeHandler
 			int i = compareServerHomes(player, message, exist);
 			if(i == 0 && exist)
 			{
-				return true;
-			} else
+				return false;
+			} else if(i < 0)
 			{
 				return false;
+			} else
+			{
+				return true;
 			}
 		}
 		if(plugin.getYamlHandler().get().getBoolean("UseWorldPermissionLevel", false))
@@ -80,10 +86,13 @@ public class HomeHandler
 			int i = compareWorldHomes(player, message, exist);
 			if(i == 0 && exist)
 			{
-				return true;
-			} else
+				return false;
+			} else if(i < 0)
 			{
 				return false;
+			} else
+			{
+				return true;
 			}
 		}
 		return true;

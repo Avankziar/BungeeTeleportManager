@@ -63,7 +63,7 @@ public class HomeHelper
 			//		.replace("%home%", homeName)));
 			//return;
 		}
-		if(!plugin.getHomeHandler().compareHomeAmount(player, true, exist))
+		if(plugin.getHomeHandler().compareHomeAmount(player, true, exist))
 		{
 			return;
 		}
