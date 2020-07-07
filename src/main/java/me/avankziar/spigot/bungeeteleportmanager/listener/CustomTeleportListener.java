@@ -4,6 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.general.object.Teleport;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.events.PlayerTeleportToPlayerEvent;
@@ -40,6 +41,7 @@ public class CustomTeleportListener implements Listener
 			return;
 		}
 		plugin.getUtility().givesEffect(event.getPlayer());
-		plugin.getCustomHandler().sendTpPos(event.getPlayer(), event.getServerlocation(), event.getMessage());
+		event.getPlayer().sendMessage(ChatApi.tl(event.getPreMessage()));
+		plugin.getCustomHandler().sendTpPos(event.getPlayer(), event.getServerlocation(), event.getPostMessage());
 	}
 }

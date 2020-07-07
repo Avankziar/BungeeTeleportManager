@@ -14,29 +14,33 @@ public class PlayerTeleportToPositionEvent extends Event
 	private boolean isCancelled;
 	private Player player;
 	private ServerLocation serverlocation;
-	private String message;
+	private String premessage;
+	private String postmessage;
 	
 	public PlayerTeleportToPositionEvent(Player player, String server, String world,
-			double x, double y, double z, float yaw, float pitch, String message)
+			double x, double y, double z, float yaw, float pitch, String premessage, String postmessage)
 	{
 		setPlayer(player);
 		setServerlocation(new ServerLocation(server, world, x, y, z, yaw, pitch));
-		setMessage(message);
+		setPreMessage(premessage);
+		setPostMessage(postmessage);
 	}
 	
-	public PlayerTeleportToPositionEvent(Player player, ServerLocation serverLocation, String message)
+	public PlayerTeleportToPositionEvent(Player player, ServerLocation serverLocation, String premessage, String postmessage)
 	{
 		setPlayer(player);
 		setServerlocation(serverLocation);
-		setMessage(message);
+		setPreMessage(premessage);
+		setPostMessage(postmessage);
 	}
 	
-	public PlayerTeleportToPositionEvent(Player player, String server, Location location, String message)
+	public PlayerTeleportToPositionEvent(Player player, String server, Location location, String premessage, String postmessage)
 	{
 		setPlayer(player);
 		setServerlocation(new ServerLocation(server, location.getWorld().getName(),
 				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch()));
-		setMessage(message);
+		setPreMessage(premessage);
+		setPostMessage(postmessage);
 	}
 	
 
@@ -83,13 +87,23 @@ public class PlayerTeleportToPositionEvent extends Event
 		this.serverlocation = serverlocation;
 	}
 
-	public String getMessage()
+	public String getPreMessage()
 	{
-		return message;
+		return premessage;
 	}
 
-	public void setMessage(String message)
+	public void setPreMessage(String premessage)
 	{
-		this.message = message;
+		this.premessage = premessage;
+	}
+
+	public String getPostMessage()
+	{
+		return postmessage;
+	}
+
+	public void setPostMessage(String postmessage)
+	{
+		this.postmessage = postmessage;
 	}
 }
