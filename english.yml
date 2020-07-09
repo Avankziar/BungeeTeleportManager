@@ -130,6 +130,11 @@ CmdTp:
   PlayerIsToggle: '&cThe player blocks teleport requests!'
   PlayerHasToggled: '&cLook out! &The player blocks teleport requests, but you will still be passed through!'
   TpaTooYourself: '&cYou cannot send a teleport request to yourself!'
+  IgnoreCreate: '&eThe teleport requests of the player &f%target% &care now ignored by you!'
+  IgnoreDelete: '&eThe teleport requests of the player &f%target% &awill no longer be ignored by you!'
+  Ignored: '&cThe player ignores your teleport request!'
+  IgnoredBypass: '&eThe player &cignores &eyour teleport request, but you will be forwarded anyway!'
+  IgnoreList: '&eYour tpaignorelist: &r'
 CmdWarp:
   WarpTo: '&aYou have been transported to warp point &f%warp% &ateleported.'
   RequestInProgress: '&eThe warp teleport is being processed!'

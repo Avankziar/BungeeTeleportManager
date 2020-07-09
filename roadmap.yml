@@ -8,6 +8,7 @@ Build 2 ========================================================================
 - +/tpaignorelist [Seitenzahl] [Spielername] | List für TpaIgnore.
 - +/sethome home, Überschreibt den Home, aber nur, wenn man noch homes frei hat, oder bei 0 ist.
 - +Async "teleport".
+- +CustomTeleport Api wurde ein ZusatzArgument hinzugefügt. Nun können eine Nachricht bevor und eine Nachricht nach dem teleport ausgegeben werden.
 
 BungeeTeleportManager Build 1 =======================================================================================================================
 - BungeeCord ready

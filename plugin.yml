@@ -2,7 +2,7 @@ name: BungeeTeleportManager
 main: main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager
 version: 2
 author: Avankziar
-api-version: 1.15
+api-version: 1.16
 description: A Home, Portal, Respawn, Teleport and Warp plugin
 commands:
   btm:
