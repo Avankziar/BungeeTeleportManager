@@ -37,8 +37,14 @@ public class PlayerTeleportToPositionEvent extends Event
 	public PlayerTeleportToPositionEvent(Player player, String server, Location location, String premessage, String postmessage)
 	{
 		setPlayer(player);
-		setServerlocation(new ServerLocation(server, location.getWorld().getName(),
-				location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch()));
+		setServerlocation(
+				new ServerLocation(server,
+				location.getWorld().getName(),
+				location.getX(),
+				location.getY(),
+				location.getZ(),
+				location.getYaw(),
+				location.getPitch()));
 		setPreMessage(premessage);
 		setPostMessage(postmessage);
 	}
