@@ -67,7 +67,7 @@ public class BackHandler
     		player.connect(plugin.getProxy().getServerInfo(oldserver));
     	}
 		int delay = 25;
-		if(!player.hasPermission(StringValues.PERM_BYPASS_WARP_DELAY))
+		if(!player.hasPermission(StringValues.PERM_BYPASS_BACK_DELAY))
 		{
 			delay = delayed;
 		}

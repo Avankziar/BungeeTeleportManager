@@ -211,6 +211,7 @@ public class StringValues
 	
 	//Bypass Perm
 	PERM_BYPASS_BACK_COST = "btm.bypass.back.cost",
+	PERM_BYPASS_BACK_DELAY = "btm.bypass.back.delay",
 	PERM_BYPASS_HOME = "btm.bypass.home.admin",
 	PERM_BYPASS_HOME_TOOMANY = "btm.bypass.home.toomany",
 	PERM_BYPASS_HOME_COST = "btm.bypass.home.cost",
