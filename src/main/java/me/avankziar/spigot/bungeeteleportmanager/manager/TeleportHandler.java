@@ -150,6 +150,7 @@ public class TeleportHandler
 			out.writeUTF(teleport.getFromName());
 			out.writeUTF(teleport.getToName());
 			out.writeUTF(returnmessage);
+			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeTeleport", 2000));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -215,6 +216,7 @@ public class TeleportHandler
 			out.writeUTF(teleport.getToName());
 			out.writeUTF(teleport.getType().toString());
 			out.writeUTF(errormessage);
+			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeTeleport", 2000));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -235,6 +237,7 @@ public class TeleportHandler
 			out.writeBoolean(isSpecific);
 			out.writeUTF(server);
 			out.writeUTF(world);
+			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeTeleport", 2000));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -262,6 +265,7 @@ public class TeleportHandler
 			out.writeFloat(sl.getYaw());
 			out.writeFloat(sl.getPitch());
 			out.writeUTF(errormessage);
+			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeTeleport", 2000));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

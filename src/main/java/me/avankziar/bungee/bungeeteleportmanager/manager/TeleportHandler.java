@@ -13,30 +13,34 @@ import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.general.object.Teleport;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 public class TeleportHandler
 {
 	private BungeeTeleportManager plugin;
-	private HashMap<String,Teleport> pendingTeleports; //Playername welche anfragt
-	private HashMap<String,String> playerWorld;
-	private ArrayList<String> forbiddenServer;
-	private ArrayList<String> forbiddenWorld;
+	private static HashMap<String,Teleport> pendingTeleports = new HashMap<>(); //Playername welche anfragt
+	private static HashMap<String,String> playerWorld = new HashMap<>();
+	private static ArrayList<String> forbiddenServer = new ArrayList<>();
+	private static ArrayList<String> forbiddenWorld = new ArrayList<>();
+	
+	private ScheduledTask taskOne;
+	private ScheduledTask taskTwo;
+	private ScheduledTask taskThree;
+	private ScheduledTask taskFour;
+	private ScheduledTask taskFive;
+	private ScheduledTask taskSix;
 	
 	public TeleportHandler(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
-		pendingTeleports = new HashMap<>();
-		playerWorld = new HashMap<>();
-		forbiddenServer = new ArrayList<>();
-		forbiddenWorld = new ArrayList<>();
 	}
 
-	public HashMap<String,Teleport> getPendingTeleports()
+	public static HashMap<String,Teleport> getPendingTeleports()
 	{
 		return pendingTeleports;
 	}
 	
-	public String getPendingTeleportValueToName(String toName)
+	public static String getPendingTeleportValueToName(String toName)
 	{
 		String r = null;
 		for(String fromName : getPendingTeleports().keySet())
@@ -51,50 +55,22 @@ public class TeleportHandler
 		return r;
 	}
 	
-	public HashMap<String,String> getPlayerWorld()
+	public static HashMap<String,String> getPlayerWorld()
 	{
 		return playerWorld;
 	}
 
-	public ArrayList<String> getForbiddenServer()
+	public static ArrayList<String> getForbiddenServer()
 	{
 		return forbiddenServer;
 	}
 
-	public ArrayList<String> getForbiddenWorld()
+	public static ArrayList<String> getForbiddenWorld()
 	{
 		return forbiddenWorld;
 	}
 	
-	public void teleportPlayer(ProxiedPlayer sender, ProxiedPlayer target)
-	{
-		if(!sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
-		{
-			sender.connect(target.getServer().getInfo());
-		}
-		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				if(sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
-	        	{
-					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-			        DataOutputStream out = new DataOutputStream(streamout);
-			        try {
-						out.writeUTF(StringValues.TP_PLAYERTOPLAYER);
-						out.writeUTF(sender.getName());
-						out.writeUTF(target.getName());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				    target.getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
-	        	}
-			}
-		}, 1, TimeUnit.SECONDS);
-	}
-	
-	public void sendServerQuitMessage(ProxiedPlayer sender, String otherPlayerName)
+	public static void sendServerQuitMessage(ProxiedPlayer sender, String otherPlayerName)
 	{
 		ByteArrayOutputStream streamout = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(streamout);
@@ -108,8 +84,46 @@ public class TeleportHandler
 	    sender.getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
 	}
 	
+	public void teleportPlayer(ProxiedPlayer sender, ProxiedPlayer target)
+	{
+		if(sender == null || target == null)
+		{
+			return;
+		}
+		if(!sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
+		{
+			sender.connect(target.getServer().getInfo());
+		}
+		taskSix = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if(sender == null || target == null)
+				{
+					taskSix.cancel();
+					return;
+				}
+				if(sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
+	        	{
+					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
+			        DataOutputStream out = new DataOutputStream(streamout);
+			        try {
+						out.writeUTF(StringValues.TP_PLAYERTOPLAYER);
+						out.writeUTF(sender.getName());
+						out.writeUTF(target.getName());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				    target.getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
+				    taskSix.cancel();
+	        	}
+			}
+		}, 5, 5, TimeUnit.MILLISECONDS);
+	}
+	
 	//Player to has accepted
-	public void preTeleportPlayerToPlayer(String fromName, String toName, String errormessage)
+	public void preTeleportPlayerToPlayer(String fromName, String toName, String errormessage, int delayed)
 	{
 		ProxiedPlayer from = plugin.getProxy().getPlayer(fromName); //Player witch execute the /tpa
 		ProxiedPlayer to = plugin.getProxy().getPlayer(toName);
@@ -134,33 +148,46 @@ public class TeleportHandler
 			return;
 		}
 		getPendingTeleports().remove(fromName);
+		int delay = 25;
+		if(!from.hasPermission(StringValues.PERM_BYPASS_TELEPORT_DELAY))
+		{
+			delay = delayed;
+		}
 		if(teleport.getType() == Teleport.Type.TPTO)
 		{
-			plugin.getBackHandler().requestNewBack(from);
-			plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+			BackHandler.requestNewBack(from);
+			taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
     		{
     			@Override
     			public void run()
     			{
-    				teleportPlayer(from, to);
+    				if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
+    				{
+    					teleportPlayer(from, to);
+        				taskOne.cancel();
+    				}
     			}
-    		}, 1, TimeUnit.SECONDS);
+    		}, delay, 5, TimeUnit.MILLISECONDS);
 		} else if(teleport.getType() == Teleport.Type.TPHERE)
 		{
-			plugin.getBackHandler().requestNewBack(to);
-			plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+			BackHandler.requestNewBack(to);
+			taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
     		{
     			@Override
     			public void run()
     			{
-    				teleportPlayer(to, from);
+    				if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
+    				{
+    					teleportPlayer(to, from);
+        				taskOne.cancel();
+    				}
     			}
-    		}, 1, TimeUnit.SECONDS);
+    		}, delay, 5, TimeUnit.MILLISECONDS);
 		}
 		return;
 	}
 	
-	public void preTeleportPlayerToPlayerForceUse(Teleport teleport, String errormessage)
+	public void preTeleportPlayerToPlayerForceUse(Teleport teleport, String errormessage, int delayed)
 	{
 		ProxiedPlayer from = plugin.getProxy().getPlayer(teleport.getFromName());
 		ProxiedPlayer to = plugin.getProxy().getPlayer(teleport.getToName());
@@ -173,32 +200,45 @@ public class TeleportHandler
 			from.sendMessage(ChatApi.tctl(errormessage));
 			return;
 		}
+		int delay = 25;
+		if(!from.hasPermission(StringValues.PERM_BYPASS_TELEPORT_DELAY))
+		{
+			delay = delayed;
+		}
 		if(teleport.getType() == Teleport.Type.TPTO)
 		{
-			plugin.getBackHandler().requestNewBack(from);
-			plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+			BackHandler.requestNewBack(from);
+			taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
     		{
     			@Override
     			public void run()
     			{
-    				teleportPlayer(from, to);
+    				if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
+    				{
+    					teleportPlayer(from, to);
+        				taskTwo.cancel();
+    				}
     			}
-    		}, 1, TimeUnit.SECONDS);
+    		}, delay, 5, TimeUnit.MILLISECONDS);
 		} else if(teleport.getType() == Teleport.Type.TPHERE)
 		{
-			plugin.getBackHandler().requestNewBack(to);
-			plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+			BackHandler.requestNewBack(to);
+			taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
     		{
     			@Override
     			public void run()
     			{
-    				teleportPlayer(to, from);
+    				if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
+    				{
+    					teleportPlayer(to, from);
+        				taskTwo.cancel();
+    				}
     			}
-    		}, 1, TimeUnit.SECONDS);
+    		}, delay, 5, TimeUnit.MILLISECONDS);
 		}
 	}
 	
-	public void preTeleportAllPlayerToOnePlayer(String fromName, Object... objects)
+	public void preTeleportAllPlayerToOnePlayer(String fromName, int delayed, Object... objects)
 	{
 		ProxiedPlayer from = plugin.getProxy().getPlayer(fromName);
 		if(from == null)
@@ -207,50 +247,63 @@ public class TeleportHandler
 		}
 		String server = (String) objects[0];
 		String world = (String) objects[1];
+		int delay = 25;
+		if(!from.hasPermission(StringValues.PERM_BYPASS_TELEPORT_DELAY))
+		{
+			delay = delayed;
+		}
 		if(server == null && world == null)
 		{
 			for(ProxiedPlayer to : plugin.getProxy().getPlayers())
 			{
 				if(!from.getName().equals(to.getName()))
 				{
-					plugin.getBackHandler().requestNewBack(to);
-					plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+					BackHandler.requestNewBack(to);
+					taskThree = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 					{
 						@Override
 						public void run()
 						{
-							teleportPlayer(to, from);
+							if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
+							{
+								teleportPlayer(to, from);
+								taskThree.cancel();
+							}
 						}
-					}, 1, TimeUnit.SECONDS);
+					}, delay, 5, TimeUnit.MILLISECONDS);
 				}
 			}
 		} else
 		{
 			for(ProxiedPlayer to : plugin.getProxy().getPlayers())
 			{
-				if(plugin.getTeleportHandler().getPlayerWorld().containsKey(to.getName()))
+				if(getPlayerWorld().containsKey(to.getName()))
 				{
-					boolean worlds = plugin.getTeleportHandler().getPlayerWorld().get(to.getName()).equals(world);
+					boolean worlds = getPlayerWorld().get(to.getName()).equals(world);
 					if(!from.getName().equals(to.getName())
 							&& to.getServer().getInfo().getName().equals(server)
 							&& worlds)
 					{
-						plugin.getBackHandler().requestNewBack(to);
-						plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+						BackHandler.requestNewBack(to);
+						taskThree = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 						{
 							@Override
 							public void run()
 							{
-								teleportPlayer(to, from);
+								if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
+								{
+									teleportPlayer(to, from);
+									taskThree.cancel();
+								}
 							}
-						}, 1, TimeUnit.SECONDS);
+						}, delay, 5, TimeUnit.MILLISECONDS);
 					}
 				}
 			}
 		}
 	}
 	
-	public void teleportPlayerToPosition(String playerName, ServerLocation location, String errorServerNotFound)
+	public void teleportPlayerToPosition(String playerName, ServerLocation location, String errorServerNotFound, int delayed)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(playerName);
 		if(player == null)
@@ -262,43 +315,72 @@ public class TeleportHandler
 			player.sendMessage(ChatApi.tctl(errorServerNotFound));
 			return;
 		}
-		plugin.getBackHandler().requestNewBack(player);
-		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		BackHandler.requestNewBack(player);
+		int delay = 25;
+		if(!player.hasPermission(StringValues.PERM_BYPASS_TELEPORT_DELAY))
+		{
+			delay = delayed;
+		}
+		taskFour = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				if(!player.getServer().getInfo().getName().equals(location.getServer()))
+				if(!BackHandler.pendingNewBackRequests.contains(player.getName()))
 				{
-					player.connect(plugin.getProxy().getServerInfo(location.getServer()));
+					teleportPlayerToPositionPost(player, location);
+					taskFour.cancel();
 				}
-				plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-				{
-					@Override
-					public void run()
-					{
-						if(player.getServer().getInfo().getName().equals(location.getServer()))
-			        	{
-							ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-					        DataOutputStream out = new DataOutputStream(streamout);
-					        try {
-								out.writeUTF(StringValues.TP_PLAYERTOPOSITION);
-								out.writeUTF(playerName);
-								out.writeUTF(location.getServer());
-								out.writeUTF(location.getWordName());
-								out.writeDouble(location.getX());
-								out.writeDouble(location.getY());
-								out.writeDouble(location.getZ());
-								out.writeFloat(location.getYaw());
-								out.writeFloat(location.getPitch());
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						    player.getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
-			        	}
-					}
-				}, 1, TimeUnit.SECONDS);
 			}
-		}, 1, TimeUnit.SECONDS);
+		}, delay, 5, TimeUnit.MILLISECONDS);
+	}
+	
+	public void teleportPlayerToPositionPost(ProxiedPlayer player, ServerLocation location)
+	{
+		if(player == null || location == null)
+		{
+			return;
+		}
+		if(!player.getServer().getInfo().getName().equals(location.getServer()))
+		{
+			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
+		}
+		taskFive = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if(player == null || location == null)
+				{
+					taskFive.cancel();
+					return;
+				}
+				if(location.getServer() == null)
+				{
+					taskFive.cancel();
+					return;
+				}
+				if(player.getServer().getInfo().getName().equals(location.getServer()))
+	        	{
+					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
+			        DataOutputStream out = new DataOutputStream(streamout);
+			        try {
+						out.writeUTF(StringValues.TP_PLAYERTOPOSITION);
+						out.writeUTF(player.getName());
+						out.writeUTF(location.getServer());
+						out.writeUTF(location.getWordName());
+						out.writeDouble(location.getX());
+						out.writeDouble(location.getY());
+						out.writeDouble(location.getZ());
+						out.writeFloat(location.getYaw());
+						out.writeFloat(location.getPitch());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				    player.getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
+				    taskFive.cancel();
+	        	}
+			}
+		}, 5, 5, TimeUnit.MILLISECONDS);
 	}
 }

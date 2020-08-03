@@ -61,9 +61,9 @@ public class TeleportMessageListener implements Listener
         		}
         		return;
         	}
-        	if(plugin.getBackHandler().getBackLocations().get(toName) != null)
+        	if(BackHandler.getBackLocations().get(toName) != null)
         	{
-        		if(plugin.getBackHandler().getBackLocations().get(toName).isToggle()
+        		if(BackHandler.getBackLocations().get(toName).isToggle()
         				&& !bypass)
         		{
         			ByteArrayOutputStream streamout = new ByteArrayOutputStream();
@@ -78,8 +78,8 @@ public class TeleportMessageListener implements Listener
     		        return;
         		}
         	}
-        	if(plugin.getTeleportHandler().getPendingTeleports().containsKey(fromName)
-        			|| plugin.getTeleportHandler().getPendingTeleportValueToName(toName) != null)
+        	if(TeleportHandler.getPendingTeleports().containsKey(fromName)
+        			|| TeleportHandler.getPendingTeleportValueToName(toName) != null)
         	{
         		ByteArrayOutputStream streamout = new ByteArrayOutputStream();
 		        DataOutputStream out = new DataOutputStream(streamout);
@@ -92,9 +92,9 @@ public class TeleportMessageListener implements Listener
 			    plugin.getProxy().getPlayer(fromName).getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
         	} else
         	{
-        		if(plugin.getTeleportHandler().getForbiddenServer().contains(
+        		if(TeleportHandler.getForbiddenServer().contains(
         				plugin.getProxy().getPlayer(fromName).getServer().getInfo().getName())
-        				|| plugin.getTeleportHandler().getForbiddenServer().contains(
+        				|| TeleportHandler.getForbiddenServer().contains(
                 				plugin.getProxy().getPlayer(toName).getServer().getInfo().getName()))
         		{
         			ByteArrayOutputStream streamout = new ByteArrayOutputStream();
@@ -109,10 +109,10 @@ public class TeleportMessageListener implements Listener
     			    return;
         		}
         		
-        		if(plugin.getTeleportHandler().getForbiddenWorld().contains(
-        				plugin.getTeleportHandler().getPlayerWorld().get(fromName))
-        				|| plugin.getTeleportHandler().getForbiddenWorld().contains(
-                				plugin.getTeleportHandler().getPlayerWorld().get(toName)))
+        		if(TeleportHandler.getForbiddenWorld().contains(
+        				TeleportHandler.getPlayerWorld().get(fromName))
+        				|| TeleportHandler.getForbiddenWorld().contains(
+        						TeleportHandler.getPlayerWorld().get(toName)))
         		{
         			ByteArrayOutputStream streamout = new ByteArrayOutputStream();
     		        DataOutputStream out = new DataOutputStream(streamout);
@@ -126,9 +126,9 @@ public class TeleportMessageListener implements Listener
     			    return;
         		}
         		boolean isToggled = false;
-        		if(plugin.getBackHandler().getBackLocations().get(toName) != null)
+        		if(BackHandler.getBackLocations().get(toName) != null)
         		{
-        			if(plugin.getBackHandler().getBackLocations().get(toName).isToggle()
+        			if(BackHandler.getBackLocations().get(toName).isToggle()
             				&& bypass)
             		{
             			isToggled = true;
@@ -189,9 +189,9 @@ public class TeleportMessageListener implements Listener
         	String toUUID = in.readUTF();
         	String toName = in.readUTF();
         	String type = in.readUTF();
-        	if(!plugin.getTeleportHandler().getPendingTeleports().containsKey(fromName))
+        	if(!TeleportHandler.getPendingTeleports().containsKey(fromName))
         	{
-        		plugin.getTeleportHandler().getPendingTeleports().put(fromName, 
+        		TeleportHandler.getPendingTeleports().put(fromName, 
         				new Teleport(UUID.fromString(fromUUID), fromName, UUID.fromString(toUUID), toName, Teleport.Type.valueOf(type)));
         	}
         	return;
@@ -208,9 +208,9 @@ public class TeleportMessageListener implements Listener
     			@Override
     			public void run()
     			{
-    				if(plugin.getTeleportHandler().getPendingTeleports().containsKey(fromName))
+    				if(TeleportHandler.getPendingTeleports().containsKey(fromName))
     	        	{
-    					plugin.getTeleportHandler().getPendingTeleports().remove(fromName);
+    					TeleportHandler.getPendingTeleports().remove(fromName);
         	        	if(sendMessage)
         	        	{
         	        		if(plugin.getProxy().getPlayer(fromName) != null)
@@ -232,7 +232,9 @@ public class TeleportMessageListener implements Listener
         	String fromName = in.readUTF();
         	String toName = in.readUTF();
         	String errormessage = in.readUTF();
-        	plugin.getTeleportHandler().preTeleportPlayerToPlayer(fromName, toName, errormessage);
+        	int delayed = in.readInt();
+        	TeleportHandler th = new TeleportHandler(plugin);
+        	th.preTeleportPlayerToPlayer(fromName, toName, errormessage, delayed);
         	return;
         } else if(task.equals(StringValues.TP_DENY))
         {
@@ -241,7 +243,7 @@ public class TeleportMessageListener implements Listener
         	String message = in.readUTF();
         	boolean sendMessage = in.readBoolean();
         	String errormessage = in.readUTF();
-        	if(!plugin.getTeleportHandler().getPendingTeleports().containsKey(fromName))
+        	if(!TeleportHandler.getPendingTeleports().containsKey(fromName))
         	{
         		if(sendMessage)
         		{
@@ -249,7 +251,7 @@ public class TeleportMessageListener implements Listener
         			return;
         		}
         	}
-        	plugin.getTeleportHandler().getPendingTeleports().remove(fromName);
+        	TeleportHandler.getPendingTeleports().remove(fromName);
     		plugin.getProxy().getPlayer(fromName).sendMessage(ChatApi.tctl(message));
     		plugin.getProxy().getPlayer(toName).sendMessage(ChatApi.tctl(message));
         	return;
@@ -259,7 +261,7 @@ public class TeleportMessageListener implements Listener
         	String message = in.readUTF();
         	boolean sendMessage = in.readBoolean();
         	String errormessage = in.readUTF();
-        	if(!plugin.getTeleportHandler().getPendingTeleports().containsKey(fromName))
+        	if(!TeleportHandler.getPendingTeleports().containsKey(fromName))
         	{
         		if(sendMessage)
         		{
@@ -267,10 +269,10 @@ public class TeleportMessageListener implements Listener
         			return;
         		}
         	}
-        	final String toName = plugin.getTeleportHandler().getPendingTeleports().get(fromName).getToName();
-        	plugin.getTeleportHandler().getPendingTeleports().remove(fromName);
-        	plugin.getTeleportHandler().getPendingTeleports().remove(
-        			plugin.getTeleportHandler().getPendingTeleportValueToName(fromName));
+        	final String toName = TeleportHandler.getPendingTeleports().get(fromName).getToName();
+        	TeleportHandler.getPendingTeleports().remove(fromName);
+        	TeleportHandler.getPendingTeleports().remove(
+        			TeleportHandler.getPendingTeleportValueToName(fromName));
         	message = message.replace("%fromplayer%", fromName).replace("%toplayer%", toName);
     		plugin.getProxy().getPlayer(fromName).sendMessage(ChatApi.tctl(message));
     		plugin.getProxy().getPlayer(toName).sendMessage(ChatApi.tctl(message));
@@ -283,20 +285,24 @@ public class TeleportMessageListener implements Listener
         	String toName = in.readUTF();
         	String type = in.readUTF();
         	String errormessage = in.readUTF();
-        	plugin.getTeleportHandler().preTeleportPlayerToPlayerForceUse(
+        	int delayed = in.readInt();
+        	TeleportHandler th = new TeleportHandler(plugin);
+        	th.preTeleportPlayerToPlayerForceUse(
         			new Teleport(UUID.fromString(fromUUID), fromName, UUID.fromString(toUUID), toName, Teleport.Type.valueOf(type)),
-        			errormessage);
+        			errormessage, delayed);
         	return;
         } else if(task.equals(StringValues.TP_ALL))
         {
         	String fromName = in.readUTF();
         	boolean isSpecific = in.readBoolean();
+        	int delayed = in.readInt();
         	if(isSpecific)
         	{
         		
         	} else
         	{
-        		plugin.getTeleportHandler().preTeleportAllPlayerToOnePlayer(fromName);
+        		TeleportHandler th = new TeleportHandler(plugin);
+            	th.preTeleportAllPlayerToOnePlayer(fromName, delayed);
         	}
         	return;
         } else if(task.equals(StringValues.TP_POS))
@@ -310,19 +316,21 @@ public class TeleportMessageListener implements Listener
         	float yaw = in.readFloat();
         	float pitch = in.readFloat();
         	String errorServerNotFound = in.readUTF();
+        	int delayed = in.readInt();
         	ServerLocation location = new ServerLocation(server, worldName, x, y, z, yaw, pitch);
-        	plugin.getTeleportHandler().teleportPlayerToPosition(playerName, location, errorServerNotFound);
+        	TeleportHandler th = new TeleportHandler(plugin);
+        	th.teleportPlayerToPosition(playerName, location, errorServerNotFound, delayed);
         	return;
         } else if(task.equals(StringValues.TP_SENDWORLD))
         {
         	String playerName = in.readUTF();
         	String worldName = in.readUTF();
-        	if(plugin.getTeleportHandler().getPlayerWorld().containsKey(playerName))
+        	if(TeleportHandler.getPlayerWorld().containsKey(playerName))
         	{
-        		plugin.getTeleportHandler().getPlayerWorld().replace(playerName, worldName);
+        		TeleportHandler.getPlayerWorld().replace(playerName, worldName);
         	} else
         	{
-        		plugin.getTeleportHandler().getPlayerWorld().put(playerName, worldName);
+        		TeleportHandler.getPlayerWorld().put(playerName, worldName);
         	}
         	return;
         } else if(task.equals(StringValues.TP_SENDLIST))
@@ -336,12 +344,12 @@ public class TeleportMessageListener implements Listener
         	}
         	if(type.equalsIgnoreCase("server"))
         	{
-        		plugin.getTeleportHandler().getForbiddenServer().clear();
-        		plugin.getTeleportHandler().getForbiddenServer().addAll(list);
+        		TeleportHandler.getForbiddenServer().clear();
+        		TeleportHandler.getForbiddenServer().addAll(list);
         	} else if(type.equalsIgnoreCase("world"))
         	{
-        		plugin.getTeleportHandler().getForbiddenWorld().clear();
-        		plugin.getTeleportHandler().getForbiddenWorld().addAll(list);
+        		TeleportHandler.getForbiddenWorld().clear();
+        		TeleportHandler.getForbiddenWorld().addAll(list);
         	}
         	return;
         }

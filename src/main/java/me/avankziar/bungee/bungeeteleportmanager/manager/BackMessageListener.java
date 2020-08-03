@@ -6,7 +6,6 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import main.java.me.avankziar.bungee.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.general.object.Back;
@@ -50,9 +49,9 @@ public class BackMessageListener implements Listener
         	String uuid = in.readUTF();
         	String name = in.readUTF();
         	Back back = getTaskBack(in, uuid, name);
-        	if(!plugin.getBackHandler().getBackLocations().containsKey(name))
+        	if(!BackHandler.getBackLocations().containsKey(name))
         	{
-        		plugin.getBackHandler().getBackLocations().put(name, back);
+        		BackHandler.getBackLocations().put(name, back);
         	}
         	return;
         } else if(task.equals(StringValues.BACK_SENDOBJECT))
@@ -60,19 +59,23 @@ public class BackMessageListener implements Listener
         	String uuid = in.readUTF();
         	String name = in.readUTF();
         	Back back = getTaskBack(in, uuid, name);
-        	if(!plugin.getBackHandler().getBackLocations().containsKey(name))
+        	if(!BackHandler.getBackLocations().containsKey(name))
         	{
-        		plugin.getBackHandler().getBackLocations().put(name, back);
+        		BackHandler.getBackLocations().put(name, back);
         	} else
         	{
-        		plugin.getBackHandler().getBackLocations().replace(name, back);
+        		BackHandler.getBackLocations().replace(name, back);
+        	}
+			if(BackHandler.getPendingNewBackRequests().contains(name))
+        	{
+        		BackHandler.getPendingNewBackRequests().remove(name);
         	}
         	return;
         } else if(task.equals(StringValues.BACK_SENDPLAYERBACK))
         {
         	String uuid = in.readUTF();
         	String name = in.readUTF();
-        	Back oldback = plugin.getBackHandler().getBackLocations().get(name);
+        	Back oldback = BackHandler.getBackLocations().get(name);
         	String oldserver = oldback.getLocation().getServer();
         	String oldworld = oldback.getLocation().getWordName();
         	double oldx = oldback.getLocation().getX();
@@ -81,52 +84,26 @@ public class BackMessageListener implements Listener
         	float oldyaw = oldback.getLocation().getYaw();
         	float oldpitch = oldback.getLocation().getPitch();
         	Back back = getTaskBack(in, uuid, name);
-        	plugin.getBackHandler().getBackLocations().replace(name, back);
+        	int delayed = in.readInt();
+        	BackHandler.getBackLocations().replace(name, back);
         	ProxiedPlayer player = plugin.getProxy().getPlayer(name);
         	if(player == null)
         	{
         		return;
         	}
-        	if(!player.getServer().getInfo().getName().equals(oldserver))
-        	{
-        		player.connect(plugin.getProxy().getServerInfo(oldserver));
-        	}
-        	plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					if(player.getServer().getInfo().getName().equals(oldserver))
-		        	{
-						ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-				        DataOutputStream out = new DataOutputStream(streamout);
-				        try {
-							out.writeUTF(StringValues.BACK_SENDPLAYERBACK);
-							out.writeUTF(name);
-							out.writeUTF(oldworld);
-							out.writeDouble(oldx);
-							out.writeDouble(oldy);
-							out.writeDouble(oldz);
-							out.writeFloat(oldyaw);
-							out.writeFloat(oldpitch);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					    player.getServer().sendData(StringValues.BACK_TOSPIGOT, streamout.toByteArray());
-		        	}
-				}
-			}, 1, TimeUnit.SECONDS);
+        	BackHandler bh = new BackHandler(plugin);
+        	bh.teleportBack(player, oldserver, name, oldworld, oldx, oldy, oldz, oldyaw, oldpitch, false, delayed);
         } else if(task.equals(StringValues.BACK_SENDDEATHOBJECT))
         {
         	String uuid = in.readUTF();
         	String name = in.readUTF();
         	Back back = getTaskBack(in, uuid, name);
-        	if(!plugin.getBackHandler().getDeathBackLocations().containsKey(name))
+        	if(!BackHandler.getDeathBackLocations().containsKey(name))
         	{
-        		plugin.getBackHandler().getDeathBackLocations().put(name, back);
+        		BackHandler.getDeathBackLocations().put(name, back);
         	} else
         	{
-        		plugin.getBackHandler().getDeathBackLocations().replace(name, back);
+        		BackHandler.getDeathBackLocations().replace(name, back);
         	}
         	return;
         } else if(task.equals(StringValues.BACK_SENDPLAYERDEATHBACK))
@@ -134,7 +111,7 @@ public class BackMessageListener implements Listener
         	String uuid = in.readUTF();
         	String name = in.readUTF();
         	ProxiedPlayer player = plugin.getProxy().getPlayer(name);
-        	if(!plugin.getBackHandler().getDeathBackLocations().containsKey(name))
+        	if(!BackHandler.getDeathBackLocations().containsKey(name))
         	{
         		if(player == null)
             	{
@@ -151,7 +128,7 @@ public class BackMessageListener implements Listener
     		    player.getServer().sendData(StringValues.BACK_TOSPIGOT, streamout.toByteArray());
     		    return;
         	}
-        	Back olddeathback = plugin.getBackHandler().getDeathBackLocations().get(name);
+        	Back olddeathback = BackHandler.getDeathBackLocations().get(name);
         	String oldserver = olddeathback.getLocation().getServer();
         	String oldworld = olddeathback.getLocation().getWordName();
         	double oldx = olddeathback.getLocation().getX();
@@ -161,49 +138,20 @@ public class BackMessageListener implements Listener
         	float oldpitch = olddeathback.getLocation().getPitch();
         	Back back = getTaskBack(in, uuid, name);
         	boolean deleteDeathBack = in.readBoolean();
-        	if(!plugin.getBackHandler().getBackLocations().containsKey(name))
+        	int delayed = in.readInt();
+			if(!BackHandler.getBackLocations().containsKey(name))
         	{
-        		plugin.getBackHandler().getBackLocations().put(name, back);
+				BackHandler.getBackLocations().put(name, back);
         	} else
         	{
-        		plugin.getBackHandler().getBackLocations().replace(name, back);
+        		BackHandler.getBackLocations().replace(name, back);
         	}
         	if(player == null)
         	{
         		return;
         	}
-        	if(!player.getServer().getInfo().getName().equals(oldserver))
-        	{
-        		player.connect(plugin.getProxy().getServerInfo(oldserver));
-        	}plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-			{
-				@Override
-				public void run()
-				{
-					if(player.getServer().getInfo().getName().equals(oldserver))
-		        	{
-						ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-				        DataOutputStream out = new DataOutputStream(streamout);
-				        try {
-							out.writeUTF(StringValues.BACK_SENDPLAYERBACK);
-							out.writeUTF(name);
-							out.writeUTF(oldworld);
-							out.writeDouble(oldx);
-							out.writeDouble(oldy);
-							out.writeDouble(oldz);
-							out.writeFloat(oldyaw);
-							out.writeFloat(oldpitch);
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					    player.getServer().sendData(StringValues.BACK_TOSPIGOT, streamout.toByteArray());
-					    if(deleteDeathBack)
-					    {
-					    	plugin.getBackHandler().getDeathBackLocations().remove(name);
-					    }
-		        	}
-				}
-			}, 1, TimeUnit.SECONDS);
+        	BackHandler bh = new BackHandler(plugin);
+        	bh.teleportBack(player, oldserver, name, oldworld, oldx, oldy, oldz, oldyaw, oldpitch, deleteDeathBack, delayed);
         }
         return;
 	}

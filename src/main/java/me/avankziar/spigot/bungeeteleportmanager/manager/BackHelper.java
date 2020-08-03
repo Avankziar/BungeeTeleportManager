@@ -79,7 +79,7 @@ public class BackHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 		}
 	}
 	
@@ -97,7 +97,7 @@ public class BackHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/bhprtw"));
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 		}
 	}
 }

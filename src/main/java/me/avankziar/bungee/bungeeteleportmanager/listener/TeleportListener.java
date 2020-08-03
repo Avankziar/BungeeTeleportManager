@@ -1,6 +1,7 @@
 package main.java.me.avankziar.bungee.bungeeteleportmanager.listener;
 
 import main.java.me.avankziar.bungee.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.TeleportHandler;
 import main.java.me.avankziar.general.object.Teleport;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
@@ -21,8 +22,8 @@ public class TeleportListener implements Listener
 	{
 		ProxiedPlayer fromplayer = event.getPlayer();
 		String fromName = fromplayer.getName();
-		Teleport teleport = plugin.getTeleportHandler().getPendingTeleports().get(fromName);
-		String to = plugin.getTeleportHandler().getPendingTeleportValueToName(fromName);
+		Teleport teleport = TeleportHandler.getPendingTeleports().get(fromName);
+		String to = TeleportHandler.getPendingTeleportValueToName(fromName);
 		if(teleport == null && to == null)
 		{
 			return;
@@ -30,22 +31,22 @@ public class TeleportListener implements Listener
 		if(teleport != null)
 		{
 			String toName = teleport.getToName();
-			plugin.getTeleportHandler().getPendingTeleports().remove(fromName);
-	    	plugin.getTeleportHandler().getPendingTeleports().remove(toName);
+			TeleportHandler.getPendingTeleports().remove(fromName);
+			TeleportHandler.getPendingTeleports().remove(toName);
 	    	ProxiedPlayer toplayer = plugin.getProxy().getPlayer(toName);
 	    	if(toplayer != null)
 	    	{
-	    		plugin.getTeleportHandler().sendServerQuitMessage(toplayer, fromName);
+	    		TeleportHandler.sendServerQuitMessage(toplayer, fromName);
 	    	}
 		}
 		if(to != null)
 		{
-			plugin.getTeleportHandler().getPendingTeleports().remove(fromName);
-	    	plugin.getTeleportHandler().getPendingTeleports().remove(to);
+			TeleportHandler.getPendingTeleports().remove(fromName);
+			TeleportHandler.getPendingTeleports().remove(to);
 	    	ProxiedPlayer toplayer = plugin.getProxy().getPlayer(to);
 	    	if(toplayer != null)
 	    	{
-	    		plugin.getTeleportHandler().sendServerQuitMessage(toplayer, fromName);
+	    		TeleportHandler.sendServerQuitMessage(toplayer, fromName);
 	    	}
 		}
     	return;

@@ -6,49 +6,82 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import main.java.me.avankziar.bungee.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.bungee.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.StringValues;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 public class WarpHandler
 {
 	private BungeeTeleportManager plugin;
+	private ScheduledTask taskOne;
+	private ScheduledTask taskTwo;
 	
 	public WarpHandler(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
 	}
 	
-	public void teleportPlayerToWarp(String playerName, String warpName, ServerLocation location)
+	public void teleportPlayerToWarp(String playerName, String warpName, ServerLocation location, int delayed)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(playerName);
 		if(player == null)
 		{
 			return;
 		}
-		plugin.getBackHandler().requestNewBack(player);
-		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		int delay = 25;
+		if(!player.hasPermission(StringValues.PERM_BYPASS_WARP_DELAY))
+		{
+			delay = delayed;
+		}
+		BackHandler.requestNewBack(player);
+		taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				teleportPlayer(player, warpName, location);
+				if(!BackHandler.pendingNewBackRequests.contains(player.getName()))
+				{
+					teleportPlayer(player, warpName, location);
+					taskOne.cancel();
+				}
 			}
-		}, 1, TimeUnit.SECONDS);
+		}, delay, 5, TimeUnit.MILLISECONDS);
 	}
 	
 	public void teleportPlayer(ProxiedPlayer player, String warpName, ServerLocation location)
 	{
+		if(player == null || location == null)
+		{
+			return;
+		}
+		if(!plugin.getProxy().getServers().containsKey(location.getServer()))
+		{
+			player.sendMessage(ChatApi.tctl("Server is unknow!"));
+			return;
+		}
 		if(!player.getServer().getInfo().getName().equals(location.getServer()))
 		{
 			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
 		}
-		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
 			@Override
 			public void run()
 			{
-				if(player.getServer().getInfo().getName().equals(location.getServer()))
+				if(player == null || location == null)
+				{
+					taskTwo.cancel();
+					return;
+				}
+				if(location.getServer() == null)
+				{
+					taskTwo.cancel();
+					return;
+				}
+				if(player.getServer().getInfo().getName().equals(
+						location.getServer()))
 				{
 					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
 			        DataOutputStream out = new DataOutputStream(streamout);
@@ -66,9 +99,9 @@ public class WarpHandler
 						e.printStackTrace();
 					}
 				    player.getServer().sendData(StringValues.WARP_TOSPIGOT, streamout.toByteArray());
-					return;
+					taskTwo.cancel();
 				}
 			}
-		}, 1, TimeUnit.SECONDS);
+		}, 5, 5, TimeUnit.MILLISECONDS);
 	}
 }

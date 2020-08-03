@@ -50,8 +50,10 @@ public class WarpMessageListener implements Listener
         	double z = in.readDouble();
         	float yaw = in.readFloat();
         	float pitch = in.readFloat();
+        	int delay = in.readInt();
         	ServerLocation location = new ServerLocation(server, worldName, x, y, z, yaw, pitch);
-        	plugin.getWarpHandler().teleportPlayerToWarp(playerName, warpName, location);
+        	WarpHandler wh = new WarpHandler(plugin);
+        	wh.teleportPlayerToWarp(playerName, warpName, location, delay);
         	return;
         }
         return;

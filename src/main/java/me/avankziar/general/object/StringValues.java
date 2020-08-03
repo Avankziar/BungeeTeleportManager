@@ -215,15 +215,19 @@ public class StringValues
 	PERM_BYPASS_HOME_TOOMANY = "btm.bypass.home.toomany",
 	PERM_BYPASS_HOME_COST = "btm.bypass.home.cost",
 	PERM_BYPASS_HOME_FORBIDDEN = "btm.bypass.home.forbidden",
+	PERM_BYPASS_HOME_DELAY = "btm.bypass.home.delay",
 	PERM_BYPASS_TELEPORT_TPATOGGLE = "btm.bypass.tp.tpatoggle",
 	PERM_BYPASS_TELEPORT_COST = "btm.bypass.tp.cost",
 	PERM_BYPASS_TELEPORT_FORBIDDEN = "btm.bypass.tp.forbidden",
 	PERM_BYPASS_TELEPORT_SILENT = "btm.bypass.tp.silent",
+	PERM_BYPASS_TELEPORT_DELAY = "btm.bypass.tp.delay",
 	PERM_BYPASS_WARP = "btm.bypass.warp.admin",
 	PERM_BYPASS_WARP_BLACKLIST = "btm.bypass.warp.blacklist",
 	PERM_BYPASS_WARP_TOOMANY = "btm.bypass.warp.toomany",
 	PERM_BYPASS_WARP_COST = "btm.bypass.warp.cost",
 	PERM_BYPASS_WARP_FORBIDDEN = "btm.bypass.warp.forbidden",
-	PERM_BYPASS_WARP_OTHER = "btm.bypass.warp.other"
+	PERM_BYPASS_WARP_OTHER = "btm.bypass.warp.other",
+	PERM_BYPASS_WARP_DELAY = "btm.bypass.warp.delay",
+	PERM_BYPASS_CUSTOM_DELAY = "btm.bypass.custom.delay"
 	;
 }

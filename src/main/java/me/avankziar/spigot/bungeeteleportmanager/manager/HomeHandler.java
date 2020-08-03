@@ -44,6 +44,7 @@ public class HomeHandler
 			out.writeDouble(home.getLocation().getZ());
 			out.writeFloat(home.getLocation().getYaw());
 			out.writeFloat(home.getLocation().getPitch());
+			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeHome", 2000));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

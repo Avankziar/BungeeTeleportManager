@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
@@ -38,7 +39,7 @@ public class BackMessageListener implements PluginMessageListener
             	if(task.equals(StringValues.BACK_SENDPLAYERBACK))
             	{
             		String playername = in.readUTF();
-            		String worldname = in.readUTF();
+            		String worldName = in.readUTF();
             		double x = in.readDouble();
             		double y = in.readDouble();
             		double z = in.readDouble();
@@ -47,7 +48,7 @@ public class BackMessageListener implements PluginMessageListener
             		new BukkitRunnable()
 					{
             			int i = 0;
-            			Location loc = new Location(plugin.getServer().getWorld(worldname), x, y, z, yaw, pitch);
+            			Location loc = new Location(plugin.getServer().getWorld(worldName), x, y, z, yaw, pitch);
 						@Override
 						public void run()
 						{
@@ -58,7 +59,22 @@ public class BackMessageListener implements PluginMessageListener
 								{
 									if(player.isOnline())
 									{
-										player.teleport(loc);
+										if(Bukkit.getWorld(worldName) == null)
+										{
+											player.sendMessage(
+													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.WorldNotFound")
+															.replace("%world%", worldName)));
+											cancel();
+											return;
+										}
+										new BukkitRunnable()
+										{
+											@Override
+											public void run()
+											{
+												player.teleport(loc);
+											}
+										}.runTask(plugin);
 										if(plugin.getBackHelper().cooldown.containsKey(player))
 										{
 											plugin.getBackHelper().cooldown.replace(
@@ -80,7 +96,7 @@ public class BackMessageListener implements PluginMessageListener
 								cancel();
 							}
 						}
-					}.runTaskTimer(plugin, 5L, 5L);
+					}.runTaskTimerAsynchronously(plugin, 5L, 5L);
             	    return;
             	} else if(task.equals(StringValues.BACK_REQUESTNEWBACK))
             	{

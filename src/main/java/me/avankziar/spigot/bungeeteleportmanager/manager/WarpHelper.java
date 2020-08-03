@@ -155,6 +155,13 @@ public class WarpHelper
 				return;
 			}
 			page = Integer.parseInt(args[0]);
+			if(!MatchApi.isPositivNumber(page))
+			{
+				player.sendMessage(plugin.getYamlHandler().getL().getString("IsNegativ")
+						.replace("%arg%", args[0]));
+				return;
+			}
+			
 		}
 		if(args.length == 2
 				&& (player.hasPermission(StringValues.PERM_BYPASS_WARP) || args[1].equals(player.getName())))
@@ -294,6 +301,12 @@ public class WarpHelper
 				return;
 			}
 			page = Integer.parseInt(args[0]);
+			if(!MatchApi.isPositivNumber(page))
+			{
+				player.sendMessage(plugin.getYamlHandler().getL().getString("IsNegativ")
+						.replace("%arg%", args[0]));
+				return;
+			}
 		}
 		if(args.length == 2 && player.hasPermission(StringValues.PERM_BYPASS_WARP))
 		{
@@ -669,8 +682,9 @@ public class WarpHelper
 		if(args.length != 1)
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
-			player.spigot().sendMessage(ChatApi.tctl(
-					plugin.getYamlHandler().getL().getString("InputIsWrong")));
+			player.spigot().sendMessage(ChatApi.clickEvent(
+					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 			return;
 		}
 		String warpName = args[0];
@@ -827,8 +841,9 @@ public class WarpHelper
 		if(args.length != 1)
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
-			player.spigot().sendMessage(ChatApi.tctl(
-					plugin.getYamlHandler().getL().getString("InputIsWrong")));
+			player.spigot().sendMessage(ChatApi.clickEvent(
+					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					ClickEvent.Action.RUN_COMMAND, "/btm"));
 			return;
 		}
 		String warpName = args[0];
@@ -881,7 +896,13 @@ public class WarpHelper
 			newowneruuid = null;
 		} else
 		{
-			newowneruuid = Utility.convertNameToUUID(newowner).toString();
+			UUID uuid = Utility.convertNameToUUID(newowner);
+			if(uuid == null)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.NoPlayerExist")));
+				return;
+			}
+			newowneruuid = uuid.toString();
 		}
 		warp.setOwner(newowneruuid);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARPS, warp, "`warpname` = ?", warp.getName());
@@ -986,8 +1007,7 @@ public class WarpHelper
 		{
 			owner = warp.getOwner().equals(player.getUniqueId().toString());
 		}
-		if(!player.hasPermission(StringValues.PERM_BYPASS_WARP)
-				&& !owner)
+		if(!player.hasPermission(StringValues.PERM_BYPASS_WARP) && !owner)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.NotOwner")));
 			return;
@@ -995,13 +1015,15 @@ public class WarpHelper
 		double price = 0.0;
 		if(!MatchApi.isDouble(args[1]))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.NoDouble")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoDouble")
+					.replace("%arg%", args[1])));
 			return;
 		}
 		price = Double.parseDouble(args[1]);
 		if(!MatchApi.isPositivNumber(price))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.IsNegativ")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("IsNegativ")
+					.replace("%arg%", args[1])));
 			return;
 		}
 		warp.setPrice(price);

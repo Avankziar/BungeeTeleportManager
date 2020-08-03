@@ -5,14 +5,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import main.java.me.avankziar.bungee.bungeeteleportmanager.listener.TeleportListener;
-import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.BackHandler;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.BackMessageListener;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.CustomMessageListener;
-import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.HomeHandler;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.HomeMessageListener;
-import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.TeleportHandler;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.TeleportMessageListener;
-import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.WarpHandler;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.WarpMessageListener;
 import main.java.me.avankziar.general.object.StringValues;
 import net.md_5.bungee.api.ProxyServer;
@@ -24,19 +20,11 @@ public class BungeeTeleportManager extends Plugin
 	public static Logger log;
 	public static String pluginName = "BungeeTeleportManager";
 	private static BungeeTeleportManager plugin;
-	private BackHandler backHandler;
-	private HomeHandler homeHandler;
-	private TeleportHandler teleportHandler;
-	private WarpHandler warpHandler;
 	
 	public void onEnable() 
 	{
 		plugin = this;
 		log = getLogger();
-		backHandler = new BackHandler();
-		homeHandler = new HomeHandler(plugin);
-		teleportHandler = new TeleportHandler(plugin);
-		warpHandler = new WarpHandler(plugin);
 		CommandSetup();
 		ListenerSetup();
 	}
@@ -99,25 +87,5 @@ public class BungeeTeleportManager extends Plugin
 		getProxy().registerChannel(StringValues.TP_TOSPIGOT);
 		getProxy().registerChannel(StringValues.WARP_TOBUNGEE);
 		getProxy().registerChannel(StringValues.WARP_TOSPIGOT);
-	}
-
-	public TeleportHandler getTeleportHandler()
-	{
-		return teleportHandler;
-	}
-
-	public BackHandler getBackHandler()
-	{
-		return backHandler;
-	}
-
-	public WarpHandler getWarpHandler()
-	{
-		return warpHandler;
-	}
-
-	public HomeHandler getHomeHandler()
-	{
-		return homeHandler;
 	}
 }

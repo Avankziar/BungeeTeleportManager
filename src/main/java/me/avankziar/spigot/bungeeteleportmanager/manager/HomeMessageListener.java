@@ -59,6 +59,9 @@ public class HomeMessageListener implements PluginMessageListener
 										Player player = plugin.getServer().getPlayer(playerName);
 										if(Bukkit.getWorld(worldName) == null)
 										{
+											player.sendMessage(
+													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.WorldNotFound")
+															.replace("%world%", worldName)));
 											cancel();
 											return;
 										}

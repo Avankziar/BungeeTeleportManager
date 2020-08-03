@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.me.avankziar.bungee.bungeeteleportmanager.assistance.ChatApi;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 
@@ -60,6 +60,9 @@ public class WarpMessageListener implements PluginMessageListener
 										Player player = plugin.getServer().getPlayer(playerName);
 										if(Bukkit.getWorld(worldName) == null)
 										{
+											player.sendMessage(
+													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.WorldNotFound")
+															.replace("%world%", worldName)));
 											cancel();
 											return;
 										}
@@ -68,7 +71,13 @@ public class WarpMessageListener implements PluginMessageListener
 											@Override
 											public void run()
 											{
-												player.teleport(loc);
+												try
+												{
+													player.teleport(loc);
+												} catch(NullPointerException e)
+												{
+													player.sendMessage(ChatApi.tl("Error! See Console!"));
+												}
 											}
 										}.runTask(plugin);
 										

@@ -58,6 +58,12 @@ TpAcceptCooldown: 3
 
 DeleteDeathBackAfterUsing: true #Delete DeathBack if it is true
 
+MinimumTimeBeforeBack: 2000
+MinimumTimeBeforeHome: 2000
+MinimumTimeBeforeTeleport: 2000
+MinimumTimeBeforeWarp: 2000 #MilliSeconds, before the server teleport you to the warp. Can be bypass.
+MinimumTimeBeforeCustom: 2000
+
 CostPerBackRequest: 100.0
 CostPerHomeTeleport: 100.0
 CostPerHomeCreate: 1000.0

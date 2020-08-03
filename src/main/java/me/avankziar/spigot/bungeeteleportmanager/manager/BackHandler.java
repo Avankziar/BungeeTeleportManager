@@ -126,6 +126,7 @@ public class BackHandler
 			out.writeFloat(back.getLocation().getYaw());
 			out.writeFloat(back.getLocation().getPitch());
 			out.writeBoolean(back.isToggle());
+			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeBack", 2000));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -153,6 +154,7 @@ public class BackHandler
 			out.writeFloat(back.getLocation().getPitch());
 			out.writeBoolean(back.isToggle());
 			out.writeBoolean(deleteDeathBack);
+			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeBack", 2000));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

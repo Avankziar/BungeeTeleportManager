@@ -273,14 +273,13 @@ public class HomeHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(plugin.getYamlHandler().getL().getString("NoNumber")
-						.replace("%arg%", args[0]));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoNumber")
+						.replace("%arg%", args[0])));
 				return;
 			}
 			page = Integer.parseInt(args[0]);
 		}
-		if(args.length == 2
-				&& (player.hasPermission(StringValues.PERM_HOMES_OTHER) || args[1].equals(player.getName())))
+		if(args.length == 2 && (player.hasPermission(StringValues.PERM_HOMES_OTHER) || args[1].equals(player.getName())))
 		{
 			playername = args[1];
 			UUID uuid = Utility.convertNameToUUID(args[1]);

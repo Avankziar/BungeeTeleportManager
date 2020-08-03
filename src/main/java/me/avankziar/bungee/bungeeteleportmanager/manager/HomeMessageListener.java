@@ -50,8 +50,10 @@ public class HomeMessageListener implements Listener
         	double z = in.readDouble();
         	float yaw = in.readFloat();
         	float pitch = in.readFloat();
+        	int delayed = in.readInt();
         	ServerLocation location = new ServerLocation(server, worldName, x, y, z, yaw, pitch);
-        	plugin.getHomeHandler().teleportPlayerToHome(playerName, location, homeName);
+        	HomeHandler hh = new HomeHandler(plugin);	
+        	hh.teleportPlayerToHome(playerName, location, homeName, delayed);
         	return;
         }
         return;

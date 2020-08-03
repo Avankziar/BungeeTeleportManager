@@ -44,6 +44,7 @@ public class WarpHandler
 			out.writeDouble(warp.getLocation().getZ());
 			out.writeFloat(warp.getLocation().getYaw());
 			out.writeFloat(warp.getLocation().getPitch());
+			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeWarp", 2000));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
