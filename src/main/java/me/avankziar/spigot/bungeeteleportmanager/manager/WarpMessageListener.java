@@ -92,6 +92,7 @@ public class WarpMessageListener implements PluginMessageListener
 							if(i >= 100)
 							{
 								cancel();
+								return;
 							}
 						}
 					}.runTaskTimerAsynchronously(plugin, 1L, 2L);

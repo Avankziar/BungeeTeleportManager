@@ -128,7 +128,7 @@ public class StringValues
 	PERM_TELEPORT_TP = "btm.cmd.staff.tp.tp",
 	PERM_TELEPORT_TPHERE = "btm.cmd.staff.tp.tphere",
 	PERM_TELEPORT_TPALL = "btm.cmd.admin.tp.tpall",
-	PERM_TELEPORT_TPPOS = "btm.cmd.staff.tptppos",
+	PERM_TELEPORT_TPPOS = "btm.cmd.staff.tp.tppos",
 	
 	//Teleport Suggestion
 	SUGGEST_TPA = "/tpa <player>",

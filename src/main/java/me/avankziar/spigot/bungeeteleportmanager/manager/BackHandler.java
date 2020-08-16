@@ -21,6 +21,22 @@ public class BackHandler
 		this.plugin = plugin;
 	}
 	
+	public void addingBack(Player player, DataOutputStream out) throws IOException
+	{
+		Back back = getNewBack(player);
+		out.writeUTF(StringValues.BACK_SENDOBJECT);
+		out.writeUTF(back.getUuid().toString());
+		out.writeUTF(back.getName());
+		out.writeUTF(back.getLocation().getServer());
+		out.writeUTF(back.getLocation().getWordName());
+		out.writeDouble(back.getLocation().getX());
+		out.writeDouble(back.getLocation().getY());
+		out.writeDouble(back.getLocation().getZ());
+		out.writeFloat(back.getLocation().getYaw());
+		out.writeFloat(back.getLocation().getPitch());
+		out.writeBoolean(back.isToggle());
+	}
+	
 	public Back getNewBack(Player player)
 	{
 		Back oldback = (Back) plugin.getMysqlHandler().getData(MysqlHandler.Type.BACK,

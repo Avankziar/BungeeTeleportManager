@@ -38,82 +38,88 @@ public class TeleportMessageListener implements PluginMessageListener
             try 
             {
             	task = in.readUTF();
+            	
             	if(task.equals(StringValues.TP_FREE))
             	{
             		String fromName = in.readUTF();
             		String toName = in.readUTF();
             		Teleport.Type type = Teleport.Type.valueOf(in.readUTF());
             		boolean isToggled = in.readBoolean();
-            		Player from = plugin.getServer().getPlayer(fromName);
-            		if(from != null)
-            		{
-            			if(!from.hasPermission(StringValues.PERM_BYPASS_TELEPORT_COST))
-            			{
-            				double price = plugin.getYamlHandler().get().getDouble("CostPerTeleportRequest", 0.0);
-                    		if(price > 0.0)
-                    		{
-                    			if(plugin.getEco() != null)
-                        		{
-                    				if(!plugin.getEco().has(fromName, price))
-                    				{
-                    					from.sendMessage(
-                    							ChatApi.tl(plugin.getYamlHandler().getL().getString("Economy.NoEnoughBalance")));
-                    					return;
-                    				}
-                    				if(!plugin.getEco().withdrawPlayer(fromName, price).transactionSuccess())
-                    				{
-                    					return;
-                    				}
-                    				if(plugin.getAdvanceEconomyHandler() != null)
-                            		{
-                    					String comment = null;
-                    					if(type == Teleport.Type.TPTO)
-                    					{
-                    						comment = plugin.getYamlHandler().getL().getString("Economy.TComment")
-                                					.replace("%from%", fromName)
-                                					.replace("%to%", toName);
-                    					} else
-                    					{
-                    						comment = plugin.getYamlHandler().getL().getString("Economy.TComment")
-                        					.replace("%from%", toName)
-                        					.replace("%to%", fromName);
-                    					}
-                            			plugin.getAdvanceEconomyHandler().EconomyLogger(
-                            					Utility.convertNameToUUID(fromName).toString(),
-                            					fromName,
-                            					plugin.getYamlHandler().getL().getString("Economy.TUUID"),
-                            					plugin.getYamlHandler().getL().getString("Economy.TName"),
-                            					plugin.getYamlHandler().getL().getString("Economy.TORDERER"),
-                            					price,
-                            					"TAKEN",
-                            					comment);
-                            			plugin.getAdvanceEconomyHandler().TrendLogger(from, -price);
-                            		}
-                        		}
-                    		}
-            			}
-            		}
-            		if(isToggled)
-            		{
-            			from.sendMessage(
-                				ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerHasToggled")));
-            		}
-            		if(type == Teleport.Type.TPTO)
-            		{
-            			Teleport teleport = new Teleport(
-            					Utility.convertNameToUUID(fromName), fromName, 
-            					Utility.convertNameToUUID(toName), toName,
-            					type);
-            			plugin.getTeleportHandler().tpSendInvite(player, teleport);
-            		} else if(type == Teleport.Type.TPHERE)
-            		{
-            			Teleport teleport = new Teleport(
-            					Utility.convertNameToUUID(fromName), fromName, 
-            					Utility.convertNameToUUID(toName), toName,
-            					type);
-            			plugin.getTeleportHandler().tpSendInvite(player, teleport);
-            		}
-            		return;
+            		new BukkitRunnable()
+					{
+						@Override
+						public void run()
+						{
+		            		Player from = plugin.getServer().getPlayer(fromName);
+		            		if(from != null)
+		            		{
+		            			if(!from.hasPermission(StringValues.PERM_BYPASS_TELEPORT_COST)
+		            					&& plugin.getEco() != null && plugin.getYamlHandler().get().getBoolean("useVault", false))
+		            			{
+		            				double price = plugin.getYamlHandler().get().getDouble("CostPerTeleportRequest", 0.0);
+		                    		if(price > 0.0)
+		                    		{
+		                    			if(!plugin.getEco().has(fromName, price))
+	                    				{
+	                    					from.sendMessage(
+	                    							ChatApi.tl(plugin.getYamlHandler().getL().getString("Economy.NoEnoughBalance")));
+	                    					return;
+	                    				}
+	                    				if(!plugin.getEco().withdrawPlayer(fromName, price).transactionSuccess())
+	                    				{
+	                    					return;
+	                    				}
+	                    				if(plugin.getAdvanceEconomyHandler() != null)
+	                            		{
+	                    					String comment = null;
+	                    					if(type == Teleport.Type.TPTO)
+	                    					{
+	                    						comment = plugin.getYamlHandler().getL().getString("Economy.TComment")
+	                                					.replace("%from%", fromName)
+	                                					.replace("%to%", toName);
+	                    					} else
+	                    					{
+	                    						comment = plugin.getYamlHandler().getL().getString("Economy.TComment")
+	                        					.replace("%from%", toName)
+	                        					.replace("%to%", fromName);
+	                    					}
+	                            			plugin.getAdvanceEconomyHandler().EconomyLogger(
+	                            					Utility.convertNameToUUID(fromName).toString(),
+	                            					fromName,
+	                            					plugin.getYamlHandler().getL().getString("Economy.TUUID"),
+	                            					plugin.getYamlHandler().getL().getString("Economy.TName"),
+	                            					plugin.getYamlHandler().getL().getString("Economy.TORDERER"),
+	                            					price,
+	                            					"TAKEN",
+	                            					comment);
+	                            			plugin.getAdvanceEconomyHandler().TrendLogger(from, -price);
+	                            		}
+		                    		}
+		            			}
+		            		}
+		            		if(isToggled)
+		            		{
+		            			from.sendMessage(
+		                				ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerHasToggled")));
+		            		}
+		            		if(type == Teleport.Type.TPTO)
+		            		{
+		            			Teleport teleport = new Teleport(
+		            					Utility.convertNameToUUID(fromName), fromName, 
+		            					Utility.convertNameToUUID(toName), toName,
+		            					type);
+		            			plugin.getTeleportHandler().tpSendInvite(player, teleport);
+		            		} else if(type == Teleport.Type.TPHERE)
+		            		{
+		            			Teleport teleport = new Teleport(
+		            					Utility.convertNameToUUID(fromName), fromName, 
+		            					Utility.convertNameToUUID(toName), toName,
+		            					type);
+		            			plugin.getTeleportHandler().tpSendInvite(player, teleport);
+		            		}
+		            		return;
+						}
+					}.runTaskAsynchronously(plugin);
             	} else if(task.equals(StringValues.TP_OCCUPIED))
             	{
             		String fromName = in.readUTF();
@@ -166,6 +172,7 @@ public class TeleportMessageListener implements PluginMessageListener
 													.replace("%playerto%", targets.getName())));
 										}
 										cancel();
+										return;
 									}
 								}
 							}
@@ -173,6 +180,7 @@ public class TeleportMessageListener implements PluginMessageListener
 							if(i >= 100)
 							{
 								cancel();
+								return;
 							}
 						}
 					}.runTaskTimerAsynchronously(plugin, 1L, 2L);
@@ -235,6 +243,7 @@ public class TeleportMessageListener implements PluginMessageListener
 												.replace("%world%", worldName)
 												.replace("%coords%", x+" "+y+" "+z+" | "+yaw+" "+pitch)));
 										cancel();
+										return;
 									}
 								}
 							}
@@ -242,6 +251,7 @@ public class TeleportMessageListener implements PluginMessageListener
 							if(i >= 100)
 							{
 								cancel();
+								return;
 							}
 						}
 					}.runTaskTimerAsynchronously(plugin, 1L, 2L);

@@ -96,12 +96,19 @@ public class TeleportHandler
 		}
 		taskSix = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
+			int i = 0;
 			@Override
 			public void run()
 			{
 				if(sender == null || target == null)
 				{
 					taskSix.cancel();
+					return;
+				}
+				if(sender.getServer() == null || sender.getServer().getInfo() == null || sender.getServer().getInfo().getName() == null
+						|| target.getServer() == null || target.getServer().getInfo() == null || target.getServer().getInfo().getName() == null)
+				{
+					taskFive.cancel();
 					return;
 				}
 				if(sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
@@ -118,6 +125,12 @@ public class TeleportHandler
 				    target.getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
 				    taskSix.cancel();
 	        	}
+				i++;
+				if(i >= 100)
+				{
+					taskSix.cancel();
+				    return;
+				}
 			}
 		}, 5, 5, TimeUnit.MILLISECONDS);
 	}
@@ -158,6 +171,7 @@ public class TeleportHandler
 			BackHandler.requestNewBack(from);
 			taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
     		{
+				int i = 0;
     			@Override
     			public void run()
     			{
@@ -166,6 +180,12 @@ public class TeleportHandler
     					teleportPlayer(from, to);
         				taskOne.cancel();
     				}
+    				i++;
+    				if(i >= 100)
+    				{
+    					taskOne.cancel();
+    				    return;
+    				}
     			}
     		}, delay, 5, TimeUnit.MILLISECONDS);
 		} else if(teleport.getType() == Teleport.Type.TPHERE)
@@ -173,6 +193,7 @@ public class TeleportHandler
 			BackHandler.requestNewBack(to);
 			taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
     		{
+				int i = 0;
     			@Override
     			public void run()
     			{
@@ -180,6 +201,12 @@ public class TeleportHandler
     				{
     					teleportPlayer(to, from);
         				taskOne.cancel();
+    				}
+    				i++;
+    				if(i >= 100)
+    				{
+    					taskOne.cancel();
+    				    return;
     				}
     			}
     		}, delay, 5, TimeUnit.MILLISECONDS);
@@ -210,6 +237,7 @@ public class TeleportHandler
 			BackHandler.requestNewBack(from);
 			taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
     		{
+				int i = 0;
     			@Override
     			public void run()
     			{
@@ -217,6 +245,13 @@ public class TeleportHandler
     				{
     					teleportPlayer(from, to);
         				taskTwo.cancel();
+        				return;
+    				}
+    				i++;
+    				if(i >= 100)
+    				{
+    					taskTwo.cancel();
+    				    return;
     				}
     			}
     		}, delay, 5, TimeUnit.MILLISECONDS);
@@ -225,6 +260,7 @@ public class TeleportHandler
 			BackHandler.requestNewBack(to);
 			taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
     		{
+				int i = 0;
     			@Override
     			public void run()
     			{
@@ -232,6 +268,13 @@ public class TeleportHandler
     				{
     					teleportPlayer(to, from);
         				taskTwo.cancel();
+        				return;
+    				}
+    				i++;
+    				if(i >= 100)
+    				{
+    					taskTwo.cancel();
+    				    return;
     				}
     			}
     		}, delay, 5, TimeUnit.MILLISECONDS);
@@ -261,6 +304,7 @@ public class TeleportHandler
 					BackHandler.requestNewBack(to);
 					taskThree = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 					{
+						int i = 0;
 						@Override
 						public void run()
 						{
@@ -268,6 +312,13 @@ public class TeleportHandler
 							{
 								teleportPlayer(to, from);
 								taskThree.cancel();
+								return;
+							}
+							i++;
+							if(i >= 100)
+							{
+								taskThree.cancel();
+							    return;
 							}
 						}
 					}, delay, 5, TimeUnit.MILLISECONDS);
@@ -287,6 +338,7 @@ public class TeleportHandler
 						BackHandler.requestNewBack(to);
 						taskThree = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 						{
+							int i = 0;
 							@Override
 							public void run()
 							{
@@ -294,6 +346,13 @@ public class TeleportHandler
 								{
 									teleportPlayer(to, from);
 									taskThree.cancel();
+									return;
+								}
+								i++;
+								if(i >= 100)
+								{
+									taskThree.cancel();
+								    return;
 								}
 							}
 						}, delay, 5, TimeUnit.MILLISECONDS);
@@ -323,6 +382,7 @@ public class TeleportHandler
 		}
 		taskFour = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
+			int i = 0;
 			@Override
 			public void run()
 			{
@@ -330,6 +390,13 @@ public class TeleportHandler
 				{
 					teleportPlayerToPositionPost(player, location);
 					taskFour.cancel();
+					return;
+				}
+				i++;
+				if(i >= 100)
+				{
+					taskFour.cancel();
+				    return;
 				}
 			}
 		}, delay, 5, TimeUnit.MILLISECONDS);
@@ -347,6 +414,7 @@ public class TeleportHandler
 		}
 		taskFive = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
+			int i = 0;
 			@Override
 			public void run()
 			{
@@ -356,6 +424,11 @@ public class TeleportHandler
 					return;
 				}
 				if(location.getServer() == null)
+				{
+					taskFive.cancel();
+					return;
+				}
+				if(player.getServer() == null || player.getServer().getInfo() == null || player.getServer().getInfo().getName() == null)
 				{
 					taskFive.cancel();
 					return;
@@ -379,7 +452,14 @@ public class TeleportHandler
 					}
 				    player.getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
 				    taskFive.cancel();
+				    return;
 	        	}
+				i++;
+				if(i >= 100)
+				{
+					taskFive.cancel();
+				    return;
+				}
 			}
 		}, 5, 5, TimeUnit.MILLISECONDS);
 	}

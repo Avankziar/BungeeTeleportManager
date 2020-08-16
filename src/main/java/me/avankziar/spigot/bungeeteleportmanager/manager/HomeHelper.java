@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.StringValues;
@@ -68,7 +69,8 @@ public class HomeHelper
 			return;
 		}
 		Home home = new Home(player.getUniqueId(), player.getName(), homeName, Utility.getLocation(player.getLocation()));
-		if(!player.hasPermission(StringValues.PERM_BYPASS_HOME_COST) && plugin.getEco() != null)
+		if(!player.hasPermission(StringValues.PERM_BYPASS_HOME_COST) && plugin.getEco() != null
+				&& plugin.getYamlHandler().get().getBoolean("useVault", false))
 		{
 			double homeCreateCost = plugin.getYamlHandler().get().getDouble("CostPerHomeCreate", 0.0);
 			if(homeCreateCost > 0.0)
@@ -181,79 +183,87 @@ public class HomeHelper
 	
 	public void homeTo(Player player, String args[])
 	{
-		if(args.length != 1 && args.length != 2)
+		new BukkitRunnable()
 		{
-			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
-			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/btm"));
-			return;
-		}
-		String homeName = args[0];
-		String playeruuid = player.getUniqueId().toString();
-		if(args.length == 2 
-				&& (player.hasPermission(StringValues.PERM_HOME_OTHER) || args[1].equals(player.getName())))
-		{
-			UUID uuid = Utility.convertNameToUUID(args[1]);
-			if(uuid == null)
+			@Override
+			public void run()
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
+				if(args.length != 1 && args.length != 2)
+				{
+					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+					player.spigot().sendMessage(ChatApi.clickEvent(
+							plugin.getYamlHandler().getL().getString("InputIsWrong"),
+							ClickEvent.Action.RUN_COMMAND, "/btm"));
+					return;
+				}
+				String homeName = args[0];
+				String playeruuid = player.getUniqueId().toString();
+				if(args.length == 2 
+						&& (player.hasPermission(StringValues.PERM_HOME_OTHER) || args[1].equals(player.getName())))
+				{
+					UUID uuid = Utility.convertNameToUUID(args[1]);
+					if(uuid == null)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
+						return;
+					}
+					playeruuid = uuid.toString();
+				}
+				if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.HOMES,
+						"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeNotExist")));
+					return;
+				}
+				Home home = (Home) plugin.getMysqlHandler().getData(MysqlHandler.Type.HOMES,
+						"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName);
+				int i = plugin.getHomeHandler().compareHome(player, false);
+				if(i > 0 && !player.hasPermission(StringValues.PERM_BYPASS_HOME_TOOMANY))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesToUse")
+							.replace("%amount%", String.valueOf(i))));
+					return;
+				}
+				if(!player.hasPermission(StringValues.PERM_BYPASS_HOME_COST) && plugin.getEco() != null
+						&& plugin.getYamlHandler().get().getBoolean("useVault", false))
+				{
+					double homeCreateCost = plugin.getYamlHandler().get().getDouble("CostPerHomeTeleport", 0.0);
+					if(homeCreateCost > 0.0)
+					{
+						if(!plugin.getEco().has(player, homeCreateCost))
+						{
+							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("Economy.NoEnoughBalance")));
+							return;
+						}
+						EconomyResponse er = plugin.getEco().withdrawPlayer(player, homeCreateCost);
+						if(!er.transactionSuccess())
+						{
+							player.sendMessage(ChatApi.tl(er.errorMessage));
+							return;
+						}
+						if(plugin.getAdvanceEconomyHandler() != null)
+						{
+							String comment = plugin.getYamlHandler().getL().getString("Economy.HComment")
+			    					.replace("%home%", home.getHomeName());
+							plugin.getAdvanceEconomyHandler().EconomyLogger(
+			    					player.getUniqueId().toString(),
+			    					player.getName(),
+			    					plugin.getYamlHandler().getL().getString("Economy.HUUID"),
+			    					plugin.getYamlHandler().getL().getString("Economy.HName"),
+			    					player.getUniqueId().toString(),
+			    					homeCreateCost,
+			    					"TAKEN",
+			    					comment);
+							plugin.getAdvanceEconomyHandler().TrendLogger(player, -homeCreateCost);
+						}
+					}
+				}
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.RequestInProgress")));
+				plugin.getUtility().givesEffect(player);
+				plugin.getHomeHandler().sendPlayerToHome(player, home);
 				return;
 			}
-			playeruuid = uuid.toString();
-		}
-		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.HOMES,
-				"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName))
-		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeNotExist")));
-			return;
-		}
-		Home home = (Home) plugin.getMysqlHandler().getData(MysqlHandler.Type.HOMES,
-				"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName);
-		int i = plugin.getHomeHandler().compareHome(player, false);
-		if(i > 0 && !player.hasPermission(StringValues.PERM_BYPASS_HOME_TOOMANY))
-		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesToUse")
-					.replace("%amount%", String.valueOf(i))));
-			return;
-		}
-		if(!player.hasPermission(StringValues.PERM_BYPASS_HOME_COST) && plugin.getEco() != null)
-		{
-			double homeCreateCost = plugin.getYamlHandler().get().getDouble("CostPerHomeTeleport", 0.0);
-			if(homeCreateCost > 0.0)
-			{
-				if(!plugin.getEco().has(player, homeCreateCost))
-				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("Economy.NoEnoughBalance")));
-					return;
-				}
-				EconomyResponse er = plugin.getEco().withdrawPlayer(player, homeCreateCost);
-				if(!er.transactionSuccess())
-				{
-					player.sendMessage(ChatApi.tl(er.errorMessage));
-					return;
-				}
-				if(plugin.getAdvanceEconomyHandler() != null)
-				{
-					String comment = plugin.getYamlHandler().getL().getString("Economy.HComment")
-	    					.replace("%home%", home.getHomeName());
-					plugin.getAdvanceEconomyHandler().EconomyLogger(
-	    					player.getUniqueId().toString(),
-	    					player.getName(),
-	    					plugin.getYamlHandler().getL().getString("Economy.HUUID"),
-	    					plugin.getYamlHandler().getL().getString("Economy.HName"),
-	    					player.getUniqueId().toString(),
-	    					homeCreateCost,
-	    					"TAKEN",
-	    					comment);
-					plugin.getAdvanceEconomyHandler().TrendLogger(player, -homeCreateCost);
-				}
-			}
-		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.RequestInProgress")));
-		plugin.getUtility().givesEffect(player);
-		plugin.getHomeHandler().sendPlayerToHome(player, home);
-		return;
+		}.runTaskAsynchronously(plugin);
 	}
 	
 	public void homes(Player player, String args[])
@@ -294,7 +304,7 @@ public class HomeHelper
 		int quantity = 25;
 		ArrayList<Home> list = ConvertHandler.convertListI(
 				plugin.getMysqlHandler().getList(MysqlHandler.Type.HOMES,
-						"`id`", false, 0, quantity, "`player_uuid` = ?", playeruuid));
+						"`id`", false, start, quantity, "`player_uuid` = ?", playeruuid));
 		if(list.isEmpty())
 		{
 			player.sendMessage(plugin.getYamlHandler().getL().getString("CmdHome.YouHaveNoHomes"));
@@ -386,8 +396,14 @@ public class HomeHelper
 				return;
 			}
 			page = Integer.parseInt(args[0]);
+			if(!MatchApi.isPositivNumber(page))
+			{
+				player.sendMessage(plugin.getYamlHandler().getL().getString("IsNegativ")
+						.replace("%arg%", args[0]));
+				return;
+			}
 		}
-		if(args.length == 2 && player.hasPermission(StringValues.PERM_BYPASS_HOME))
+		if(args.length >= 2 && player.hasPermission(StringValues.PERM_BYPASS_HOME))
 		{
 			serverORWorld = args[1];
 		}
@@ -404,7 +420,7 @@ public class HomeHelper
 		{
 			 list = ConvertHandler.convertListI(
 					plugin.getMysqlHandler().getTop(MysqlHandler.Type.HOMES,
-							"`id`", false, 0, quantity));
+							"`id`", false, start, quantity));
 		}
 		String server = plugin.getYamlHandler().get().getString("ServerName");
 		String world = player.getLocation().getWorld().getName();

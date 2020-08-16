@@ -4,9 +4,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
-import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.general.object.Teleport;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.events.PlayerTeleportToPlayerEvent;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.events.PlayerTeleportToPositionEvent;
 

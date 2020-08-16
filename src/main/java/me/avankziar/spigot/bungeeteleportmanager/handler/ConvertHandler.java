@@ -2,8 +2,12 @@ package main.java.me.avankziar.spigot.bungeeteleportmanager.handler;
 
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Home;
+import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.TeleportIgnore;
 import main.java.me.avankziar.general.object.Warp;
 
@@ -71,5 +75,10 @@ public class ConvertHandler
 			}
 		}
 		return el;
+	}
+	
+	public static Location getLocation(ServerLocation loc)
+	{
+		return new Location(Bukkit.getWorld(loc.getWordName()), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
 	}
 }

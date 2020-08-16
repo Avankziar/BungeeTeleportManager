@@ -87,6 +87,7 @@ public class BackMessageListener implements PluginMessageListener
 													1000L*plugin.getYamlHandler().get().getLong("BackCooldown", 10));
 										}
 										cancel();
+										return;
 									}
 								}
 							}
@@ -94,6 +95,7 @@ public class BackMessageListener implements PluginMessageListener
 							if(i >= 100)
 							{
 								cancel();
+								return;
 							}
 						}
 					}.runTaskTimerAsynchronously(plugin, 5L, 5L);

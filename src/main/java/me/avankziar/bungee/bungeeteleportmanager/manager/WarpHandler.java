@@ -15,7 +15,7 @@ import net.md_5.bungee.api.scheduler.ScheduledTask;
 public class WarpHandler
 {
 	private BungeeTeleportManager plugin;
-	private ScheduledTask taskOne;
+	//private ScheduledTask taskOne;
 	private ScheduledTask taskTwo;
 	
 	public WarpHandler(BungeeTeleportManager plugin)
@@ -35,9 +35,10 @@ public class WarpHandler
 		{
 			delay = delayed;
 		}
-		BackHandler.requestNewBack(player);
+		/*BackHandler.requestNewBack(player);
 		taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
+			int i = 0;
 			@Override
 			public void run()
 			{
@@ -45,12 +46,20 @@ public class WarpHandler
 				{
 					teleportPlayer(player, warpName, location);
 					taskOne.cancel();
+					return;
+				}
+				i++;
+				if(i >= 100)
+				{
+					taskOne.cancel();
+				    return;
 				}
 			}
-		}, delay, 5, TimeUnit.MILLISECONDS);
+		}, delay, 5, TimeUnit.MILLISECONDS);*/
+		teleportPlayer(player, delay, warpName, location); //Back wurde schon gemacht
 	}
 	
-	public void teleportPlayer(ProxiedPlayer player, String warpName, ServerLocation location)
+	public void teleportPlayer(ProxiedPlayer player, int delay, String warpName, ServerLocation location)
 	{
 		if(player == null || location == null)
 		{
@@ -67,6 +76,7 @@ public class WarpHandler
 		}
 		taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
+			int i = 0;
 			@Override
 			public void run()
 			{
@@ -76,6 +86,11 @@ public class WarpHandler
 					return;
 				}
 				if(location.getServer() == null)
+				{
+					taskTwo.cancel();
+					return;
+				}
+				if(player.getServer() == null || player.getServer().getInfo() == null || player.getServer().getInfo().getName() == null)
 				{
 					taskTwo.cancel();
 					return;
@@ -100,8 +115,15 @@ public class WarpHandler
 					}
 				    player.getServer().sendData(StringValues.WARP_TOSPIGOT, streamout.toByteArray());
 					taskTwo.cancel();
+					return;
+				}
+				i++;
+				if(i >= 100)
+				{
+					taskTwo.cancel();
+				    return;
 				}
 			}
-		}, 5, 5, TimeUnit.MILLISECONDS);
+		}, delay, 25, TimeUnit.MILLISECONDS);
 	}
 }

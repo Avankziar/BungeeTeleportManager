@@ -64,6 +64,7 @@ MinimumTimeBeforeTeleport: 2000
 MinimumTimeBeforeWarp: 2000 #MilliSeconds, before the server teleport you to the warp. Can be bypass.
 MinimumTimeBeforeCustom: 2000
 
+useVault: true #May you use the economy in this plugin?
 CostPerBackRequest: 100.0
 CostPerHomeTeleport: 100.0
 CostPerHomeCreate: 1000.0

@@ -25,9 +25,9 @@ public class CustomMessageListener implements Listener
 	private BungeeTeleportManager plugin;
 	
 	private ScheduledTask taskOne;
-	private ScheduledTask taskTwo;
+	//private ScheduledTask taskTwo;
 	private ScheduledTask taskThree;
-	private ScheduledTask taskFour;
+	//private ScheduledTask taskFour;
 	
 	public CustomMessageListener(BungeeTeleportManager plugin)
 	{
@@ -112,6 +112,7 @@ public class CustomMessageListener implements Listener
 			BackHandler.requestNewBack(from);
 			taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
     		{
+				int i = 0;
     			@Override
     			public void run()
     			{
@@ -119,14 +120,22 @@ public class CustomMessageListener implements Listener
     				{
     					teleportPlayer(from, to);
     					taskOne.cancel();
+    					return;
+    				}
+    				i++;
+    				if(i >= 100)
+    				{
+    					taskOne.cancel();
+    				    return;
     				}
     			}
-    		}, delay, 5, TimeUnit.MILLISECONDS);
+    		}, delay, TimeUnit.MILLISECONDS);
 		} else if(teleport.getType() == Teleport.Type.TPHERE)
 		{
 			BackHandler.requestNewBack(to);
 			taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
     		{
+				int i = 0;
     			@Override
     			public void run()
     			{
@@ -134,9 +143,16 @@ public class CustomMessageListener implements Listener
     				{
     					teleportPlayer(to, from);
     					taskOne.cancel();
+    					return;
+    				}
+    				i++;
+    				if(i >= 100)
+    				{
+    					taskOne.cancel();
+    				    return;
     				}
     			}
-    		}, delay, 5, TimeUnit.MILLISECONDS);
+    		}, delay, TimeUnit.MILLISECONDS);
 		}
 	}
 	
@@ -146,36 +162,73 @@ public class CustomMessageListener implements Listener
 		{
 			return;
 		}
-		if(!sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
+		try
 		{
-			sender.connect(target.getServer().getInfo());
+			if(!sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
+			{
+				sender.connect(target.getServer().getInfo());
+			}
+		} catch(NullPointerException e)
+		{
+			//if(taskTwo != null)
+			//{
+				//taskTwo.cancel();
+			//}
+			return;
 		}
-		taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		//taskTwo = 
+		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
+			int i = 0;
 			@Override
 			public void run()
 			{
-				if(sender == null || target == null)
+				try
 				{
-					taskTwo.cancel();
+					i++;
+					if(i >= 100)
+					{
+						//taskTwo.cancel();
+						BungeeTeleportManager.log.warning("Custom Player To Player Teleport is cancelled!");
+					    return;
+					}
+					if(sender == null || target == null)
+					{
+						//taskTwo.cancel();
+						BungeeTeleportManager.log.warning("Custom Player To Player Teleport is cancelled!");
+						return;
+					}
+					if(sender.getServer() == null || sender.getServer().getInfo() == null || sender.getServer().getInfo().getName() == null
+							|| target.getServer() == null || target.getServer().getInfo() == null || target.getServer().getInfo().getName() == null)
+					{
+						//taskTwo.cancel();
+						BungeeTeleportManager.log.warning("Custom Player To Player Teleport is cancelled!");
+						return;
+					}
+					if(sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
+		        	{
+						ByteArrayOutputStream streamout = new ByteArrayOutputStream();
+				        DataOutputStream out = new DataOutputStream(streamout);
+				        try {
+							out.writeUTF(StringValues.CUSTOM_PLAYERTOPLAYER);
+							out.writeUTF(sender.getName());
+							out.writeUTF(target.getName());
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					    target.getServer().sendData(StringValues.CUSTOM_TOSPIGOT, streamout.toByteArray());
+					    //taskTwo.cancel();
+					    return;
+		        	}
+				} catch(NullPointerException e)
+				{
+					//taskTwo.cancel();
+					BungeeTeleportManager.log.warning("Custom Player To Player Teleport is cancelled!");
 					return;
 				}
-				if(sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
-	        	{
-					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-			        DataOutputStream out = new DataOutputStream(streamout);
-			        try {
-						out.writeUTF(StringValues.CUSTOM_PLAYERTOPLAYER);
-						out.writeUTF(sender.getName());
-						out.writeUTF(target.getName());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				    target.getServer().sendData(StringValues.CUSTOM_TOSPIGOT, streamout.toByteArray());
-				    taskTwo.cancel();
-	        	}
+				
 			}
-		}, 5, 5, TimeUnit.MILLISECONDS);
+		}, 1, TimeUnit.SECONDS);
 	}
 	
 	public void teleportPlayerToPosition(String playerName, ServerLocation location, String errorServerNotFound,
@@ -204,6 +257,7 @@ public class CustomMessageListener implements Listener
 		}
 		taskThree = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
+			int i = 0;
 			@Override
 			public void run()
 			{
@@ -211,9 +265,16 @@ public class CustomMessageListener implements Listener
 				{
 					teleportPlayerToPositionPost(player, location, message);
 					taskThree.cancel();
+					return;
+				}
+				i++;
+				if(i >= 100)
+				{
+					taskThree.cancel();
+				    return;
 				}
 			}
-		}, delay, 5, TimeUnit.MILLISECONDS);
+		}, delay, TimeUnit.MILLISECONDS);
 	}
 	
 	public void teleportPlayerToPositionPost(final ProxiedPlayer player, final ServerLocation location, String message)
@@ -226,51 +287,88 @@ public class CustomMessageListener implements Listener
 		{
 			return;
 		}
-		if(!player.getServer().getInfo().getName().equals(location.getServer()))
+		try
 		{
-			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
+			if(!player.getServer().getInfo().getName().equals(location.getServer()))
+			{
+				player.connect(plugin.getProxy().getServerInfo(location.getServer()));
+			}
+		} catch(NullPointerException e)
+		{
+			//if(taskFour != null)
+			//{
+				//taskFour.cancel();
+			//}
+			BungeeTeleportManager.log.warning("Custom Player To Position Teleport is cancelled!");
+			return;
 		}
-		taskFour = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		//taskFour = 
+		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
+			int i = 0;
 			@Override
 			public void run()
 			{
-				if(player == null || location == null)
+				try
 				{
-					 taskFour.cancel();
-					 return;
-				}
-				if(location.getServer() == null)
-				{
-					 taskFour.cancel();
-					 return;
-				}
-				if(player.getServer().getInfo().getName().equals(location.getServer()))
-	        	{
-					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-			        DataOutputStream out = new DataOutputStream(streamout);
-			        try {
-						out.writeUTF(StringValues.CUSTOM_PLAYERTOPOSITION);
-						out.writeUTF(player.getName());
-						out.writeUTF(location.getServer());
-						out.writeUTF(location.getWordName());
-						out.writeDouble(location.getX());
-						out.writeDouble(location.getY());
-						out.writeDouble(location.getZ());
-						out.writeFloat(location.getYaw());
-						out.writeFloat(location.getPitch());
-						out.writeBoolean(message == null);
-						if(message != null)
-						{
-							out.writeUTF(message);
-						}
-					} catch (IOException e) {
-						e.printStackTrace();
+					i++;
+					if(i >= 100)
+					{
+						//taskFour.cancel();
+						BungeeTeleportManager.log.warning("Custom Player To Position Teleport is cancelled!");
+					    return;
 					}
-				    player.getServer().sendData(StringValues.CUSTOM_TOSPIGOT, streamout.toByteArray());
-				    taskFour.cancel();
-	        	}
+					if(player == null || location == null)
+					{
+						// taskFour.cancel();
+						 BungeeTeleportManager.log.warning("Custom Player To Position Teleport is cancelled!");
+						 return;
+					}
+					if(location.getServer() == null)
+					{
+						 //taskFour.cancel();
+						 BungeeTeleportManager.log.warning("Custom Player To Position Teleport is cancelled!");
+						 return;
+					}
+					if(player.getServer() == null || player.getServer().getInfo() == null || player.getServer().getInfo().getName() == null)
+					{
+						//taskFour.cancel();
+						BungeeTeleportManager.log.warning("Custom Player To Position Teleport is cancelled!");
+						return;
+					}
+					if(player.getServer().getInfo().getName().equals(location.getServer()))
+		        	{
+						ByteArrayOutputStream streamout = new ByteArrayOutputStream();
+				        DataOutputStream out = new DataOutputStream(streamout);
+				        try {
+							out.writeUTF(StringValues.CUSTOM_PLAYERTOPOSITION);
+							out.writeUTF(player.getName());
+							out.writeUTF(location.getServer());
+							out.writeUTF(location.getWordName());
+							out.writeDouble(location.getX());
+							out.writeDouble(location.getY());
+							out.writeDouble(location.getZ());
+							out.writeFloat(location.getYaw());
+							out.writeFloat(location.getPitch());
+							out.writeBoolean(message == null);
+							if(message != null)
+							{
+								out.writeUTF(message);
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					    player.getServer().sendData(StringValues.CUSTOM_TOSPIGOT, streamout.toByteArray());
+					    //taskFour.cancel();
+					    return;
+		        	}
+				} catch(NullPointerException e)
+				{
+					//taskFour.cancel();
+					BungeeTeleportManager.log.warning("Custom Player To Position Teleport is cancelled!");
+					return;
+				}
 			}
-		}, 5, 5, TimeUnit.MILLISECONDS);
+		}, 1, TimeUnit.SECONDS);
 	}
 }

@@ -5,11 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.UUID;
 
 import main.java.me.avankziar.bungee.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.general.object.Back;
-import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.StringValues;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
@@ -48,7 +46,7 @@ public class BackMessageListener implements Listener
         {
         	String uuid = in.readUTF();
         	String name = in.readUTF();
-        	Back back = getTaskBack(in, uuid, name);
+        	Back back = BackHandler.getTaskBack(in, uuid, name);
         	if(!BackHandler.getBackLocations().containsKey(name))
         	{
         		BackHandler.getBackLocations().put(name, back);
@@ -58,7 +56,7 @@ public class BackMessageListener implements Listener
         {
         	String uuid = in.readUTF();
         	String name = in.readUTF();
-        	Back back = getTaskBack(in, uuid, name);
+        	Back back = BackHandler.getTaskBack(in, uuid, name);
         	if(!BackHandler.getBackLocations().containsKey(name))
         	{
         		BackHandler.getBackLocations().put(name, back);
@@ -83,7 +81,7 @@ public class BackMessageListener implements Listener
         	double oldz = oldback.getLocation().getZ();
         	float oldyaw = oldback.getLocation().getYaw();
         	float oldpitch = oldback.getLocation().getPitch();
-        	Back back = getTaskBack(in, uuid, name);
+        	Back back = BackHandler.getTaskBack(in, uuid, name);
         	int delayed = in.readInt();
         	BackHandler.getBackLocations().replace(name, back);
         	ProxiedPlayer player = plugin.getProxy().getPlayer(name);
@@ -97,7 +95,7 @@ public class BackMessageListener implements Listener
         {
         	String uuid = in.readUTF();
         	String name = in.readUTF();
-        	Back back = getTaskBack(in, uuid, name);
+        	Back back = BackHandler.getTaskBack(in, uuid, name);
         	if(!BackHandler.getDeathBackLocations().containsKey(name))
         	{
         		BackHandler.getDeathBackLocations().put(name, back);
@@ -136,7 +134,7 @@ public class BackMessageListener implements Listener
         	double oldz = olddeathback.getLocation().getZ();
         	float oldyaw = olddeathback.getLocation().getYaw();
         	float oldpitch = olddeathback.getLocation().getPitch();
-        	Back back = getTaskBack(in, uuid, name);
+        	Back back = BackHandler.getTaskBack(in, uuid, name);
         	boolean deleteDeathBack = in.readBoolean();
         	int delayed = in.readInt();
 			if(!BackHandler.getBackLocations().containsKey(name))
@@ -156,16 +154,5 @@ public class BackMessageListener implements Listener
         return;
 	}
 	
-	private Back getTaskBack(DataInputStream in, String uuid, String name) throws IOException
-	{
-		String serverName = in.readUTF();
-    	String worldName = in.readUTF();
-    	double x = in.readDouble();
-    	double y = in.readDouble();
-    	double z = in.readDouble();
-    	float yaw = in.readFloat();
-    	float pitch = in.readFloat();
-    	boolean toggle = in.readBoolean();
-    	return new Back(UUID.fromString(uuid), name, new ServerLocation(serverName, worldName, x, y, z, yaw, pitch), toggle);
-	}
+	
 }

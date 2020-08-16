@@ -299,29 +299,37 @@ public class Utility
 	
 	public void givesEffect(Player player)
 	{
-		if(plugin.getYamlHandler().get().getBoolean("GiveEffects", false))
+		new BukkitRunnable()
 		{
-			if(plugin.getYamlHandler().get().get("Effectlist") != null)
+			
+			@Override
+			public void run()
 			{
-				for(String s : plugin.getYamlHandler().get().getStringList("Effectlist"))
+				if(plugin.getYamlHandler().get().getBoolean("GiveEffects", false))
 				{
-					String[] effect = s.split(";");
-					if(effect.length==3)
+					if(plugin.getYamlHandler().get().get("Effectlist") != null)
 					{
-						PotionEffect pe = null;
-						try
+						for(String s : plugin.getYamlHandler().get().getStringList("Effectlist"))
 						{
-							pe = new PotionEffect(PotionEffectType.getByName(effect[0]),
-									Integer.valueOf(effect[1]),
-									Integer.valueOf(effect[2]));
-						} catch(Exception e)
-						{
-							
+							String[] effect = s.split(";");
+							if(effect.length==3)
+							{
+								PotionEffect pe = null;
+								try
+								{
+									pe = new PotionEffect(PotionEffectType.getByName(effect[0]),
+											Integer.valueOf(effect[1]),
+											Integer.valueOf(effect[2]));
+								} catch(Exception e)
+								{
+									
+								}
+								player.addPotionEffect(pe);
+							}
 						}
-						player.addPotionEffect(pe);
 					}
 				}
 			}
-		}
+		}.runTask(plugin);
 	}
 }

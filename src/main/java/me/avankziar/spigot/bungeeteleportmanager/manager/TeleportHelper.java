@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.StringValues;
@@ -133,130 +134,153 @@ public class TeleportHelper
 	
 	public void tpCmd(Player player, String[] args, Teleport.Type type)
 	{
-		if(args.length == 1)
+		new BukkitRunnable()
 		{
-			if(player.getName().equals(args[0]))
+			@Override
+			public void run()
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.TpaTooYourself")));
-				return;
+				if(args.length == 1)
+				{
+					if(player.getName().equals(args[0]))
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.TpaTooYourself")));
+						return;
+					}
+					UUID uuid = Utility.convertNameToUUID(args[0]);
+					if(uuid == null)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+						return;
+					}
+					String name = Utility.convertUUIDToName(uuid.toString());
+					if(name == null)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+						return;
+					}
+					Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
+							uuid, name, type);
+					plugin.getTeleportHandler().tpForce(player,tp);
+				} else
+				{
+					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+					player.spigot().sendMessage(ChatApi.clickEvent(
+							plugin.getYamlHandler().getL().getString("InputIsWrong"),
+							ClickEvent.Action.RUN_COMMAND, "/btm"));
+				}
 			}
-			UUID uuid = Utility.convertNameToUUID(args[0]);
-			if(uuid == null)
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
-				return;
-			}
-			String name = Utility.convertUUIDToName(uuid.toString());
-			if(name == null)
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
-				return;
-			}
-			Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
-					uuid, name, type);
-			plugin.getTeleportHandler().tpForce(player,tp);
-		} else
-		{
-			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
-			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/btm"));
-		}
+		}.runTaskAsynchronously(plugin);
 	}
 	
 	public void tpAll(Player player, String[] args, Teleport.Type type)
 	{
-		if(args.length == 0)
+		new BukkitRunnable()
 		{
-			plugin.getTeleportHandler().tpAll(player, false, "", "");
-		} else if(args.length == 2) 
-		{
-			plugin.getTeleportHandler().tpAll(player, true, args[0], args[1]);
-		} else
-		{
-			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
-			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/btm"));
-		}
+			
+			@Override
+			public void run()
+			{
+				if(args.length == 0)
+				{
+					plugin.getTeleportHandler().tpAll(player, false, "", "");
+				} else if(args.length == 2) 
+				{
+					plugin.getTeleportHandler().tpAll(player, true, args[0], args[1]);
+				} else
+				{
+					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+					player.spigot().sendMessage(ChatApi.clickEvent(
+							plugin.getYamlHandler().getL().getString("InputIsWrong"),
+							ClickEvent.Action.RUN_COMMAND, "/btm"));
+				}
+			}
+		}.runTaskAsynchronously(plugin);
 	}
 	
 	public void tpPos(Player player, String[] args, Teleport.Type type)
 	{
-		ServerLocation sl = null;
-		if(args.length == 3)
+		new BukkitRunnable()
 		{
-			if(!MatchApi.isDouble(args[0]) || !MatchApi.isDouble(args[1]) || !MatchApi.isDouble(args[2]))
+			
+			@Override
+			public void run()
 			{
-				player.spigot().sendMessage(ChatApi.clickEvent(
-						plugin.getYamlHandler().getL().getString("InputIsWrong"),
-						ClickEvent.Action.RUN_COMMAND, "/btm"));
-				return;
+				ServerLocation sl = null;
+				if(args.length == 3)
+				{
+					if(!MatchApi.isDouble(args[0]) || !MatchApi.isDouble(args[1]) || !MatchApi.isDouble(args[2]))
+					{
+						player.spigot().sendMessage(ChatApi.clickEvent(
+								plugin.getYamlHandler().getL().getString("InputIsWrong"),
+								ClickEvent.Action.RUN_COMMAND, "/btm"));
+						return;
+					}
+					sl = new ServerLocation(
+							plugin.getYamlHandler().get().getString("ServerName"),
+							player.getLocation().getWorld().getName(),
+							Double.parseDouble(args[0]),
+							Double.parseDouble(args[1]),
+							Double.parseDouble(args[2]), 0, 0);
+					plugin.getTeleportHandler().tpPos(player, sl);
+				} else if(args.length == 4)
+				{
+					if(!MatchApi.isDouble(args[1]) || !MatchApi.isDouble(args[2]) || !MatchApi.isDouble(args[3]))
+					{
+						player.spigot().sendMessage(ChatApi.clickEvent(
+								plugin.getYamlHandler().getL().getString("InputIsWrong"),
+								ClickEvent.Action.RUN_COMMAND, "/btm"));
+						return;
+					}
+					sl = new ServerLocation(
+							plugin.getYamlHandler().get().getString("ServerName"),
+							args[0],
+							Double.parseDouble(args[1]),
+							Double.parseDouble(args[2]),
+							Double.parseDouble(args[3]), 0, 0);
+					plugin.getTeleportHandler().tpPos(player, sl);
+				} else if(args.length == 5)
+				{
+					if(!MatchApi.isDouble(args[2]) || !MatchApi.isDouble(args[3]) || !MatchApi.isDouble(args[4]))
+					{
+						player.spigot().sendMessage(ChatApi.clickEvent(
+								plugin.getYamlHandler().getL().getString("InputIsWrong"),
+								ClickEvent.Action.RUN_COMMAND, "/btm"));
+						return;
+					}
+					sl = new ServerLocation(
+							args[0], args[1],
+							Double.parseDouble(args[2]),
+							Double.parseDouble(args[3]),
+							Double.parseDouble(args[4]),
+							0, 0);
+					plugin.getTeleportHandler().tpPos(player, sl);
+				} else if(args.length == 7)
+				{
+					if(!MatchApi.isDouble(args[2]) || !MatchApi.isDouble(args[3]) || !MatchApi.isDouble(args[4])
+							|| !MatchApi.isInteger(args[5]) || !MatchApi.isInteger(args[6]))
+					{
+						player.spigot().sendMessage(ChatApi.clickEvent(
+								plugin.getYamlHandler().getL().getString("InputIsWrong"),
+								ClickEvent.Action.RUN_COMMAND, "/btm"));
+						return;
+					}
+					sl = new ServerLocation(
+							args[0], args[1],
+							Double.parseDouble(args[2]),
+							Double.parseDouble(args[3]),
+							Double.parseDouble(args[4]),
+							Float.parseFloat(args[5]),
+							Float.parseFloat(args[6]));
+					plugin.getTeleportHandler().tpPos(player, sl);
+				} else
+				{
+					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+					player.spigot().sendMessage(ChatApi.clickEvent(
+							plugin.getYamlHandler().getL().getString("InputIsWrong"),
+							ClickEvent.Action.RUN_COMMAND, "/btm"));
+				}
 			}
-			sl = new ServerLocation(
-					plugin.getYamlHandler().get().getString("ServerName"),
-					player.getLocation().getWorld().getName(),
-					Double.parseDouble(args[0]),
-					Double.parseDouble(args[1]),
-					Double.parseDouble(args[2]), 0, 0);
-			plugin.getTeleportHandler().tpPos(player, sl);
-		} else if(args.length == 4)
-		{
-			if(!MatchApi.isDouble(args[1]) || !MatchApi.isDouble(args[2]) || !MatchApi.isDouble(args[3]))
-			{
-				player.spigot().sendMessage(ChatApi.clickEvent(
-						plugin.getYamlHandler().getL().getString("InputIsWrong"),
-						ClickEvent.Action.RUN_COMMAND, "/btm"));
-				return;
-			}
-			sl = new ServerLocation(
-					plugin.getYamlHandler().get().getString("ServerName"),
-					args[0],
-					Double.parseDouble(args[1]),
-					Double.parseDouble(args[2]),
-					Double.parseDouble(args[3]), 0, 0);
-			plugin.getTeleportHandler().tpPos(player, sl);
-		} else if(args.length == 5)
-		{
-			if(!MatchApi.isDouble(args[2]) || !MatchApi.isDouble(args[3]) || !MatchApi.isDouble(args[4]))
-			{
-				player.spigot().sendMessage(ChatApi.clickEvent(
-						plugin.getYamlHandler().getL().getString("InputIsWrong"),
-						ClickEvent.Action.RUN_COMMAND, "/btm"));
-				return;
-			}
-			sl = new ServerLocation(
-					args[0], args[1],
-					Double.parseDouble(args[2]),
-					Double.parseDouble(args[3]),
-					Double.parseDouble(args[4]),
-					0, 0);
-			plugin.getTeleportHandler().tpPos(player, sl);
-		} else if(args.length == 7)
-		{
-			if(!MatchApi.isDouble(args[2]) || !MatchApi.isDouble(args[3]) || !MatchApi.isDouble(args[4])
-					|| !MatchApi.isInteger(args[5]) || !MatchApi.isInteger(args[6]))
-			{
-				player.spigot().sendMessage(ChatApi.clickEvent(
-						plugin.getYamlHandler().getL().getString("InputIsWrong"),
-						ClickEvent.Action.RUN_COMMAND, "/btm"));
-				return;
-			}
-			sl = new ServerLocation(
-					args[0], args[1],
-					Double.parseDouble(args[2]),
-					Double.parseDouble(args[3]),
-					Double.parseDouble(args[4]),
-					Float.parseFloat(args[5]),
-					Float.parseFloat(args[6]));
-			plugin.getTeleportHandler().tpPos(player, sl);
-		} else
-		{
-			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
-			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, "/btm"));
-		}
+		}.runTaskAsynchronously(plugin);
 	}
 	
 	public void tpaIgnore(Player player, String[] args)

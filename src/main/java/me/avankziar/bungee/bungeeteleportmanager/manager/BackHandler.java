@@ -1,14 +1,17 @@
 package main.java.me.avankziar.bungee.bungeeteleportmanager.manager;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import main.java.me.avankziar.bungee.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.general.object.Back;
+import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.StringValues;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
@@ -58,6 +61,35 @@ public class BackHandler
 	    player.getServer().sendData(StringValues.BACK_TOSPIGOT, streamout.toByteArray());
 	}
 	
+	public static void getBack(DataInputStream in, String uuid, String name) throws IOException
+	{
+		Back back = getTaskBack(in, uuid, name);
+    	if(!BackHandler.getBackLocations().containsKey(name))
+    	{
+    		BackHandler.getBackLocations().put(name, back);
+    	} else
+    	{
+    		BackHandler.getBackLocations().replace(name, back);
+    	}
+		if(BackHandler.getPendingNewBackRequests().contains(name))
+    	{
+    		BackHandler.getPendingNewBackRequests().remove(name);
+    	}
+	}
+	
+	public static Back getTaskBack(DataInputStream in, String uuid, String name) throws IOException
+	{
+		String serverName = in.readUTF();
+    	String worldName = in.readUTF();
+    	double x = in.readDouble();
+    	double y = in.readDouble();
+    	double z = in.readDouble();
+    	float yaw = in.readFloat();
+    	float pitch = in.readFloat();
+    	boolean toggle = in.readBoolean();
+    	return new Back(UUID.fromString(uuid), name, new ServerLocation(serverName, worldName, x, y, z, yaw, pitch), toggle);
+	}
+	
 	public void teleportBack(ProxiedPlayer player,
 			String oldserver, String name, String oldworld,
 			double oldx, double oldy, double oldz, float oldyaw, float oldpitch, boolean deleteDeathBack, int delayed)
@@ -73,10 +105,16 @@ public class BackHandler
 		}
     	taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
+    		int i = 0;
 			@Override
 			public void run()
 			{
 				if(player == null || oldserver == null)
+				{
+					taskOne.cancel();
+					return;
+				}
+				if(player.getServer() == null || player.getServer().getInfo() == null || player.getServer().getInfo().getName() == null)
 				{
 					taskOne.cancel();
 					return;
@@ -104,6 +142,12 @@ public class BackHandler
 				    }
 				    taskOne.cancel();
 	        	}
+				i++;
+				if(i >= 100)
+				{
+					taskOne.cancel();
+				    return;
+				}
 			}
 		}, delay, 5, TimeUnit.MILLISECONDS);
 	}

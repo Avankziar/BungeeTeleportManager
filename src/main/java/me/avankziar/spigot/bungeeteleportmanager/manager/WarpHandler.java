@@ -8,12 +8,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 public class WarpHandler
@@ -25,30 +27,50 @@ public class WarpHandler
 		this.plugin = plugin;
 	}
 	
-	public void sendPlayerToWarp(Player player, Warp warp, String playername)
+	public void sendPlayerToWarp(Player player, Warp warp, String playername, String uuid)
 	{
-		if(!plugin.isBungee())
+		if(warp.getLocation().getServer().equals(plugin.getYamlHandler().get().getString("ServerName")))
 		{
-			return;
+			BackHandler bh = new BackHandler(plugin);
+			bh.sendBackObject(player, bh.getNewBack(player));
+			int delayed = plugin.getYamlHandler().get().getInt("MinimumTimeBeforeWarp", 2000);
+			int delay = 25;
+			if(!player.hasPermission(StringValues.PERM_BYPASS_WARP_DELAY))
+			{
+				delay = delayed;
+			}
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					player.teleport(ConvertHandler.getLocation(warp.getLocation()));
+				}
+			}.runTaskLater(plugin, delay);
+		} else
+		{
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	        DataOutputStream out = new DataOutputStream(stream);
+	        try {
+				out.writeUTF(StringValues.WARP_PLAYERTOPOSITION);
+				out.writeUTF(uuid);
+				out.writeUTF(playername);
+				out.writeUTF(warp.getName());
+				out.writeUTF(warp.getLocation().getServer());
+				out.writeUTF(warp.getLocation().getWordName());
+				out.writeDouble(warp.getLocation().getX());
+				out.writeDouble(warp.getLocation().getY());
+				out.writeDouble(warp.getLocation().getZ());
+				out.writeFloat(warp.getLocation().getYaw());
+				out.writeFloat(warp.getLocation().getPitch());
+				out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeWarp", 2000));
+				new BackHandler(plugin).addingBack(player, out);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        player.sendPluginMessage(plugin, StringValues.WARP_TOBUNGEE, stream.toByteArray());
 		}
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(stream);
-        try {
-			out.writeUTF(StringValues.WARP_PLAYERTOPOSITION);
-			out.writeUTF(playername);
-			out.writeUTF(warp.getName());
-			out.writeUTF(warp.getLocation().getServer());
-			out.writeUTF(warp.getLocation().getWordName());
-			out.writeDouble(warp.getLocation().getX());
-			out.writeDouble(warp.getLocation().getY());
-			out.writeDouble(warp.getLocation().getZ());
-			out.writeFloat(warp.getLocation().getYaw());
-			out.writeFloat(warp.getLocation().getPitch());
-			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeWarp", 2000));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        player.sendPluginMessage(plugin, StringValues.WARP_TOBUNGEE, stream.toByteArray());
+		return;
 	}
 	
 	public boolean compareWarpAmount(Player player, boolean message)

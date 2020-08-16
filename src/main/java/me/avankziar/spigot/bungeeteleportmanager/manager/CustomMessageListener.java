@@ -70,6 +70,7 @@ public class CustomMessageListener implements PluginMessageListener
 												.replace("%playerfrom%", senders.getName())
 												.replace("%playerto%", targets.getName())));
 										cancel();
+										return;
 									}
 								}
 							}
@@ -77,9 +78,10 @@ public class CustomMessageListener implements PluginMessageListener
 							if(i >= 100)
 							{
 								cancel();
+								return;
 							}
 						}
-					}.runTaskTimer(plugin, 1L, 2L);
+					}.runTaskTimerAsynchronously(plugin, 1L, 2L);
             	    return;
             	} else if(task.equals(StringValues.CUSTOM_PLAYERTOPOSITION))
             	{
@@ -140,6 +142,7 @@ public class CustomMessageListener implements PluginMessageListener
 											player.sendMessage(ChatApi.tl(messages));
 										}
 										cancel();
+										return;
 									}
 								}
 							}
@@ -147,6 +150,7 @@ public class CustomMessageListener implements PluginMessageListener
 							if(i >= 100)
 							{
 								cancel();
+								return;
 							}
 						}
 					}.runTaskTimerAsynchronously(plugin, 1L, 2L);

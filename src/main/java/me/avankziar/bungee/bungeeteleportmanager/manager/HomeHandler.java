@@ -41,6 +41,7 @@ public class HomeHandler
 		}
 		taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
+			int i = 0;
 			@Override
 			public void run()
 			{
@@ -48,6 +49,12 @@ public class HomeHandler
 				{
 					teleportPlayer(player, location, homeName);
 					taskOne.cancel();
+				}
+				i++;
+				if(i >= 100)
+				{
+					taskOne.cancel();
+				    return;
 				}
 			}
 		}, delay, 5, TimeUnit.MILLISECONDS);
@@ -65,6 +72,7 @@ public class HomeHandler
 		}
 		taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
+			int i = 0;
 			@Override
 			public void run()
 			{
@@ -97,6 +105,12 @@ public class HomeHandler
 					}
 				    player.getServer().sendData(StringValues.HOME_TOSPIGOT, streamout.toByteArray());
 				    taskTwo.cancel();
+				}
+				i++;
+				if(i >= 100)
+				{
+					taskTwo.cancel();
+				    return;
 				}
 			}
 		},5, 5, TimeUnit.MILLISECONDS);
