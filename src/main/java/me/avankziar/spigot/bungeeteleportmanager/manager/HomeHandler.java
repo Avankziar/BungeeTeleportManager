@@ -8,12 +8,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 public class HomeHandler
@@ -27,28 +29,50 @@ public class HomeHandler
 	
 	public void sendPlayerToHome(Player player, Home home)
 	{
-		if(!plugin.isBungee())
+		if(home.getLocation().getServer().equals(plugin.getYamlHandler().get().getString("ServerName")))
 		{
-			return;
+			BackHandler bh = new BackHandler(plugin);
+			bh.sendBackObject(player, bh.getNewBack(player));
+			int delayed = plugin.getYamlHandler().get().getInt("MinimumTimeBeforeHome", 2000);
+			int delay = 1;
+			if(!player.hasPermission(StringValues.PERM_BYPASS_HOME_DELAY))
+			{
+				delay = Math.floorDiv(delayed, 50);
+			}
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					player.teleport(ConvertHandler.getLocation(home.getLocation()));
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeTo")
+							.replace("%home%", home.getHomeName())));
+				}
+			}.runTaskLater(plugin, delay);
+		} else
+		{
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	        DataOutputStream out = new DataOutputStream(stream);
+	        try {
+				out.writeUTF(StringValues.HOME_PLAYERTOPOSITION);
+				out.writeUTF(player.getUniqueId().toString());
+				out.writeUTF(player.getName());
+				out.writeUTF(home.getHomeName());
+				out.writeUTF(home.getLocation().getServer());
+				out.writeUTF(home.getLocation().getWordName());
+				out.writeDouble(home.getLocation().getX());
+				out.writeDouble(home.getLocation().getY());
+				out.writeDouble(home.getLocation().getZ());
+				out.writeFloat(home.getLocation().getYaw());
+				out.writeFloat(home.getLocation().getPitch());
+				out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeHome", 2000));
+				new BackHandler(plugin).addingBack(player, out);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        player.sendPluginMessage(plugin, StringValues.HOME_TOBUNGEE, stream.toByteArray());
 		}
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(stream);
-        try {
-			out.writeUTF(StringValues.HOME_PLAYERTOPOSITION);
-			out.writeUTF(player.getName());
-			out.writeUTF(home.getHomeName());
-			out.writeUTF(home.getLocation().getServer());
-			out.writeUTF(home.getLocation().getWordName());
-			out.writeDouble(home.getLocation().getX());
-			out.writeDouble(home.getLocation().getY());
-			out.writeDouble(home.getLocation().getZ());
-			out.writeFloat(home.getLocation().getYaw());
-			out.writeFloat(home.getLocation().getPitch());
-			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeHome", 2000));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        player.sendPluginMessage(plugin, StringValues.HOME_TOBUNGEE, stream.toByteArray());
+        return;
 	}
 	
 	public boolean compareHomeAmount(Player player, boolean message, boolean exist)

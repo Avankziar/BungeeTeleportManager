@@ -28,12 +28,11 @@ import net.milkbowl.vault.economy.EconomyResponse;
 public class WarpHelper
 {
 	private BungeeTeleportManager plugin;
-	private HashMap<Player, Long> cooldown;
+	private HashMap<Player, Long> cooldown = new HashMap<>();
 	
 	public WarpHelper(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
-		cooldown = new HashMap<>();
 	}
 	
 	public void warpCreate(Player player, String[] args)

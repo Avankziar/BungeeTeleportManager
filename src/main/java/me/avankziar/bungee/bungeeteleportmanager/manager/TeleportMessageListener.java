@@ -48,10 +48,13 @@ public class TeleportMessageListener implements Listener
         
         if(task.equals(StringValues.TP_EXISTPENDING))
         {
+        	String uuid = in.readUTF();
+        	String playername = in.readUTF();
         	String fromName = in.readUTF();
         	String toName = in.readUTF();
         	String type = in.readUTF();
         	boolean bypass = in.readBoolean();
+        	BackHandler.getBack(in, uuid, playername);
         	if(plugin.getProxy().getPlayer(toName) == null)
         	{
         		String error = in.readUTF();
@@ -279,6 +282,8 @@ public class TeleportMessageListener implements Listener
         	return;
         } else if(task.equals(StringValues.TP_FORCE))
         {
+        	String uuid = in.readUTF();
+        	String playername = in.readUTF();
         	String fromUUID = in.readUTF();
         	String fromName = in.readUTF();
         	String toUUID = in.readUTF();
@@ -286,6 +291,7 @@ public class TeleportMessageListener implements Listener
         	String type = in.readUTF();
         	String errormessage = in.readUTF();
         	int delayed = in.readInt();
+        	BackHandler.getBack(in, uuid, playername);
         	TeleportHandler th = new TeleportHandler(plugin);
         	th.preTeleportPlayerToPlayerForceUse(
         			new Teleport(UUID.fromString(fromUUID), fromName, UUID.fromString(toUUID), toName, Teleport.Type.valueOf(type)),
@@ -307,6 +313,7 @@ public class TeleportMessageListener implements Listener
         	return;
         } else if(task.equals(StringValues.TP_POS))
         {
+        	String uuid = in.readUTF();
         	String playerName = in.readUTF();
         	String server = in.readUTF();
         	String worldName = in.readUTF();
@@ -317,6 +324,7 @@ public class TeleportMessageListener implements Listener
         	float pitch = in.readFloat();
         	String errorServerNotFound = in.readUTF();
         	int delayed = in.readInt();
+        	BackHandler.getBack(in, uuid, playerName);
         	ServerLocation location = new ServerLocation(server, worldName, x, y, z, yaw, pitch);
         	TeleportHandler th = new TeleportHandler(plugin);
         	th.teleportPlayerToPosition(playerName, location, errorServerNotFound, delayed);

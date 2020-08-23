@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.bungee.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.general.object.Back;
@@ -15,6 +17,7 @@ import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.general.object.Teleport;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 
 public class TeleportHandler
 {
@@ -81,11 +84,14 @@ public class TeleportHandler
         DataOutputStream out = new DataOutputStream(stream);
         try {
 			out.writeUTF(StringValues.TP_EXISTPENDING);
+			out.writeUTF(player.getUniqueId().toString());
+			out.writeUTF(player.getName());
 			out.writeUTF(teleport.getFromName());
 			out.writeUTF(teleport.getToName());
 			out.writeUTF(teleport.getType().toString());
 			out.writeBoolean(player.hasPermission(StringValues.PERM_BYPASS_TELEPORT_TPATOGGLE));
 			out.writeUTF(plugin.getYamlHandler().getL().getString("NoPlayerExist"));
+			new BackHandler(plugin).addingBack(player, out);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -202,25 +208,60 @@ public class TeleportHandler
 	
 	public void sendForceObject(Player player, Teleport teleport, String errormessage)
 	{
-		if(!plugin.isBungee())
+		if(Bukkit.getPlayer(teleport.getToUUID()) != null)
 		{
-			return;
-		}
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(stream);
-        try {
-			out.writeUTF(StringValues.TP_FORCE);
-			out.writeUTF(teleport.getFromUUID().toString());
-			out.writeUTF(teleport.getFromName());
-			out.writeUTF(teleport.getToUUID().toString());
-			out.writeUTF(teleport.getToName());
-			out.writeUTF(teleport.getType().toString());
-			out.writeUTF(errormessage);
-			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeTeleport", 2000));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        player.sendPluginMessage(plugin, StringValues.TP_TOBUNGEE, stream.toByteArray());
+			Player targets = Bukkit.getPlayer(teleport.getToUUID());
+			BackHandler bh = new BackHandler(plugin);
+			bh.sendBackObject(player, bh.getNewBack(player));
+			int delayed = plugin.getYamlHandler().get().getInt("MinimumTimeBeforeTeleport", 2000);
+			int delay = 1;
+			if(!player.hasPermission(StringValues.PERM_BYPASS_CUSTOM_DELAY))
+			{
+				delay = Math.floorDiv(delayed, 50);
+			}
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					player.teleport(targets);
+					if(player.hasPermission(StringValues.PERM_BYPASS_TELEPORT_SILENT))
+					{
+						player.sendMessage(
+								ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
+								.replace("%playerfrom%", player.getName())
+								.replace("%playerto%", targets.getName())));
+					}										
+					if(targets.hasPermission(StringValues.PERM_BYPASS_TELEPORT_SILENT))
+					{
+						targets.sendMessage(
+								ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
+								.replace("%playerfrom%", player.getName())
+								.replace("%playerto%", targets.getName())));
+					}
+				}
+			}.runTaskLater(plugin, delay);
+		} else
+		{
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	        DataOutputStream out = new DataOutputStream(stream);
+	        try {
+				out.writeUTF(StringValues.TP_FORCE);
+				out.writeUTF(player.getUniqueId().toString());
+				out.writeUTF(player.getName());
+				out.writeUTF(teleport.getFromUUID().toString());
+				out.writeUTF(teleport.getFromName());
+				out.writeUTF(teleport.getToUUID().toString());
+				out.writeUTF(teleport.getToName());
+				out.writeUTF(teleport.getType().toString());
+				out.writeUTF(errormessage);
+				out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeTeleport", 2000));
+				new BackHandler(plugin).addingBack(player, out);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        player.sendPluginMessage(plugin, StringValues.TP_TOBUNGEE, stream.toByteArray());
+		}        
     }
 	
 	public void sendTpAll(Player player, boolean isSpecific, String server, String world)
@@ -246,30 +287,54 @@ public class TeleportHandler
 	
 	public void sendTpPos(Player player, ServerLocation sl)
 	{
-		if(!plugin.isBungee())
+		if(sl.getServer().equals(plugin.getYamlHandler().get().getString("ServerName")))
 		{
-			return;
+			BackHandler bh = new BackHandler(plugin);
+			bh.sendBackObject(player, bh.getNewBack(player));
+			int delayed = plugin.getYamlHandler().get().getInt("MinimumTimeBeforeTeleport", 2000);
+			int delay = 1;
+			if(!player.hasPermission(StringValues.PERM_BYPASS_CUSTOM_DELAY))
+			{
+				delay = Math.floorDiv(delayed, 50);
+			}
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					player.teleport(ConvertHandler.getLocation(sl));
+					player.sendMessage(
+							ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PositionTeleport")
+							.replace("%server%", sl.getServer())
+							.replace("%world%", sl.getWordName())
+							.replace("%coords%", sl.getX()+" "+sl.getY()+" "+sl.getZ()+" | "+sl.getYaw()+" "+sl.getPitch())));
+				}
+			}.runTaskLater(plugin, delay);
+		} else
+		{
+			String errormessage = plugin.getYamlHandler().getL().getString("CmdTp.ServerNotFound")
+					.replace("%server%", sl.getServer());
+	        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	        DataOutputStream out = new DataOutputStream(stream);
+	        try {
+				out.writeUTF(StringValues.TP_POS);
+				out.writeUTF(player.getUniqueId().toString());
+				out.writeUTF(player.getName());
+				out.writeUTF(sl.getServer());
+				out.writeUTF(sl.getWordName());
+				out.writeDouble(sl.getX());
+				out.writeDouble(sl.getY());
+				out.writeDouble(sl.getZ());
+				out.writeFloat(sl.getYaw());
+				out.writeFloat(sl.getPitch());
+				out.writeUTF(errormessage);
+				out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeTeleport", 2000));
+				new BackHandler(plugin).addingBack(player, out);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        player.sendPluginMessage(plugin, StringValues.TP_TOBUNGEE, stream.toByteArray());
 		}
-		String errormessage = plugin.getYamlHandler().getL().getString("CmdTp.ServerNotFound")
-				.replace("%server%", sl.getServer());
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(stream);
-        try {
-			out.writeUTF(StringValues.TP_POS);
-			out.writeUTF(player.getName());
-			out.writeUTF(sl.getServer());
-			out.writeUTF(sl.getWordName());
-			out.writeDouble(sl.getX());
-			out.writeDouble(sl.getY());
-			out.writeDouble(sl.getZ());
-			out.writeFloat(sl.getYaw());
-			out.writeFloat(sl.getPitch());
-			out.writeUTF(errormessage);
-			out.writeInt(plugin.getYamlHandler().get().getInt("MinimumTimeBeforeTeleport", 2000));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        player.sendPluginMessage(plugin, StringValues.TP_TOBUNGEE, stream.toByteArray());
 	}
 	
 	public void sendWorldName(Player player)

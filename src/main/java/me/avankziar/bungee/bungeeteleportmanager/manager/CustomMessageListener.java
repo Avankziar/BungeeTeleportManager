@@ -60,12 +60,14 @@ public class CustomMessageListener implements Listener
         	String type = in.readUTF();
         	String errormessage = in.readUTF();
         	int delayed = in.readInt();
+        	BackHandler.getBack(in, fromUUID, fromName);
         	preTeleportPlayerToPlayerForceUse(
         			new Teleport(UUID.fromString(fromUUID), fromName, UUID.fromString(toUUID), toName, Teleport.Type.valueOf(type)),
         			errormessage, delayed);
         	return;
         } else if(task.equals(StringValues.CUSTOM_PLAYERTOPOSITION))
         {
+        	String uuid = in.readUTF();
         	String playerName = in.readUTF();
         	String server = in.readUTF();
         	String worldName = in.readUTF();
@@ -76,6 +78,7 @@ public class CustomMessageListener implements Listener
         	float pitch = in.readFloat();
         	String errorServerNotFound = in.readUTF();
         	int delayed = in.readInt();
+        	BackHandler.getBack(in, uuid, playerName);
         	boolean messagenull = in.readBoolean();
         	String message = null;
         	if(!messagenull)
@@ -291,6 +294,10 @@ public class CustomMessageListener implements Listener
 		{
 			if(!player.getServer().getInfo().getName().equals(location.getServer()))
 			{
+				if(plugin.getProxy().getServerInfo(location.getServer()) == null)
+				{
+					return;
+				}
 				player.connect(plugin.getProxy().getServerInfo(location.getServer()));
 			}
 		} catch(NullPointerException e)

@@ -15,7 +15,6 @@ import net.md_5.bungee.api.scheduler.ScheduledTask;
 public class WarpHandler
 {
 	private BungeeTeleportManager plugin;
-	//private ScheduledTask taskOne;
 	private ScheduledTask taskTwo;
 	
 	public WarpHandler(BungeeTeleportManager plugin)
@@ -35,27 +34,6 @@ public class WarpHandler
 		{
 			delay = delayed;
 		}
-		/*BackHandler.requestNewBack(player);
-		taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-		{
-			int i = 0;
-			@Override
-			public void run()
-			{
-				if(!BackHandler.pendingNewBackRequests.contains(player.getName()))
-				{
-					teleportPlayer(player, warpName, location);
-					taskOne.cancel();
-					return;
-				}
-				i++;
-				if(i >= 100)
-				{
-					taskOne.cancel();
-				    return;
-				}
-			}
-		}, delay, 5, TimeUnit.MILLISECONDS);*/
 		teleportPlayer(player, delay, warpName, location); //Back wurde schon gemacht
 	}
 	
@@ -72,6 +50,10 @@ public class WarpHandler
 		}
 		if(!player.getServer().getInfo().getName().equals(location.getServer()))
 		{
+			if(plugin.getProxy().getServerInfo(location.getServer()) == null)
+			{
+				return;
+			}
 			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
 		}
 		taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()

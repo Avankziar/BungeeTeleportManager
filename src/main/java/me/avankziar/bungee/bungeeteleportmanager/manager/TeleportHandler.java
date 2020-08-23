@@ -23,10 +23,6 @@ public class TeleportHandler
 	private static ArrayList<String> forbiddenServer = new ArrayList<>();
 	private static ArrayList<String> forbiddenWorld = new ArrayList<>();
 	
-	private ScheduledTask taskOne;
-	private ScheduledTask taskTwo;
-	private ScheduledTask taskThree;
-	private ScheduledTask taskFour;
 	private ScheduledTask taskFive;
 	private ScheduledTask taskSix;
 	
@@ -84,7 +80,7 @@ public class TeleportHandler
 	    sender.getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
 	}
 	
-	public void teleportPlayer(ProxiedPlayer sender, ProxiedPlayer target)
+	public void teleportPlayer(ProxiedPlayer sender, ProxiedPlayer target, int delay)
 	{
 		if(sender == null || target == null)
 		{
@@ -132,7 +128,7 @@ public class TeleportHandler
 				    return;
 				}
 			}
-		}, 5, 5, TimeUnit.MILLISECONDS);
+		}, delay, TimeUnit.MILLISECONDS);
 	}
 	
 	//Player to has accepted
@@ -168,48 +164,10 @@ public class TeleportHandler
 		}
 		if(teleport.getType() == Teleport.Type.TPTO)
 		{
-			BackHandler.requestNewBack(from);
-			taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-    		{
-				int i = 0;
-    			@Override
-    			public void run()
-    			{
-    				if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
-    				{
-    					teleportPlayer(from, to);
-        				taskOne.cancel();
-    				}
-    				i++;
-    				if(i >= 100)
-    				{
-    					taskOne.cancel();
-    				    return;
-    				}
-    			}
-    		}, delay, 5, TimeUnit.MILLISECONDS);
+			teleportPlayer(from, to, delay);
 		} else if(teleport.getType() == Teleport.Type.TPHERE)
 		{
-			BackHandler.requestNewBack(to);
-			taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-    		{
-				int i = 0;
-    			@Override
-    			public void run()
-    			{
-    				if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
-    				{
-    					teleportPlayer(to, from);
-        				taskOne.cancel();
-    				}
-    				i++;
-    				if(i >= 100)
-    				{
-    					taskOne.cancel();
-    				    return;
-    				}
-    			}
-    		}, delay, 5, TimeUnit.MILLISECONDS);
+			teleportPlayer(to, from, delay);
 		}
 		return;
 	}
@@ -234,50 +192,10 @@ public class TeleportHandler
 		}
 		if(teleport.getType() == Teleport.Type.TPTO)
 		{
-			BackHandler.requestNewBack(from);
-			taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-    		{
-				int i = 0;
-    			@Override
-    			public void run()
-    			{
-    				if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
-    				{
-    					teleportPlayer(from, to);
-        				taskTwo.cancel();
-        				return;
-    				}
-    				i++;
-    				if(i >= 100)
-    				{
-    					taskTwo.cancel();
-    				    return;
-    				}
-    			}
-    		}, delay, 5, TimeUnit.MILLISECONDS);
+			teleportPlayer(from, to, delay);
 		} else if(teleport.getType() == Teleport.Type.TPHERE)
 		{
-			BackHandler.requestNewBack(to);
-			taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-    		{
-				int i = 0;
-    			@Override
-    			public void run()
-    			{
-    				if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
-    				{
-    					teleportPlayer(to, from);
-        				taskTwo.cancel();
-        				return;
-    				}
-    				i++;
-    				if(i >= 100)
-    				{
-    					taskTwo.cancel();
-    				    return;
-    				}
-    			}
-    		}, delay, 5, TimeUnit.MILLISECONDS);
+			teleportPlayer(to, from, delay);
 		}
 	}
 	
@@ -301,27 +219,7 @@ public class TeleportHandler
 			{
 				if(!from.getName().equals(to.getName()))
 				{
-					BackHandler.requestNewBack(to);
-					taskThree = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-					{
-						int i = 0;
-						@Override
-						public void run()
-						{
-							if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
-							{
-								teleportPlayer(to, from);
-								taskThree.cancel();
-								return;
-							}
-							i++;
-							if(i >= 100)
-							{
-								taskThree.cancel();
-							    return;
-							}
-						}
-					}, delay, 5, TimeUnit.MILLISECONDS);
+					teleportPlayer(to, from, delay);
 				}
 			}
 		} else
@@ -335,27 +233,7 @@ public class TeleportHandler
 							&& to.getServer().getInfo().getName().equals(server)
 							&& worlds)
 					{
-						BackHandler.requestNewBack(to);
-						taskThree = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-						{
-							int i = 0;
-							@Override
-							public void run()
-							{
-								if(!BackHandler.pendingNewBackRequests.contains(from.getName()))
-								{
-									teleportPlayer(to, from);
-									taskThree.cancel();
-									return;
-								}
-								i++;
-								if(i >= 100)
-								{
-									taskThree.cancel();
-								    return;
-								}
-							}
-						}, delay, 5, TimeUnit.MILLISECONDS);
+						teleportPlayer(to, from, delay);
 					}
 				}
 			}
@@ -374,35 +252,15 @@ public class TeleportHandler
 			player.sendMessage(ChatApi.tctl(errorServerNotFound));
 			return;
 		}
-		BackHandler.requestNewBack(player);
 		int delay = 25;
 		if(!player.hasPermission(StringValues.PERM_BYPASS_TELEPORT_DELAY))
 		{
 			delay = delayed;
 		}
-		taskFour = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-		{
-			int i = 0;
-			@Override
-			public void run()
-			{
-				if(!BackHandler.pendingNewBackRequests.contains(player.getName()))
-				{
-					teleportPlayerToPositionPost(player, location);
-					taskFour.cancel();
-					return;
-				}
-				i++;
-				if(i >= 100)
-				{
-					taskFour.cancel();
-				    return;
-				}
-			}
-		}, delay, 5, TimeUnit.MILLISECONDS);
+		teleportPlayerToPositionPost(player, location, delay);
 	}
 	
-	public void teleportPlayerToPositionPost(ProxiedPlayer player, ServerLocation location)
+	public void teleportPlayerToPositionPost(ProxiedPlayer player, ServerLocation location, int delay)
 	{
 		if(player == null || location == null)
 		{
@@ -461,6 +319,6 @@ public class TeleportHandler
 				    return;
 				}
 			}
-		}, 5, 5, TimeUnit.MILLISECONDS);
+		}, delay, TimeUnit.MILLISECONDS);
 	}
 }

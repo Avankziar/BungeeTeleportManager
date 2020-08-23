@@ -14,7 +14,7 @@ import net.md_5.bungee.api.scheduler.ScheduledTask;
 public class HomeHandler
 {
 	private BungeeTeleportManager plugin;
-	private ScheduledTask taskOne;
+	//private ScheduledTask taskOne;
 	private ScheduledTask taskTwo;
 	
 	public HomeHandler(BungeeTeleportManager plugin)
@@ -22,24 +22,29 @@ public class HomeHandler
 		this.plugin = plugin;
 	}
 	
-	public void teleportPlayerToHome(String playerName, ServerLocation location, String homeName, int delayed)
+	public void teleportPlayerToHome(String playerName, String uuid, ServerLocation location, String homeName, int delayed)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(playerName);
 		if(player == null || location == null)
 		{
 			return;
 		}
-		BackHandler.requestNewBack(player);
-		if(!player.getServer().getInfo().getName().equals(location.getServer()))
-		{
-			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
-		}
+		
 		int delay = 25;
 		if(!player.hasPermission(StringValues.PERM_BYPASS_HOME_DELAY))
 		{
 			delay = delayed;
 		}
-		taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		//BackHandler.requestNewBack(player);
+		if(!player.getServer().getInfo().getName().equals(location.getServer()))
+		{
+			if(plugin.getProxy().getServerInfo(location.getServer()) == null)
+			{
+				return;
+			}
+			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
+		}
+		/*taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
 			int i = 0;
 			@Override
@@ -57,10 +62,11 @@ public class HomeHandler
 				    return;
 				}
 			}
-		}, delay, 5, TimeUnit.MILLISECONDS);
+		}, delay, 5, TimeUnit.MILLISECONDS);*/
+		teleportPlayer(player, delay, location, homeName); //Back wurde schon gemacht.
 	}
 	
-	public void teleportPlayer(ProxiedPlayer player, ServerLocation location, String homeName)
+	public void teleportPlayer(ProxiedPlayer player, int delay, ServerLocation location, String homeName)
 	{
 		if(player == null || location == null)
 		{
@@ -113,7 +119,7 @@ public class HomeHandler
 				    return;
 				}
 			}
-		},5, 5, TimeUnit.MILLISECONDS);
+		}, delay, 50, TimeUnit.MILLISECONDS);
 	}
 
 }

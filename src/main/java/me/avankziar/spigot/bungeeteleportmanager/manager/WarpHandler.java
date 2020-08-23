@@ -34,10 +34,10 @@ public class WarpHandler
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
 			int delayed = plugin.getYamlHandler().get().getInt("MinimumTimeBeforeWarp", 2000);
-			int delay = 25;
+			int delay = 1;
 			if(!player.hasPermission(StringValues.PERM_BYPASS_WARP_DELAY))
 			{
-				delay = delayed;
+				delay = Math.floorDiv(delayed, 50);
 			}
 			new BukkitRunnable()
 			{
@@ -45,6 +45,8 @@ public class WarpHandler
 				public void run()
 				{
 					player.teleport(ConvertHandler.getLocation(warp.getLocation()));
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.WarpTo")
+							.replace("%warp%", warp.getName())));
 				}
 			}.runTaskLater(plugin, delay);
 		} else
