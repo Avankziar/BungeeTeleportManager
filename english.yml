@@ -54,6 +54,8 @@ CmdBtm:
   tpdeny: '&c/tpadeny <Spielername> &f| Rejects the TPA from the player. (Clickable in chat)'
   tpaquit: '&c/tpaquit &f| Cancel all TPA.'
   tpatoggle: '&c/tpatoggle &f| Switches the automatic rejection of all TPAs.'
+  tpaignore: '&c/tpaignore &f| Toggles whether the tpas are immediately rejected by the specified player or not.'
+  tpaignorelist: '&c/tpaignorelist &f| Shows all ignored players.'
   tp: '&c/tp <Spielername> &f| Teleports you to the player without request.'
   tphere: '&c/tphere <Spielername> &f| Teleports the player to you without request.'
   tpall: '&c/tpall &f| Teleports all players on all servers to you without request.'
