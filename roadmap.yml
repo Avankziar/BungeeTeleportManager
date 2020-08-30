@@ -1,9 +1,13 @@
-Build 4 =========================================================================================================================
+Future =========================================================================================================================
 - Wenn der Spieler auf einem Entity sitzt. Sollen die Entitys mitteleportiert werden.
 - Portale
 - SpawnPoint
 - RespawnPoint
 - SavePoint
+
+Build 4 ========================================================================================================================
+- Starke Optimierung aller Prozesse. Aka Schedulerabbau, vor allem auf BungeeEbene
+- Alle Serverinternen Teleporte werden nun auch Serverintern abgearbeitet, was eine große Portion Leistung einspart.
 
 Build 3 =========================================================================================================================
 - +Schedular-Artiger Teleport (No Cooldown)
