@@ -38,7 +38,7 @@ public class TeleportMessageListener implements PluginMessageListener
             try 
             {
             	task = in.readUTF();
-            	
+            	BungeeTeleportManager.log.info(task);
             	if(task.equals(StringValues.TP_FREE))
             	{
             		String fromName = in.readUTF();
@@ -279,6 +279,7 @@ public class TeleportMessageListener implements PluginMessageListener
             {
     			e.printStackTrace();
     		}
+            BungeeTeleportManager.log.info(task);
 		}
 	}
 }

@@ -73,6 +73,9 @@ public class BackMessageListener implements Listener
         {
         	String uuid = in.readUTF();
         	String name = in.readUTF();
+        	Back back = BackHandler.getTaskBack(in, uuid, name);
+        	int delayed = in.readInt();
+        	
         	Back oldback = BackHandler.getBackLocations().get(name);
         	String oldserver = oldback.getLocation().getServer();
         	String oldworld = oldback.getLocation().getWordName();
@@ -81,16 +84,9 @@ public class BackMessageListener implements Listener
         	double oldz = oldback.getLocation().getZ();
         	float oldyaw = oldback.getLocation().getYaw();
         	float oldpitch = oldback.getLocation().getPitch();
-        	Back back = BackHandler.getTaskBack(in, uuid, name);
-        	int delayed = in.readInt();
         	BackHandler.getBackLocations().replace(name, back);
-        	ProxiedPlayer player = plugin.getProxy().getPlayer(name);
-        	if(player == null)
-        	{
-        		return;
-        	}
         	BackHandler bh = new BackHandler(plugin);
-        	bh.teleportBack(player, oldserver, name, oldworld, oldx, oldy, oldz, oldyaw, oldpitch, false, delayed);
+        	bh.teleportBack(oldserver, name, oldworld, oldx, oldy, oldz, oldyaw, oldpitch, false, delayed);
         } else if(task.equals(StringValues.BACK_SENDDEATHOBJECT))
         {
         	String uuid = in.readUTF();
@@ -144,12 +140,8 @@ public class BackMessageListener implements Listener
         	{
         		BackHandler.getBackLocations().replace(name, back);
         	}
-        	if(player == null)
-        	{
-        		return;
-        	}
         	BackHandler bh = new BackHandler(plugin);
-        	bh.teleportBack(player, oldserver, name, oldworld, oldx, oldy, oldz, oldyaw, oldpitch, deleteDeathBack, delayed);
+        	bh.teleportBack(oldserver, name, oldworld, oldx, oldy, oldz, oldyaw, oldpitch, deleteDeathBack, delayed);
         }
         return;
 	}

@@ -13,7 +13,6 @@ import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.StringValues;
 import main.java.me.avankziar.general.object.Teleport;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 public class TeleportHandler
 {
@@ -22,9 +21,6 @@ public class TeleportHandler
 	private static HashMap<String,String> playerWorld = new HashMap<>();
 	private static ArrayList<String> forbiddenServer = new ArrayList<>();
 	private static ArrayList<String> forbiddenWorld = new ArrayList<>();
-	
-	private ScheduledTask taskFive;
-	private ScheduledTask taskSix;
 	
 	public TeleportHandler(BungeeTeleportManager plugin)
 	{
@@ -90,43 +86,30 @@ public class TeleportHandler
 		{
 			sender.connect(target.getServer().getInfo());
 		}
-		taskSix = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
-			int i = 0;
 			@Override
 			public void run()
 			{
 				if(sender == null || target == null)
 				{
-					taskSix.cancel();
 					return;
 				}
 				if(sender.getServer() == null || sender.getServer().getInfo() == null || sender.getServer().getInfo().getName() == null
 						|| target.getServer() == null || target.getServer().getInfo() == null || target.getServer().getInfo().getName() == null)
 				{
-					taskFive.cancel();
 					return;
 				}
-				if(sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
-	        	{
-					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-			        DataOutputStream out = new DataOutputStream(streamout);
-			        try {
-						out.writeUTF(StringValues.TP_PLAYERTOPLAYER);
-						out.writeUTF(sender.getName());
-						out.writeUTF(target.getName());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				    target.getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
-				    taskSix.cancel();
-	        	}
-				i++;
-				if(i >= 100)
-				{
-					taskSix.cancel();
-				    return;
+				ByteArrayOutputStream streamout = new ByteArrayOutputStream();
+		        DataOutputStream out = new DataOutputStream(streamout);
+		        try {
+					out.writeUTF(StringValues.TP_PLAYERTOPLAYER);
+					out.writeUTF(sender.getName());
+					out.writeUTF(target.getName());
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
+			    target.getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
 			}
 		}, delay, TimeUnit.MILLISECONDS);
 	}
@@ -266,58 +249,52 @@ public class TeleportHandler
 		{
 			return;
 		}
+		if(!plugin.getProxy().getServers().containsKey(location.getServer()))
+		{
+			player.sendMessage(ChatApi.tctl("Server is unknow!"));
+			return;
+		}
 		if(!player.getServer().getInfo().getName().equals(location.getServer()))
 		{
+			if(plugin.getProxy().getServerInfo(location.getServer()) == null)
+			{
+				return;
+			}
 			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
 		}
-		taskFive = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
-			int i = 0;
 			@Override
 			public void run()
 			{
 				if(player == null || location == null)
 				{
-					taskFive.cancel();
 					return;
 				}
 				if(location.getServer() == null)
 				{
-					taskFive.cancel();
 					return;
 				}
 				if(player.getServer() == null || player.getServer().getInfo() == null || player.getServer().getInfo().getName() == null)
 				{
-					taskFive.cancel();
 					return;
 				}
-				if(player.getServer().getInfo().getName().equals(location.getServer()))
-	        	{
-					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-			        DataOutputStream out = new DataOutputStream(streamout);
-			        try {
-						out.writeUTF(StringValues.TP_PLAYERTOPOSITION);
-						out.writeUTF(player.getName());
-						out.writeUTF(location.getServer());
-						out.writeUTF(location.getWordName());
-						out.writeDouble(location.getX());
-						out.writeDouble(location.getY());
-						out.writeDouble(location.getZ());
-						out.writeFloat(location.getYaw());
-						out.writeFloat(location.getPitch());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				    player.getServer().sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
-				    taskFive.cancel();
-				    return;
-	        	}
-				i++;
-				if(i >= 100)
-				{
-					taskFive.cancel();
-				    return;
+				ByteArrayOutputStream streamout = new ByteArrayOutputStream();
+		        DataOutputStream out = new DataOutputStream(streamout);
+		        try {
+					out.writeUTF(StringValues.TP_PLAYERTOPOSITION);
+					out.writeUTF(player.getName());
+					out.writeUTF(location.getServer());
+					out.writeUTF(location.getWordName());
+					out.writeDouble(location.getX());
+					out.writeDouble(location.getY());
+					out.writeDouble(location.getZ());
+					out.writeFloat(location.getYaw());
+					out.writeFloat(location.getPitch());
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
+		        plugin.getProxy().getServerInfo(location.getServer()).sendData(StringValues.TP_TOSPIGOT, streamout.toByteArray());
 			}
 		}, delay, TimeUnit.MILLISECONDS);
 	}

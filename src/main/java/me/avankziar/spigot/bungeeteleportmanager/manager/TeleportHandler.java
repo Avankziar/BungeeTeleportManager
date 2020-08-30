@@ -224,20 +224,41 @@ public class TeleportHandler
 				@Override
 				public void run()
 				{
-					player.teleport(targets);
-					if(player.hasPermission(StringValues.PERM_BYPASS_TELEPORT_SILENT))
+					
+					if(teleport.getType() == Teleport.Type.TPTO)
 					{
-						player.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
-								.replace("%playerfrom%", player.getName())
-								.replace("%playerto%", targets.getName())));
-					}										
-					if(targets.hasPermission(StringValues.PERM_BYPASS_TELEPORT_SILENT))
+						player.teleport(targets);
+						if(player.hasPermission(StringValues.PERM_BYPASS_TELEPORT_SILENT))
+						{
+							player.sendMessage(
+									ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
+									.replace("%playerfrom%", player.getName())
+									.replace("%playerto%", targets.getName())));
+						}										
+						if(targets.hasPermission(StringValues.PERM_BYPASS_TELEPORT_SILENT))
+						{
+							targets.sendMessage(
+									ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
+									.replace("%playerfrom%", player.getName())
+									.replace("%playerto%", targets.getName())));
+						}
+					} else if(teleport.getType() == Teleport.Type.TPHERE)
 					{
-						targets.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
-								.replace("%playerfrom%", player.getName())
-								.replace("%playerto%", targets.getName())));
+						targets.teleport(player);
+						if(player.hasPermission(StringValues.PERM_BYPASS_TELEPORT_SILENT))
+						{
+							player.sendMessage(
+									ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
+									.replace("%playerfrom%", targets.getName())
+									.replace("%playerto%", player.getName())));
+						}										
+						if(targets.hasPermission(StringValues.PERM_BYPASS_TELEPORT_SILENT))
+						{
+							targets.sendMessage(
+									ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
+									.replace("%playerfrom%", targets.getName())
+									.replace("%playerto%", player.getName())));
+						}
 					}
 				}
 			}.runTaskLater(plugin, delay);

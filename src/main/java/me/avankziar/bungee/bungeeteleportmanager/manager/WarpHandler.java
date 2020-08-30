@@ -10,12 +10,10 @@ import main.java.me.avankziar.bungee.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.StringValues;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 public class WarpHandler
 {
 	private BungeeTeleportManager plugin;
-	private ScheduledTask taskTwo;
 	
 	public WarpHandler(BungeeTeleportManager plugin)
 	{
@@ -56,56 +54,41 @@ public class WarpHandler
 			}
 			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
 		}
-		taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
-			int i = 0;
 			@Override
 			public void run()
 			{
 				if(player == null || location == null)
 				{
-					taskTwo.cancel();
 					return;
 				}
 				if(location.getServer() == null)
 				{
-					taskTwo.cancel();
 					return;
 				}
 				if(player.getServer() == null || player.getServer().getInfo() == null || player.getServer().getInfo().getName() == null)
 				{
-					taskTwo.cancel();
 					return;
 				}
-				if(player.getServer().getInfo().getName().equals(
-						location.getServer()))
-				{
-					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-			        DataOutputStream out = new DataOutputStream(streamout);
-			        try {
-			        	out.writeUTF(StringValues.WARP_PLAYERTOPOSITION);
-						out.writeUTF(player.getName());
-						out.writeUTF(warpName);
-						out.writeUTF(location.getWordName());
-						out.writeDouble(location.getX());
-						out.writeDouble(location.getY());
-						out.writeDouble(location.getZ());
-						out.writeFloat(location.getYaw());
-						out.writeFloat(location.getPitch());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				    player.getServer().sendData(StringValues.WARP_TOSPIGOT, streamout.toByteArray());
-					taskTwo.cancel();
-					return;
+				ByteArrayOutputStream streamout = new ByteArrayOutputStream();
+		        DataOutputStream out = new DataOutputStream(streamout);
+		        try {
+		        	out.writeUTF(StringValues.WARP_PLAYERTOPOSITION);
+					out.writeUTF(player.getName());
+					out.writeUTF(warpName);
+					out.writeUTF(location.getWordName());
+					out.writeDouble(location.getX());
+					out.writeDouble(location.getY());
+					out.writeDouble(location.getZ());
+					out.writeFloat(location.getYaw());
+					out.writeFloat(location.getPitch());
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-				i++;
-				if(i >= 100)
-				{
-					taskTwo.cancel();
-				    return;
-				}
+		        plugin.getProxy().getServerInfo(location.getServer()).sendData(StringValues.WARP_TOSPIGOT, streamout.toByteArray());
+				return;
 			}
-		}, delay, 25, TimeUnit.MILLISECONDS);
+		}, delay, TimeUnit.MILLISECONDS);
 	}
 }

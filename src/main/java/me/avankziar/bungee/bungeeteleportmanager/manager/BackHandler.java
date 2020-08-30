@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import main.java.me.avankziar.bungee.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.bungee.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.StringValues;
@@ -90,10 +91,19 @@ public class BackHandler
     	return new Back(UUID.fromString(uuid), name, new ServerLocation(serverName, worldName, x, y, z, yaw, pitch), toggle);
 	}
 	
-	public void teleportBack(ProxiedPlayer player,
-			String oldserver, String name, String oldworld,
+	public void teleportBack(String oldserver, String name, String oldworld,
 			double oldx, double oldy, double oldz, float oldyaw, float oldpitch, boolean deleteDeathBack, int delayed)
 	{
+		ProxiedPlayer player = plugin.getProxy().getPlayer(name);
+    	if(player == null)
+    	{
+    		return;
+    	}
+    	if(!plugin.getProxy().getServers().containsKey(oldserver))
+		{
+			player.sendMessage(ChatApi.tctl("Server is unknow!"));
+			return;
+		}
 		if(!player.getServer().getInfo().getName().equals(oldserver))
     	{
     		player.connect(plugin.getProxy().getServerInfo(oldserver));

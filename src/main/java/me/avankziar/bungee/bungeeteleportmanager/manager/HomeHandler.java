@@ -6,16 +6,14 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import main.java.me.avankziar.bungee.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.bungee.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.StringValues;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 public class HomeHandler
 {
 	private BungeeTeleportManager plugin;
-	//private ScheduledTask taskOne;
-	private ScheduledTask taskTwo;
 	
 	public HomeHandler(BungeeTeleportManager plugin)
 	{
@@ -35,34 +33,7 @@ public class HomeHandler
 		{
 			delay = delayed;
 		}
-		//BackHandler.requestNewBack(player);
-		if(!player.getServer().getInfo().getName().equals(location.getServer()))
-		{
-			if(plugin.getProxy().getServerInfo(location.getServer()) == null)
-			{
-				return;
-			}
-			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
-		}
-		/*taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
-		{
-			int i = 0;
-			@Override
-			public void run()
-			{
-				if(!BackHandler.pendingNewBackRequests.contains(player.getName()))
-				{
-					teleportPlayer(player, location, homeName);
-					taskOne.cancel();
-				}
-				i++;
-				if(i >= 100)
-				{
-					taskOne.cancel();
-				    return;
-				}
-			}
-		}, delay, 5, TimeUnit.MILLISECONDS);*/
+		
 		teleportPlayer(player, delay, location, homeName); //Back wurde schon gemacht.
 	}
 	
@@ -72,54 +43,51 @@ public class HomeHandler
 		{
 			return;
 		}
-		if(location.getServer() == null)
+		if(!plugin.getProxy().getServers().containsKey(location.getServer()))
 		{
+			player.sendMessage(ChatApi.tctl("Server is unknow!"));
 			return;
 		}
-		taskTwo = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		if(!player.getServer().getInfo().getName().equals(location.getServer()))
 		{
-			int i = 0;
+			if(plugin.getProxy().getServerInfo(location.getServer()) == null)
+			{
+				return;
+			}
+			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
+		}
+		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		{
 			@Override
 			public void run()
 			{
 				if(player == null || location == null)
 				{
-					taskTwo.cancel();
 					return;
 				}
 				if(location.getServer() == null)
 				{
-					taskTwo.cancel();
 					return;
 				}
-				if(player.getServer().getInfo().getName().equals(location.getServer()))
-				{
-					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-			        DataOutputStream out = new DataOutputStream(streamout);
-			        try {
-			        	out.writeUTF(StringValues.HOME_PLAYERTOPOSITION);
-						out.writeUTF(player.getName());
-						out.writeUTF(homeName);
-						out.writeUTF(location.getWordName());
-						out.writeDouble(location.getX());
-						out.writeDouble(location.getY());
-						out.writeDouble(location.getZ());
-						out.writeFloat(location.getYaw());
-						out.writeFloat(location.getPitch());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				    player.getServer().sendData(StringValues.HOME_TOSPIGOT, streamout.toByteArray());
-				    taskTwo.cancel();
+				ByteArrayOutputStream streamout = new ByteArrayOutputStream();
+		        DataOutputStream out = new DataOutputStream(streamout);
+		        try {
+		        	out.writeUTF(StringValues.HOME_PLAYERTOPOSITION);
+					out.writeUTF(player.getName());
+					out.writeUTF(homeName);
+					out.writeUTF(location.getWordName());
+					out.writeDouble(location.getX());
+					out.writeDouble(location.getY());
+					out.writeDouble(location.getZ());
+					out.writeFloat(location.getYaw());
+					out.writeFloat(location.getPitch());
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
-				i++;
-				if(i >= 100)
-				{
-					taskTwo.cancel();
-				    return;
-				}
+		        plugin.getProxy().getServerInfo(location.getServer()).sendData(StringValues.HOME_TOSPIGOT, streamout.toByteArray());
+		        return;
 			}
-		}, delay, 50, TimeUnit.MILLISECONDS);
+		}, delay, TimeUnit.MILLISECONDS);
 	}
 
 }
