@@ -119,7 +119,7 @@ CmdTp:
   CancelInvite: '&f%fromplayer% &chas aborted the teleport request for &f%toplayer%&c!'
   HasAlreadyRequest: '&cA teleport request is currently not possible, because either you or the requested player already has an open request!'
   ServerQuitMessage: '&cThe player &f%player% &has left the server. The pending teleport request has been cancelled.'
-  PlayerTeleport: '&f%playerfrom% &awas become &f%playerto% &ateleported!'
+  PlayerTeleport: '&f%playerfrom% &awas teleported to &f%playerto%!'
   PositionTeleport: '&aYou became the server &f%server% &aand the world &f%world% &ato the coordinates &f%coords% &ateleported!'
   ServerNotFound: '&cThe server &f%server% &cdoes not exist!'
   WorldNotFound: '&cThe world &f%world% &cdoes not practice!'
