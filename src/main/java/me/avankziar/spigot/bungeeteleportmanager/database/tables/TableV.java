@@ -368,8 +368,7 @@ public interface TableV
 			try 
 			{			
 				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameV
-						+ "` WHERE "+whereColumn
-						+ " ORDER BY `id` DESC";
+						+ "` WHERE "+whereColumn+" ORDER BY `id` DESC";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
 		        for(Object o : whereObject)

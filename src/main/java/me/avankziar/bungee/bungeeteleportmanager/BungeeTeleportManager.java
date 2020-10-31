@@ -8,6 +8,7 @@ import main.java.me.avankziar.bungee.bungeeteleportmanager.listener.TeleportList
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.BackMessageListener;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.CustomMessageListener;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.HomeMessageListener;
+import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.SavePointMessageListener;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.TeleportMessageListener;
 import main.java.me.avankziar.bungee.bungeeteleportmanager.manager.WarpMessageListener;
 import main.java.me.avankziar.general.object.StringValues;
@@ -72,19 +73,22 @@ public class BungeeTeleportManager extends Plugin
 	{
 		PluginManager pm = getProxy().getPluginManager();
 		pm.registerListener(plugin, new BackMessageListener(plugin));
-		pm.registerListener(plugin, new CustomMessageListener(plugin));
-		pm.registerListener(plugin, new HomeMessageListener(plugin));
-		pm.registerListener(plugin, new TeleportMessageListener(plugin));
-		pm.registerListener(plugin, new TeleportListener(plugin));
-		pm.registerListener(plugin, new WarpMessageListener(plugin));
 		getProxy().registerChannel(StringValues.BACK_TOBUNGEE);
 		getProxy().registerChannel(StringValues.BACK_TOSPIGOT);
+		pm.registerListener(plugin, new CustomMessageListener(plugin));
 		getProxy().registerChannel(StringValues.CUSTOM_TOBUNGEE);
 		getProxy().registerChannel(StringValues.CUSTOM_TOSPIGOT);
+		pm.registerListener(plugin, new HomeMessageListener(plugin));
 		getProxy().registerChannel(StringValues.HOME_TOBUNGEE);
 		getProxy().registerChannel(StringValues.HOME_TOSPIGOT);
+		pm.registerListener(plugin, new SavePointMessageListener(plugin));
+		getProxy().registerChannel(StringValues.SAVEPOINT_TOBUNGEE);
+		getProxy().registerChannel(StringValues.SAVEPOINT_TOSPIGOT);
+		pm.registerListener(plugin, new TeleportMessageListener(plugin));
+		pm.registerListener(plugin, new TeleportListener(plugin));
 		getProxy().registerChannel(StringValues.TP_TOBUNGEE);
 		getProxy().registerChannel(StringValues.TP_TOSPIGOT);
+		pm.registerListener(plugin, new WarpMessageListener(plugin));
 		getProxy().registerChannel(StringValues.WARP_TOBUNGEE);
 		getProxy().registerChannel(StringValues.WARP_TOSPIGOT);
 	}

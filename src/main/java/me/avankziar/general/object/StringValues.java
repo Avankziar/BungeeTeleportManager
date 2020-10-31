@@ -190,6 +190,15 @@ public class StringValues
 	PERM_WARP_COUNTWARPS_SERVER = "btm.count.warp.server.",
 	PERM_WARP_COUNTWARPS_GLOBAL = "btm.count.warp.global.",
 	
+	//Warp Bypass
+	PERM_BYPASS_WARP = "btm.bypass.warp.admin",
+	PERM_BYPASS_WARP_BLACKLIST = "btm.bypass.warp.blacklist",
+	PERM_BYPASS_WARP_TOOMANY = "btm.bypass.warp.toomany",
+	PERM_BYPASS_WARP_COST = "btm.bypass.warp.cost",
+	PERM_BYPASS_WARP_FORBIDDEN = "btm.bypass.warp.forbidden",
+	PERM_BYPASS_WARP_OTHER = "btm.bypass.warp.other",
+	PERM_BYPASS_WARP_DELAY = "btm.bypass.warp.delay",
+	
 	//warp suggest
 	SUGGEST_WARP_CREATE = "/warpcreate <warpname>",
 	SUGGEST_WARP_REMOVE = "/warpremove <warpname>",
@@ -209,6 +218,27 @@ public class StringValues
 	SUGGEST_WARP_ADDBLACKLIST = "/warpaddblacklist <warpname> <playername>",
 	SUGGEST_WARP_REMOVEBLACKLIST = "/warpremoveblacklist <warpname> <playername>",
 	
+	//SacePoint Sending
+	SAVEPOINT_TOBUNGEE = "btm:savepointtobungee",
+	SAVEPOINT_TOSPIGOT = "btm:savepointtospigot",
+	SAVEPOINT_PLAYERTOPOSITION = "savepoint-playertoposition",
+	
+	//SavePoint Permission
+	PERM_SAVEPOINT_CREATE = "btm.cmd.user.savepoint.create",
+	PERM_SAVEPOINT_COUNTWARPS_WORLD = "btm.count.savepoint.world.",
+	PERM_SAVEPOINT_COUNTWARPS_SERVER = "btm.count.savepoint.server.",
+	PERM_SAVEPOINT_COUNTWARPS_GLOBAL = "btm.count.savepoint.global.",
+			
+	//SavePoint Bypass
+	PERM_BYPASS_SAVEPOINT = "btm.bypass.savepoint.admin",
+	PERM_BYPASS_SAVEPOINT_TOOMANY = "btm.bypass.savepoint.toomany",
+	PERM_BYPASS_SAVEPOINT_COST = "btm.bypass.savepoint.cost",
+	PERM_BYPASS_SAVEPOINT_OTHER = "btm.bypass.savepoint.other",
+	PERM_BYPASS_SAVEPOINT_DELAY = "btm.bypass.savepoint.delay",
+		
+	//SavePoint suggest
+	SUGGEST_SAVEPOINT_CREATE = "/savepointcreate <warpname>",
+	
 	//Bypass Perm
 	PERM_BYPASS_BACK_COST = "btm.bypass.back.cost",
 	PERM_BYPASS_BACK_DELAY = "btm.bypass.back.delay",
@@ -222,13 +252,6 @@ public class StringValues
 	PERM_BYPASS_TELEPORT_FORBIDDEN = "btm.bypass.tp.forbidden",
 	PERM_BYPASS_TELEPORT_SILENT = "btm.bypass.tp.silent",
 	PERM_BYPASS_TELEPORT_DELAY = "btm.bypass.tp.delay",
-	PERM_BYPASS_WARP = "btm.bypass.warp.admin",
-	PERM_BYPASS_WARP_BLACKLIST = "btm.bypass.warp.blacklist",
-	PERM_BYPASS_WARP_TOOMANY = "btm.bypass.warp.toomany",
-	PERM_BYPASS_WARP_COST = "btm.bypass.warp.cost",
-	PERM_BYPASS_WARP_FORBIDDEN = "btm.bypass.warp.forbidden",
-	PERM_BYPASS_WARP_OTHER = "btm.bypass.warp.other",
-	PERM_BYPASS_WARP_DELAY = "btm.bypass.warp.delay",
 	PERM_BYPASS_CUSTOM_DELAY = "btm.bypass.custom.delay"
 	;
 }

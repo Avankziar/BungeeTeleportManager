@@ -1,6 +1,6 @@
 name: BungeeTeleportManager
 main: main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager
-version: 4
+version: 5
 author: Avankziar
 api-version: 1.16
 description: A Home, Portal, Respawn, Teleport and Warp plugin

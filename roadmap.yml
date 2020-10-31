@@ -1,12 +1,57 @@
 Future =========================================================================================================================
 - Wenn der Spieler auf einem Entity sitzt. Sollen die Entitys mitteleportiert werden.
 - Portale
-- SpawnPoint
-- RespawnPoint
+
+Build 5 ========================================================================================================================
+- Beim Sethome eine Liste tabbar machen, um homes zu leichter überschreiben zu können.
+- Back- & Deathback befehle abschaltbar machen
+- Back- & Deathback location Speicherung (forbiddenworld) ausschaltbar machen
 - SavePoint
+  Ist ein Spielerspezifischer Speicherpunkt für nach dem Tode.
+  - Alle Config basierten Werte für SavePoints hinzufügen.
+  - Alle Befehle Consolenfähig machen
+  - /savepointcreate <Spieler> <SavePointName> <Server> <Welt> <x> <y> <z> <yaw> <pitch>
+  - /savepointdelete <Spieler> <SavePointName>
+  - /savepointdelete <Spieler> [Server] [Welt]
+  - /savepointdelete <Spieler>
+  - /savepointdeleteall <Server> <Welt>
+  - /savepoints | Listet alle aktiven SavePoints vom Spieler auf.
+  - /savepointlist [Spielername] | Listet alle aktiven SavePoints auf.
+  - /savepoint | Lädt den aktuellesten SavePoint
+  - /savepoint <SavePointName> | Lädt den gewünschten SavePoint.
+- FirstSpawn
+  - Sind für alle Neuen Spieler.
+  - Man kann nur einen Firstspawn pro Server gemacht werden. Dabei muss keine Mysql genommen werden, sondern per Config.
+  - /firstspawnset | Setzt den FirstSpawn für den Server.
+  - /firstspawn | Tp zu Server FirstSpawn.
+  - Wenn der Spieler zum erstem mal Joint, soll eine Liste von Befehlen für diesen (Console) und mit diesem (als er selbst theoretisch)
+    ausgeführt werden einmalig. Beide Listen in der Config einstellbar machen. Es würden nur Spigot Befehle gehen. 
+    Eine Umleitung auf Bungee dauer länger und ist aufwendiger
+- Respawn
+  Ist ein SpielerUNspezifischer Speicherpunkt für nach dem Tode.
+  - Alle Config basierten Werte für SavePoints hinzufügen.
+  - /respawncreate <RespawnName> | Erstellt Respawn
+  - /respawn <RespawnName> | Tp zum Respawn 
+  - /respawnlist | Liste aller Respawns
+  - /respawndelete <RespawnName> | Löscht Respawn
+  Todeszone:
+    Eine Todeszone ist ein Bereich, eine Welt oder ein Server, welche als Bedingung für eine Tod zählt.
+    Sollte ein Spieler innerhalb dieses Bereichs sterben, so wird der Respawn genommen, welcher Verlinkt ist.
+    Sollten sich Todeszonen überschneiden, wird die die höhere Priorität genommen. Bei gleicher Prio, ist es Zufall.
+    - /deathzonecreate <DeathzoneName> <Server> [Welt] [Radius] [Priorität] | Sollte kein optionals Argument eingegeben werden, so ist Prio = 0.
+      Radius ist in Minecraft eine Region. Da von der Location +x +y +z und -x -y -z mit dem Radius erstellt wird.
+    - /deathzonelist | Listet alle Deathzones auf.
+    - /deathzonedelete <DeathzoneName> | Löscht die Deathzone.
+- BedSpawn
+  - Passiver Speicherpunkt ohne aktive Speicherung/Laden. Heißt, weder Spieler/Admins sollen den speichern können.
+- TodesAblaufschema in der Config pro Server oder pro Welt.
+  - Hierbei wird pro Welt ein Schema mit Enums der Mechaniken gemacht. Diese geben an, in welcher Reihenfolge 
+    die Mechaniken greifen sollen. Bspw. Zuerst SavePoints, Respawn, BedSpawn, FristSpawn.
+    Hierbei gilt natürlich, dass alle Mechaniken einen Datensatz für den Spieler in diesem Server und oder Welt haben.
 
 Build 4 ========================================================================================================================
-- Starke Optimierung aller Prozesse. Aka Schedulerabbau, vor allem auf BungeeEbene
+- Starke Optimierung aller Prozesse. Aka Schedulerabbau, vor allem auf BungeeEbene.
+- Dazu wurden alle Spigot to Bungee Nachrichten so geändert, dass die Backlocation direkt mitgeliefert wird.
 - Alle Serverinternen Teleporte werden nun auch Serverintern abgearbeitet, was eine große Portion Leistung einspart.
 
 Build 3 =========================================================================================================================

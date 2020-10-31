@@ -273,7 +273,7 @@ public class WarpHandler
 			{
 				where += "`world` = ? OR ";
 			}
-			where += "`world` = ?) AND `player_uuid` = ?";
+			where += "`world` = ?) AND `owner` = ?";
 			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
 					MysqlHandler.Type.WARPS, where, o);
 			if(player.hasPermission(StringValues.PERM_WARP_COUNTWARPS_WORLD+"*")
@@ -302,7 +302,7 @@ public class WarpHandler
 		} else
 		{
 			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
-					MysqlHandler.Type.WARPS, "`player_uuid` = ? AND `world` = ?",
+					MysqlHandler.Type.WARPS, "`owner` = ? AND `world` = ?",
 					player.getUniqueId().toString(), world);
 			if(player.hasPermission(StringValues.PERM_WARP_COUNTWARPS_WORLD+"*")
 					|| player.hasPermission(StringValues.PERM_WARP_COUNTWARPS_WORLD+world+".*"))
