@@ -2,23 +2,7 @@ Future =========================================================================
 - Wenn der Spieler auf einem Entity sitzt. Sollen die Entitys mitteleportiert werden.
 - Portale
 
-Build 5 ========================================================================================================================
-- Beim Sethome eine Liste tabbar machen, um homes zu leichter überschreiben zu können.
-- Back- & Deathback befehle abschaltbar machen
-- Back- & Deathback location Speicherung (forbiddenworld) ausschaltbar machen
-- SavePoint
-  Ist ein Spielerspezifischer Speicherpunkt für nach dem Tode.
-  - Alle Config basierten Werte für SavePoints hinzufügen.
-  - Alle Befehle Consolenfähig machen
-  - /savepointcreate <Spieler> <SavePointName> <Server> <Welt> <x> <y> <z> <yaw> <pitch>
-  - /savepointdelete <Spieler> <SavePointName>
-  - /savepointdelete <Spieler> [Server] [Welt]
-  - /savepointdelete <Spieler>
-  - /savepointdeleteall <Server> <Welt>
-  - /savepoints | Listet alle aktiven SavePoints vom Spieler auf.
-  - /savepointlist [Spielername] | Listet alle aktiven SavePoints auf.
-  - /savepoint | Lädt den aktuellesten SavePoint
-  - /savepoint <SavePointName> | Lädt den gewünschten SavePoint.
+Build 6 =======================================================================================================================
 - FirstSpawn
   - Sind für alle Neuen Spieler.
   - Man kann nur einen Firstspawn pro Server gemacht werden. Dabei muss keine Mysql genommen werden, sondern per Config.
@@ -42,22 +26,52 @@ Build 5 ========================================================================
       Radius ist in Minecraft eine Region. Da von der Location +x +y +z und -x -y -z mit dem Radius erstellt wird.
     - /deathzonelist | Listet alle Deathzones auf.
     - /deathzonedelete <DeathzoneName> | Löscht die Deathzone.
+    - Man kann für deathzone spezifisische Potioneffekts einfügen. Sollte man außerhalb der Deathzone sterben, so bekommt man den 
+      generellen effekt von der config.yml
 - BedSpawn
   - Passiver Speicherpunkt ohne aktive Speicherung/Laden. Heißt, weder Spieler/Admins sollen den speichern können.
 - TodesAblaufschema in der Config pro Server oder pro Welt.
   - Hierbei wird pro Welt ein Schema mit Enums der Mechaniken gemacht. Diese geben an, in welcher Reihenfolge 
-    die Mechaniken greifen sollen. Bspw. Zuerst SavePoints, Respawn, BedSpawn, FristSpawn.
+    die Mechaniken greifen sollen. Bspw. Zuerst SavePoints(Welcher SavePointName), Respawn, BedSpawn, FristSpawn.
     Hierbei gilt natürlich, dass alle Mechaniken einen Datensatz für den Spieler in diesem Server und oder Welt haben.
+    
+Build 5 ========================================================================================================================
+- +YamlManager
+- +commands.yml
+- +Beim Sethome eine Liste tabbar machen, um homes zu leichter überschreiben zu können.
+- +Back- & Deathback befehle abschaltbar machen
+- +Back- & Deathback location Speicherung (forbiddenworld) ausschaltbar machen. D.H. Wenn man in einer Verboteten Welt stirbt oder einfach nur
+  "war", kann man kein /back || /deathback machen.
+- +Warps einer Kategorie hinzufügen (Mysql).
+- +Back eine "Show_forbiddenarea" hinzugefügt (Mysql). Bestimmt, ob der Spieler zum Serverjoin (spigot) die nachricht bekommt,
+  in welchen Welten was (Homes, Tp, etc.) verboten ist und ob Back und Deathback gespeichert wird.
+- +/warplist [Seite] [Kategorie], als Befehl hinzufügen um dann nach Kategorie aufzuführen. Ersetzt /warplist [Seite] [ServerOderWelt]
+- +/warpsdeleteserverworld <Server> <Welt>, löscht alle Warps in der Welt auf dem Server.
+- +/warps [Seite] [Spielername] [Kategorie], als befehl hinzufügen.
+- Effekte werden nun auch nach dem teleport vergeben, sowie kann nun unterteilt werden. Bei Teleport wird nur am Ende Effekte verteilt.
+- SavePoint
+  Ist ein Spielerspezifischer Speicherpunkt für nach dem Tode.
+  - Alle Config basierten Werte für SavePoints hinzufügen.
+  - Alle Befehle Consolenfähig machen
+  - /savepoint | Lädt den aktuellesten SavePoint
+  - /savepoint <SavePointName> | Lädt den gewünschten SavePoint.
+  - /savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] | Erstellt einen SavePoint, falls SavePointname gleich ist, wird es überschrieben
+  - /savepointdelete <Spieler> | Löscht alle SavePoint des Spielers
+  - /savepointdelete <Spieler> [SavePointName...] | | Löscht den spezifischen SavePoint des Spielers, falls vorhanden.
+  - /savepointdeleteall <Server> <Welt>
+  - /savepoints [Seite] [Spielername] | Listet alle aktiven SavePoints vom Spieler auf.
+  - /savepointlist [Seite] | Listet alle aktiven SavePoints auf.
+- RandomTeleport, einzustellen in config. Wo ist man, und wohin soll man, Server Welt Radius- oder Flächenbasiert ODER Warpauswahlbasiert.
 
-Build 4 ========================================================================================================================
-- Starke Optimierung aller Prozesse. Aka Schedulerabbau, vor allem auf BungeeEbene.
-- Dazu wurden alle Spigot to Bungee Nachrichten so geändert, dass die Backlocation direkt mitgeliefert wird.
-- Alle Serverinternen Teleporte werden nun auch Serverintern abgearbeitet, was eine große Portion Leistung einspart.
+=========== Build 4 ========================================================================================================================
+- +Starke Optimierung aller Prozesse. Aka Schedulerabbau, vor allem auf BungeeEbene.
+- +Dazu wurden alle Spigot to Bungee Nachrichten so geändert, dass die Backlocation direkt mitgeliefert wird.
+- +Alle Serverinternen Teleporte werden nun auch Serverintern abgearbeitet, was eine große Portion Leistung einspart.
 
-Build 3 =========================================================================================================================
+========== Build 3 =========================================================================================================================
 - +Schedular-Artiger Teleport (No Cooldown)
 
-Build 2 =========================================================================================================================
+========== Build 2 =========================================================================================================================
 - +Mögliche Effektvergabe durch die Config bei /home, /warp, /back und /deathback
 - +TpAccept Cooldown per Config
 - +/tpaignore <Spielername> | Ignoriert den Spieler für Tpas.

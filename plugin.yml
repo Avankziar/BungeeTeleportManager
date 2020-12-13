@@ -1,9 +1,10 @@
 name: BungeeTeleportManager
-main: main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager
+main: main.java.me.avankziar.spigot.btm.BungeeTeleportManager
 version: 5
 author: Avankziar
 api-version: 1.16
 description: A Home, Portal, Respawn, Teleport and Warp plugin
+loadbefore: [Essentials]
 commands:
   btm:
     description: The btm command
@@ -85,6 +86,8 @@ commands:
     description: The warpaddblacklist command
   warpremoveblacklist:
     description: The warpremoveblacklist command
+  warpsetcategory:
+    description: The warpsetcategory command
 permissions:
   btm.cmd.btm:
     description: Enable to /btm

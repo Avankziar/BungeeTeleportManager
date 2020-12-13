@@ -1,0 +1,48 @@
+package main.java.me.avankziar.spigot.btm.listener;
+
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+
+import main.java.me.avankziar.general.object.Teleport;
+import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
+import main.java.me.avankziar.spigot.btm.events.PlayerTeleportToPlayerEvent;
+import main.java.me.avankziar.spigot.btm.events.PlayerTeleportToPositionEvent;
+import main.java.me.avankziar.spigot.btm.handler.ForbiddenHandler.Mechanics;
+
+public class CustomTeleportListener implements Listener
+{
+	private BungeeTeleportManager plugin;
+	
+	public CustomTeleportListener(BungeeTeleportManager plugin)
+	{
+		this.plugin = plugin;
+	}
+	
+	@EventHandler (priority = EventPriority.HIGHEST)
+	public void onTeleportToPlayer(PlayerTeleportToPlayerEvent event)
+	{
+		if(event.isCancelled())
+		{
+			return;
+		}
+		plugin.getUtility().givesEffect(event.getPlayer(), Mechanics.CUSTOM, true, false);
+		plugin.getCustomHandler().sendForceObject(event.getPlayer(),
+				new Teleport(event.getPlayer().getUniqueId(), event.getPlayer().getName(),
+						event.getToPlayerUUID(), event.getToPlayer(), Teleport.Type.TPTO), 
+				plugin.getYamlHandler().getL().getString("NoPlayerExist", ""));
+	}
+	
+	@EventHandler (priority = EventPriority.HIGHEST)
+	public void onTeleportToPosition(PlayerTeleportToPositionEvent event)
+	{
+		if(event.isCancelled())
+		{
+			return;
+		}
+		plugin.getUtility().givesEffect(event.getPlayer(), Mechanics.CUSTOM, true, false);
+		event.getPlayer().sendMessage(ChatApi.tl(event.getPreMessage()));
+		plugin.getCustomHandler().sendTpPos(event.getPlayer(), event.getServerlocation(), event.getPostMessage());
+	}
+}
