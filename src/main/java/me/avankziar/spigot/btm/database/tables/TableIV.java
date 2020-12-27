@@ -6,9 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import main.java.me.avankziar.advanceeconomy.spigot.handler.ConvertHandler;
-import main.java.me.avankziar.advanceeconomy.spigot.object.TrendLogger;
-import main.java.me.avankziar.advanceeconomy.spigot.object.TrendLogger.Type;
+import main.java.me.avankziar.aep.spigot.handler.ConvertHandler;
+import main.java.me.avankziar.aep.spigot.object.TrendLogger;
+import main.java.me.avankziar.aep.spigot.object.TrendLogger.Type;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 
 public interface TableIV

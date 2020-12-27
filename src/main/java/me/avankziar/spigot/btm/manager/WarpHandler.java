@@ -33,7 +33,7 @@ public class WarpHandler
 		{
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeWarp", 2000);
+			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Warp", 2000);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP_DELAY))
 			{
@@ -65,7 +65,13 @@ public class WarpHandler
 				out.writeDouble(warp.getLocation().getZ());
 				out.writeFloat(warp.getLocation().getYaw());
 				out.writeFloat(warp.getLocation().getPitch());
-				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeWarp", 2000));
+				if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP_DELAY))
+				{
+					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Warp", 2000));
+				} else
+				{
+					out.writeInt(25);
+				}
 				new BackHandler(plugin).addingBack(player, out);
 			} catch (IOException e) {
 				e.printStackTrace();

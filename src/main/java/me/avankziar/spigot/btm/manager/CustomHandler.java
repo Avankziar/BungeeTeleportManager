@@ -31,7 +31,7 @@ public class CustomHandler
 			Player targets = Bukkit.getPlayer(teleport.getToUUID());
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(senders, bh.getNewBack(senders));
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeCustom", 2000);
+			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Custom", 2000);
 			int delay = 1;
 			if(!senders.hasPermission(StaticValues.PERM_BYPASS_CUSTOM_DELAY))
 			{
@@ -65,7 +65,13 @@ public class CustomHandler
 				out.writeUTF(teleport.getToName());
 				out.writeUTF(teleport.getType().toString());
 				out.writeUTF(errormessage);
-				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeCustom", 2000));
+				if(!senders.hasPermission(StaticValues.PERM_BYPASS_CUSTOM_DELAY))
+				{
+					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Custom", 2000));
+				} else
+				{
+					out.writeInt(25);
+				}
 				new BackHandler(plugin).addingBack(senders, out);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -80,7 +86,7 @@ public class CustomHandler
 		{
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeCustom", 2000);
+			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Custom", 2000);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_CUSTOM_DELAY))
 			{
@@ -123,7 +129,13 @@ public class CustomHandler
 				out.writeFloat(sl.getYaw());
 				out.writeFloat(sl.getPitch());
 				out.writeUTF(errormessage);
-				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeCustom", 2000));
+				if(!player.hasPermission(StaticValues.PERM_BYPASS_CUSTOM_DELAY))
+				{
+					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Custom", 2000));
+				} else
+				{
+					out.writeInt(25);
+				}
 				new BackHandler(plugin).addingBack(player, out);
 				out.writeBoolean((message == null));
 				if(message != null)

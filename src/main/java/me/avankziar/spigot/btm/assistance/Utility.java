@@ -15,6 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Home;
+import main.java.me.avankziar.general.object.SavePoint;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
@@ -210,6 +211,31 @@ public class Utility
 				} else
 				{
 					BungeeTeleportManager.homes.put(player.getName(), homes);
+				}
+			}
+		}.runTaskAsynchronously(plugin);
+	}
+	
+	public void setSavePointsTabCompleter(Player player)
+	{
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				ArrayList<SavePoint> sp = ConvertHandler.convertListVII(
+						plugin.getMysqlHandler().getList(MysqlHandler.Type.SAVEPOINT,
+								"`id` DESC", 0,
+								plugin.getMysqlHandler().lastID(MysqlHandler.Type.SAVEPOINT),
+								"`player_uuid` = ?", player.getUniqueId().toString()));
+				ArrayList<String> sps = new ArrayList<>();
+				for(SavePoint h : sp) sps.add(h.getSavePointName());	
+				if(BungeeTeleportManager.savepoints.containsKey(player.getName()))
+				{
+					BungeeTeleportManager.savepoints.replace(player.getName(), sps);
+				} else
+				{
+					BungeeTeleportManager.savepoints.put(player.getName(), sps);
 				}
 			}
 		}.runTaskAsynchronously(plugin);

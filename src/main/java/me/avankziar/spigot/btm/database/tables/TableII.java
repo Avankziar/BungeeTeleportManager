@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import main.java.me.avankziar.advanceeconomy.spigot.object.BankAccount;
+import main.java.me.avankziar.aep.spigot.object.BankAccount;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 
 public interface TableII

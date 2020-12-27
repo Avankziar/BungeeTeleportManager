@@ -57,7 +57,7 @@ public class TeleportMessageListener implements PluginMessageListener
 		            			if(!from.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_COST)
 		            					&& plugin.getEco() != null && plugin.getYamlHandler().getConfig().getBoolean("useVault", false))
 		            			{
-		            				double price = plugin.getYamlHandler().getConfig().getDouble("CostPerTeleportRequest", 0.0);
+		            				double price = plugin.getYamlHandler().getConfig().getDouble("CostPer.TeleportRequest", 0.0);
 		                    		if(price > 0.0)
 		                    		{
 		                    			if(!plugin.getEco().has(fromName, price))
@@ -70,7 +70,7 @@ public class TeleportMessageListener implements PluginMessageListener
 	                    				{
 	                    					return;
 	                    				}
-	                    				if(plugin.getAdvanceEconomyHandler() != null)
+	                    				if(plugin.getAdvancedEconomyHandler() != null)
 	                            		{
 	                    					String comment = null;
 	                    					if(type == Teleport.Type.TPTO)
@@ -84,7 +84,7 @@ public class TeleportMessageListener implements PluginMessageListener
 	                        					.replace("%from%", toName)
 	                        					.replace("%to%", fromName);
 	                    					}
-	                            			plugin.getAdvanceEconomyHandler().EconomyLogger(
+	                            			plugin.getAdvancedEconomyHandler().EconomyLogger(
 	                            					Utility.convertNameToUUID(fromName).toString(),
 	                            					fromName,
 	                            					plugin.getYamlHandler().getL().getString("Economy.TUUID"),
@@ -93,7 +93,7 @@ public class TeleportMessageListener implements PluginMessageListener
 	                            					price,
 	                            					"TAKEN",
 	                            					comment);
-	                            			plugin.getAdvanceEconomyHandler().TrendLogger(from, -price);
+	                            			plugin.getAdvancedEconomyHandler().TrendLogger(from, -price);
 	                            		}
 		                    		}
 		            			}

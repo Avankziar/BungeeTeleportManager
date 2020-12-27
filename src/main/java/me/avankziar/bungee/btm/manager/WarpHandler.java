@@ -27,12 +27,7 @@ public class WarpHandler
 		{
 			return;
 		}
-		int delay = 25;
-		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP_DELAY))
-		{
-			delay = delayed;
-		}
-		teleportPlayer(player, delay, warpName, location); //Back wurde schon gemacht
+		teleportPlayer(player, delayed, warpName, location); //Back wurde schon gemacht
 	}
 	
 	public void teleportPlayer(ProxiedPlayer player, int delay, String warpName, ServerLocation location)

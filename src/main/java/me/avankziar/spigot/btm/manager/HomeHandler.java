@@ -33,7 +33,7 @@ public class HomeHandler
 		{
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeHome", 2000);
+			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Home", 2000);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_HOME_DELAY))
 			{
@@ -65,7 +65,13 @@ public class HomeHandler
 				out.writeDouble(home.getLocation().getZ());
 				out.writeFloat(home.getLocation().getYaw());
 				out.writeFloat(home.getLocation().getPitch());
-				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeHome", 2000));
+				if(!player.hasPermission(StaticValues.PERM_BYPASS_HOME_DELAY))
+				{
+					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Home", 2000));
+				} else
+				{
+					out.writeInt(25);
+				}
 				new BackHandler(plugin).addingBack(player, out);
 			} catch (IOException e) {
 				e.printStackTrace();

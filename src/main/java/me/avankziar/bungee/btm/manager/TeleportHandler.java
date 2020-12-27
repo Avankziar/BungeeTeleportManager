@@ -102,7 +102,7 @@ public class TeleportHandler
 	}
 	
 	//Player to has accepted
-	public void preTeleportPlayerToPlayer(String fromName, String toName, String errormessage, int delayed)
+	public void preTeleportPlayerToPlayer(String fromName, String toName, String errormessage, int delay)
 	{
 		ProxiedPlayer from = plugin.getProxy().getPlayer(fromName); //Player witch execute the /tpa
 		ProxiedPlayer to = plugin.getProxy().getPlayer(toName);
@@ -127,11 +127,6 @@ public class TeleportHandler
 			return;
 		}
 		getPendingTeleports().remove(fromName);
-		int delay = 25;
-		if(!from.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_DELAY))
-		{
-			delay = delayed;
-		}
 		if(teleport.getType() == Teleport.Type.TPTO)
 		{
 			teleportPlayer(from, to, delay);
@@ -142,7 +137,7 @@ public class TeleportHandler
 		return;
 	}
 	
-	public void preTeleportPlayerToPlayerForceUse(Teleport teleport, String errormessage, int delayed)
+	public void preTeleportPlayerToPlayerForceUse(Teleport teleport, String errormessage, int delay)
 	{
 		ProxiedPlayer from = plugin.getProxy().getPlayer(teleport.getFromName());
 		ProxiedPlayer to = plugin.getProxy().getPlayer(teleport.getToName());
@@ -155,11 +150,6 @@ public class TeleportHandler
 			from.sendMessage(ChatApi.tctl(errormessage));
 			return;
 		}
-		int delay = 25;
-		if(!from.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_DELAY))
-		{
-			delay = delayed;
-		}
 		if(teleport.getType() == Teleport.Type.TPTO)
 		{
 			teleportPlayer(from, to, delay);
@@ -169,7 +159,7 @@ public class TeleportHandler
 		}
 	}
 	
-	public void preTeleportAllPlayerToOnePlayer(String fromName, int delayed, Object... objects)
+	public void preTeleportAllPlayerToOnePlayer(String fromName, int delay, Object... objects)
 	{
 		ProxiedPlayer from = plugin.getProxy().getPlayer(fromName);
 		if(from == null)
@@ -178,11 +168,6 @@ public class TeleportHandler
 		}
 		String server = (String) objects[0];
 		String world = (String) objects[1];
-		int delay = 25;
-		if(!from.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_DELAY))
-		{
-			delay = delayed;
-		}
 		if(server == null && world == null)
 		{
 			for(ProxiedPlayer to : plugin.getProxy().getPlayers())
@@ -210,7 +195,7 @@ public class TeleportHandler
 		}
 	}
 	
-	public void teleportPlayerToPosition(String playerName, ServerLocation location, String errorServerNotFound, int delayed)
+	public void teleportPlayerToPosition(String playerName, ServerLocation location, String errorServerNotFound, int delay)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(playerName);
 		if(player == null)
@@ -221,11 +206,6 @@ public class TeleportHandler
 		{
 			player.sendMessage(ChatApi.tctl(errorServerNotFound));
 			return;
-		}
-		int delay = 25;
-		if(!player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_DELAY))
-		{
-			delay = delayed;
 		}
 		teleportPlayerToPositionPost(player, location, delay);
 	}

@@ -13,6 +13,10 @@ public class KeyHandler
 	public static String HOME_DEL = "HOME_DEL";
 	public static String HOME_REMOVE = "HOME_REMOVE";
 	
+	public static String SAVEPOINT = "SAVEPOINT";
+	public static String SAVEPOINTS = "SAVEPOINTS";
+	public static String SAVEPOINT_LIST = "SAVEPOINT_LIST";
+	
 	public static String TPACCEPT = "TPACCEPT";
 	public static String TPDENY = "TPDENY";
 	public static String TP = "TP";

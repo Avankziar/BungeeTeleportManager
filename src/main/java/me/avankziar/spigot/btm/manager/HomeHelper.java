@@ -74,7 +74,7 @@ public class HomeHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_HOME_COST) && plugin.getEco() != null
 				&& plugin.getYamlHandler().getConfig().getBoolean("useVault", false))
 		{
-			double homeCreateCost = plugin.getYamlHandler().getConfig().getDouble("CostPerHomeCreate", 0.0);
+			double homeCreateCost = plugin.getYamlHandler().getConfig().getDouble("CostPer.HomeCreate", 0.0);
 			if(homeCreateCost > 0.0)
 			{
 				if(!plugin.getEco().has(player, homeCreateCost))
@@ -88,11 +88,11 @@ public class HomeHelper
 					player.sendMessage(ChatApi.tl(er.errorMessage));
 					return;
 				}
-				if(plugin.getAdvanceEconomyHandler() != null)
+				if(plugin.getAdvancedEconomyHandler() != null)
 				{
 					String comment = plugin.getYamlHandler().getL().getString("Economy.HCommentCreate")
 	    					.replace("%home%", home.getHomeName());
-					plugin.getAdvanceEconomyHandler().EconomyLogger(
+					plugin.getAdvancedEconomyHandler().EconomyLogger(
 	    					player.getUniqueId().toString(),
 	    					player.getName(),
 	    					plugin.getYamlHandler().getL().getString("Economy.HUUID"),
@@ -101,7 +101,7 @@ public class HomeHelper
 	    					homeCreateCost,
 	    					"TAKEN",
 	    					comment);
-					plugin.getAdvanceEconomyHandler().TrendLogger(player, -homeCreateCost);
+					plugin.getAdvancedEconomyHandler().TrendLogger(player, -homeCreateCost);
 				}
 			}
 		}
@@ -230,7 +230,7 @@ public class HomeHelper
 				if(!player.hasPermission(StaticValues.PERM_BYPASS_HOME_COST) && plugin.getEco() != null
 						&& plugin.getYamlHandler().getConfig().getBoolean("useVault", false))
 				{
-					double homeCreateCost = plugin.getYamlHandler().getConfig().getDouble("CostPerHomeTeleport", 0.0);
+					double homeCreateCost = plugin.getYamlHandler().getConfig().getDouble("CostPer.HomeTeleport", 0.0);
 					if(homeCreateCost > 0.0)
 					{
 						if(!plugin.getEco().has(player, homeCreateCost))
@@ -244,11 +244,11 @@ public class HomeHelper
 							player.sendMessage(ChatApi.tl(er.errorMessage));
 							return;
 						}
-						if(plugin.getAdvanceEconomyHandler() != null)
+						if(plugin.getAdvancedEconomyHandler() != null)
 						{
 							String comment = plugin.getYamlHandler().getL().getString("Economy.HComment")
 			    					.replace("%home%", home.getHomeName());
-							plugin.getAdvanceEconomyHandler().EconomyLogger(
+							plugin.getAdvancedEconomyHandler().EconomyLogger(
 			    					player.getUniqueId().toString(),
 			    					player.getName(),
 			    					plugin.getYamlHandler().getL().getString("Economy.HUUID"),
@@ -257,7 +257,7 @@ public class HomeHelper
 			    					homeCreateCost,
 			    					"TAKEN",
 			    					comment);
-							plugin.getAdvanceEconomyHandler().TrendLogger(player, -homeCreateCost);
+							plugin.getAdvancedEconomyHandler().TrendLogger(player, -homeCreateCost);
 						}
 					}
 				}
@@ -310,7 +310,7 @@ public class HomeHelper
 						"`id` ASC", start, quantity, "`player_uuid` = ?", playeruuid));
 		if(list.isEmpty())
 		{
-			player.sendMessage(plugin.getYamlHandler().getL().getString("CmdHome.YouHaveNoHomes"));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.YouHaveNoHomes")));
 			return;
 		}
 		String server = plugin.getYamlHandler().getConfig().getString("ServerName");

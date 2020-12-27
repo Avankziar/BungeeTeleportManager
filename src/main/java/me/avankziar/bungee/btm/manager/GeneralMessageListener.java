@@ -61,6 +61,17 @@ public class GeneralMessageListener implements Listener
             		ForbiddenHandler.getHomeForbiddenWorld().clear();
             		ForbiddenHandler.getHomeForbiddenWorld().addAll(list);
             	}
+        	} else if(mechanics.equalsIgnoreCase("RandomTeleport"))
+        	{
+        		if(type.equalsIgnoreCase("server"))
+            	{
+            		ForbiddenHandler.getRandomTeleportForbiddenServer().clear();
+            		ForbiddenHandler.getRandomTeleportForbiddenServer().addAll(list);
+            	} else if(type.equalsIgnoreCase("world"))
+            	{
+            		ForbiddenHandler.getTeleportForbiddenWorld().clear();
+            		ForbiddenHandler.getTeleportForbiddenWorld().addAll(list);
+            	}
         	} else if(mechanics.equalsIgnoreCase("Teleport"))
         	{
         		if(type.equalsIgnoreCase("server"))

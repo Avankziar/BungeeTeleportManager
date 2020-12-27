@@ -3,6 +3,8 @@ package main.java.me.avankziar.spigot.btm.manager;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -12,6 +14,7 @@ import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 public class SavePointHandler
 {
@@ -28,7 +31,7 @@ public class SavePointHandler
 		{
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeSavePoint", 2000);
+			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.SavePoint", 2000);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_DELAY))
 			{
@@ -42,11 +45,11 @@ public class SavePointHandler
 					player.teleport(ConvertHandler.getLocation(sp.getLocation()));
 					if(last)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.WarpToLast")
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.spToLast")
 								.replace("%savepoint%", sp.getSavePointName())));
 					} else
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.WarpTo")
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.spTo")
 								.replace("%savepoint%", sp.getSavePointName())));
 					}
 				}
@@ -68,7 +71,13 @@ public class SavePointHandler
 				out.writeFloat(sp.getLocation().getYaw());
 				out.writeFloat(sp.getLocation().getPitch());
 				out.writeBoolean(last);
-				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeSavePoint", 2000));
+				if(!player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_DELAY))
+				{
+					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.SavePoint", 2000));
+				} else
+				{
+					out.writeInt(25);
+				}
 				new BackHandler(plugin).addingBack(player, out);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -76,5 +85,41 @@ public class SavePointHandler
 	        player.sendPluginMessage(plugin, StaticValues.SAVEPOINT_TOBUNGEE, stream.toByteArray());
 		}
 		return;
+	}
+	
+	public LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> mapping(
+			SavePoint sp,
+			LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map,
+			BaseComponent bct)
+	{
+		if(map.containsKey(sp.getLocation().getServer()))
+		{
+			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = map.get(sp.getLocation().getServer());
+			if(mapmap.containsKey(sp.getLocation().getWordName()))
+			{
+				ArrayList<BaseComponent> bc = mapmap.get(sp.getLocation().getWordName());
+				bc.add(bct);
+				mapmap.replace(sp.getLocation().getWordName(), bc);
+				map.replace(sp.getLocation().getServer(), mapmap);
+				return map;
+			} else
+			{
+				ArrayList<BaseComponent> bc = new ArrayList<>();
+				bc.add(ChatApi.tctl("  &e"+sp.getLocation().getWordName()+": "));
+				bc.add(bct);
+				mapmap.put(sp.getLocation().getWordName(), bc);
+				map.replace(sp.getLocation().getServer(), mapmap);
+				return map;
+			}
+		} else
+		{
+			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = new LinkedHashMap<String, ArrayList<BaseComponent>>();
+			ArrayList<BaseComponent> bc = new ArrayList<>();
+			bc.add(ChatApi.tctl("  &e"+sp.getLocation().getWordName()+": "));
+			bc.add(bct);
+			mapmap.put(sp.getLocation().getWordName(), bc);
+			map.put(sp.getLocation().getServer(), mapmap);
+			return map;
+		}
 	}
 }

@@ -48,20 +48,22 @@ Build 5 ========================================================================
 - +/warplist [Seite] [Kategorie], als Befehl hinzufügen um dann nach Kategorie aufzuführen. Ersetzt /warplist [Seite] [ServerOderWelt]
 - +/warpsdeleteserverworld <Server> <Welt>, löscht alle Warps in der Welt auf dem Server.
 - +/warps [Seite] [Spielername] [Kategorie], als befehl hinzufügen.
-- Effekte werden nun auch nach dem teleport vergeben, sowie kann nun unterteilt werden. Bei Teleport wird nur am Ende Effekte verteilt.
-- SavePoint
-  Ist ein Spielerspezifischer Speicherpunkt für nach dem Tode.
-  - Alle Config basierten Werte für SavePoints hinzufügen.
-  - Alle Befehle Consolenfähig machen
-  - /savepoint | Lädt den aktuellesten SavePoint
-  - /savepoint <SavePointName> | Lädt den gewünschten SavePoint.
-  - /savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] | Erstellt einen SavePoint, falls SavePointname gleich ist, wird es überschrieben
-  - /savepointdelete <Spieler> | Löscht alle SavePoint des Spielers
-  - /savepointdelete <Spieler> [SavePointName...] | | Löscht den spezifischen SavePoint des Spielers, falls vorhanden.
-  - /savepointdeleteall <Server> <Welt>
-  - /savepoints [Seite] [Spielername] | Listet alle aktiven SavePoints vom Spieler auf.
-  - /savepointlist [Seite] | Listet alle aktiven SavePoints auf.
-- RandomTeleport, einzustellen in config. Wo ist man, und wohin soll man, Server Welt Radius- oder Flächenbasiert ODER Warpauswahlbasiert.
+- +Effekte werden nun auch nach dem teleport vergeben, sowie kann nun unterteilt werden. Bei Teleport wird nur am Ende Effekte verteilt.
+- +SavePoint
+  +Ist ein Spielerspezifischer Speicherpunkt für nach dem Tode.
+  - +Alle Config basierten Werte für SavePoints hinzufügen.
+  - +Alle Befehle Consolenfähig machen
+  - +/savepoint | Lädt den aktuellesten SavePoint
+  - +/savepoint <SavePointName> [Spielername] | Lädt den gewünschten SavePoint.
+  - +/savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] | Erstellt einen SavePoint, falls SavePointname gleich ist, wird es überschrieben
+  - +/savepointdelete <Spieler> | Löscht alle SavePoint des Spielers
+  - +/savepointdelete <Spieler> [SavePointName] | | Löscht den spezifischen SavePoint des Spielers, falls vorhanden.
+  - +/savepointdeleteall <Server> <Welt>
+  - +/savepoints [Seite] [Spielername] | Listet alle aktiven SavePoints vom Spieler auf.
+  - +/savepointlist [Seite] | Listet alle aktiven SavePoints auf.
+- +RandomTeleport, einzustellen in config. Wo ist man, und wohin soll man, Server Welt Radius- oder Flächenbasiert
+  - +/randomteleport
+- +BTM nutzt nun AEP 3.
 
 =========== Build 4 ========================================================================================================================
 - +Starke Optimierung aller Prozesse. Aka Schedulerabbau, vor allem auf BungeeEbene.

@@ -8,7 +8,7 @@ public class ForbiddenHandler
 {
 	public enum Mechanics
 	{
-		BACK, DEATHBACK, CUSTOM, HOME, SAVEPOINT, TELEPORT, WARP;
+		BACK, DEATHBACK, CUSTOM, HOME, RANDOMTELEPORT, SAVEPOINT, TELEPORT, WARP;
 	}
 	
 	//INFO Teleport wird nur auf der BungeeCord ebene abgehandelt
@@ -16,10 +16,15 @@ public class ForbiddenHandler
 	{
 		switch(mechanics)
 		{
-		default:
-			break;
 		case HOME:
 			if(plugin.getYamlHandler().getConfig().getStringList("ForbiddenServerHome")
+					.contains(plugin.getYamlHandler().getConfig().getString("ServerName")))
+			{
+				return true;
+			}
+			break;
+		case RANDOMTELEPORT:
+			if(plugin.getYamlHandler().getConfig().getStringList("ForbiddenServerRandomTeleport")
 					.contains(plugin.getYamlHandler().getConfig().getString("ServerName")))
 			{
 				return true;
@@ -32,6 +37,8 @@ public class ForbiddenHandler
 				return true;
 			}
 			break;
+		default:
+			break;
 		}
 		return false;
 	}
@@ -40,10 +47,15 @@ public class ForbiddenHandler
 	{
 		switch(mechanics)
 		{
-		default:
-			break;
 		case HOME:
 			if(plugin.getYamlHandler().getConfig().getStringList("ForbiddenWorldHome")
+					.contains(player.getLocation().getWorld().getName()))
+			{
+				return true;
+			}
+			break;
+		case RANDOMTELEPORT:
+			if(plugin.getYamlHandler().getConfig().getStringList("ForbiddenWorldRandomTeleport")
 					.contains(player.getLocation().getWorld().getName()))
 			{
 				return true;
@@ -55,6 +67,8 @@ public class ForbiddenHandler
 			{
 				return true;
 			}
+			break;
+		default:
 			break;
 		}
 		return false;

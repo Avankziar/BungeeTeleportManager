@@ -142,7 +142,13 @@ public class BackHandler
 			out.writeFloat(back.getLocation().getYaw());
 			out.writeFloat(back.getLocation().getPitch());
 			out.writeBoolean(back.isToggle());
-			out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeBack", 2000));
+			if(!player.hasPermission(StaticValues.PERM_BYPASS_BACK_DELAY))
+			{
+				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Back", 2000));
+			} else
+			{
+				out.writeInt(25);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -170,7 +176,14 @@ public class BackHandler
 			out.writeFloat(back.getLocation().getPitch());
 			out.writeBoolean(back.isToggle());
 			out.writeBoolean(deleteDeathBack);
-			out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeBack", 2000));
+			if(!player.hasPermission(StaticValues.PERM_BYPASS_DEATHBACK_DELAY))
+			{
+				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.DeathBack", 2000));
+			} else
+			{
+				out.writeInt(25);
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

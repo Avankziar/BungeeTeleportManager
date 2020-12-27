@@ -102,7 +102,7 @@ public class BackHandler
 	}
 	
 	public void teleportBack(String oldserver, String name, String oldworld,
-			double oldx, double oldy, double oldz, float oldyaw, float oldpitch, boolean deleteDeathBack, int delayed, boolean isDeathback)
+			double oldx, double oldy, double oldz, float oldyaw, float oldpitch, boolean deleteDeathBack, int delay, boolean isDeathback)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(name);
     	if(player == null)
@@ -118,11 +118,6 @@ public class BackHandler
     	{
     		player.connect(plugin.getProxy().getServerInfo(oldserver));
     	}
-		int delay = 25;
-		if(!player.hasPermission(StaticValues.PERM_BYPASS_BACK_DELAY))
-		{
-			delay = delayed;
-		}
     	taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
     		int i = 0;
@@ -144,7 +139,7 @@ public class BackHandler
 					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
 			        DataOutputStream out = new DataOutputStream(streamout);
 			        try {
-			        	if(isDeathback)
+			        	if(!isDeathback)
 			        	{
 			        		out.writeUTF(StaticValues.BACK_SENDPLAYERBACK);
 			        	} else

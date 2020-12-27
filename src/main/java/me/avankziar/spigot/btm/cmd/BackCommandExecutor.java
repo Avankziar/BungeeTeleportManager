@@ -12,7 +12,7 @@ import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.cmd.tree.CommandConstructor;
 
 public class BackCommandExecutor implements CommandExecutor 
-	 {
+{
 	 	private BungeeTeleportManager plugin;
 	 	private static LinkedHashMap<String, CommandConstructor> commandList = new LinkedHashMap<>();
 	 	

@@ -3,7 +3,8 @@ main: main.java.me.avankziar.spigot.btm.BungeeTeleportManager
 version: 5
 author: Avankziar
 api-version: 1.16
-description: A Home, Portal, Respawn, Teleport and Warp plugin
+description: A Teleport plugin with Back, Deathback, Homes, SavePoints, RTP, TPA, TP and Warps
+softdepend: [Vault,AdvancedEconomyPlus]
 loadbefore: [Essentials]
 commands:
   btm:

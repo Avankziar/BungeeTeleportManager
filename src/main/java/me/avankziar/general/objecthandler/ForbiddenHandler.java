@@ -9,9 +9,10 @@ public class ForbiddenHandler
 {
 	public enum Mechanics
 	{
-		NONE, //Für alle Mechaniken, welche kein Back und Deathback speichern. Bspw. Custom, SavePoint
-		BACK,DEATHBACK, //Bei Beiden Fällen, läuft es immer durch alle andere Mechaniken durch
+		NONE, //Für alle Mechaniken, welche kein Back und Deathback speichern. Bspw. SavePoint
+		BACK, DEATHBACK, //Bei Beiden Fällen, läuft es immer durch alle andere Mechaniken durch
 		HOME, //Läuft bei den Homes durch.
+		RANDOMTELEPORT,
 		TELEPORT,
 		WARP
 	}
@@ -21,6 +22,9 @@ public class ForbiddenHandler
 	
 	private static ArrayList<String> homeForbiddenServer = new ArrayList<>();
 	private static ArrayList<String> homeForbiddenWorld = new ArrayList<>();
+	
+	private static ArrayList<String> randomTeleportForbiddenServer = new ArrayList<>();
+	private static ArrayList<String> randomTeleportForbiddenWorld = new ArrayList<>();
 	
 	private static ArrayList<String> teleportForbiddenServer = new ArrayList<>();
 	private static ArrayList<String> teleportForbiddenWorld = new ArrayList<>();
@@ -99,6 +103,19 @@ public class ForbiddenHandler
 				return true;
 			}
 			break;
+		case RANDOMTELEPORT:
+			if(ForbiddenHandler.getRandomTeleportForbiddenWorld().contains(
+					back.getLocation().getWordName()))
+			{
+				return true;
+			}
+			if(ForbiddenHandler.getRandomTeleportForbiddenServer().contains(
+        				plugin.getProxy().getPlayer(playername)
+        				.getServer().getInfo().getName()))
+			{
+				return true;
+			}
+			break;
 		case TELEPORT:
 			if(ForbiddenHandler.getTeleportForbiddenWorld().contains(
 					back.getLocation().getWordName()))
@@ -167,6 +184,26 @@ public class ForbiddenHandler
 	public static void setHomeForbiddenWorld(ArrayList<String> homeForbiddenWorld)
 	{
 		ForbiddenHandler.homeForbiddenWorld = homeForbiddenWorld;
+	}
+
+	public static ArrayList<String> getRandomTeleportForbiddenServer()
+	{
+		return randomTeleportForbiddenServer;
+	}
+
+	public static void setRandomTeleportForbiddenServer(ArrayList<String> randomTeleportForbiddenServer)
+	{
+		ForbiddenHandler.randomTeleportForbiddenServer = randomTeleportForbiddenServer;
+	}
+
+	public static ArrayList<String> getRandomTeleportForbiddenWorld()
+	{
+		return randomTeleportForbiddenWorld;
+	}
+
+	public static void setRandomTeleportForbiddenWorld(ArrayList<String> randomTeleportForbiddenWorld)
+	{
+		ForbiddenHandler.randomTeleportForbiddenWorld = randomTeleportForbiddenWorld;
 	}
 
 	public static ArrayList<String> getTeleportForbiddenServer()

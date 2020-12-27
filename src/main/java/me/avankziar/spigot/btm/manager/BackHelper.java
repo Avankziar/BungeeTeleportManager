@@ -47,7 +47,7 @@ public class BackHelper
 					if(!player.hasPermission(StaticValues.PERM_BYPASS_BACK_COST)
 							&& plugin.getYamlHandler().getConfig().getBoolean("useVault", false))
 					{
-						double price = plugin.getYamlHandler().getConfig().getDouble("CostPerBackRequest", 0.0);
+						double price = plugin.getYamlHandler().getConfig().getDouble("CostPer.BackRequest", 0.0);
 		        		if(price > 0.0)
 		        		{
 		        			if(plugin.getEco() != null)
@@ -62,10 +62,10 @@ public class BackHelper
 		        				{
 		        					return;
 		        				}
-		        				if(plugin.getAdvanceEconomyHandler() != null)
+		        				if(plugin.getAdvancedEconomyHandler() != null)
 		                		{
 		        					String comment = null;
-		        					plugin.getAdvanceEconomyHandler().EconomyLogger(
+		        					plugin.getAdvancedEconomyHandler().EconomyLogger(
 		                					player.getUniqueId().toString(),
 		                					player.getName(),
 		                					plugin.getYamlHandler().getL().getString("Economy.BUUID"),
@@ -74,7 +74,7 @@ public class BackHelper
 		                					price,
 		                					"TAKEN",
 		                					comment);
-		        					plugin.getAdvanceEconomyHandler().TrendLogger(player, -price);
+		        					plugin.getAdvancedEconomyHandler().TrendLogger(player, -price);
 		                		}
 		            		}
 		        		}

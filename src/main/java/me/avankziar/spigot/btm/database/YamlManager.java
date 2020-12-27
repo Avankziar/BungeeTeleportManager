@@ -213,6 +213,9 @@ public class YamlManager
 			configKeys.put("Use.Portal"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
+			configKeys.put("Use.RandomTeleport"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
 			configKeys.put("Use.RespawnPoint"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
@@ -294,6 +297,12 @@ public class YamlManager
 			configKeys.put("Effectlist.HOME.After"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configKeys.put("Effectlist.RANDOMTELEPORT.Before"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configKeys.put("Effectlist.RANDOMTELEPORT.After"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
 			configKeys.put("Effectlist.SAVEPOINT.Before"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
@@ -324,22 +333,28 @@ public class YamlManager
 		}
 		Minimums:
 		{
-			configKeys.put("MinimumTimeBeforeBack"
+			configKeys.put("MinimumTimeBefore.Back"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					2000}));
-			configKeys.put("MinimumTimeBeforeHome"
+			configKeys.put("MinimumTimeBefore.DeathBack"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					2000}));
-			configKeys.put("MinimumTimeBeforeCustom"
+			configKeys.put("MinimumTimeBefore.Home"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					2000}));
-			configKeys.put("MinimumTimeBeforeSavePoint"
+			configKeys.put("MinimumTimeBefore.Custom"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					2000}));
-			configKeys.put("MinimumTimeBeforeTeleport"
+			configKeys.put("MinimumTimeBeforeRandom.Teleport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					2000}));
-			configKeys.put("MinimumTimeBeforeWarp"
+			configKeys.put("MinimumTimeBefore.SavePoint"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					2000}));
+			configKeys.put("MinimumTimeBefore.Teleport"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					2000}));
+			configKeys.put("MinimumTimeBefore.Warp"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					2000}));
 		}
@@ -348,19 +363,22 @@ public class YamlManager
 			configKeys.put("useVault"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configKeys.put("CostPerBackRequest"
+			configKeys.put("CostPer.BackRequest"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					100.0}));
-			configKeys.put("CostPerHomeTeleport"
+			configKeys.put("CostPer.HomeTeleport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					100.0}));
-			configKeys.put("CostPerHomeCreate"
+			configKeys.put("CostPer.HomeCreate"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					1000.0}));
-			configKeys.put("CostPerTeleportRequest"
+			configKeys.put("CostPer.RandomTeleport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					100.0}));
-			configKeys.put("CostPerWarpCreate"
+			configKeys.put("CostPer.TeleportRequest"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					100.0}));
+			configKeys.put("CostPer.WarpCreate"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					9142.0}));
 			configKeys.put("MustConfirmWarpWhereYouPayForIt"
@@ -386,12 +404,12 @@ public class YamlManager
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"hubsworld", "hubsnethder"}));
 			
-			configKeys.put("ForbiddenServerWarp"
+			configKeys.put("ForbiddenServerRandomTeleport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"hubsworld", "hubsnethder"}));
-			configKeys.put("ForbiddenWorldWarp"
+					"hub", "hubTwo"}));
+			configKeys.put("ForbiddenWorldRandomTeleport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"hubsworld", "hubsnethder"}));
+					"hubsworld", "hubsnether"}));
 			
 			configKeys.put("ForbiddenServerTeleport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -400,12 +418,32 @@ public class YamlManager
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"hubsworld", "hubsnether"}));
 			
+			configKeys.put("ForbiddenServerWarp"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"hubsworld", "hubsnethder"}));
+			configKeys.put("ForbiddenWorldWarp"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"hubsworld", "hubsnethder"}));
+			
 			configKeys.put("Can.UpdateBackInForbiddenAreas"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
 			configKeys.put("Can.UpdateDeathbackInForbiddenAreas"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
+		}
+		RandomTeleport:
+		{
+			configKeys.put("RandomTeleport.UseSimpleTarget"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configKeys.put("RandomTeleport.SimpleTarget"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"ServerTarget;WorldTarget@500;50;500[]-500;255;-500"}));
+			configKeys.put("RandomTeleport.ComplexTarget"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"WorldOne>>ServerTarget;WorldTarget@500;50;500[]-500;255;-500",
+					"WorldTwo>>ServerTarget;WorldTarget@500;50;500()50"}));
 		}
 		Generator:
 		{
@@ -455,15 +493,15 @@ public class YamlManager
 				"&c/deathback &f| Teleports you to your death point.",
 				"Warp to your deathback position");
 		comHome();
+		comRT();
 		comTp();
 		comSavepoint();
 		comWarp();
 	}
 	
-	private void comBypass()
+	private void comBypass() //INFO:ComBypass
 	{
 		String path = "Bypass.";
-		//INFO:Back
 		commandsKeys.put(path+"Back.Cost"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.back.cost"}));
@@ -471,12 +509,14 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.back.delay"}));
 		
-		//INFO:Custom
+		commandsKeys.put(path+"DeathBack.Delay"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.bypass.deathback.delay"}));
+		
 		commandsKeys.put(path+"Custom.Delay"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.custom.delay"}));
 		
-		//INFO:Home
 		commandsKeys.put(path+"Home.Other"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.cmd.staff.home.home.other"}));
@@ -510,7 +550,23 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.count.home.global."}));
 		
-		//INFO:Tp
+		commandsKeys.put(path+"RandomTeleport.Admin"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.bypass.randomteleport.admin"}));
+		commandsKeys.put(path+"RandomTeleport.Cost"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.bypass.randomteleport.delay"}));
+		commandsKeys.put(path+"RandomTeleport.Delay"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.bypass.randomteleport.cost"}));
+		
+		commandsKeys.put(path+"SavePoint.Other"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.bypass.savepoint.other"}));
+		commandsKeys.put(path+"SavePoint.Delay"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.bypass.savepoint.delay"}));
+		
 		commandsKeys.put(path+"Tp.Tpatoggle"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.tp.tpatoggle"}));
@@ -527,7 +583,6 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.tp.delay"}));
 		
-		//INFO:Warp
 		commandsKeys.put(path+"Warp.Other"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.warp.warp.other"}));
@@ -613,9 +668,47 @@ public class YamlManager
 				"Lists all home points of all players.");
 	}
 	
-	private void comSavepoint() //ADDME:ComSavePoint
+	private void comRT() //INFO:ComHome
 	{
-		
+		commandsInput("randomteleport", "randomteleport", "btm.cmd.user.randomteleport.randomteleport",
+				"/randomteleport", "/randomteleport",
+				"&c/randomteleport &f| Teleportiert euch zu einem zufälligen Ort.",
+				"&c/randomteleport &f| Teleport to a random location.",
+				"Teleport you to a random location, which is configurated in the config.yml");
+	}
+	
+	private void comSavepoint() //INFO:ComSavePoint
+	{
+		commandsInput("savepoint", "savepoint", "btm.cmd.user.savepoint.savepoint.self", 
+				"/savepoint [savepoint] [playername]", "/savepoint ",
+				"&c/savepoint [savepoint] [SpielerName] &f| Teleportiert dich zu deinen Speicherpunkt.",
+				"&c/savepoint [savepoint] [playername] &f| Teleports you to your save point.",
+				"Teleports you to your save point. If is only >/savepoint<, it teleports to your last savepoint");
+		commandsInput("savepoints", "savepoints", "btm.cmd.user.savepoint.savepoints.self", 
+				"/savepoints [page] [playername]", "/savepoints ",
+				"&c/savepoints [Seite] [SpielerName] &f| Shows your Savepoints.",
+				"&c/savepoints [page] [playername] &f| Shows your Savepoints.",
+				"Shows your Savepoints.");
+		commandsInput("savepointlist", "savepointlist", "btm.cmd.admin.savepoint.savepointlist", 
+				"/savepointlist [page]", "/savepointlist ",
+				"&c/savepointlist [page] &f| Shows all Savepoints",
+				"&c/savepointlist [page] &f| Shows all Savepoints",
+				"Shows all Savepoints");
+		commandsInput("savepointcreate", "savepointcreate", "btm.cmd.user.savepoint.savepointcreate", 
+				"/savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>]", "/savepoint ",
+				"&c/savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Erstellt einen Speicherpunkt für den Spieler.",
+				"&c/savepointcreate <player> <savepointname> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Create a save point for the player.",
+				"Create a save point for the player. If only player and savepointname set, the position of the player are taken. If the savepoint already exist for the player, it is overriden.");
+		commandsInput("savepointdelete", "savepoindeletet", "btm.cmd.user.savepoint.savepointdelete", 
+				"/savepointdelete <Spieler> [SavePointName]", "/savepointdelete ",
+				"&c/savepointdelete <Spieler> [SavePointName] &f| Löscht alle oder einen spezifischen Speicherpunkt von einem Spieler.",
+				"&c/savepointdelete <player> [savepointname] &f| Deletes all or a specific save point from a player.",
+				"Deletes all or a specific save point from a player.");
+		commandsInput("savepointdeleteall", "savepointdeleteall", "btm.cmd.user.savepoint.savepointdeleteall", 
+				"/savepointdeleteall <Server> <Welt>", "/savepointdeleteall ",
+				"&c/savepointdeleteall <Server> <Welt> &f| Löscht alle Speicherpunkte in der Welt vom Server.",
+				"&c/savepointdeleteall <server> <world> &f| Deletes all save points in the world from the server.",
+				"Deletes all save points in the world from the server.");
 	}
 	
 	private void comTp() //INFO:ComTp
@@ -902,6 +995,7 @@ public class YamlManager
 		langEconomy();
 		langBtm();
 		langHome();
+		langRandomTeleport();
 		langSavePoint();
 		langTp();
 		langWarp();
@@ -1105,12 +1199,37 @@ public class YamlManager
 						"&6"}));
 	}
 	
+	private void langRandomTeleport() //INFO:LangRandomTeleport
+	{
+		String path = "CmdRandomTeleport.";
+		languageKeys.put(path+"WarpTo", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&aDu wurdest an einem zufälligen Ort auf dem Server &f%server% &aund der Welt &f%world% &ateleportiert.",
+						"&aYou were teleported to a random location on the server &f%server% &aand the world &f%world%&a."}));
+		languageKeys.put(path+"RequestInProgress", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Randomteleport wird bearbeitet!",
+						"&eThe random teleport is being processed!"}));
+		languageKeys.put(path+"ErrorInConfig", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cFEHLER! In der Config existiert ein Fehler bei der Definition vom RandomTeleport!",
+						"&eERROR! In the Config exists an error at the definition of the RandomTeleport!"}));
+	}
+	
 	private void langSavePoint() //INFO:LangSavePoint
 	{
 		String path = "CmdSavePoint.";
+		languageKeys.put(path+"LastSavePointDontExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu besitzt keine Speicherpunkte.",
+						"&cYou owned no savepoint."}));
 		languageKeys.put(path+"SavePointDontExist", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cDer Speicherpunkt &f%savepoint% &cnicht für dich hinterlegt.",
+						"&cDer Speicherpunkt &f%savepoint% &cist nicht für dich hinterlegt.",
+						"&cThe savepoint &f%savepoint% &cisnt stored for you."}));
+		languageKeys.put(path+"SavePointDontExistOther", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Speicherpunkt &f%savepoint% &cist nicht für &f%player% &chinterlegt.",
 						"&cThe savepoint &f%savepoint% &cnot stored for you."}));
 		languageKeys.put(path+"WarpTo", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -1136,6 +1255,62 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Speicherpunkt &f%savepoint% &ewurde neu gesetzt.",
 						"&eThe savepoint &f%savepoint% &ehas been reset."}));
+		languageKeys.put(path+"YouHaveNoSavePoints",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu besitzt keine Speicherpunkte!",
+						"&cYou don not have savepoints!"}));
+		languageKeys.put(path+"SavePointHeadline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e=====&7[&6Speicherpunkte &9| &7Anzahl: &f%amount%&7]&e=====",
+						"&e=====&7[&6SavePoints &9| &7Quantity: &f%amount%&7]&e====="}));
+		languageKeys.put(path+"ListHeadline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e=====&7[&6Speicherpunktelist &9| &7Anzahl: &f%amount%&7]&e=====",
+						"&e=====&7[&6SavePointslist &9| &7Quantity: &f%amount%&7]&e====="}));
+		languageKeys.put(path+"ListHelp", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bGleicher Server&f~&dGleiche Welt&f~&6Sonstiges",
+						"&bSame server&f~&dSame world&f~&6Other"}));
+		languageKeys.put(path+"ListSameServer",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&b",
+						"&b"}));
+		languageKeys.put(path+"ListSameWorld",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&d",
+						"&d"}));
+		languageKeys.put(path+"ListElse",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&6",
+						"&6"}));
+		languageKeys.put(path+"Next",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e&nnächste Seite &e==>",
+						"&e&nnext page &e==>"}));
+		languageKeys.put(path+"Past", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e<== &nvorherige Seite",
+						"&e<== &nprevious page"}));
+		languageKeys.put(path+"SavePointDelete", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Speicherpunkt &f%savepoint% &evom Spieler &f%player% &ewurde gelöscht.",
+						"&eThe SavePoint &f%savepoint% &eof the player &f%player% &ehas been deleted."}));
+		languageKeys.put(path+"YourSavePointDelete", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDein Speicherpunkt &f%savepoint% &ewurde gelöscht.",
+						"&eYour savepoint &f%savepoint% &ehas been deleted."}));
+		languageKeys.put(path+"SavePointsDelete", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDie Speicherpunkte vom Spieler &f%player% &ewurden gelöscht.",
+						"&eThe SavePoints of the player &f%player% &ehas been deleted."}));
+		languageKeys.put(path+"YourSavePointsDelete", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDeine Speicherpunkte wurden gelöscht.",
+						"&eYour savepoints has been deleted."}));
+		languageKeys.put(path+"SavePointServerWorldDelete",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast alle Speicherpunkte auf der Welt &f%world% &edes Servers &f%server% &egelöscht! &cGelöschte Datenanzahl = &f%amount%",
+						"&eYou have deleted all savepoints in the world &f%world% &ethe server &f%server% &edeleted! &cDeleted data count = &f%amount%!"}));
 	}
 	
 	private void langTp() //INFO:LangTp

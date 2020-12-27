@@ -9,8 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import main.java.me.avankziar.advanceeconomy.spigot.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.assistance.MatchApi;
 import main.java.me.avankziar.spigot.btm.cmd.tree.ArgumentConstructor;
 import main.java.me.avankziar.spigot.btm.cmd.tree.ArgumentModule;

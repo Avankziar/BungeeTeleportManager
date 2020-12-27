@@ -14,6 +14,7 @@ public class BTMSettings
 	private boolean isDeathback;
 	private boolean isHome;
 	private boolean isPortal;
+	private boolean isRandomTeleport;
 	private boolean isRespawnPoint;
 	private boolean isSavePoint;
 	private boolean isTeleport;
@@ -25,7 +26,8 @@ public class BTMSettings
 	
 	public BTMSettings(boolean isBungee, boolean isMysql,
 			boolean isBack, boolean isDeathback,
-			boolean isHome, boolean isPortal, boolean isRespawnPoint, boolean isSavePoint, boolean isTeleport, boolean isWarp)
+			boolean isHome, boolean isPortal,
+			boolean isRandomTeleport, boolean isRespawnPoint, boolean isSavePoint, boolean isTeleport, boolean isWarp)
 	{
 		setBungee(isBungee);
 		setMysql(isMysql);
@@ -33,6 +35,7 @@ public class BTMSettings
 		setDeathback(isDeathback);
 		setHome(isHome);
 		setPortal(isPortal);
+		setRandomTeleport(isRandomTeleport);
 		setRespawnPoint(isRespawnPoint);
 		setSavePoint(isSavePoint);
 		setTeleport(isTeleport);
@@ -48,11 +51,13 @@ public class BTMSettings
 		boolean isDeathback = yh.getConfig().getBoolean("Use.Deathback", false);
 		boolean isHome = yh.getConfig().getBoolean("Use.Home", false);
 		boolean isPortal = false;//yh.getConfig().getBoolean("Use.Portal", false);
+		boolean isRandomTeleport = yh.getConfig().getBoolean("Use.RandomTeleport", false);
 		boolean isRespawnPoint = yh.getConfig().getBoolean("Use.RespawnPoint", false);
 		boolean isSavePoint = yh.getConfig().getBoolean("Use.SavePoint", false);
 		boolean isTeleport = yh.getConfig().getBoolean("Use.Teleport", false);
 		boolean isWarp = yh.getConfig().getBoolean("Use.Warp", false);
-		settings = new BTMSettings(isBungee, isMysql, isBack, isDeathback, isHome, isPortal, isRespawnPoint, isSavePoint, isTeleport, isWarp);
+		settings = new BTMSettings(isBungee, isMysql, isBack, isDeathback, isHome, isPortal,
+				isRandomTeleport, isRespawnPoint, isSavePoint, isTeleport, isWarp);
 	}
 
 	public boolean isBungee()
@@ -184,5 +189,15 @@ public class BTMSettings
 		{
 			commands.put(key, commandString);
 		}
+	}
+
+	public boolean isRandomTeleport()
+	{
+		return isRandomTeleport;
+	}
+
+	public void setRandomTeleport(boolean isRandomTeleport)
+	{
+		this.isRandomTeleport = isRandomTeleport;
 	}
 }

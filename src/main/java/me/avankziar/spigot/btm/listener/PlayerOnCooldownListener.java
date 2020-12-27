@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
@@ -39,6 +40,16 @@ public class PlayerOnCooldownListener implements Listener
 		{
 			playerCooldownlist.put(event.getPlayer(), 
 					System.currentTimeMillis()+1000L*plugin.getYamlHandler().getConfig().getInt("TPJoinCooldown"));
+		}
+	}
+	
+	@EventHandler
+	public void onCommand(PlayerCommandPreprocessEvent event)
+	{
+		if(playerCooldownlist.containsKey(event.getPlayer())
+				&& playerCooldownlist.get(event.getPlayer()) >= System.currentTimeMillis())
+		{
+			event.setCancelled(true);
 		}
 	}
 	

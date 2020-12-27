@@ -38,6 +38,13 @@ public class ServerAndWordListener implements Listener
 						(ArrayList<String>) plugin.getYamlHandler().getConfig().getStringList("ForbiddenWorldHome"));
 				
 				plugin.getGeneralHandler().sendList(player,
+						"server", "RANDOMTELEPORT",
+						(ArrayList<String>) plugin.getYamlHandler().getConfig().getStringList("ForbiddenServerRandomTeleport"));
+				plugin.getGeneralHandler().sendList(player,
+						"world", "RANDOMTELEPORT",
+						(ArrayList<String>) plugin.getYamlHandler().getConfig().getStringList("ForbiddenWorldRandomTeleport"));
+				
+				plugin.getGeneralHandler().sendList(player,
 						"server", "TELEPORT",
 						(ArrayList<String>) plugin.getYamlHandler().getConfig().getStringList("ForbiddenServerTeleport"));
 				plugin.getGeneralHandler().sendList(player,

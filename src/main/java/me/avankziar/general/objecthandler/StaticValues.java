@@ -30,6 +30,11 @@ public class StaticValues
 		HOME_TOSPIGOT = "btm:hometospigot",
 		HOME_PLAYERTOPOSITION = "home-playertoposition",
 		
+		//RandomTeleport
+		RANDOMTELEPORT_TOBUNGEE = "btm:randomteleporttobungee",
+		RANDOMTELEPORT_TOSPIGOT = "btm:randomteleporttospigot",
+		RANDOMTELEPORT_PLAYERTOPOSITION = "randomteleport-playertoposition",
+		
 		//SavePoint Sending
 		SAVEPOINT_TOBUNGEE = "btm:savepointtobungee",
 		SAVEPOINT_TOSPIGOT = "btm:savepointtospigot",
@@ -71,6 +76,9 @@ public class StaticValues
 		PERM_BYPASS_BACK_COST = "btm.bypass.back.cost",
 		PERM_BYPASS_BACK_DELAY = "btm.bypass.back.delay",
 		
+		//Deahback
+		PERM_BYPASS_DEATHBACK_DELAY = "btm.bypass.deathback.delay",
+		
 		//Costum
 		PERM_BYPASS_CUSTOM_DELAY = "btm.bypass.custom.delay",
 		
@@ -88,6 +96,15 @@ public class StaticValues
 		PERM_BYPASS_HOME_FORBIDDEN = "btm.bypass.home.forbidden",
 		PERM_BYPASS_HOME_DELAY = "btm.bypass.home.delay",
 		
+		//RandomTeleport
+		PERM_BYPASS_RANDOMTELEPORT = "btm.bypass.randomteleport.admin",
+		PERM_BYPASS_RANDOMTELEPORT_DELAY = "btm.bypass.randomteleport.delay",
+		PERM_BYPASS_RANDOMTELEPORT_COST = "btm.bypass.randomteleport.cost",
+		
+		//SavePoint Bypass
+		PERM_BYPASS_SAVEPOINT_OTHER = "btm.bypass.savepoint.other",
+		PERM_BYPASS_SAVEPOINT_DELAY = "btm.bypass.savepoint.delay",
+	
 		//Teleport
 		PERM_BYPASS_TELEPORT_TPATOGGLE = "btm.bypass.tp.tpatoggle",
 		PERM_BYPASS_TELEPORT_COST = "btm.bypass.tp.cost",
@@ -95,11 +112,7 @@ public class StaticValues
 		PERM_BYPASS_TELEPORT_SILENT = "btm.bypass.tp.silent",
 		PERM_BYPASS_TELEPORT_DELAY = "btm.bypass.tp.delay",
 		
-		//SavePoint Bypass
-		PERM_BYPASS_SAVEPOINT = "btm.bypass.savepoint.admin",
-		PERM_BYPASS_SAVEPOINT_TOOMANY = "btm.bypass.savepoint.toomany",
-		PERM_BYPASS_SAVEPOINT_OTHER = "btm.bypass.savepoint.other",
-		PERM_BYPASS_SAVEPOINT_DELAY = "btm.bypass.savepoint.delay",
+		
 		
 		//Warp
 		PERM_WARP_OTHER = "btm.bypass.warp.warp.other",

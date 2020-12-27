@@ -27,6 +27,8 @@ import main.java.me.avankziar.spigot.btm.cmd.BTMCommandExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.BackCommandExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.CommandHelper;
 import main.java.me.avankziar.spigot.btm.cmd.HomeCommandExecutor;
+import main.java.me.avankziar.spigot.btm.cmd.RTCommandExecutor;
+import main.java.me.avankziar.spigot.btm.cmd.SavePointCommandExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.TABCompletionOne;
 import main.java.me.avankziar.spigot.btm.cmd.TABCompletionTwo;
 import main.java.me.avankziar.spigot.btm.cmd.TpCommandExecutor;
@@ -38,7 +40,7 @@ import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 import main.java.me.avankziar.spigot.btm.database.MysqlSetup;
 import main.java.me.avankziar.spigot.btm.database.YamlHandler;
 import main.java.me.avankziar.spigot.btm.database.YamlManager;
-import main.java.me.avankziar.spigot.btm.handler.AdvanceEconomyHandler;
+import main.java.me.avankziar.spigot.btm.handler.AdvancedEconomyHandler;
 import main.java.me.avankziar.spigot.btm.listener.BackListener;
 import main.java.me.avankziar.spigot.btm.listener.CustomTeleportListener;
 import main.java.me.avankziar.spigot.btm.listener.PlayerOnCooldownListener;
@@ -52,6 +54,9 @@ import main.java.me.avankziar.spigot.btm.manager.GeneralHandler;
 import main.java.me.avankziar.spigot.btm.manager.HomeHandler;
 import main.java.me.avankziar.spigot.btm.manager.HomeHelper;
 import main.java.me.avankziar.spigot.btm.manager.HomeMessageListener;
+import main.java.me.avankziar.spigot.btm.manager.RandomTeleportHandler;
+import main.java.me.avankziar.spigot.btm.manager.RandomTeleportHelper;
+import main.java.me.avankziar.spigot.btm.manager.RandomTeleportMessageListener;
 import main.java.me.avankziar.spigot.btm.manager.SavePointHandler;
 import main.java.me.avankziar.spigot.btm.manager.SavePointHelper;
 import main.java.me.avankziar.spigot.btm.manager.SavePointMessageListener;
@@ -79,7 +84,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private BungeeBridge bungeeBridge;
 	private CommandHelper commandHelper;
 	private Economy eco;
-	private AdvanceEconomyHandler advanceEconomyHandler;
+	private AdvancedEconomyHandler advancedEconomyHandler;
 	
 	private GeneralHandler generalHandler;
 	private BackHandler backHandler;
@@ -87,6 +92,8 @@ public class BungeeTeleportManager extends JavaPlugin
 	private CustomHandler customHandler;
 	private HomeHandler homeHandler;
 	private HomeHelper homeHelper;
+	private RandomTeleportHandler randomTeleportHandler;
+	private RandomTeleportHelper randomTeleportHelper;
 	private SavePointHandler savePointHandler;
 	private SavePointHelper savePointHelper;
 	private TeleportHandler teleportHandler;
@@ -95,6 +102,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private WarpHelper warpHelper;
 	
 	public static LinkedHashMap<String, ArrayList<String>> homes;
+	public static LinkedHashMap<String, ArrayList<String>> savepoints;
 	public static LinkedHashMap<String, ArrayList<String>> warps;
 	
 	private ArrayList<String> players;
@@ -151,6 +159,8 @@ public class BungeeTeleportManager extends JavaPlugin
 		customHandler = new CustomHandler(plugin);
 		homeHelper = new HomeHelper(plugin);
 		homeHandler = new HomeHandler(plugin);
+		randomTeleportHelper = new RandomTeleportHelper(plugin);
+		randomTeleportHandler = new RandomTeleportHandler(plugin);
 		savePointHelper = new SavePointHelper(plugin);
 		savePointHandler = new SavePointHandler(plugin);
 		teleportHelper = new TeleportHelper(plugin);
@@ -328,6 +338,15 @@ public class BungeeTeleportManager extends JavaPlugin
 			
 		}
 		
+		if(BTMSettings.settings.isRandomTeleport())
+		{
+			CommandConstructor randomteleport = new CommandConstructor(plugin, "randomteleport", false);
+			
+			registerCommand(randomteleport.getPath(), randomteleport.getName());
+			getCommand(randomteleport.getName()).setExecutor(new RTCommandExecutor(plugin, randomteleport));
+			getCommand(randomteleport.getName()).setTabCompleter(new TABCompletionOne(plugin));
+		}
+		
 		if(BTMSettings.settings.isRespawnPoint())
 		{
 			
@@ -335,7 +354,44 @@ public class BungeeTeleportManager extends JavaPlugin
 		
 		if(BTMSettings.settings.isSavePoint())
 		{
-			// ADDME
+			CommandConstructor savepoint = new CommandConstructor(plugin, "savepoint", false);
+			
+			registerCommand(savepoint.getPath(), savepoint.getName());
+			getCommand(savepoint.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepoint));
+			getCommand(savepoint.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.SAVEPOINT, savepoint.getCommandString());
+			
+			CommandConstructor savepoints = new CommandConstructor(plugin, "savepoints", false);
+			
+			registerCommand(savepoints.getPath(), savepoints.getName());
+			getCommand(savepoints.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepoints));
+			getCommand(savepoints.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.SAVEPOINTS, savepoints.getCommandString());
+			
+			CommandConstructor savepointlist = new CommandConstructor(plugin, "savepointlist", false);
+			
+			registerCommand(savepointlist.getPath(), savepointlist.getName());
+			getCommand(savepointlist.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepointlist));
+			getCommand(savepointlist.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.SAVEPOINT_LIST, savepointlist.getCommandString());
+			
+			CommandConstructor savepointcreate = new CommandConstructor(plugin, "savepointcreate", false);
+			
+			registerCommand(savepointcreate.getPath(), savepointcreate.getName());
+			getCommand(savepointcreate.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepointcreate));
+			getCommand(savepointcreate.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			
+			CommandConstructor savepointdelete = new CommandConstructor(plugin, "savepointdelete", false);
+			
+			registerCommand(savepointdelete.getPath(), savepointdelete.getName());
+			getCommand(savepointdelete.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepointdelete));
+			getCommand(savepointdelete.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			
+			CommandConstructor savepointdeleteall = new CommandConstructor(plugin, "savepointdeleteall", false);
+			
+			registerCommand(savepointdeleteall.getPath(), savepointdeleteall.getName());
+			getCommand(savepointdeleteall.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepointdeleteall));
+			getCommand(savepointdeleteall.getName()).setTabCompleter(new TABCompletionOne(plugin));
 		}
 		
 		if(BTMSettings.settings.isTeleport())
@@ -578,6 +634,8 @@ public class BungeeTeleportManager extends JavaPlugin
 		StaticValues.PERM_BYPASS_BACK_COST = yamlHandler.getCom().getString(path+"Back.Cost");
 		StaticValues.PERM_BYPASS_BACK_DELAY = yamlHandler.getCom().getString(path+"Back.Delay");
 		
+		StaticValues.PERM_BYPASS_DEATHBACK_DELAY = yamlHandler.getCom().getString(path+"DeathBack.Delay");
+		
 		StaticValues.PERM_BYPASS_CUSTOM_DELAY = yamlHandler.getCom().getString(path+"Custom.Delay");
 		
 		StaticValues.PERM_HOME_OTHER = yamlHandler.getCom().getString(path+"Home.Other");
@@ -590,6 +648,13 @@ public class BungeeTeleportManager extends JavaPlugin
 		StaticValues.PERM_HOME_COUNTHOMES_WORLD = yamlHandler.getCom().getString(path+"Home.Count.World");
 		StaticValues.PERM_HOME_COUNTHOMES_SERVER = yamlHandler.getCom().getString(path+"Home.Count.Server");
 		StaticValues.PERM_HOME_COUNTHOMES_GLOBAL = yamlHandler.getCom().getString(path+"Home.Count.Global");
+		
+		StaticValues.PERM_BYPASS_RANDOMTELEPORT = yamlHandler.getCom().getString(path+"RandomTeleport.Admin");
+		StaticValues.PERM_BYPASS_RANDOMTELEPORT_COST = yamlHandler.getCom().getString(path+"RandomTeleport.Cost");
+		StaticValues.PERM_BYPASS_RANDOMTELEPORT_DELAY = yamlHandler.getCom().getString(path+"RandomTeleport.Delay");
+		
+		StaticValues.PERM_BYPASS_SAVEPOINT_OTHER = yamlHandler.getCom().getString(path+"SavePoint.Other");
+		StaticValues.PERM_BYPASS_SAVEPOINT_DELAY = yamlHandler.getCom().getString(path+"SavePoint.Delay");
 		
 		StaticValues.PERM_BYPASS_TELEPORT_COST = yamlHandler.getCom().getString(path+"Tp.Cost");
 		StaticValues.PERM_BYPASS_TELEPORT_DELAY = yamlHandler.getCom().getString(path+"Tp.Delay");
@@ -732,6 +797,8 @@ public class BungeeTeleportManager extends JavaPlugin
 		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.CUSTOM_TOSPIGOT, new CustomMessageListener(this));
 		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.HOME_TOBUNGEE);
 		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.HOME_TOSPIGOT, new HomeMessageListener(this));
+		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.RANDOMTELEPORT_TOBUNGEE);
+		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.RANDOMTELEPORT_TOSPIGOT, new RandomTeleportMessageListener(this));
 		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.SAVEPOINT_TOBUNGEE);
 		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.SAVEPOINT_TOSPIGOT, new SavePointMessageListener(this));
 		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.TP_TOBUNGEE);
@@ -781,6 +848,10 @@ public class BungeeTeleportManager extends JavaPlugin
             return false;
         }
         eco = rsp.getProvider();
+        if(eco != null)
+        {
+    		log.info(pluginName + " detected Vault. Hooking!");
+        }
         return eco != null;
     }
 	
@@ -801,23 +872,24 @@ public class BungeeTeleportManager extends JavaPlugin
 		{
 			return false;
 		}
+		log.info(pluginName+" hook with "+externPluginName);
 		return true;
 	}
 	
 	private void setupLogHandler()
 	{
-		if(existHook("AdvancedEconomy") || existHook("AdvanceEconomyPlus"))
+		if(existHook("AdvancedEconomyPlus"))
 		{
-			advanceEconomyHandler = new AdvanceEconomyHandler(plugin, false);
+			advancedEconomyHandler = new AdvancedEconomyHandler(plugin);
 		} else
 		{
-			advanceEconomyHandler = null;
+			advancedEconomyHandler = null;
 		}
 	}
 	
-	public AdvanceEconomyHandler getAdvanceEconomyHandler()
+	public AdvancedEconomyHandler getAdvancedEconomyHandler()
 	{
-		return advanceEconomyHandler;
+		return advancedEconomyHandler;
 	}
 
 	public BungeeBridge getBungeeBridge()
@@ -838,6 +910,41 @@ public class BungeeTeleportManager extends JavaPlugin
 	public CustomHandler getCustomHandler()
 	{
 		return customHandler;
+	}
+	
+	public GeneralHandler getGeneralHandler()
+	{
+		return generalHandler;
+	}
+	
+	public HomeHandler getHomeHandler()
+	{
+		return homeHandler;
+	}
+
+	public HomeHelper getHomeHelper()
+	{
+		return homeHelper;
+	}
+	
+	public RandomTeleportHelper getRandomTeleportHelper()
+	{
+		return randomTeleportHelper;
+	}
+	
+	public RandomTeleportHandler getRandomTeleportHandler()
+	{
+		return randomTeleportHandler;
+	}
+	
+	public SavePointHandler getSavePointHandler()
+	{
+		return savePointHandler;
+	}
+
+	public SavePointHelper getSavePointHelper()
+	{
+		return savePointHelper;
 	}
 
 	public TeleportHelper getTeleportHelper()
@@ -860,16 +967,6 @@ public class BungeeTeleportManager extends JavaPlugin
 		return warpHelper;
 	}
 
-	public HomeHandler getHomeHandler()
-	{
-		return homeHandler;
-	}
-
-	public HomeHelper getHomeHelper()
-	{
-		return homeHelper;
-	}
-
 	public ArrayList<String> getMysqlPlayers()
 	{
 		return players;
@@ -878,20 +975,5 @@ public class BungeeTeleportManager extends JavaPlugin
 	public void setMysqlPlayers(ArrayList<String> players)
 	{
 		this.players = players;
-	}
-
-	public GeneralHandler getGeneralHandler()
-	{
-		return generalHandler;
-	}
-
-	public SavePointHandler getSavePointHandler()
-	{
-		return savePointHandler;
-	}
-
-	public SavePointHelper getSavePointHelper()
-	{
-		return savePointHelper;
 	}
 }

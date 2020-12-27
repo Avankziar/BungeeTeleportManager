@@ -157,7 +157,13 @@ public class TeleportHandler
 			out.writeUTF(teleport.getFromName());
 			out.writeUTF(teleport.getToName());
 			out.writeUTF(returnmessage);
-			out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeTeleport", 2000));
+			if(!player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_DELAY))
+			{
+				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Teleport", 2000));
+			} else
+			{
+				out.writeInt(25);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -214,7 +220,7 @@ public class TeleportHandler
 			Player targets = Bukkit.getPlayer(teleport.getToUUID());
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeTeleport", 2000);
+			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Teleport", 2000);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_CUSTOM_DELAY))
 			{
@@ -277,7 +283,13 @@ public class TeleportHandler
 				out.writeUTF(teleport.getToName());
 				out.writeUTF(teleport.getType().toString());
 				out.writeUTF(errormessage);
-				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeTeleport", 2000));
+				if(!player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_DELAY))
+				{
+					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Teleport", 2000));
+				} else
+				{
+					out.writeInt(25);
+				}
 				new BackHandler(plugin).addingBack(player, out);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -300,7 +312,13 @@ public class TeleportHandler
 			out.writeBoolean(isSpecific);
 			out.writeUTF(server);
 			out.writeUTF(world);
-			out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeTeleport", 2000));
+			if(!player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_DELAY))
+			{
+				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Teleport", 2000));
+			} else
+			{
+				out.writeInt(25);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -313,7 +331,7 @@ public class TeleportHandler
 		{
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeTeleport", 2000);
+			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Teleport", 2000);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_CUSTOM_DELAY))
 			{
@@ -350,7 +368,13 @@ public class TeleportHandler
 				out.writeFloat(sl.getYaw());
 				out.writeFloat(sl.getPitch());
 				out.writeUTF(errormessage);
-				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBeforeTeleport", 2000));
+				if(!player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_DELAY))
+				{
+					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Teleport", 2000));
+				} else
+				{
+					out.writeInt(25);
+				}
 				new BackHandler(plugin).addingBack(player, out);
 			} catch (IOException e) {
 				e.printStackTrace();

@@ -88,7 +88,7 @@ public class CustomMessageListener implements Listener
         return;
 	}
 	
-	public void preTeleportPlayerToPlayerForceUse(Teleport teleport, String errormessage, int delayed)
+	public void preTeleportPlayerToPlayerForceUse(Teleport teleport, String errormessage, int delay)
 	{
 		ProxiedPlayer from = plugin.getProxy().getPlayer(teleport.getFromName());
 		ProxiedPlayer to = plugin.getProxy().getPlayer(teleport.getToName());
@@ -100,11 +100,6 @@ public class CustomMessageListener implements Listener
 		{
 			from.sendMessage(ChatApi.tctl(errormessage));
 			return;
-		}
-		int delay = 25;
-		if(!from.hasPermission(StaticValues.PERM_BYPASS_CUSTOM_DELAY))
-		{
-			delay = delayed;
 		}
 		if(teleport.getType() == Teleport.Type.TPTO)
 		{
@@ -166,7 +161,7 @@ public class CustomMessageListener implements Listener
 	}
 	
 	public void teleportPlayerToPosition(String playerName, ServerLocation location, String errorServerNotFound,
-			String message, int delayed)
+			String message, int delay)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(playerName);
 		if(player == null)
@@ -182,11 +177,6 @@ public class CustomMessageListener implements Listener
 		{
 			player.sendMessage(ChatApi.tctl(errorServerNotFound));
 			return;
-		}
-		int delay = 25;
-		if(!player.hasPermission(StaticValues.PERM_BYPASS_CUSTOM_DELAY))
-		{
-			delay = delayed;
 		}
 		teleportPlayerToPositionPost(player, location, message, delay);
 	}

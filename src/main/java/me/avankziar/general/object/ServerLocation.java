@@ -20,6 +20,17 @@ public class ServerLocation
 		setYaw(yaw);
 		setPitch(pitch);
 	}
+	
+	public ServerLocation(String server, String worldName, double x, double y, double z)
+	{
+		setServer(server);
+		setWordName(worldName);
+		setX(x);
+		setY(y);
+		setZ(z);
+		setYaw(0.0F);
+		setPitch(0.0F);
+	}
 
 	public String getServer()
 	{

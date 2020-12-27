@@ -20,17 +20,12 @@ public class SavePointHandler
 		this.plugin = plugin;
 	}
 	
-	public void teleportPlayerToSavePoint(String playerName, String warpName, ServerLocation location, int delayed, boolean last)
+	public void teleportPlayerToSavePoint(String playerName, String warpName, ServerLocation location, int delay, boolean last)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(playerName);
 		if(player == null)
 		{
 			return;
-		}
-		int delay = 25;
-		if(!player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_DELAY))
-		{
-			delay = delayed;
 		}
 		teleportPlayer(player, delay, warpName, location, last); //Back wurde schon gemacht
 	}

@@ -20,20 +20,13 @@ public class HomeHandler
 		this.plugin = plugin;
 	}
 	
-	public void teleportPlayerToHome(String playerName, String uuid, ServerLocation location, String homeName, int delayed)
+	public void teleportPlayerToHome(String playerName, String uuid, ServerLocation location, String homeName, int delay)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(playerName);
 		if(player == null || location == null)
 		{
 			return;
-		}
-		
-		int delay = 25;
-		if(!player.hasPermission(StaticValues.PERM_BYPASS_HOME_DELAY))
-		{
-			delay = delayed;
-		}
-		
+		}		
 		teleportPlayer(player, delay, location, homeName); //Back wurde schon gemacht.
 	}
 	

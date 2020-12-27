@@ -68,6 +68,36 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
+		} else if (cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT))) 
+		{
+			if(args.length == 1)
+			{
+				if (!args[0].equals("")) 
+				{
+					if(BungeeTeleportManager.savepoints.containsKey(player.getName()))
+					{
+						for (String savepointName : BungeeTeleportManager.savepoints.get(player.getName())) 
+						{
+							if (savepointName.startsWith(args[0])
+									|| savepointName.toLowerCase().startsWith(args[0])
+									|| savepointName.toUpperCase().startsWith(args[0])) 
+							{
+								list.add(savepointName);
+							}
+						}
+						Collections.sort(list);
+						return list;
+					}
+				} else
+				{
+					if(BungeeTeleportManager.savepoints.get(player.getName()) != null)
+					{
+						list.addAll(BungeeTeleportManager.savepoints.get(player.getName()));
+						Collections.sort(list);
+					}
+					return list;
+				}
+			}
 		} else if (cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP))
 				|| cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_INFO))) 
 		{
