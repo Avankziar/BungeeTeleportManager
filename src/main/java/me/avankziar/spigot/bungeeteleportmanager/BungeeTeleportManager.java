@@ -101,9 +101,9 @@ public class BungeeTeleportManager extends JavaPlugin
 	private WarpHandler warpHandler;
 	private WarpHelper warpHelper;
 	
-	public static LinkedHashMap<String, ArrayList<String>> homes;
-	public static LinkedHashMap<String, ArrayList<String>> savepoints;
-	public static LinkedHashMap<String, ArrayList<String>> warps;
+	public static LinkedHashMap<String, ArrayList<String>> homes = new LinkedHashMap<String, ArrayList<String>>();
+	public static LinkedHashMap<String, ArrayList<String>> savepoints = new LinkedHashMap<String, ArrayList<String>>();
+	public static LinkedHashMap<String, ArrayList<String>> warps = new LinkedHashMap<String, ArrayList<String>>();
 	
 	private ArrayList<String> players;
 	private ArrayList<CommandConstructor> commandTree;
@@ -137,8 +137,6 @@ public class BungeeTeleportManager extends JavaPlugin
 			e.printStackTrace();
 		}
 		utility = new Utility(plugin);
-		homes = new LinkedHashMap<String, ArrayList<String>>();
-		warps = new LinkedHashMap<String, ArrayList<String>>();
 		setMysqlPlayers(new ArrayList<String>());
 		if (yamlHandler.getConfig().getBoolean("Mysql.Status", false) == true)
 		{
@@ -248,7 +246,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		registerCommand(btm.getPath(), btm.getName());
 		getCommand(btm.getName()).setExecutor(new BTMCommandExecutor(plugin, btm));
 		getCommand(btm.getName()).setTabCompleter(new TABCompletionTwo(plugin));
-		BTMSettings.settings.addCommands(KeyHandler.BTM, btm.getCommandString());
+		BTMSettings.settings.addCommands(KeyHandler.BTM, btm.getCommandString().trim());
 		
 		addingHelps(btm);
 		
@@ -281,28 +279,28 @@ public class BungeeTeleportManager extends JavaPlugin
 			registerCommand(sethome.getPath(), sethome.getName());
 			getCommand(sethome.getName()).setExecutor(new HomeCommandExecutor(plugin, sethome));
 			getCommand(sethome.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.HOME_SET, sethome.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.HOME_SET, sethome.getCommandString().trim());
 			
 			CommandConstructor homecreate = new CommandConstructor(plugin, "homecreate", false);
 			
 			registerCommand(homecreate.getPath(), homecreate.getName());
 			getCommand(homecreate.getName()).setExecutor(new HomeCommandExecutor(plugin, homecreate));
 			getCommand(homecreate.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.HOME_CREATE, homecreate.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.HOME_CREATE, homecreate.getCommandString().trim());
 			
 			CommandConstructor delhome = new CommandConstructor(plugin, "delhome", false);
 			
 			registerCommand(delhome.getPath(), delhome.getName());
 			getCommand(delhome.getName()).setExecutor(new HomeCommandExecutor(plugin, delhome));
 			getCommand(delhome.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.HOME_DEL, delhome.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.HOME_DEL, delhome.getCommandString().trim());
 			
 			CommandConstructor homeremove = new CommandConstructor(plugin, "homeremove", false);
 			
 			registerCommand(homeremove.getPath(), homeremove.getName());
 			getCommand(homeremove.getName()).setExecutor(new HomeCommandExecutor(plugin, homeremove));
 			getCommand(homeremove.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.HOME_REMOVE, homeremove.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.HOME_REMOVE, homeremove.getCommandString().trim());
 			
 			CommandConstructor homesdeleteserverworld = new CommandConstructor(plugin, "homesdeleteserverworld", false);
 			
@@ -315,14 +313,14 @@ public class BungeeTeleportManager extends JavaPlugin
 			registerCommand(home.getPath(), home.getName());
 			getCommand(home.getName()).setExecutor(new HomeCommandExecutor(plugin, home));
 			getCommand(home.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.HOME, home.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.HOME, home.getCommandString().trim());
 			
 			CommandConstructor homes = new CommandConstructor(plugin, "homes", false);
 			
 			registerCommand(homes.getPath(), homes.getName());
 			getCommand(homes.getName()).setExecutor(new HomeCommandExecutor(plugin, homes));
 			getCommand(homes.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.HOMES, homes.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.HOMES, homes.getCommandString().trim());
 			
 			CommandConstructor homelist = new CommandConstructor(plugin, "homelist", false);
 			
@@ -359,35 +357,35 @@ public class BungeeTeleportManager extends JavaPlugin
 			registerCommand(savepoint.getPath(), savepoint.getName());
 			getCommand(savepoint.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepoint));
 			getCommand(savepoint.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.SAVEPOINT, savepoint.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.SAVEPOINT, savepoint.getCommandString().trim());
 			
 			CommandConstructor savepoints = new CommandConstructor(plugin, "savepoints", false);
 			
 			registerCommand(savepoints.getPath(), savepoints.getName());
 			getCommand(savepoints.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepoints));
 			getCommand(savepoints.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.SAVEPOINTS, savepoints.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.SAVEPOINTS, savepoints.getCommandString().trim());
 			
 			CommandConstructor savepointlist = new CommandConstructor(plugin, "savepointlist", false);
 			
 			registerCommand(savepointlist.getPath(), savepointlist.getName());
 			getCommand(savepointlist.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepointlist));
 			getCommand(savepointlist.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.SAVEPOINT_LIST, savepointlist.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.SAVEPOINT_LIST, savepointlist.getCommandString().trim());
 			
-			CommandConstructor savepointcreate = new CommandConstructor(plugin, "savepointcreate", false);
+			CommandConstructor savepointcreate = new CommandConstructor(plugin, "savepointcreate", true);
 			
 			registerCommand(savepointcreate.getPath(), savepointcreate.getName());
 			getCommand(savepointcreate.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepointcreate));
 			getCommand(savepointcreate.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			
-			CommandConstructor savepointdelete = new CommandConstructor(plugin, "savepointdelete", false);
+			CommandConstructor savepointdelete = new CommandConstructor(plugin, "savepointdelete", true);
 			
 			registerCommand(savepointdelete.getPath(), savepointdelete.getName());
 			getCommand(savepointdelete.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepointdelete));
 			getCommand(savepointdelete.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			
-			CommandConstructor savepointdeleteall = new CommandConstructor(plugin, "savepointdeleteall", false);
+			CommandConstructor savepointdeleteall = new CommandConstructor(plugin, "savepointdeleteall", true);
 			
 			registerCommand(savepointdeleteall.getPath(), savepointdeleteall.getName());
 			getCommand(savepointdeleteall.getName()).setExecutor(new SavePointCommandExecutor(plugin, savepointdeleteall));
@@ -401,14 +399,14 @@ public class BungeeTeleportManager extends JavaPlugin
 			registerCommand(tpaccept.getPath(), tpaccept.getName());
 			getCommand(tpaccept.getName()).setExecutor(new TpCommandExecutor(plugin, tpaccept));
 			getCommand(tpaccept.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.TPACCEPT, tpaccept.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.TPACCEPT, tpaccept.getCommandString().trim());
 			
 			CommandConstructor tpdeny = new CommandConstructor(plugin, "tpdeny", false);
 			
 			registerCommand(tpdeny.getPath(), tpdeny.getName());
 			getCommand(tpdeny.getName()).setExecutor(new TpCommandExecutor(plugin, tpdeny));
 			getCommand(tpdeny.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.TPDENY, tpdeny.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.TPDENY, tpdeny.getCommandString().trim());
 			
 			CommandConstructor tpquit = new CommandConstructor(plugin, "tpaquit", false);
 			
@@ -427,7 +425,7 @@ public class BungeeTeleportManager extends JavaPlugin
 			registerCommand(tpaignore.getPath(), tpaignore.getName());
 			getCommand(tpaignore.getName()).setExecutor(new TpCommandExecutor(plugin, tpaignore));
 			getCommand(tpaignore.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.TPAIGNORE, tpaignore.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.TPAIGNORE, tpaignore.getCommandString().trim());
 			
 			CommandConstructor tpaignorelist = new CommandConstructor(plugin, "tpaignorelist", false);
 			
@@ -440,28 +438,28 @@ public class BungeeTeleportManager extends JavaPlugin
 			registerCommand(tpa.getPath(), tpa.getName());
 			getCommand(tpa.getName()).setExecutor(new TpCommandExecutor(plugin, tpa));
 			getCommand(tpa.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.TPA, tpa.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.TPA, tpa.getCommandString().trim());
 			
 			CommandConstructor tpahere = new CommandConstructor(plugin, "tpahere", false);
 			
 			registerCommand(tpahere.getPath(), tpahere.getName());
 			getCommand(tpahere.getName()).setExecutor(new TpCommandExecutor(plugin, tpahere));
 			getCommand(tpahere.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.TPAHERE, tpahere.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.TPAHERE, tpahere.getCommandString().trim());
 			
 			CommandConstructor tp = new CommandConstructor(plugin, "tp", false);
 			
 			registerCommand(tp.getPath(), tp.getName());
 			getCommand(tp.getName()).setExecutor(new TpCommandExecutor(plugin, tp));
 			getCommand(tp.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.TP, tp.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.TP, tp.getCommandString().trim());
 			
 			CommandConstructor tphere = new CommandConstructor(plugin, "tphere", false);
 			
 			registerCommand(tphere.getPath(), tphere.getName());
 			getCommand(tphere.getName()).setExecutor(new TpCommandExecutor(plugin, tphere));
 			getCommand(tphere.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.TPHERE, tphere.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.TPHERE, tphere.getCommandString().trim());
 			
 			CommandConstructor tpall = new CommandConstructor(plugin, "tpall", false);
 			
@@ -486,133 +484,133 @@ public class BungeeTeleportManager extends JavaPlugin
 			registerCommand(warpcreate.getPath(), warpcreate.getName());
 			getCommand(warpcreate.getName()).setExecutor(new WarpCommandExecutor(plugin, warpcreate));
 			getCommand(warpcreate.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_CREATE, warpcreate.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_CREATE, warpcreate.getCommandString().trim());
 			
 			CommandConstructor warpremove = new CommandConstructor(plugin, "warpremove", false);
 			
 			registerCommand(warpremove.getPath(), warpremove.getName());
 			getCommand(warpremove.getName()).setExecutor(new WarpCommandExecutor(plugin, warpremove));
 			getCommand(warpremove.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_REMOVE, warpremove.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_REMOVE, warpremove.getCommandString().trim());
 			
 			CommandConstructor warplist = new CommandConstructor(plugin, "warplist", false);
 			
 			registerCommand(warplist.getPath(), warplist.getName());
 			getCommand(warplist.getName()).setExecutor(new WarpCommandExecutor(plugin, warplist));
 			getCommand(warplist.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_LIST, warplist.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_LIST, warplist.getCommandString().trim());
 			
 			CommandConstructor warp = new CommandConstructor(plugin, "warp", false);
 			
 			registerCommand(warp.getPath(), warp.getName());
 			getCommand(warp.getName()).setExecutor(new WarpCommandExecutor(plugin, warp));
 			getCommand(warp.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP, warp.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP, warp.getCommandString().trim());
 			
 			CommandConstructor warps = new CommandConstructor(plugin, "warps", false);
 			
 			registerCommand(warps.getPath(), warps.getName());
 			getCommand(warps.getName()).setExecutor(new WarpCommandExecutor(plugin, warps));
 			getCommand(warps.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARPS, warps.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARPS, warps.getCommandString().trim());
 			
 			CommandConstructor warpinfo = new CommandConstructor(plugin, "warpinfo", false);
 			
 			registerCommand(warpinfo.getPath(), warpinfo.getName());
 			getCommand(warpinfo.getName()).setExecutor(new WarpCommandExecutor(plugin, warpinfo));
 			getCommand(warpinfo.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_INFO, warpinfo.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_INFO, warpinfo.getCommandString().trim());
 			
 			CommandConstructor warpsetname = new CommandConstructor(plugin, "warpsetname", false);
 			
 			registerCommand(warpsetname.getPath(), warpsetname.getName());
 			getCommand(warpsetname.getName()).setExecutor(new WarpCommandExecutor(plugin, warpsetname));
 			getCommand(warpsetname.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_SETNAME, warpsetname.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_SETNAME, warpsetname.getCommandString().trim());
 			
 			CommandConstructor warpsetposition = new CommandConstructor(plugin, "warpsetposition", false);
 			
 			registerCommand(warpsetposition.getPath(), warpsetposition.getName());
 			getCommand(warpsetposition.getName()).setExecutor(new WarpCommandExecutor(plugin, warpsetposition));
 			getCommand(warpsetposition.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_SETPOSITION, warpsetposition.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_SETPOSITION, warpsetposition.getCommandString().trim());
 			
 			CommandConstructor warpsetowner = new CommandConstructor(plugin, "warpsetowner", false);
 			
 			registerCommand(warpsetowner.getPath(), warpsetowner.getName());
 			getCommand(warpsetowner.getName()).setExecutor(new WarpCommandExecutor(plugin, warpsetowner));
 			getCommand(warpsetowner.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_SETOWNER, warpsetowner.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_SETOWNER, warpsetowner.getCommandString().trim());
 			
 			CommandConstructor warpsetpermission = new CommandConstructor(plugin, "warpsetpermission", false);
 			
 			registerCommand(warpsetpermission.getPath(), warpsetpermission.getName());
 			getCommand(warpsetpermission.getName()).setExecutor(new WarpCommandExecutor(plugin, warpsetpermission));
 			getCommand(warpsetpermission.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_SETPERMISSION, warpsetpermission.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_SETPERMISSION, warpsetpermission.getCommandString().trim());
 			
 			CommandConstructor warpsetpassword = new CommandConstructor(plugin, "warpsetpassword", false);
 			
 			registerCommand(warpsetpassword.getPath(), warpsetpassword.getName());
 			getCommand(warpsetpassword.getName()).setExecutor(new WarpCommandExecutor(plugin, warpsetpassword));
 			getCommand(warpsetpassword.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_SETPASSWORD, warpsetpassword.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_SETPASSWORD, warpsetpassword.getCommandString().trim());
 			
 			CommandConstructor warpsetprice = new CommandConstructor(plugin, "warpsetprice", false);
 			
 			registerCommand(warpsetprice.getPath(), warpsetprice.getName());
 			getCommand(warpsetprice.getName()).setExecutor(new WarpCommandExecutor(plugin, warpsetprice));
 			getCommand(warpsetprice.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_SETPRICE, warpsetprice.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_SETPRICE, warpsetprice.getCommandString().trim());
 			
 			CommandConstructor warphidden = new CommandConstructor(plugin, "warphidden", false);
 			
 			registerCommand(warphidden.getPath(), warphidden.getName());
 			getCommand(warphidden.getName()).setExecutor(new WarpCommandExecutor(plugin, warphidden));
 			getCommand(warphidden.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_HIDDEN, warphidden.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_HIDDEN, warphidden.getCommandString().trim());
 			
 			CommandConstructor warpaddmember = new CommandConstructor(plugin, "warpaddmember", false);
 			
 			registerCommand(warpaddmember.getPath(), warpaddmember.getName());
 			getCommand(warpaddmember.getName()).setExecutor(new WarpCommandExecutor(plugin, warpaddmember));
 			getCommand(warpaddmember.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_ADDMEMBER, warpaddmember.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_ADDMEMBER, warpaddmember.getCommandString().trim());
 			
 			CommandConstructor warpremovemember = new CommandConstructor(plugin, "warpremovemember", false);
 			
 			registerCommand(warpremovemember.getPath(), warpremovemember.getName());
 			getCommand(warpremovemember.getName()).setExecutor(new WarpCommandExecutor(plugin, warpremovemember));
 			getCommand(warpremovemember.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_REMOVEMEMBER, warpremovemember.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_REMOVEMEMBER, warpremovemember.getCommandString().trim());
 			
 			CommandConstructor warpaddblacklist = new CommandConstructor(plugin, "warpaddblacklist", false);
 			
 			registerCommand(warpaddblacklist.getPath(), warpaddblacklist.getName());
 			getCommand(warpaddblacklist.getName()).setExecutor(new WarpCommandExecutor(plugin, warpaddblacklist));
 			getCommand(warpaddblacklist.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_ADDBLACKLIST, warpaddblacklist.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_ADDBLACKLIST, warpaddblacklist.getCommandString().trim());
 			
 			CommandConstructor warpremoveblacklist = new CommandConstructor(plugin, "warpremoveblacklist", false);
 			
 			registerCommand(warpremoveblacklist.getPath(), warpremoveblacklist.getName());
 			getCommand(warpremoveblacklist.getName()).setExecutor(new WarpCommandExecutor(plugin, warpremoveblacklist));
 			getCommand(warpremoveblacklist.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_REMOVEBLACKLIST, warpremoveblacklist.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_REMOVEBLACKLIST, warpremoveblacklist.getCommandString().trim());
 			
 			CommandConstructor warpsetcategory = new CommandConstructor(plugin, "warpsetcategory", false);
 			
 			registerCommand(warpsetcategory.getPath(), warpsetcategory.getName());
 			getCommand(warpsetcategory.getName()).setExecutor(new WarpCommandExecutor(plugin, warpsetcategory));
 			getCommand(warpsetcategory.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_SETCATEGORY, warpsetcategory.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_SETCATEGORY, warpsetcategory.getCommandString().trim());
 			
 			CommandConstructor warpsdeleteserverworld = new CommandConstructor(plugin, "warpsdeleteserverworld", false);
 			
 			registerCommand(warpsdeleteserverworld.getPath(), warpsdeleteserverworld.getName());
 			getCommand(warpsdeleteserverworld.getName()).setExecutor(new WarpCommandExecutor(plugin, warpsdeleteserverworld));
 			getCommand(warpsdeleteserverworld.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.WARP_DELETESERVERWORLD, warpsdeleteserverworld.getCommandString());
+			BTMSettings.settings.addCommands(KeyHandler.WARP_DELETESERVERWORLD, warpsdeleteserverworld.getCommandString().trim());
 			
 			addingHelps(warp, warps, warpcreate, warpremove, warplist, warpinfo, warpsetname, warpsetowner, warpsetposition,
 					warpsetpassword, warpsetprice, warphidden, warpaddmember, warpremovemember, warpaddblacklist, warpremoveblacklist,
