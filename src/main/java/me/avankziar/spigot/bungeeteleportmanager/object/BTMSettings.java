@@ -182,6 +182,7 @@ public class BTMSettings
 	
 	public void addCommands(String key, String commandString)
 	{
+		BungeeTeleportManager.log.info("Register Command "+commandString+" with Key "+key);
 		if(commands.containsKey(key))
 		{
 			commands.replace(key, commandString);
