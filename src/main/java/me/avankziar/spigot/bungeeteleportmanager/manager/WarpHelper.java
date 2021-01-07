@@ -358,7 +358,7 @@ public class WarpHelper
 		player.spigot().sendMessage(ChatApi.clickEvent(
 				plugin.getYamlHandler().getL().getString("CmdWarp.WarpCreate")
 				.replace("%name%", warpName),
-				ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+warpName));
+				ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warpName));
 		plugin.getUtility().setWarpsTabCompleter(player);
 		return;
 	}
@@ -488,7 +488,7 @@ public class WarpHelper
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						hidden+warp.getName()+" &9| ",
-						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+warp.getName(),
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
 						+owner
@@ -498,7 +498,7 @@ public class WarpHelper
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						blacklist+warp.getName()+" &9| ",
-						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+warp.getName(),
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
 						HoverEvent.Action.SHOW_TEXT, 
 						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
 						+owner
@@ -508,7 +508,7 @@ public class WarpHelper
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						sameWorld+warp.getName()+" &9| ",
-						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+warp.getName(),
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
 						HoverEvent.Action.SHOW_TEXT, 
 						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
 						+owner
@@ -518,7 +518,7 @@ public class WarpHelper
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						sameServer+warp.getName()+" &9| ",
-						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+warp.getName(),
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
 						HoverEvent.Action.SHOW_TEXT, 
 						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
 						+owner
@@ -528,7 +528,7 @@ public class WarpHelper
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						infoElse+warp.getName()+" &9| ",
-						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+warp.getName(),
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
 						HoverEvent.Action.SHOW_TEXT, 
 						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
 						+owner
@@ -642,7 +642,7 @@ public class WarpHelper
 				{
 					map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 							hidden+warp.getName()+" &9| ",
-							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+warp.getName(),
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
 							HoverEvent.Action.SHOW_TEXT, 
 							plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
 							+owner
@@ -653,7 +653,7 @@ public class WarpHelper
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						blacklist+warp.getName()+" &9| ",
-						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+warp.getName(),
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
 						HoverEvent.Action.SHOW_TEXT, 
 						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
 						+owner
@@ -663,7 +663,7 @@ public class WarpHelper
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						sameWorld+warp.getName()+" &9| ",
-						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+warp.getName(),
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
 						HoverEvent.Action.SHOW_TEXT, 
 						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
 						+owner
@@ -673,7 +673,7 @@ public class WarpHelper
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						sameServer+warp.getName()+" &9| ",
-						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+warp.getName(),
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
 						HoverEvent.Action.SHOW_TEXT, 
 						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
 						+owner
@@ -683,7 +683,7 @@ public class WarpHelper
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						infoElse+warp.getName()+" &9| ",
-						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+warp.getName(),
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
 						HoverEvent.Action.SHOW_TEXT, 
 						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
 						+owner

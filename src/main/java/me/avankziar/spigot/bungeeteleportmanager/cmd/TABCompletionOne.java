@@ -28,11 +28,12 @@ public class TABCompletionOne implements TabCompleter
 	{
 		Player player = (Player)sender;
 		List<String> list = new ArrayList<String>();
-		if (cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME))
-				|| cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_DEL))
-				|| cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_SET))
-				|| cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_REMOVE))
-				|| cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_CREATE))) 
+		String command = "/"+cmd.getName();
+		if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME))
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_DEL))
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_SET))
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_REMOVE))
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_CREATE))) 
 		{
 			if(args.length == 1)
 			{
@@ -68,7 +69,7 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT))) 
+		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT))) 
 		{
 			if(args.length == 1)
 			{
@@ -98,8 +99,8 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP))
-				|| cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_INFO))) 
+		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP))
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_INFO))) 
 		{
 			if(args.length == 1)
 			{
@@ -129,11 +130,11 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPA)) 
-				|| cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAHERE))
-				|| cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TP)) 
-				|| cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPHERE))
-				|| cmd.getName().equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAIGNORE))) 
+		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPA)) 
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAHERE))
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TP)) 
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPHERE))
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAIGNORE))) 
 		{
 			if(args.length == 1)
 			{

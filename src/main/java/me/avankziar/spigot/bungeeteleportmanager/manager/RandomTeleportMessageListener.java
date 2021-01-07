@@ -62,10 +62,14 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
                 	new BukkitRunnable()
 					{
             			int i = 0;
-            			final Location loc = plugin.getRandomTeleportHandler().getSaveTeleport(rt);
+            			final Location loc = plugin.getRandomTeleportHandler().getRandomTeleport(rt);
 						@Override
 						public void run()
 						{
+							if(loc == null)
+	            			{
+	            				player.sendMessage(ChatApi.tl("&cERROR!"));
+	            			}
 							if(plugin.getServer().getPlayer(playerName) != null)
 							{
 								if(plugin.getServer().getPlayer(playerName).isOnline())

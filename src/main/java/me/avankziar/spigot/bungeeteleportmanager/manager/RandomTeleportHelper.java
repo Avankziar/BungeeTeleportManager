@@ -32,15 +32,15 @@ public class RandomTeleportHelper
 	
 	public void randomTeleportTo(Player player, String[] args)
 	{
+		if(cooldown.containsKey(player) && cooldown.get(player) > System.currentTimeMillis())
+		{
+			return;
+		}
 		new BukkitRunnable()
 		{
 			@Override
 			public void run()
 			{
-				if(cooldown.containsKey(player) && cooldown.get(player) > System.currentTimeMillis())
-				{
-					return;
-				}
 				if(args.length != 0)
 				{
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
@@ -131,42 +131,45 @@ public class RandomTeleportHelper
 		int radius = 0;
 		if(function[1].contains("[]"))
 		{
-			if(function[1].split("[]").length != 2)
+			//split geht auch mit regular Expressions. Um dies zu verhindern vor jedem Zeichen \\ einbauen.
+			String[] farray = function[1].split("\\[\\]");
+			if(farray.length != 2)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
-			if(function[1].split("[]")[0].contains(";"))
+			if(!farray[0].contains(";") || !farray[1].contains(";"))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			point1 = new ServerLocation(targetServer, targetWorld,
-					Double.parseDouble(function[1].split("[]")[0].split(";")[0]),
-					Double.parseDouble(function[1].split("[]")[0].split(";")[1]),
-					Double.parseDouble(function[1].split("[]")[0].split(";")[2]));
+					Double.parseDouble(farray[0].split(";")[0]),
+					Double.parseDouble(farray[0].split(";")[1]),
+					Double.parseDouble(farray[0].split(";")[2]));
 			point2 = new ServerLocation(targetServer, targetWorld,
-					Double.parseDouble(function[1].split("[]")[1].split(";")[0]),
-					Double.parseDouble(function[1].split("[]")[1].split(";")[1]),
-					Double.parseDouble(function[1].split("[]")[1].split(";")[2]));
+					Double.parseDouble(farray[1].split(";")[0]),
+					Double.parseDouble(farray[1].split(";")[1]),
+					Double.parseDouble(farray[1].split(";")[2]));
 		} else if(function[1].contains("()"))
 		{
-			if(function[1].split("()").length != 2)
+			String[] farray = function[1].split("\\(\\)");
+			if(farray.length != 2)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
-			if(function[1].split("()")[0].contains(";"))
+			if(!farray[0].contains(";") || farray[1].contains(";"))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			point1 = new ServerLocation(targetServer, targetWorld,
-					Double.parseDouble(function[1].split("()")[0].split(";")[0]),
-					Double.parseDouble(function[1].split("()")[0].split(";")[1]),
-					Double.parseDouble(function[1].split("()")[0].split(";")[2]));
+					Double.parseDouble(farray[0].split(";")[0]),
+					Double.parseDouble(farray[0].split(";")[1]),
+					Double.parseDouble(farray[0].split(";")[2]));
 			isArea = false;
-			radius = Integer.parseInt(function[1].split("()")[1]);
+			radius = Integer.parseInt(farray[1]);
 		} else
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
@@ -181,24 +184,32 @@ public class RandomTeleportHelper
 		ArrayList<String> possibleTargets = new ArrayList<>();
 		for(String rtcode : rtcodes)
 		{
-			String[] targetgroup = rtcode.split(">>");
+			String[] targetgroup = rtcode.split("\\>\\>");
 			if(targetgroup.length != 2)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
-			String formWorld = targetgroup[0];
-			if(player.getWorld().getName().equals(formWorld))
+			String fromWorld = targetgroup[0];
+			if(player.getWorld().getName().equals(fromWorld))
 			{
 				possibleTargets.add(rtcode);
 			}
 		}
 		if(possibleTargets.size() == 0)
 		{
-			return getSimpleTarget(player, uuid, playername);
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+			return null;
 		}
-		int random = plugin.getRandomTeleportHandler().getRandomWithExclusion(new Random(), 0, possibleTargets.size()-1);
-		String rtcode = possibleTargets.get(random);
+		String rtcode = null;
+		if(possibleTargets.size() == 1)
+		{
+			rtcode = possibleTargets.get(0);
+		} else
+		{
+			int random = plugin.getRandomTeleportHandler().getRandom(new Random(), 0, possibleTargets.size()-1);
+			rtcode = possibleTargets.get(random);
+		}
 		String[] function = rtcode.split("@");
 		if(function.length != 2)
 		{
@@ -210,12 +221,13 @@ public class RandomTeleportHelper
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
 			return null;
 		}
-		if(!function[0].split(">>")[1].contains(";"))
+		String[] farrayOne = function[0].split("\\>\\>");
+		if(!farrayOne[1].contains(";"))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
 			return null;
 		}
-		String[] subfunction = function[0].split(">>")[1].split(";");
+		String[] subfunction = farrayOne[1].split(";");
 		if(subfunction.length != 2)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
@@ -229,42 +241,44 @@ public class RandomTeleportHelper
 		int radius = 0;
 		if(function[1].contains("[]"))
 		{
-			if(function[1].split("[]").length != 2)
+			String[] farray = function[1].split("\\[\\]");
+			if(farray.length != 2)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
-			if(function[1].split("[]")[0].contains(";"))
+			if(!farray[0].contains(";") || !farray[1].contains(";"))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			point1 = new ServerLocation(targetServer, targetWorld,
-					Double.parseDouble(function[1].split("[]")[0].split(";")[0]),
-					Double.parseDouble(function[1].split("[]")[0].split(";")[1]),
-					Double.parseDouble(function[1].split("[]")[0].split(";")[2]));
+					Double.parseDouble(farray[0].split(";")[0]),
+					Double.parseDouble(farray[0].split(";")[1]),
+					Double.parseDouble(farray[0].split(";")[2]));
 			point2 = new ServerLocation(targetServer, targetWorld,
-					Double.parseDouble(function[1].split("[]")[1].split(";")[0]),
-					Double.parseDouble(function[1].split("[]")[1].split(";")[1]),
-					Double.parseDouble(function[1].split("[]")[1].split(";")[2]));
+					Double.parseDouble(farray[1].split(";")[0]),
+					Double.parseDouble(farray[1].split(";")[1]),
+					Double.parseDouble(farray[1].split(";")[2]));
 		} else if(function[1].contains("()"))
 		{
-			if(function[1].split("()").length != 2)
+			String[] farray = function[1].split("\\(\\)");
+			if(farray.length != 2)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
-			if(function[1].split("()")[0].contains(";"))
+			if(!farray[0].contains(";") || farray[1].contains(";"))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			point1 = new ServerLocation(targetServer, targetWorld,
-					Double.parseDouble(function[1].split("()")[0].split(";")[0]),
-					Double.parseDouble(function[1].split("()")[0].split(";")[1]),
-					Double.parseDouble(function[1].split("()")[0].split(";")[2]));
+					Double.parseDouble(farray[0].split(";")[0]),
+					Double.parseDouble(farray[0].split(";")[1]),
+					Double.parseDouble(farray[0].split(";")[2]));
 			isArea = false;
-			radius = Integer.parseInt(function[1].split("()")[1]);
+			radius = Integer.parseInt(farray[1]);
 		} else
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));

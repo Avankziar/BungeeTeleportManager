@@ -11,7 +11,7 @@ public class MatchApi
 		{
 			return false;
 		}
-		if(numberstring.matches("(([0-9]+[.]?[0-9]*)|([0-9]*[.]?[0-9]+))"))
+		if(isLong(numberstring) || isFloat(numberstring))
 		{
 			return true;
 		}
@@ -34,6 +34,22 @@ public class MatchApi
 		}
 	}
 	
+	public static boolean isLong(String number)
+	{
+		if(number == null)
+		{
+			return false;
+		}
+		try
+		{
+			Long.parseLong(number);
+			return true;
+		} catch (Exception e) 
+		{
+			return false;
+		}
+	}
+	
 	public static boolean isDouble(String number)
 	{
 		if(number == null)
@@ -43,6 +59,22 @@ public class MatchApi
 		try
 		{
 			Double.parseDouble(number);
+			return true;
+		} catch (Exception e) 
+		{
+			return false;
+		}
+	}
+	
+	public static boolean isFloat(String number)
+	{
+		if(number == null)
+		{
+			return false;
+		}
+		try
+		{
+			Float.parseFloat(number);
 			return true;
 		} catch (Exception e) 
 		{

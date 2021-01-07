@@ -29,7 +29,6 @@ public class RandomTeleportHandler
 	
 	public void sendPlayerToRT(Player player, RandomTeleport rt, String playername, String uuid)
 	{
-		
 		if(rt.getPoint1().getServer().equals(plugin.getYamlHandler().getConfig().getString("ServerName")))
 		{
 			BackHandler bh = new BackHandler(plugin);
@@ -40,7 +39,12 @@ public class RandomTeleportHandler
 			{
 				delay = Math.floorDiv(delayed, 50);
 			}
-			final Location loc = getSaveTeleport(rt);
+			Location loc = getRandomTeleport(rt);
+			if(loc == null)
+			{
+				player.sendMessage(ChatApi.tl("&cERROR!"));
+				return;
+			}
 			new BukkitRunnable()
 			{
 				@Override
@@ -92,81 +96,356 @@ public class RandomTeleportHandler
 		return;
 	}
 	
-	public Location getSaveTeleport(RandomTeleport rt)
+	public Location getRandomTeleport(RandomTeleport rt)
 	{
 		Location loc = null;
-		if(rt.isArea())
+		while(loc == null)
 		{
-			for(int i = 0; i < 10; i++)
+			if(rt.isArea())
 			{
-				double x = getRandomWithExclusion(new Random(), -rt.getRadius(), rt.getRadius()*2);
+				double x = Math.min(rt.getPoint1().getX(), rt.getPoint2().getX()) + 
+						getRandom(new Random(), 0,
+							(int) Math.max(getPositiveInt(rt.getPoint1().getX()), getPositiveInt(rt.getPoint2().getX())) -
+							(int) Math.min(getPositiveInt(rt.getPoint1().getX()), getPositiveInt(rt.getPoint2().getX())));
 				double y = Math.max(rt.getPoint1().getY(), rt.getPoint2().getY());
 				double minY = Math.min(rt.getPoint1().getY(), rt.getPoint2().getY());
-				double z = rt.getPoint1().getZ() + getRandomWithExclusion(new Random(), -rt.getRadius(), rt.getRadius()*2);
-				loc = new Location(Bukkit.getWorld(rt.getPoint1().getWordName()), x, y, z);
-				y = isSafe(loc, (int) minY);
-				if(y != 0)
-				{
-					loc = new Location(Bukkit.getWorld(rt.getPoint1().getWordName()), x, y, z);
-					break;
-				}
-			}
-		} else
-		{
-			for(int i = 0; i < 10; i++)
+				double z = Math.min(rt.getPoint1().getZ(), rt.getPoint2().getZ()) + 
+						getRandom(new Random(), 0,
+							(int) Math.max(getPositiveInt(rt.getPoint1().getZ()), getPositiveInt(rt.getPoint2().getZ())) -
+							(int) Math.min(getPositiveInt(rt.getPoint1().getZ()), getPositiveInt(rt.getPoint2().getZ())));
+				loc = isSafe(new Location(Bukkit.getWorld(rt.getPoint1().getWordName()), x, y, z), minY);
+			} else
 			{
-				double x = rt.getPoint1().getX() + getRandomWithExclusion(new Random(), -rt.getRadius(), rt.getRadius()*2);
+				double x = rt.getPoint1().getX() + getRoll()*getRandom(new Random(), 0, rt.getRadius());
 				double y = rt.getPoint1().getY() + rt.getRadius();
 				double minY = rt.getPoint1().getY() - rt.getRadius();
-				double z = rt.getPoint1().getZ() + getRandomWithExclusion(new Random(), -rt.getRadius(), rt.getRadius()*2);
-				loc = new Location(Bukkit.getWorld(rt.getPoint1().getWordName()), x, y, z);
-				y = isSafe(loc, (int) minY);
-				if(y != 0)
-				{
-					loc = new Location(Bukkit.getWorld(rt.getPoint1().getWordName()), x, y, z);
-					break;
-				}
+				if(minY <= 0) {minY = 1;}
+				double z = rt.getPoint1().getZ() + getRoll()*getRandom(new Random(), 0, rt.getRadius());
+				loc = isSafe(new Location(Bukkit.getWorld(rt.getPoint1().getWordName()), x, y, z), minY);
 			}
-			
 		}
+		BungeeTeleportManager.log.info("l: | "+loc.getX()+" | "+loc.getY()+" | "+loc.getZ());
 		return loc;
 	}
 	
-	private int isSafe(Location loc, int minY)
+	private Location isSafe(Location loc, double minY)
 	{
 		Location l = loc;
-		while(l.getBlockY() != minY)
+		Location up = new Location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ());
+		Location down = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
+		Location bottom = new Location(l.getWorld(), l.getX(), l.getY() - 2, l.getZ());
+		while(l.getY() > minY)
 		{
-			Block b = l.getBlock();
-			if(b.getType() == Material.AIR)
+			Block bl = l.getBlock();
+			Block bup = up.getBlock();
+			Block bdown = down.getBlock();
+			Block bbottom = bottom.getBlock();
+			if(bbottom.getType().isSolid() && isTransparant(bdown) && isTransparant(bl))
 			{
-				Location l2 = l;
-				l2.add(0, -1.0, 0);
-				Block b2 = l2.getBlock();
-				if(b2.getType() != Material.AIR 
-					&& b2.getType() != Material.LAVA 
-					&& b2.getType() != Material.WATER)
-				{
-					return l.getBlockY();
-				}
+				return new Location(loc.getWorld(), bottom.getX(), down.getY(), bottom.getZ());
+			} else if(bdown.getType().isSolid() && isTransparant(bl) && isTransparant(bup))
+			{
+				return new Location(loc.getWorld(), down.getX(), l.getY(), down.getZ());
+			} else
+			{
+				/*BungeeTeleportManager.log.info("bottom: "+bbottom.getType().toString()+" | "+bottom.getX()+" | "+bottom.getY()+" | "+bottom.getZ());
+				BungeeTeleportManager.log.info("down: "+bdown.getType().toString()+" | "+down.getX()+" | "+down.getY()+" | "+down.getZ());
+				BungeeTeleportManager.log.info("l: "+bl.getType().toString()+" | "+l.getX()+" | "+l.getY()+" | "+l.getZ());
+				BungeeTeleportManager.log.info("up: "+bup.getType().toString()+" | "+up.getX()+" | "+up.getY()+" | "+up.getZ());*/
 			}
-			l.add(0, -1.0, 0);
+			l = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
+			up = new Location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ());
+			down = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
+			bottom = new Location(l.getWorld(), l.getX(), l.getY() - 2, l.getZ());
 		}
-		return 0;
+		return null;
 	}
 	
-	public int getRandomWithExclusion(Random rnd, int start, int end, int... exclude)
+	private boolean isTransparant(Block block) 
 	{
-	    int random = start + rnd.nextInt(end - start + 1 - exclude.length);
-	    for (int ex : exclude) 
-	    {
-	        if (random < ex) 
-	        {
-	            break;
-	        }
-		       random++;
+		Material type = block.getType();
+		switch (type) 
+		{
+			case AIR:
+				return true;
+				
+			case ACACIA_BUTTON:
+				return true;
+			case OAK_BUTTON:
+				return true;
+			case DARK_OAK_BUTTON:
+				return true;
+			case BIRCH_BUTTON:
+				return true;
+			case SPRUCE_BUTTON:
+				return true;
+			case JUNGLE_BUTTON:
+				return true;
+			case CRIMSON_BUTTON:
+				return true;
+			case WARPED_BUTTON:
+				return true;
+			case STONE_BUTTON:
+				return true;
+				
+			case ACACIA_TRAPDOOR:
+				return true;
+			case OAK_TRAPDOOR:
+				return true;
+			case DARK_OAK_TRAPDOOR:
+				return true;
+			case BIRCH_TRAPDOOR:
+				return true;
+			case SPRUCE_TRAPDOOR:
+				return true;
+			case JUNGLE_TRAPDOOR:
+				return true;
+			case CRIMSON_TRAPDOOR:
+				return true;
+			case WARPED_TRAPDOOR:
+				return true;
+			case IRON_TRAPDOOR:
+				return true;
+				
+			case ACACIA_LEAVES:
+				return false;
+			case BIRCH_LEAVES:
+				return false;
+			case SPRUCE_LEAVES:
+				return false;
+			case OAK_LEAVES:
+				return false;
+			case DARK_OAK_LEAVES:
+				return false;
+			case JUNGLE_LEAVES:
+				return false;
+				
+			case OAK_PRESSURE_PLATE:
+				return true;
+			case DARK_OAK_PRESSURE_PLATE:
+				return true;
+			case ACACIA_PRESSURE_PLATE:
+				return true;
+			case BIRCH_PRESSURE_PLATE:
+				return true;
+			case SPRUCE_PRESSURE_PLATE:
+				return true;
+			case JUNGLE_PRESSURE_PLATE:
+				return true;
+			case CRIMSON_PRESSURE_PLATE:
+				return true;
+			case WARPED_PRESSURE_PLATE:
+				return true;
+			case STONE_PRESSURE_PLATE:
+				return true;
+			case LIGHT_WEIGHTED_PRESSURE_PLATE:
+				return true;
+			case HEAVY_WEIGHTED_PRESSURE_PLATE:
+				return true;
+				
+			case ACACIA_SIGN:
+				return true;
+			case BIRCH_SIGN:
+				return true;
+			case SPRUCE_SIGN:
+				return true;
+			case OAK_SIGN:
+				return true;
+			case DARK_OAK_SIGN:
+				return true;
+			case JUNGLE_SIGN:
+				return true;
+			case CRIMSON_SIGN:
+				return true;
+			case WARPED_SIGN:
+				return true;
+				
+			case ACACIA_WALL_SIGN:
+				return true;
+			case BIRCH_WALL_SIGN:
+				return true;
+			case SPRUCE_WALL_SIGN:
+				return true;
+			case OAK_WALL_SIGN:
+				return true;
+			case DARK_OAK_WALL_SIGN:
+				return true;
+			case JUNGLE_WALL_SIGN:
+				return true;
+			case CRIMSON_WALL_SIGN:
+				return true;
+			case WARPED_WALL_SIGN:
+				return true;
+			case POWERED_RAIL:
+				return true;
+			case BLACK_CARPET:
+				return true;
+			case BLUE_CARPET:
+				return true;
+			case BROWN_CARPET:
+				return true;
+			case CYAN_CARPET:
+				return true;
+			case GRAY_CARPET:
+				return true;
+			case GREEN_CARPET:
+				return true;
+			case LIGHT_BLUE_CARPET:
+				return true;
+			case LIGHT_GRAY_CARPET:
+				return true;
+			case LIME_CARPET:
+				return true;
+			case MAGENTA_CARPET:
+				return true;
+			case ORANGE_CARPET:
+				return true;
+			case PINK_CARPET:
+				return true;
+			case PURPLE_CARPET:
+				return true;
+			case RED_CARPET:
+				return true;
+			case WHITE_CARPET:
+				return true;
+			
+			case ACTIVATOR_RAIL:
+				return true;
+			case ALLIUM:
+				return true;
+			case ARMOR_STAND:
+				return true;
+			case AZURE_BLUET:
+				return true;
+			case BLUE_ORCHID:
+				return true;
+			case BRAIN_CORAL:
+				return true;
+			case BRAIN_CORAL_FAN:
+				return true;
+			case BREWING_STAND:
+				return true;
+			case BUBBLE_CORAL:
+				return true;
+			case BUBBLE_CORAL_FAN:
+				return true;
+			case COBWEB:
+				return true;
+			case DAYLIGHT_DETECTOR:
+				return true;
+			case DEAD_BUSH:
+				return true;
+			case DETECTOR_RAIL:
+				return true;
+			case END_ROD:
+				return true;
+			case FERN:
+				return true;
+			case FIRE_CORAL:
+				return true;
+			case FIRE_CORAL_FAN:
+				return true;
+			case GRASS:
+				return true;
+			
+			case HORN_CORAL:
+				return true;
+			case HORN_CORAL_FAN:
+				return true;
+			
+			case LADDER:
+				return true;
+			case KELP:
+				return true;
+			case LARGE_FERN:
+				return true;
+			case LEVER:
+				return true;
+			case LILAC:
+				return true;
+			case LILY_PAD:
+				return true;
+			case ORANGE_TULIP:
+				return true;
+			case OXEYE_DAISY:
+				return true;
+			case POPPY:
+				return true;
+			case RAIL:
+				return true;
+			case RED_MUSHROOM:
+				return true;
+			case RED_TULIP:
+				return true;
+			case REDSTONE:
+				return true;
+			case REDSTONE_TORCH:
+				return true;
+			case REPEATER:
+				return true;
+			case ROSE_BUSH:
+				return true;
+			case SEA_PICKLE:
+				return true;
+			case SEAGRASS:
+				return true;
+			case SNOW:
+				return true;
+			case STRING:
+				return true;
+			case TALL_GRASS:
+				return true;
+			case TORCH:
+				return true;
+			case TRIPWIRE_HOOK:
+				return true;
+			case TUBE_CORAL:
+				return true;
+			case TUBE_CORAL_FAN:
+				return true;
+			case VINE:
+				return true;
+			case WHITE_TULIP:
+				return true;
+			case REDSTONE_WALL_TORCH:
+				return true;
+			case WALL_TORCH:
+				return true;
+			case REDSTONE_WIRE:
+				return true;
+			default:
+				return false;
 		}
-		   return random;
+	}
+	
+	private int getRoll()
+	{
+		int i = getRandom(new Random(), 0, 100);
+		if(i <= 50)
+		{
+			return -1;
+		} else
+		{
+			return 1;
+		}
+	}
+	
+	public int getRandom(Random rnd, int start, int end)
+	{
+	    int random = start + rnd.nextInt(end - start + 1);
+		return random;
+	}
+	
+	private double getPositiveInt(double number)
+	{
+		if(number > 0)
+		{
+			return number;
+		} else
+		{
+			double n = number * -1;
+			return n;
+		}
 	}
 
 }

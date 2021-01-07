@@ -178,7 +178,7 @@ public class SavePointHelper
 				map = plugin.getSavePointHandler().mapping(sp, map, ChatApi.apiChat(
 						sameWorld+sp.getSavePointName()+" &9| ",
 						ClickEvent.Action.RUN_COMMAND,
-						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+sp.getSavePointName(),
+						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName(),
 						HoverEvent.Action.SHOW_TEXT, 
 						plugin.getYamlHandler().getL().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
@@ -187,7 +187,7 @@ public class SavePointHelper
 				map = plugin.getSavePointHandler().mapping(sp, map, ChatApi.apiChat(
 						sameServer+sp.getSavePointName()+" &9| ",
 						ClickEvent.Action.RUN_COMMAND,
-						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+sp.getSavePointName(),
+						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName(),
 						HoverEvent.Action.SHOW_TEXT, 
 						plugin.getYamlHandler().getL().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
@@ -196,7 +196,7 @@ public class SavePointHelper
 				map = plugin.getSavePointHandler().mapping(sp, map, ChatApi.apiChat(
 						infoElse+sp.getSavePointName()+" &9| ",
 						ClickEvent.Action.RUN_COMMAND,
-						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+sp.getSavePointName(),
+						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName(),
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
@@ -252,7 +252,7 @@ public class SavePointHelper
 						"`server` ASC, `world` ASC", start, quantity));
 		String server = plugin.getYamlHandler().getConfig().getString("ServerName");
 		String world = player.getLocation().getWorld().getName();
-		int last = plugin.getMysqlHandler().lastID(MysqlHandler.Type.WARP);
+		int last = plugin.getMysqlHandler().lastID(MysqlHandler.Type.SAVEPOINT);
 		boolean lastpage = false;
 		if((start+quantity) > last)
 		{
@@ -273,7 +273,7 @@ public class SavePointHelper
 				map = plugin.getSavePointHandler().mapping(sp, map, ChatApi.apiChat(
 						sameWorld+owner+"&f|"+sameWorld+sp.getSavePointName()+" &9| ",
 						ClickEvent.Action.RUN_COMMAND,
-						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+sp.getSavePointName()+" "+owner,
+						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName()+" "+owner,
 						HoverEvent.Action.SHOW_TEXT, 
 						plugin.getYamlHandler().getL().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
@@ -282,7 +282,7 @@ public class SavePointHelper
 				map = plugin.getSavePointHandler().mapping(sp, map, ChatApi.apiChat(
 						sameServer+owner+"&f|"+sameServer+sp.getSavePointName()+" &9| ",
 						ClickEvent.Action.RUN_COMMAND,
-						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+sp.getSavePointName()+" "+owner,
+						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName()+" "+owner,
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
@@ -291,7 +291,7 @@ public class SavePointHelper
 				map = plugin.getSavePointHandler().mapping(sp, map, ChatApi.apiChat(
 						infoElse+owner+"&f|"+infoElse+sp.getSavePointName()+" &9| ",
 						ClickEvent.Action.RUN_COMMAND,
-						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+sp.getSavePointName()+" "+owner,
+						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName()+" "+owner,
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
@@ -321,7 +321,7 @@ public class SavePointHelper
 	
 	public void savePointCreate(CommandSender sender, String[] args)
 	{
-		if(args.length != 2 && args.length != 8)
+		if(args.length != 2 && args.length != 9)
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			sender.spigot().sendMessage(ChatApi.clickEvent(
@@ -332,6 +332,7 @@ public class SavePointHelper
 		UUID uuid = null;
 		String playerName = args[0];
 		String savePointName = args[1];
+		BungeeTeleportManager.log.info("playerName: "+playerName+" | spn: "+savePointName); //FIXME
 		String server = "";
 		String world = "";
 		double x = 0.0;
@@ -355,7 +356,7 @@ public class SavePointHelper
 			z = otherplayer.getLocation().getZ();
 			yaw = otherplayer.getLocation().getYaw();
 			pitch = otherplayer.getLocation().getPitch();
-		} else if(args.length == 8)
+		} else if(args.length == 9)
 		{
 			uuid = Utility.convertNameToUUID(playerName);
 			if(uuid == null)
@@ -368,10 +369,10 @@ public class SavePointHelper
 			if(!MatchApi.isNumber(args[4])
 					|| !MatchApi.isNumber(args[5])
 					|| !MatchApi.isNumber(args[6])
-					|| !MatchApi.isNumber(args[6])
-					|| !MatchApi.isNumber(args[7]))
+					|| !MatchApi.isNumber(args[7])
+					|| !MatchApi.isNumber(args[8]))
 			{
-				sender.sendMessage(plugin.getYamlHandler().getL().getString("NoNumberII"));
+				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoNumberII")));
 				return;
 			}
 			x = Double.parseDouble(args[4]);

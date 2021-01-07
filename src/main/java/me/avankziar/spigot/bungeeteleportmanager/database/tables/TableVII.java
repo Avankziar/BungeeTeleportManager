@@ -75,7 +75,7 @@ public interface TableVII
 			{
 				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameVII 
 						+ "`(`player_uuid`, `player_name`, `savepoint_name`,"
-						+ " `server`,`world`, `x`, `y`, `z`, `yaw`, `pitch`) " 
+						+ " `server`, `world`, `x`, `y`, `z`, `yaw`, `pitch`) " 
 						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				preparedStatement = conn.prepareStatement(sql);
 		        preparedStatement.setString(1, h.getUuid().toString());
