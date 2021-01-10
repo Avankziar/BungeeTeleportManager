@@ -97,12 +97,12 @@ public class StaticValues
 		PERM_BYPASS_HOME_DELAY = "btm.bypass.home.delay",
 		
 		//RandomTeleport
-		PERM_BYPASS_RANDOMTELEPORT = "btm.bypass.randomteleport.admin",
 		PERM_BYPASS_RANDOMTELEPORT_DELAY = "btm.bypass.randomteleport.delay",
 		PERM_BYPASS_RANDOMTELEPORT_COST = "btm.bypass.randomteleport.cost",
 		
 		//SavePoint Bypass
 		PERM_BYPASS_SAVEPOINT_OTHER = "btm.bypass.savepoint.other",
+		PERM_BYPASS_SAVEPOINTS_OTHER = "btm.bypass.savepoint.savepoints.other",
 		PERM_BYPASS_SAVEPOINT_DELAY = "btm.bypass.savepoint.delay",
 	
 		//Teleport

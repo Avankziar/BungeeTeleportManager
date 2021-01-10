@@ -29,8 +29,6 @@ public class SavePointHandler
 	{
 		if(sp.getLocation().getServer().equals(plugin.getYamlHandler().getConfig().getString("ServerName")))
 		{
-			BackHandler bh = new BackHandler(plugin);
-			bh.sendBackObject(player, bh.getNewBack(player));
 			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.SavePoint", 2000);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_DELAY))
@@ -45,11 +43,11 @@ public class SavePointHandler
 					player.teleport(ConvertHandler.getLocation(sp.getLocation()));
 					if(last)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.spToLast")
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.WarpToLast")
 								.replace("%savepoint%", sp.getSavePointName())));
 					} else
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.spTo")
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.WarpTo")
 								.replace("%savepoint%", sp.getSavePointName())));
 					}
 				}

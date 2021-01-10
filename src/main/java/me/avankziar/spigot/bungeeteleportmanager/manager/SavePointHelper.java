@@ -61,21 +61,24 @@ public class SavePointHelper
 						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.LastSavePointDontExist")));
 						return;
 					}
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.RequestInProgress")));
 					plugin.getSavePointHandler().sendPlayerToSavePoint(player, sp, player.getName(), player.getUniqueId().toString(), true);
 				} else if(args.length >= 1)
 				{
-					String savepointname = args[1];
+					String savepointname = args[0];
 					String otherplayeruuid = player.getUniqueId().toString();
-					if(args.length >= 2 && player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_OTHER) && !args[2].equals(player.getName()))
+					if(args.length >= 2 && player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_OTHER) 
+							&& !args[1].equals(player.getName()))
 					{
-						UUID uuid = Utility.convertNameToUUID(args[2]);
+						UUID uuid = Utility.convertNameToUUID(args[1]);
 						if(uuid == null)
 						{
 							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
 							return;
 						}
 						otherplayeruuid = uuid.toString();
-					} else if(args.length >= 2 && !player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_OTHER) && !args[2].equals(player.getName()))
+					} else if(args.length >= 2 && !player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_OTHER) 
+							&& !args[1].equals(player.getName()))
 					{
 						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPermission")));
 						return;
@@ -86,7 +89,7 @@ public class SavePointHelper
 						if(args.length >= 2)
 						{
 							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.SavePointDontExistOther")
-									.replace("%player%", args[2])
+									.replace("%player%", args[1])
 									.replace("%savepoint%", savepointname)));
 							return;
 						}
@@ -96,6 +99,7 @@ public class SavePointHelper
 					}
 					sp = (SavePoint) plugin.getMysqlHandler().getData(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?",
 							player.getUniqueId().toString(), savepointname);
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.RequestInProgress")));
 					plugin.getSavePointHandler().sendPlayerToSavePoint(player, sp, player.getName(), player.getUniqueId().toString(), false);
 				}
 				return;
@@ -134,7 +138,7 @@ public class SavePointHelper
 			
 		}
 		if(args.length >= 2
-				&& (player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_OTHER) || args[1].equals(player.getName())))
+				&& (player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINTS_OTHER) || args[1].equals(player.getName())))
 		{
 			playername = args[1];
 			UUID uuid = Utility.convertNameToUUID(args[1]);
@@ -332,7 +336,6 @@ public class SavePointHelper
 		UUID uuid = null;
 		String playerName = args[0];
 		String savePointName = args[1];
-		BungeeTeleportManager.log.info("playerName: "+playerName+" | spn: "+savePointName); //FIXME
 		String server = "";
 		String world = "";
 		double x = 0.0;
@@ -436,7 +439,13 @@ public class SavePointHelper
 		}
 		if(savepoints != null)
 		{
-			plugin.getMysqlHandler().deleteData(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?", otherplayername, savepoints);
+			if(!plugin.getMysqlHandler().exist(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?", uuid.toString(), savepoints))
+			{
+				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.SavePointDontExist")
+						.replace("%savepoint%", args[1])));
+				return;
+			}
+			plugin.getMysqlHandler().deleteData(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?", uuid.toString(), savepoints);
 			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.SavePointDelete")
 					.replace("%player%", args[0])
 					.replace("%savepoint%", args[1])));
@@ -449,14 +458,17 @@ public class SavePointHelper
 			}
 		} else
 		{
-			plugin.getMysqlHandler().deleteData(Type.SAVEPOINT, "`player_uuid` = ?", otherplayername);
+			final int count = plugin.getMysqlHandler().countWhereID(Type.SAVEPOINT, "`player_uuid` = ?", uuid.toString());
+			plugin.getMysqlHandler().deleteData(Type.SAVEPOINT, "`player_uuid` = ?", uuid.toString());
 			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.SavePointsDelete")
-					.replace("%player%", args[0])));
+					.replace("%player%", args[0])
+					.replace("%count%", String.valueOf(count))));
 			Player player = Bukkit.getPlayer(uuid);
 			if(player != null)
 			{
 				plugin.getUtility().setSavePointsTabCompleter(player);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.YourSavePointsDelete")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.YourSavePointsDelete")
+						.replace("%count%", String.valueOf(count))));
 			}
 		}
 		

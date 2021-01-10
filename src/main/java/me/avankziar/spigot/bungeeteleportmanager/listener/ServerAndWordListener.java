@@ -76,6 +76,7 @@ public class ServerAndWordListener implements Listener
 			plugin.getUtility().setTpaPlayersTabCompleter();
 		}
 		plugin.getUtility().setHomesTabCompleter(player);
+		plugin.getUtility().setSavePointsTabCompleter(player);
 		plugin.getUtility().setWarpsTabCompleter(player);
 	}
 	
@@ -89,6 +90,7 @@ public class ServerAndWordListener implements Listener
 	public void onQuit(PlayerQuitEvent event)
 	{
 		BungeeTeleportManager.homes.remove(event.getPlayer().getName());
+		BungeeTeleportManager.savepoints.remove(event.getPlayer().getName());
 		BungeeTeleportManager.warps.remove(event.getPlayer().getName());
 	}
 

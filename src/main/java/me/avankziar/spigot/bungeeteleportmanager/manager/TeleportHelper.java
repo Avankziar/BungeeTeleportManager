@@ -321,14 +321,6 @@ public class TeleportHelper
 	
 	public void tpaIgnoreList(Player player, String[] args)
 	{
-		if(args.length != 0)
-		{
-			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
-			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
-			return;
-		}
 		int last = plugin.getMysqlHandler().lastID(MysqlHandler.Type.TELEPORTIGNORE);
 		ArrayList<TeleportIgnore> list = ConvertHandler.convertListVI(plugin.getMysqlHandler().getList(
 				MysqlHandler.Type.TELEPORTIGNORE, "`id` DESC", 0, last,

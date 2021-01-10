@@ -15,6 +15,7 @@ import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler.Mechanics;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.object.BTMSettings;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -67,11 +68,19 @@ public class RandomTeleportHelper
 						return;
 					}
 				}
-				
+				if(ForbiddenHandler.isForbiddenServer(plugin, Mechanics.RANDOMTELEPORT))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ForbiddenRTServer")));
+					return;
+				}
+				if(ForbiddenHandler.isForbiddenWorld(plugin, Mechanics.RANDOMTELEPORT, player))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ForbiddenRTWorld")));
+					return;
+				}
 				double price = plugin.getYamlHandler().getConfig().getDouble("CostPer.RandomTeleport", 0.0);
 				if(price > 0.0 
 						&& !player.hasPermission(StaticValues.PERM_BYPASS_RANDOMTELEPORT_COST)
-						&& !player.hasPermission(StaticValues.PERM_BYPASS_RANDOMTELEPORT)
 						&& plugin.getEco() != null
 						&& plugin.getYamlHandler().getConfig().getBoolean("useVault", false))
 				{

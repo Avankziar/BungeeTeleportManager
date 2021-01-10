@@ -647,11 +647,11 @@ public class BungeeTeleportManager extends JavaPlugin
 		StaticValues.PERM_HOME_COUNTHOMES_SERVER = yamlHandler.getCom().getString(path+"Home.Count.Server");
 		StaticValues.PERM_HOME_COUNTHOMES_GLOBAL = yamlHandler.getCom().getString(path+"Home.Count.Global");
 		
-		StaticValues.PERM_BYPASS_RANDOMTELEPORT = yamlHandler.getCom().getString(path+"RandomTeleport.Admin");
 		StaticValues.PERM_BYPASS_RANDOMTELEPORT_COST = yamlHandler.getCom().getString(path+"RandomTeleport.Cost");
 		StaticValues.PERM_BYPASS_RANDOMTELEPORT_DELAY = yamlHandler.getCom().getString(path+"RandomTeleport.Delay");
 		
 		StaticValues.PERM_BYPASS_SAVEPOINT_OTHER = yamlHandler.getCom().getString(path+"SavePoint.Other");
+		StaticValues.PERM_BYPASS_SAVEPOINTS_OTHER = yamlHandler.getCom().getString(path+"SavePoint.SavePointsOther");
 		StaticValues.PERM_BYPASS_SAVEPOINT_DELAY = yamlHandler.getCom().getString(path+"SavePoint.Delay");
 		
 		StaticValues.PERM_BYPASS_TELEPORT_COST = yamlHandler.getCom().getString(path+"Tp.Cost");

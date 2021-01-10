@@ -145,7 +145,7 @@ public class WarpHelper
 				{
 					owner = warp.getOwner().equals(player.getUniqueId().toString());
 				}
-				if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP))
+				if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP) && !owner)
 				{
 					if(warp.getPermission() != null)
 					{
@@ -175,7 +175,6 @@ public class WarpHelper
 					}
 					if(warp.getPrice() > 0.0 
 							&& !player.hasPermission(StaticValues.PERM_BYPASS_WARP_COST) 
-							&& !owner
 							&& !warp.getMember().contains(player.getUniqueId().toString())
 							&& plugin.getEco() != null
 							&& plugin.getYamlHandler().getConfig().getBoolean("useVault", false))
@@ -281,9 +280,15 @@ public class WarpHelper
 				}
 				if(cooldown.containsKey(player)) cooldown.replace(player, System.currentTimeMillis()+1000L*3);
 				else cooldown.put(player, System.currentTimeMillis()+1000L*3);
+				if(Bukkit.getPlayer(UUID.fromString(playeruuid)) == null)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
+					return;
+				}
+				Player other = Bukkit.getPlayer(UUID.fromString(playeruuid));
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.RequestInProgress")));
-				plugin.getUtility().givesEffect(player, Mechanics.WARP, true, true);
-				plugin.getWarpHandler().sendPlayerToWarp(player, warp, playername, playeruuid);
+				plugin.getUtility().givesEffect(other, Mechanics.WARP, true, true);
+				plugin.getWarpHandler().sendPlayerToWarp(other, warp, playername, playeruuid);
 				return;
 			}
 		}.runTaskAsynchronously(plugin);

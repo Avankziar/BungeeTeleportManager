@@ -550,19 +550,19 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.count.home.global."}));
 		
-		commandsKeys.put(path+"RandomTeleport.Admin"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"btm.bypass.randomteleport.admin"}));
 		commandsKeys.put(path+"RandomTeleport.Cost"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"btm.bypass.randomteleport.delay"}));
+				"btm.bypass.randomteleport.cost"}));
 		commandsKeys.put(path+"RandomTeleport.Delay"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"btm.bypass.randomteleport.cost"}));
+				"btm.bypass.randomteleport.delay"}));
 		
 		commandsKeys.put(path+"SavePoint.Other"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.savepoint.other"}));
+		commandsKeys.put(path+"SavePoint.SavePointsOther"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.bypass.savepoint.savepoints.other"}));
 		commandsKeys.put(path+"SavePoint.Delay"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.savepoint.delay"}));
@@ -699,7 +699,7 @@ public class YamlManager
 				"&c/savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Erstellt einen Speicherpunkt für den Spieler.",
 				"&c/savepointcreate <player> <savepointname> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Create a save point for the player.",
 				"Create a save point for the player. If only player and savepointname set, the position of the player are taken. If the savepoint already exist for the player, it is overriden.");
-		commandsInput("savepointdelete", "savepoindeletet", "btm.cmd.user.savepoint.savepointdelete", 
+		commandsInput("savepointdelete", "savepointdelete", "btm.cmd.user.savepoint.savepointdelete", 
 				"/savepointdelete <Spieler> [SavePointName]", "/savepointdelete ",
 				"&c/savepointdelete <Spieler> [SavePointName] &f| Löscht alle oder einen spezifischen Speicherpunkt von einem Spieler.",
 				"&c/savepointdelete <player> [savepointname] &f| Deletes all or a specific save point from a player.",
@@ -799,8 +799,8 @@ public class YamlManager
 				"Lists all warps visible to you.");
 		commandsInput("warps", "warps", "btm.cmd.user.warp.warps",
 				"/warps [page] [playername]", "/warps ",
-				"&c/warps [Seitenzahl] &f| Zeigt seitenbasiert deine Warppunkte an.",
-				"&c/warps [Seitenzahl] &f| Displays your warp points based on pages.",
+				"&c/warps [Seitenzahl] [Spielername] &f| Zeigt seitenbasiert deine Warppunkte an.",
+				"&c/warps [pagenumber] [playername]&f| Displays your warp points based on pages.",
 				"Displays your warp points based on pages.");
 		commandsInput("warpinfo", "warpinfo", "btm.cmd.user.warp.info", "/warpinfo <warpname>",
 				"/warpinfo ",
@@ -1230,11 +1230,23 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cFEHLER! In der Config existiert ein Fehler bei der Definition vom RandomTeleport!",
 						"&eERROR! In the Config exists an error at the definition of the RandomTeleport!"}));
+		languageKeys.put(path+"ForbiddenRTServer", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAuf diesem Server darf kein RandomTeleport benutzt werden!",
+						"&cNo RandomTeleport may be used on this server!"}));
+		languageKeys.put(path+"ForbiddenRTWorld", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAuf dieser Welt darf kein RandomTeleport benutzt werden!",
+						"&cNo RandomTeleport may be used in this world!"}));
 	}
 	
 	private void langSavePoint() //INFO:LangSavePoint
 	{
 		String path = "CmdSavePoint.";
+		languageKeys.put(path+"RequestInProgress", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Savepointteleport wird bearbeitet!",
+						"&eThe savepoint teleport is being processed!"}));
 		languageKeys.put(path+"LastSavePointDontExist", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu besitzt keine Speicherpunkte.",
@@ -1317,12 +1329,12 @@ public class YamlManager
 						"&eYour savepoint &f%savepoint% &ehas been deleted."}));
 		languageKeys.put(path+"SavePointsDelete", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDie Speicherpunkte vom Spieler &f%player% &ewurden gelöscht.",
-						"&eThe SavePoints of the player &f%player% &ehas been deleted."}));
+						"&eDie Speicherpunkte vom Spieler &f%player% &ewurden gelöscht. Anzahl: &f%count%",
+						"&eThe SavePoints of the player &f%player% &ehas been deleted. Quantity: &f%count%"}));
 		languageKeys.put(path+"YourSavePointsDelete", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDeine Speicherpunkte wurden gelöscht.",
-						"&eYour savepoints has been deleted."}));
+						"&eDeine Speicherpunkte wurden gelöscht. Anzahl: &f%count%",
+						"&eYour savepoints has been deleted. Quantity: &f%count%"}));
 		languageKeys.put(path+"SavePointServerWorldDelete",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast alle Speicherpunkte auf der Welt &f%world% &edes Servers &f%server% &egelöscht! &cGelöschte Datenanzahl = &f%amount%",

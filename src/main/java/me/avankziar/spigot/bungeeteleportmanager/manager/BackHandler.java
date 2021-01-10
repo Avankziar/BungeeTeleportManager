@@ -5,12 +5,14 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.object.BTMSettings;
 
 public class BackHandler
@@ -124,35 +126,56 @@ public class BackHandler
 	
 	public void sendPlayerBack(Player player, Back back)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(back.getLocation().getServer().equals(plugin.getYamlHandler().getConfig().getString("ServerName")))
 		{
-			return;
-		}
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        DataOutputStream out = new DataOutputStream(stream);
-        try {
-			out.writeUTF(StaticValues.BACK_SENDPLAYERBACK);
-			out.writeUTF(back.getUuid().toString());
-			out.writeUTF(back.getName());
-			out.writeUTF(back.getLocation().getServer());
-			out.writeUTF(back.getLocation().getWordName());
-			out.writeDouble(back.getLocation().getX());
-			out.writeDouble(back.getLocation().getY());
-			out.writeDouble(back.getLocation().getZ());
-			out.writeFloat(back.getLocation().getYaw());
-			out.writeFloat(back.getLocation().getPitch());
-			out.writeBoolean(back.isToggle());
+			BackHandler bh = new BackHandler(plugin);
+			bh.sendBackObject(player, bh.getNewBack(player));
+			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Back", 2000);
+			int delay = 1;
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_BACK_DELAY))
 			{
-				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Back", 2000));
-			} else
-			{
-				out.writeInt(25);
+				delay = Math.floorDiv(delayed, 50);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					player.teleport(ConvertHandler.getLocation(back.getLocation()));
+				}
+			}.runTaskLater(plugin, delay);
+		} else
+		{
+			if(!BTMSettings.settings.isBungee())
+			{
+				return;
+			}
+	        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	        DataOutputStream out = new DataOutputStream(stream);
+	        try {
+				out.writeUTF(StaticValues.BACK_SENDPLAYERBACK);
+				out.writeUTF(back.getUuid().toString());
+				out.writeUTF(back.getName());
+				out.writeUTF(back.getLocation().getServer());
+				out.writeUTF(back.getLocation().getWordName());
+				out.writeDouble(back.getLocation().getX());
+				out.writeDouble(back.getLocation().getY());
+				out.writeDouble(back.getLocation().getZ());
+				out.writeFloat(back.getLocation().getYaw());
+				out.writeFloat(back.getLocation().getPitch());
+				out.writeBoolean(back.isToggle());
+				if(!player.hasPermission(StaticValues.PERM_BYPASS_BACK_DELAY))
+				{
+					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Back", 2000));
+				} else
+				{
+					out.writeInt(25);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        player.sendPluginMessage(plugin, StaticValues.BACK_TOBUNGEE, stream.toByteArray());
 		}
-        player.sendPluginMessage(plugin, StaticValues.BACK_TOBUNGEE, stream.toByteArray());
 	}
 	
 	public void sendPlayerDeathBack(Player player, Back back, boolean deleteDeathBack)
