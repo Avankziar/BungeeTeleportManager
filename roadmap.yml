@@ -1,6 +1,8 @@
 Future =========================================================================================================================
 - Wenn der Spieler auf einem Entity sitzt. Sollen die Entitys mitteleportiert werden.
 - Portale
+- EntityTransport
+- EntityTeleport
 
 Build 6 =======================================================================================================================
 - FirstSpawn

@@ -67,8 +67,14 @@ public class YamlHandler
 		//Erstellen aller Werte FÜR die Config.yml
 		plugin.setYamlManager(new YamlManager());
 		
+		File directory = new File(plugin.getDataFolder()+"");
+		if(!directory.exists())
+		{
+			directory.mkdir();
+		}
+		
 		//Initialisierung der config.yml
-		config = new File(plugin.getDataFolder(), "config.yml");
+		config = new File(plugin.getDataFolder(), "default.yml");
 		if(!config.exists()) 
 		{
 			BungeeTeleportManager.log.info("Create config.yml...");
@@ -90,7 +96,7 @@ public class YamlHandler
 		//Niederschreiben aller Werte für die Datei
 		writeFile(config, cfg, plugin.getYamlManager().getConfigKey());
 		
-		languages = cfg.getString("Language", "ENGLISH").toUpperCase();
+		languages = cfg.getString("Language", "ENG").toUpperCase();
 		
 		commands = new File(plugin.getDataFolder(), "commands.yml");
 		if(!commands.exists()) 
