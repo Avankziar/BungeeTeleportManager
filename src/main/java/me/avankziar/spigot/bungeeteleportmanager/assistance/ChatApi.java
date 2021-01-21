@@ -404,7 +404,10 @@ public class ChatApi
     {
         if (supportsHex()) 
         {
-            return ChatColor.of((String)hex).toString();
+        	if(hex.length()>7)
+        	{
+        		return ChatColor.of((String)hex).toString();
+        	}
         }
         Color awtColor = Color.decode(hex);
         ChatColor nearestColor = ChatColor.WHITE;

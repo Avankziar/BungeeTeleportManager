@@ -77,7 +77,7 @@ public interface TableV
 				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameV 
 						+ "`(`warpname`, `server`, `world`, `x`, `y`, `z`, `yaw`, `pitch`,"
 						+ " `hidden`, `owner`, `permission`, `password`, `member`, `blacklist`, `price`, `category`) " 
-						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				String m = null;
 				if(w.getMember() != null)
 				{
