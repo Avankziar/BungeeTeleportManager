@@ -126,56 +126,36 @@ public class BackHandler
 	
 	public void sendPlayerBack(Player player, Back back)
 	{
-		if(back.getLocation().getServer().equals(plugin.getYamlHandler().getConfig().getString("ServerName")))
+		//Hier KEINEN Server internen Teleport!
+		if(!BTMSettings.settings.isBungee())
 		{
-			BackHandler bh = new BackHandler(plugin);
-			bh.sendBackObject(player, bh.getNewBack(player));
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Back", 2000);
-			int delay = 1;
+			return;
+		}
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(stream);
+        try {
+			out.writeUTF(StaticValues.BACK_SENDPLAYERBACK);
+			out.writeUTF(back.getUuid().toString());
+			out.writeUTF(back.getName());
+			out.writeUTF(back.getLocation().getServer());
+			out.writeUTF(back.getLocation().getWordName());
+			out.writeDouble(back.getLocation().getX());
+			out.writeDouble(back.getLocation().getY());
+			out.writeDouble(back.getLocation().getZ());
+			out.writeFloat(back.getLocation().getYaw());
+			out.writeFloat(back.getLocation().getPitch());
+			out.writeBoolean(back.isToggle());
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_BACK_DELAY))
 			{
-				delay = Math.floorDiv(delayed, 50);
-			}
-			new BukkitRunnable()
+				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Back", 2000));
+			} else
 			{
-				@Override
-				public void run()
-				{
-					player.teleport(ConvertHandler.getLocation(back.getLocation()));
-				}
-			}.runTaskLater(plugin, delay);
-		} else
-		{
-			if(!BTMSettings.settings.isBungee())
-			{
-				return;
+				out.writeInt(25);
 			}
-	        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	        DataOutputStream out = new DataOutputStream(stream);
-	        try {
-				out.writeUTF(StaticValues.BACK_SENDPLAYERBACK);
-				out.writeUTF(back.getUuid().toString());
-				out.writeUTF(back.getName());
-				out.writeUTF(back.getLocation().getServer());
-				out.writeUTF(back.getLocation().getWordName());
-				out.writeDouble(back.getLocation().getX());
-				out.writeDouble(back.getLocation().getY());
-				out.writeDouble(back.getLocation().getZ());
-				out.writeFloat(back.getLocation().getYaw());
-				out.writeFloat(back.getLocation().getPitch());
-				out.writeBoolean(back.isToggle());
-				if(!player.hasPermission(StaticValues.PERM_BYPASS_BACK_DELAY))
-				{
-					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Back", 2000));
-				} else
-				{
-					out.writeInt(25);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	        player.sendPluginMessage(plugin, StaticValues.BACK_TOBUNGEE, stream.toByteArray());
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+        player.sendPluginMessage(plugin, StaticValues.BACK_TOBUNGEE, stream.toByteArray());
 	}
 	
 	public void sendPlayerDeathBack(Player player, Back back, boolean deleteDeathBack)

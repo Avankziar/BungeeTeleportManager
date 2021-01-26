@@ -257,7 +257,7 @@ public class BungeeTeleportManager extends JavaPlugin
 			registerCommand(back.getPath(), back.getName());
 			getCommand(back.getName()).setExecutor(new BackCommandExecutor(plugin, back));
 			getCommand(back.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			
+			BTMSettings.settings.addCommands(KeyHandler.BACK, back.getCommandString().trim());
 			addingHelps(back);
 		}
 		
