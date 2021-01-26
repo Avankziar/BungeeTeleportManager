@@ -3,7 +3,7 @@ package main.java.me.avankziar.spigot.bungeeteleportmanager.cmd.tree;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-import main.java.me.avankziar.spigot.bungeeteleportmanager.database.YamlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 
 public class ArgumentConstructor extends BaseConstructor
 {
@@ -15,17 +15,16 @@ public class ArgumentConstructor extends BaseConstructor
     public LinkedHashMap<Integer, ArrayList<String>> tabList;
 
     public ArgumentConstructor(
-    		YamlHandler yamlHandler,
     		String path, int position, int minArgs, int maxArgs, boolean canConsoleAccess,
     		LinkedHashMap<Integer, ArrayList<String>> tablistAddingOtherValue,
     		ArgumentConstructor...argumentConstructors)
     {
-    	super(yamlHandler.getCom().getString(path+".Argument"),
+    	super(BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Argument"),
     			path,
-    			yamlHandler.getCom().getString(path+".Permission"),
-    			yamlHandler.getCom().getString(path+".Suggestion"),
-    			yamlHandler.getCom().getString(path+".CommandString"),
-    			yamlHandler.getCom().getString(path+".HelpInfo"),
+    			BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Permission"),
+    			BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Suggestion"),
+    			BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".CommandString"),
+    			BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".HelpInfo"),
     			canConsoleAccess);
         this.minArgsConstructor = minArgs;
         this.maxArgsConstructor = maxArgs;

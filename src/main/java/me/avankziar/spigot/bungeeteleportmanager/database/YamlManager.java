@@ -207,6 +207,12 @@ public class YamlManager
 		}
 		MechanicSettings:
 		{
+			configKeys.put("Use.Back"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configKeys.put("Use.Deathback"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
 			configKeys.put("Use.Home"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
@@ -439,7 +445,7 @@ public class YamlManager
 					true}));
 			configKeys.put("RandomTeleport.SimpleTarget"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"ServerTarget;WorldTarget@500;50;500[]-500;255;-500"}));
+					"ServerTarget;WorldTarget@500;50;500[]-500;254;-500"}));
 			configKeys.put("RandomTeleport.ComplexTarget"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"WorldOne>>ServerTarget;WorldTarget@500;50;500[]-500;255;-500",

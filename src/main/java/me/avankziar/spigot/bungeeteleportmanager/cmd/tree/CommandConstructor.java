@@ -9,15 +9,15 @@ public class CommandConstructor extends BaseConstructor
     public ArrayList<ArgumentConstructor> subcommands;
     public ArrayList<String> tablist;
 
-	public CommandConstructor(BungeeTeleportManager plugin, String path, boolean canConsoleAccess,
+	public CommandConstructor(String path, boolean canConsoleAccess,
     		ArgumentConstructor...argumentConstructors)
     {
-		super(plugin.getYamlHandler().getCom().getString(path+".Name"),
+		super(BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Name"),
 				path,
-				plugin.getYamlHandler().getCom().getString(path+".Permission"),
-				plugin.getYamlHandler().getCom().getString(path+".Suggestion"),
-				plugin.getYamlHandler().getCom().getString(path+".CommandString"),
-				plugin.getYamlHandler().getCom().getString(path+".HelpInfo"),
+				BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Permission"),
+				BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Suggestion"),
+				BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".CommandString"),
+				BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".HelpInfo"),
 				canConsoleAccess);
         this.subcommands = new ArrayList<>();
         this.tablist = new ArrayList<>();
@@ -26,6 +26,6 @@ public class CommandConstructor extends BaseConstructor
         	this.subcommands.add(ac);
         	this.tablist.add(ac.getName());
         }
-        plugin.getCommandTree().add(this);
+        BungeeTeleportManager.getPlugin().getCommandTree().add(this);
     }
 }

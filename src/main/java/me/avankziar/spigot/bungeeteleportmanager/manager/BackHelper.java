@@ -81,7 +81,7 @@ public class BackHelper
 					}
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdBack.RequestInProgress")));
 					Back newback = plugin.getBackHandler().getNewBack(player);
-					plugin.getUtility().givesEffect(player, Mechanics.BACK, true, false);
+					plugin.getUtility().givesEffect(player, Mechanics.BACK, true, true);
 					plugin.getMysqlHandler().updateData(
 							MysqlHandler.Type.BACK, newback, "`player_uuid` = ?", newback.getUuid().toString());
 					plugin.getBackHandler().sendPlayerBack(player, newback);
@@ -108,7 +108,7 @@ public class BackHelper
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdBack.RequestInProgress")));
 					boolean deleteDeathBackAfterUsing = plugin.getYamlHandler().getConfig().getBoolean("DeleteDeathBackAfterUsing", true);
 					Back newback = plugin.getBackHandler().getNewBack(player);
-					plugin.getUtility().givesEffect(player, Mechanics.DEATHBACK, true, false);
+					plugin.getUtility().givesEffect(player, Mechanics.DEATHBACK, true, true);
 					plugin.getBackHandler().sendPlayerDeathBack(player, newback, deleteDeathBackAfterUsing);
 				} else
 				{

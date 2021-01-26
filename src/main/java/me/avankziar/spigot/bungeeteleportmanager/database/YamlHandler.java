@@ -74,7 +74,7 @@ public class YamlHandler
 		}
 		
 		//Initialisierung der config.yml
-		config = new File(plugin.getDataFolder(), "default.yml");
+		config = new File(plugin.getDataFolder(), "config.yml");
 		if(!config.exists()) 
 		{
 			BungeeTeleportManager.log.info("Create config.yml...");

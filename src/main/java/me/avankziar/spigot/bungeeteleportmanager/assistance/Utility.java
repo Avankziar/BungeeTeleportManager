@@ -272,16 +272,32 @@ public class Utility
 								continue;
 							}
 						}
-						if(player.hasPermission(StaticValues.PERM_BYPASS_WARP))
+						if(w.getPermission() != null)
 						{
-							warps.add(w.getName());
-							continue;
-						}
-						if(w.getMember() != null)
-						{
-							if(w.getMember().contains(player.getUniqueId().toString()))
+							if(player.hasPermission(w.getPermission()))
 							{
 								warps.add(w.getName());
+								continue;
+							} else if(w.getMember().contains(player.getUniqueId().toString()))
+							{
+								warps.add(w.getName());
+								continue;
+							} else if(player.hasPermission(StaticValues.PERM_BYPASS_WARP))
+							{
+								warps.add(w.getName());
+								continue;
+							}
+						} else
+						{
+							if(w.getMember() != null)
+							{
+								if(w.getMember().contains(player.getUniqueId().toString()))
+								{
+									warps.add(w.getName());
+									continue;
+								}
+							} else
+							{
 								continue;
 							}
 						}
@@ -302,6 +318,10 @@ public class Utility
 								warps.add(w.getName());
 								continue;
 							} else if(w.getMember().contains(player.getUniqueId().toString()))
+							{
+								warps.add(w.getName());
+								continue;
+							} else if(player.hasPermission(StaticValues.PERM_BYPASS_WARP))
 							{
 								warps.add(w.getName());
 								continue;

@@ -1,6 +1,7 @@
 Future =========================================================================================================================
 - Wenn der Spieler auf einem Entity sitzt. Sollen die Entitys mitteleportiert werden.
 - Portale
+ - Warps mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Befehl ansteuern zu können.
 - EntityTransport
 - EntityTeleport
 
