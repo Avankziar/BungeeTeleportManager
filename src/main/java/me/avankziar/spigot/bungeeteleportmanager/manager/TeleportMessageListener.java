@@ -282,7 +282,6 @@ public class TeleportMessageListener implements PluginMessageListener
             {
     			e.printStackTrace();
     		}
-            BungeeTeleportManager.log.info(task);
 		}
 	}
 }

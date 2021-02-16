@@ -4,6 +4,7 @@ Future =========================================================================
  - Warps mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Befehl ansteuern zu können.
 - EntityTransport
 - EntityTeleport
+- Zählen, welche Warps/home angesteuert werden, um sowas wie Beliebtheit darstellen zu können.
 
 Build 6 =======================================================================================================================
 - FirstSpawn

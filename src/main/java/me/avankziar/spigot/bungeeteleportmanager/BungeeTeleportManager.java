@@ -7,9 +7,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.event.HandlerList;
@@ -429,7 +431,7 @@ public class BungeeTeleportManager extends JavaPlugin
 			
 			CommandConstructor tpaignorelist = new CommandConstructor("tpaignorelist", false);
 			
-			registerCommand(tpaignorelist.getPath(), tpaccept.getName());
+			registerCommand(tpaignorelist.getPath(), tpaignorelist.getName());
 			getCommand(tpaignorelist.getName()).setExecutor(new TpCommandExecutor(plugin, tpaignorelist));
 			getCommand(tpaignorelist.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			
@@ -756,7 +758,6 @@ public class BungeeTeleportManager extends JavaPlugin
 		} catch (NoSuchMethodException e) {
 			e.printStackTrace();
 		}
-	 
 		return command;
 	}
 	 
@@ -781,9 +782,29 @@ public class BungeeTeleportManager extends JavaPlugin
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
 		}
-	 
 		return commandMap;
 	}
+	
+	@SuppressWarnings("unchecked")
+    public void registerCommand(String cmdName, Command cmd) 
+    		throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException
+    {
+		final Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+		field.setAccessible(true);
+		CommandMap map = (CommandMap) field.get(Bukkit.getServer());
+        if(map.register("secretcraft", cmd) == false)
+        {
+            try {
+                final Field f = map.getClass().getSuperclass().getDeclaredField("knownCommands");
+                f.setAccessible(true);
+                Map<String, Command> cmds = (Map<String, Command>) f.get(map);
+                cmds.replace(cmdName, cmd);
+                f.set(map, cmds);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 	
 	public void ListenerSetup()
 	{
@@ -973,5 +994,5 @@ public class BungeeTeleportManager extends JavaPlugin
 	public void setMysqlPlayers(ArrayList<String> players)
 	{
 		this.players = players;
-	}
+	}	
 }
