@@ -78,8 +78,10 @@ public class WarpHelper
 							if(uuid != null)
 							{
 								playeruuid = uuid.toString();
+							} else
+							{
+								password = args[1];
 							}
-							password = args[2];
 						} else
 						{
 							password = args[1];
@@ -93,24 +95,25 @@ public class WarpHelper
 						confirm = true;
 					} else
 					{
-						if(!player.hasPermission(StaticValues.PERM_WARP_OTHER))
+						if(player.hasPermission(StaticValues.PERM_WARP_OTHER))
 						{
-							///Du hast dafür keine Rechte!
-							player.spigot().sendMessage(ChatApi.tctl(
-									plugin.getYamlHandler().getL().getString("NoPermission")));
-							return;
-						}
-						playername = args[2];
-						uuid = Utility.convertNameToUUID(playername);
-						if(uuid == null)
+							playername = args[2];
+							uuid = Utility.convertNameToUUID(playername);
+							if(uuid != null)
+							{
+								playeruuid = uuid.toString();
+							} else
+							{
+								password = args[2];
+							}
+						} else
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
-							return;
+							password = args[2];
 						}
-						playeruuid = uuid.toString();
+						
 					}
 				}
-				if(args.length == 4)
+				if(args.length >= 4)
 				{
 					if(args[3].equalsIgnoreCase("confirm") || args[3].equalsIgnoreCase("bestätigen"))
 					{

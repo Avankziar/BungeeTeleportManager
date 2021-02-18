@@ -5,4 +5,3 @@ author: Avankziar
 api-version: 1.16
 description: A Teleport plugin with Back, Deathback, Homes, SavePoints, RTP, TPA, TP and Warps
 softdepend: [Vault,AdvancedEconomyPlus]
-load: STARTUP
