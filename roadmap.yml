@@ -39,6 +39,11 @@ Build 6 ========================================================================
     die Mechaniken greifen sollen. Bspw. Zuerst SavePoints(Welcher SavePointName), Respawn, BedSpawn, FristSpawn.
     Hierbei gilt natürlich, dass alle Mechaniken einen Datensatz für den Spieler in diesem Server und oder Welt haben.
     
+Build 5-10 =====================================================================================================================
+- Logikfehler beim vergleichen der Home & Warpanzahl
+- Nachrichten NPE gefixt.
+================================================================================================================================
+    
 Build 5 ========================================================================================================================
 - +YamlManager
 - +commands.yml

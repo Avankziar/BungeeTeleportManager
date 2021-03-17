@@ -208,15 +208,20 @@ public class HomeHandler
 			{
 				clusterlist = new ArrayList<>();
 			}
-			clusterlist.add(server);
 			clusterlist.add(player.getUniqueId().toString());
 			Object[] o = clusterlist.toArray();
 			String where = "(";
 			for(int i = 2; i < clusterlist.size(); i++)
 			{
-				where += "`server` = ? OR ";
+				if(i == (clusterlist.size()-1))
+				{
+					where += "`server` = ?)";
+				} else
+				{
+					where += "`server` = ? OR ";
+				}				
 			}
-			where += "`server` = ?) AND `player_uuid` = ?";
+			where += " AND `player_uuid` = ?";
 			int serverHomeCount = plugin.getMysqlHandler().countWhereID(
 					MysqlHandler.Type.HOME, where,
 					o);
@@ -309,15 +314,21 @@ public class HomeHandler
 					}
 				}
 			}
-			list.add(world);
 			list.add(player.getUniqueId().toString());
 			Object[] o = list.toArray();
 			String where = "(";
 			for(int i = 2; i < list.size(); i++)
 			{
-				where += "`world` = ? OR ";
+				if(i == (clusterlist.size()-1))
+				{
+					where += "`world` = ?)";
+				} else
+				{
+					where += "`world` = ? OR ";
+				}
+				
 			}
-			where += "`world` = ?) AND `player_uuid` = ?";
+			where += " AND `player_uuid` = ?";
 			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
 					MysqlHandler.Type.HOME, where, o);
 			if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_WORLD+"*")

@@ -327,6 +327,7 @@ public class BungeeTeleportManager extends JavaPlugin
 			registerCommand(homelist.getPath(), homelist.getName());
 			getCommand(homelist.getName()).setExecutor(new HomeCommandExecutor(plugin, homelist));
 			getCommand(homelist.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.HOME_LIST, homelist.getCommandString().trim());
 			
 			addingHelps(sethome, delhome, homecreate, homeremove, homesdeleteserverworld, home, homes, homelist);
 		}

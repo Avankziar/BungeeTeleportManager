@@ -8,6 +8,7 @@ public class KeyHandler
 	
 	public static String HOME = "HOME";
 	public static String HOMES = "HOMES";
+	public static String HOME_LIST = "HOME_LIST";
 	public static String HOME_SET = "HOME_SET";
 	public static String HOME_CREATE = "HOME_CREATE";
 	public static String HOME_DEL = "HOME_DEL";

@@ -374,7 +374,7 @@ public class HomeHelper
 				player.spigot().sendMessage(tc);
 			}
 		}
-		plugin.getCommandHelper().pastNextPage(player, "CmdBtm", page, lastpage, "/homes ", playername);
+		plugin.getCommandHelper().pastNextPage(player, "CmdBtm.BaseInfo", page, lastpage, "/homes ", playername);
 		return;
 	}
 	
@@ -488,10 +488,10 @@ public class HomeHelper
 		}
 		if(serverORWorld != null)
 		{
-			plugin.getCommandHelper().pastNextPage(player, "CmdBtm", page, lastpage, "/homelist ", serverORWorld);
+			plugin.getCommandHelper().pastNextPage(player, "CmdBtm.BaseInfo", page, lastpage, BTMSettings.settings.getCommands(KeyHandler.HOME_LIST), serverORWorld);
 		} else
 		{
-			plugin.getCommandHelper().pastNextPage(player, "CmdBtm", page, lastpage, "/homelist ");
+			plugin.getCommandHelper().pastNextPage(player, "CmdBtm.BaseInfo", page, lastpage, BTMSettings.settings.getCommands(KeyHandler.HOME_LIST));
 		}
 		return;
 	}

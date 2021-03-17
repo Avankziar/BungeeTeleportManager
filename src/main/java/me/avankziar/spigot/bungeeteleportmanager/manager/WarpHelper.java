@@ -556,7 +556,7 @@ public class WarpHelper
 				player.spigot().sendMessage(tc);
 			}
 		}
-		plugin.getCommandHelper().pastNextPage(player, "CmdBtm", page, lastpage, BTMSettings.settings.getCommands(KeyHandler.WARPS), playername);
+		plugin.getCommandHelper().pastNextPage(player, "CmdWarp.", page, lastpage, BTMSettings.settings.getCommands(KeyHandler.WARPS), playername);
 		return;
 	}
 	
