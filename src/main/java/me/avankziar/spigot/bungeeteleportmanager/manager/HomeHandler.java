@@ -81,13 +81,23 @@ public class HomeHandler
         return;
 	}
 	
+	/*
+	 * if returns true, than the player has more homes, than he should have.
+	 */
 	public boolean compareHomeAmount(Player player, boolean message, boolean exist)
 	{
 		if(plugin.getYamlHandler().getConfig().getBoolean("UseGlobalPermissionLevel", false))
 		{
 			// Vorher >= 0, jetzt nur bei den Homes, dadurch dass man mit /homecreate, das home neu setzten sollen kann.
 			int i = compareGlobalHomes(player, message, exist);
-			if(i == 0 && exist)
+			if(i == 0 && !exist)
+			{
+				return true;
+			} else if(i >= 0)
+			{
+				return true;
+			}
+			/*if(i == 0 && exist)
 			{
 				return false;
 			} else if(i < 0)
@@ -96,18 +106,15 @@ public class HomeHandler
 			} else
 			{
 				return true;
-			}
+			}*/
 		}		
 		if(plugin.getYamlHandler().getConfig().getBoolean("UseServerPermissionLevel", false))
 		{
 			int i = compareServerHomes(player, message, exist);
-			if(i == 0 && exist)
+			if(i == 0 && !exist)
 			{
-				return false;
-			} else if(i < 0)
-			{
-				return false;
-			} else
+				return true;
+			} else if(i >= 0)
 			{
 				return true;
 			}
@@ -115,18 +122,15 @@ public class HomeHandler
 		if(plugin.getYamlHandler().getConfig().getBoolean("UseWorldPermissionLevel", false))
 		{
 			int i = compareWorldHomes(player, message, exist);
-			if(i == 0 && exist)
+			if(i == 0 && !exist)
 			{
-				return false;
-			} else if(i < 0)
-			{
-				return false;
-			} else
+				return true;
+			} else if(i >= 0)
 			{
 				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 	
 	public int compareHome(Player player, boolean message)
@@ -177,9 +181,9 @@ public class HomeHandler
 				break;
 			}
 		}
-		if(globalHomeCount >= globalLimit || globalLimit == 0)
+		int i = globalHomeCount-globalLimit;
+		if(i >= 0 || globalLimit == 0)
 		{
-			int i = globalHomeCount-globalLimit;
 			if(message && exist == false && i >= 0)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesGlobal")
@@ -189,25 +193,30 @@ public class HomeHandler
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesGlobal")
 						.replace("%amount%", String.valueOf(globalLimit))));
 			}
-			return i;
 		}
-		return -1;
+		return i;
 	}
-	
+	/*
+	 * return i
+	 * if i < 0, than the amount of homes of the player has not reach the limit or has a bypass permission
+	 * if i == 0 && exist, than the amount of homes of the player has reach the limit, but the home will be overriden
+	 * if i > 0, than the amount of homes of the player has reach the limit, cannot add new homes.
+	 */
 	public int compareServerHomes(Player player, boolean message, boolean exist)
 	{
 		String server = plugin.getYamlHandler().getConfig().getString("ServerName");
 		String serverCluster = plugin.getYamlHandler().getConfig().getString("ServerCluster");
 		boolean clusterBeforeServer = plugin.getYamlHandler().getConfig().getBoolean("ServerClusterActive", false);
 		int serverLimit = 0;
-		
-		if(clusterBeforeServer)
+		List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("ServerClusterList");
+		if(clusterlist == null)
 		{
-			List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("ServerClusterList");
-			if(clusterlist == null)
-			{
-				clusterlist = new ArrayList<>();
-			}
+			clusterlist = new ArrayList<>();
+		}
+		boolean serverIsInCluster = clusterlist.contains(server);
+		
+		if(clusterBeforeServer && serverIsInCluster)
+		{
 			clusterlist.add(player.getUniqueId().toString());
 			Object[] o = clusterlist.toArray();
 			String where = "(";
@@ -223,8 +232,7 @@ public class HomeHandler
 			}
 			where += " AND `player_uuid` = ?";
 			int serverHomeCount = plugin.getMysqlHandler().countWhereID(
-					MysqlHandler.Type.HOME, where,
-					o);
+					MysqlHandler.Type.HOME, where, o);
 			if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_SERVER+"*")
 					|| player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_SERVER+serverCluster+".*"))
 			{
@@ -238,9 +246,9 @@ public class HomeHandler
 					break;
 				}
 			}
-			if(serverHomeCount >= serverLimit || serverLimit == 0)
+			int i = serverHomeCount-serverLimit;
+			if(i >= 0 || serverLimit == 0)
 			{
-				int i = serverHomeCount-serverLimit;
 				if(message && exist == false && i >= 0)
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesServerCluster")
@@ -250,9 +258,10 @@ public class HomeHandler
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesServerCluster")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
-				return i;
 			}
-		} else {
+			return i;
+		} else
+		{ 
 			int serverHomeCount = plugin.getMysqlHandler().countWhereID(
 					MysqlHandler.Type.HOME, "`player_uuid` = ? AND `server` = ?",
 					player.getUniqueId().toString(), server);
@@ -269,9 +278,9 @@ public class HomeHandler
 					break;
 				}
 			}
-			if(serverHomeCount >= serverLimit || serverLimit == 0)
+			int i = serverHomeCount-serverLimit;
+			if(i >= 0 || serverLimit == 0)
 			{
-				int i = serverHomeCount-serverLimit;
 				if(message && exist == false && i >= 0)
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesServer")
@@ -281,10 +290,9 @@ public class HomeHandler
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesServer")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
-				return i;
 			}
+			return i;
 		}
-		return -1;
 	}
 	
 	public int compareWorldHomes(Player player, boolean message, boolean exist)
@@ -292,6 +300,11 @@ public class HomeHandler
 		String world = player.getLocation().getWorld().getName();
 		boolean clusterActive = plugin.getYamlHandler().getConfig().getBoolean("WorldClusterActive", false);
 		int worldLimit = 0;
+		
+		boolean worldIsInCluster = false;
+		List<String> list = new ArrayList<>();
+		String cluster = "";
+		
 		if(clusterActive)
 		{
 			List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("WorldClusterList");
@@ -299,8 +312,6 @@ public class HomeHandler
 			{
 				clusterlist = new ArrayList<>();
 			}
-			List<String> list = new ArrayList<>();
-			String cluster = "";
 			for(String clusters : clusterlist)
 			{
 				List<String> worldclusterlist = plugin.getYamlHandler().getConfig().getStringList(clusters);
@@ -308,25 +319,28 @@ public class HomeHandler
 				{
 					if(worlds.equals(world))
 					{
+						worldIsInCluster = true;
 						cluster = clusters;
 						list = worldclusterlist;
 						break;
 					}
 				}
 			}
+		}		
+		if(clusterActive && worldIsInCluster)
+		{
 			list.add(player.getUniqueId().toString());
 			Object[] o = list.toArray();
 			String where = "(";
 			for(int i = 1; i < list.size(); i++)
 			{
-				if(i == (clusterlist.size()-1))
+				if(i == (list.size()-1))
 				{
 					where += "`world` = ?)";
 				} else
 				{
 					where += "`world` = ? OR ";
 				}
-				
 			}
 			where += " AND `player_uuid` = ?";
 			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
@@ -344,9 +358,9 @@ public class HomeHandler
 					break;
 				}
 			}
-			if(worldHomeCount >= worldLimit || worldLimit == 0)
+			int i = worldHomeCount-worldLimit;
+			if(i >= 0 || worldLimit == 0)
 			{
-				int i = worldHomeCount-worldLimit;
 				if(message && exist == false && i >= 0)
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesWorld")
@@ -356,9 +370,8 @@ public class HomeHandler
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
-				return i;
 			}
-			return -1;
+			return i;
 		} else
 		{
 			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
@@ -377,9 +390,10 @@ public class HomeHandler
 					break;
 				}
 			}
-			if(worldHomeCount >= worldLimit || worldLimit == 0)
+			int i = worldHomeCount-worldLimit;
+			if(i >= 0 || worldLimit == 0)
 			{
-				int i = worldHomeCount-worldLimit;
+				
 				if(message && exist == false && i >= 0)
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesWorld")
@@ -389,9 +403,8 @@ public class HomeHandler
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
-				return i;
 			}
-			return -1;
+			return i;
 		}
 	}
 	

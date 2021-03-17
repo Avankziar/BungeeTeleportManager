@@ -155,32 +155,37 @@ public class WarpHandler
 				break;
 			}
 		}
-		if(globalHomeCount >= globalLimit || globalLimit == 0)
+		int i = globalHomeCount-globalLimit;
+		if(i >= 0 || globalLimit == 0)
 		{
 			if(message)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.TooManyWarpsGlobal")
 						.replace("%amount%", String.valueOf(globalLimit))));
 			}
-			return (globalHomeCount-globalLimit);
 		}
-		return -1;
+		return i;
 	}
-	
+	/*
+	 * return i
+	 * if i < 0, than the amount of warps of the player has not reach the limit or has a bypass permission
+	 * if i == 0 && exist, than the amount of warps of the player has reach the limit, but the home will be overriden
+	 * if i > 0, than the amount of warps of the player has reach the limit, cannot add new homes.
+	 */
 	public int compareServerWarps(Player player, boolean message)
 	{
 		String server = plugin.getYamlHandler().getConfig().getString("ServerName");
 		String serverCluster = plugin.getYamlHandler().getConfig().getString("ServerCluster");
 		boolean clusterBeforeServer = plugin.getYamlHandler().getConfig().getBoolean("ServerClusterActive", false);
 		int serverLimit = 0;
-		
-		if(clusterBeforeServer)
+		List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("ServerClusterList");
+		if(clusterlist == null)
 		{
-			List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("ServerClusterList");
-			if(clusterlist == null)
-			{
-				clusterlist = new ArrayList<>();
-			}
+			clusterlist = new ArrayList<>();
+		}
+		boolean serverIsInCluster = clusterlist.contains(server);
+		if(clusterBeforeServer && serverIsInCluster)
+		{
 			clusterlist.add(player.getUniqueId().toString());
 			Object[] o = clusterlist.toArray();
 			String where = "(";
@@ -211,15 +216,16 @@ public class WarpHandler
 					break;
 				}
 			}
-			if(serverHomeCount >= serverLimit || serverLimit == 0)
+			int i = serverHomeCount-serverLimit;
+			if(i >= 0 || serverLimit == 0)
 			{
 				if(message)
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.TooManyWarpsServerCluster")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
-				return (serverHomeCount-serverLimit);
 			}
+			return i;
 		} else {
 			int serverHomeCount = plugin.getMysqlHandler().countWhereID(
 					MysqlHandler.Type.WARP, "`owner` = ? AND `server` = ?",
@@ -237,17 +243,17 @@ public class WarpHandler
 					break;
 				}
 			}
-			if(serverHomeCount >= serverLimit || serverLimit == 0)
+			int i = serverHomeCount-serverLimit;
+			if(i >= 0 || serverLimit == 0)
 			{
 				if(message)
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.TooManyWarpsServer")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
-				return (serverHomeCount-serverLimit);
 			}
+			return i;
 		}
-		return -1;
 	}
 	
 	public int compareWorldWarps(Player player, boolean message)
@@ -255,6 +261,11 @@ public class WarpHandler
 		String world = player.getLocation().getWorld().getName();
 		boolean clusterActive = plugin.getYamlHandler().getConfig().getBoolean("WorldClusterActive", false);
 		int worldLimit = 0;
+		
+		boolean worldIsInCluster = false;
+		List<String> list = new ArrayList<>();
+		String cluster = "";
+		
 		if(clusterActive)
 		{
 			List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("WorldClusterList");
@@ -262,8 +273,6 @@ public class WarpHandler
 			{
 				clusterlist = new ArrayList<>();
 			}
-			List<String> list = new ArrayList<>();
-			String cluster = "";
 			for(String clusters : clusterlist)
 			{
 				List<String> worldclusterlist = plugin.getYamlHandler().getConfig().getStringList(clusters);
@@ -271,18 +280,25 @@ public class WarpHandler
 				{
 					if(worlds.equals(world))
 					{
+						worldIsInCluster = true;
 						cluster = clusters;
 						list = worldclusterlist;
 						break;
 					}
 				}
 			}
+		}
+		/*
+		 * If World is not in the clusterlist, so pick the normal Worldpermissioncheck.
+		 */
+		if(clusterActive && worldIsInCluster)
+		{
 			list.add(player.getUniqueId().toString());
 			Object[] o = list.toArray();
 			String where = "(";
 			for(int i = 1; i < list.size(); i++)
 			{
-				if(i == (clusterlist.size()-1))
+				if(i == (list.size()-1))
 				{
 					where += "`world` = ?)";
 				} else
@@ -307,16 +323,16 @@ public class WarpHandler
 					break;
 				}
 			}
-			if(worldHomeCount >= worldLimit || worldLimit == 0)
+			int i = worldHomeCount-worldLimit;
+			if(i >= 0 || worldLimit == 0)
 			{
 				if(message)
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.TooManyWarpsWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
-				return(worldHomeCount-worldLimit);
 			}
-			return -1;
+			return i;
 		} else
 		{
 			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
@@ -335,16 +351,16 @@ public class WarpHandler
 					break;
 				}
 			}
-			if(worldHomeCount >= worldLimit || worldLimit == 0)
+			int i = worldHomeCount-worldLimit;
+			if(i >= 0 || worldLimit == 0)
 			{
 				if(message)
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.TooManyWarpsWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
-				return(worldHomeCount-worldLimit);
 			}
-			return -1;
+			return i;
 		}
 	}
 	
