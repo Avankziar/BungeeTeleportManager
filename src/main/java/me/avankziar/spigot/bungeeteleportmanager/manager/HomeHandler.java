@@ -211,7 +211,7 @@ public class HomeHandler
 			clusterlist.add(player.getUniqueId().toString());
 			Object[] o = clusterlist.toArray();
 			String where = "(";
-			for(int i = 2; i < clusterlist.size(); i++)
+			for(int i = 1; i < clusterlist.size(); i++)
 			{
 				if(i == (clusterlist.size()-1))
 				{
@@ -317,7 +317,7 @@ public class HomeHandler
 			list.add(player.getUniqueId().toString());
 			Object[] o = list.toArray();
 			String where = "(";
-			for(int i = 2; i < list.size(); i++)
+			for(int i = 1; i < list.size(); i++)
 			{
 				if(i == (clusterlist.size()-1))
 				{
