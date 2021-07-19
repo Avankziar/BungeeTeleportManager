@@ -957,7 +957,7 @@ public class WarpHelper
 		}
 		String newowner = args[1];
 		String newowneruuid = "";
-		if(newowner.equals("null"))
+		if(newowner.equals("null")) //ADDME BypassPerm
 		{
 			newowneruuid = null;
 		} else

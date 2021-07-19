@@ -6,7 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
+import org.bukkit.Location;
+import org.bukkit.command.BlockCommandSender;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.SavePoint;
@@ -119,5 +123,40 @@ public class SavePointHandler
 			map.put(sp.getLocation().getServer(), mapmap);
 			return map;
 		}
+	}
+	
+	public static ArrayList<Player> getTargets(CommandSender sender, double radius) 
+	{
+		ArrayList<Player> list = new ArrayList<>();
+	    Location loc = null;
+	    if (sender instanceof Player) 
+	    {
+	      loc = ((Player)sender).getLocation();
+	    } else if (sender instanceof BlockCommandSender) 
+	    {
+	      loc = ((BlockCommandSender)sender).getBlock().getLocation().add(0.5D, 0.5D, 0.5D);
+	    } else if (sender instanceof CommandMinecart) 
+	    {
+	      loc = ((CommandMinecart)sender).getLocation();
+	    }
+		for (Player e : loc.getWorld().getPlayers()) 
+		{
+		    if(e == sender)
+		    {
+		    	continue;
+		    } 
+		    Location temp = loc;
+		    if(temp == null)
+		    {
+		    	temp = e.getWorld().getSpawnLocation(); 
+		    }
+		        
+		    double distance = e.getLocation().distanceSquared(temp);
+		    if (radius > distance) 
+		    {
+		    	list.add(e);
+		    } 
+		} 
+	    return list;
 	}
 }

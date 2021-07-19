@@ -335,7 +335,7 @@ public class HomeHelper
 				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
 						sameWorld+home.getHomeName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
-						"/home "+home.getHomeName(),
+						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName(),
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("GeneralHover")
 						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
@@ -345,7 +345,7 @@ public class HomeHelper
 				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
 						sameServer+home.getHomeName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
-						"/home "+home.getHomeName(),
+						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName(),
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("GeneralHover")
 						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
@@ -355,7 +355,7 @@ public class HomeHelper
 				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
 						infoElse+home.getHomeName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
-						"/home "+home.getHomeName(),
+						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName(),
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("GeneralHover")
 						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
@@ -447,7 +447,7 @@ public class HomeHelper
 				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
 						sameWorld+home.getHomeName()+"&f|&7"+home.getPlayerName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
-						"/home "+home.getHomeName()+" "+home.getPlayerName(),
+						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("GeneralHover")
 						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
@@ -457,7 +457,7 @@ public class HomeHelper
 				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
 						sameServer+home.getHomeName()+"&f|&7"+home.getPlayerName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
-						"/home "+home.getHomeName()+" "+home.getPlayerName(),
+						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("GeneralHover")
 						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
@@ -467,7 +467,7 @@ public class HomeHelper
 				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
 						infoElse+home.getHomeName()+"&f|&7"+home.getPlayerName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
-						"/home "+home.getHomeName()+" "+home.getPlayerName(),
+						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("GeneralHover")
 						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")

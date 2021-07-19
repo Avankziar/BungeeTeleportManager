@@ -5,6 +5,17 @@ Future =========================================================================
 - EntityTransport
 - EntityTeleport
 - Zählen, welche Warps/home angesteuert werden, um sowas wie Beliebtheit darstellen zu können.
+- Vordefinierte Perms einstellbarmachen für die Warps.
+- Maximalbeträge für Warps an Warpkosten einstellbar machen.
+- Eine einstellbare Einstellung für Warps, dass man von anderen server diese nicht sehen kann.
+- Bypass im tpa/tp für ForbiddenServer/World einbauen.
+- Das Forbidden System so überarbeiten, dass das schon auf dem Spigotserver definiert ist, ob das back/deathback,
+  forbidden ist oder nicht. Dann kann dort ein boolean hochgeschickt werden und fertig.
+  Am besten mach ne einzelne Datei für bestimmte sachen.
+- /tpaccept, ohne Argument möglich machen, damit man den ersten TpA annimmt.
+- /home, ohne Argument möglich machen, damit man das erste Home nimmt.
+- CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
+  ob back übernommen werden soll, oder nicht.
 
 Build 6 =======================================================================================================================
 - FirstSpawn
@@ -38,7 +49,11 @@ Build 6 ========================================================================
   - Hierbei wird pro Welt ein Schema mit Enums der Mechaniken gemacht. Diese geben an, in welcher Reihenfolge 
     die Mechaniken greifen sollen. Bspw. Zuerst SavePoints(Welcher SavePointName), Respawn, BedSpawn, FristSpawn.
     Hierbei gilt natürlich, dass alle Mechaniken einen Datensatz für den Spieler in diesem Server und oder Welt haben.
-    
+
+Build 5-13 =====================================================================================================================
+- Befehle konnten nicht umbenannt werden. Ist gefixt.
+================================================================================================================================
+
 Build 5-10 =====================================================================================================================
 - Logikfehler beim vergleichen der Home & Warpanzahl
 - Nachrichten NPE gefixt.

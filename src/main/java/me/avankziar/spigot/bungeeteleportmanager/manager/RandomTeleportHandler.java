@@ -107,7 +107,9 @@ public class RandomTeleportHandler
 						getRandom(new Random(), 0,
 							(int) Math.max(getPositiveInt(rt.getPoint1().getX()), getPositiveInt(rt.getPoint2().getX())) -
 							(int) Math.min(getPositiveInt(rt.getPoint1().getX()), getPositiveInt(rt.getPoint2().getX())));
-				double y = Math.max(rt.getPoint1().getY(), rt.getPoint2().getY());
+				double y = getRandom(new Random(),
+						(int) Math.min(rt.getPoint1().getY(), rt.getPoint2().getY()),
+						(int) Math.max(rt.getPoint1().getY(), rt.getPoint2().getY()));
 				double minY = Math.min(rt.getPoint1().getY(), rt.getPoint2().getY());
 				double z = Math.min(rt.getPoint1().getZ(), rt.getPoint2().getZ()) + 
 						getRandom(new Random(), 0,
@@ -134,6 +136,7 @@ public class RandomTeleportHandler
 		Location up = new Location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ());
 		Location down = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
 		Location bottom = new Location(l.getWorld(), l.getX(), l.getY() - 2, l.getZ());
+		int count = 0;
 		while(l.getY() > minY)
 		{
 			Block bl = l.getBlock();
@@ -146,12 +149,9 @@ public class RandomTeleportHandler
 			} else if(bdown.getType().isSolid() && isTransparant(bl) && isTransparant(bup))
 			{
 				return new Location(loc.getWorld(), down.getX(), l.getY(), down.getZ());
-			} else
+			} else if(count >= 25)
 			{
-				/*BungeeTeleportManager.log.info("bottom: "+bbottom.getType().toString()+" | "+bottom.getX()+" | "+bottom.getY()+" | "+bottom.getZ());
-				BungeeTeleportManager.log.info("down: "+bdown.getType().toString()+" | "+down.getX()+" | "+down.getY()+" | "+down.getZ());
-				BungeeTeleportManager.log.info("l: "+bl.getType().toString()+" | "+l.getX()+" | "+l.getY()+" | "+l.getZ());
-				BungeeTeleportManager.log.info("up: "+bup.getType().toString()+" | "+up.getX()+" | "+up.getY()+" | "+up.getZ());*/
+				return null;
 			}
 			l = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
 			up = new Location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ());

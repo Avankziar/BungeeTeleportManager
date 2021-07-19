@@ -43,7 +43,7 @@ public class ForbiddenHandler
 		{
 			return isForbiddenTask(back, playername, mechanics);
 		}
-		return false;
+		return false;//FIXME, es sollte true sein, damit er die backs nicht mehr logs.
 	}
 	
 	private static boolean isForbiddenTask(Back back, String playername, Mechanics mechanics)

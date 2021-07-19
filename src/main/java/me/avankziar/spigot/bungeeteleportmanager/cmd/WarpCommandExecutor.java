@@ -85,8 +85,8 @@ public class WarpCommandExecutor implements CommandExecutor
 			}
 			plugin.getWarpHelper().warpList(player, args);
 			return true;
-		} else if(commandList.containsKey(cmd.getName()) 
-				&& commandList.get(cmd.getName()).getPath().equals("warp"))
+		} else if(commandList.containsKey(lable) 
+				&& commandList.get(lable).getPath().equals("warp"))
 		{
 			if (!(sender instanceof Player)) 
 			{

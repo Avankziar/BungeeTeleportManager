@@ -735,7 +735,7 @@ public class YamlManager
 				"&c/tpaccept <Spielername> &f| Accepts the TPA from the player. (Clickable in chat)",
 				"Accepts the TPA from the player. (Clickable in chat)");
 		commandsInput("tpdeny", "tpdeny", "btm.cmd.user.tp.tpdeny",
-				"/tpdeny <playername>", "/tpdeny",
+				"/tpdeny <playername>", "/tpdeny ",
 				"&c/tpadeny <Spielername> &f| Lehnt die TPA vom Spieler ab. (Klickbar im Chat)",
 				"&c/tpadeny <Spielername> &f| Rejects the TPA from the player. (Clickable in chat)",
 				"Rejects the TPA from the player. (Clickable in chat)");

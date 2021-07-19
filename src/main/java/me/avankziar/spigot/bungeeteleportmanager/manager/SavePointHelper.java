@@ -321,6 +321,7 @@ public class SavePointHelper
 	/* INFO
 	 * savepointcreate <Playername> <SavePointName> [Server] [World] [x] [y] [z] [Yaw] [Pitch]
 	 * Args == 2, Location == Player(name) Location
+	 * if @p, @a or something u use, use the plugin => https://www.spigotmc.org/resources/commandhook.61415/
 	 */
 	
 	public void savePointCreate(CommandSender sender, String[] args)

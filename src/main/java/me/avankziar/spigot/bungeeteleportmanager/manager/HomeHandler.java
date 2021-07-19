@@ -27,6 +27,19 @@ public class HomeHandler
 		this.plugin = plugin;
 	}
 	
+	private void debug(Player player, String s)
+	{
+		boolean boo = false;
+		if(boo)
+		{
+			if(player != null)
+			{
+				player.sendMessage(s);
+			}
+			System.out.println(s);
+		}
+	}
+	
 	public void sendPlayerToHome(Player player, Home home)
 	{
 		if(home.getLocation().getServer().equals(plugin.getYamlHandler().getConfig().getString("ServerName")))
@@ -84,16 +97,19 @@ public class HomeHandler
 	/*
 	 * if returns true, than the player has more homes, than he should have.
 	 */
+	//FIXME Wenn 3 von 3 Homes vorhanden sind, so kann der home nicht umgesetzt werden. Warp eventuell auch.
 	public boolean compareHomeAmount(Player player, boolean message, boolean exist)
 	{
+		debug(player, "cHA start");
 		if(plugin.getYamlHandler().getConfig().getBoolean("UseGlobalPermissionLevel", false))
 		{
 			// Vorher >= 0, jetzt nur bei den Homes, dadurch dass man mit /homecreate, das home neu setzten sollen kann.
 			int i = compareGlobalHomes(player, message, exist);
+			debug(player, "cHA g i: "+i+" | exist: "+exist);
 			if(i == 0 && !exist)
 			{
 				return true;
-			} else if(i >= 0)
+			} else if(i > 0)
 			{
 				return true;
 			}
@@ -111,10 +127,11 @@ public class HomeHandler
 		if(plugin.getYamlHandler().getConfig().getBoolean("UseServerPermissionLevel", false))
 		{
 			int i = compareServerHomes(player, message, exist);
+			debug(player, "cHA s i: "+i+" | exist: "+exist);
 			if(i == 0 && !exist)
 			{
 				return true;
-			} else if(i >= 0)
+			} else if(i > 0)
 			{
 				return true;
 			}
@@ -122,10 +139,11 @@ public class HomeHandler
 		if(plugin.getYamlHandler().getConfig().getBoolean("UseWorldPermissionLevel", false))
 		{
 			int i = compareWorldHomes(player, message, exist);
+			debug(player, "cHA w i: "+i+" | exist: "+exist);
 			if(i == 0 && !exist)
 			{
 				return true;
-			} else if(i >= 0)
+			} else if(i > 0)
 			{
 				return true;
 			}
@@ -139,6 +157,7 @@ public class HomeHandler
 		if(plugin.getYamlHandler().getConfig().getBoolean("UseGlobalPermissionLevel", false))
 		{
 			i = compareGlobalHomes(player, message, true);
+			debug(player, "cH g i: "+i);
 			if(i > 0)
 			{
 				return i;
@@ -147,6 +166,7 @@ public class HomeHandler
 		if(plugin.getYamlHandler().getConfig().getBoolean("UseServerPermissionLevel", false))
 		{
 			i = compareServerHomes(player, message, true);
+			debug(player, "cH s i: "+i);
 			if(i > 0)
 			{
 				return i;
@@ -155,6 +175,7 @@ public class HomeHandler
 		if(plugin.getYamlHandler().getConfig().getBoolean("UseWorldPermissionLevel", false))
 		{
 			i = compareWorldHomes(player, message, true);
+			debug(player, "cH g : "+i);
 			if(i > 0)
 			{
 				return i;
@@ -233,9 +254,11 @@ public class HomeHandler
 			where += " AND `player_uuid` = ?";
 			int serverHomeCount = plugin.getMysqlHandler().countWhereID(
 					MysqlHandler.Type.HOME, where, o);
+			debug(player, "cSH sHC: "+serverHomeCount);
 			if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_SERVER+"*")
 					|| player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_SERVER+serverCluster+".*"))
 			{
+				debug(player, "cSH have Admin-Permission");
 				return -1;
 			}
 			for(int i = 500; i >= 0; i--)
@@ -247,6 +270,7 @@ public class HomeHandler
 				}
 			}
 			int i = serverHomeCount-serverLimit;
+			debug(player, "cSH sHC-sL: "+serverHomeCount+" - "+serverLimit +" = "+i);
 			if(i >= 0 || serverLimit == 0)
 			{
 				if(message && exist == false && i >= 0)

@@ -28,7 +28,7 @@ public class TABCompletionOne implements TabCompleter
 	{
 		Player player = (Player)sender;
 		List<String> list = new ArrayList<String>();
-		String command = "/"+cmd.getName();
+		String command = "/"+lable;
 		if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME))
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_DEL))
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_SET))

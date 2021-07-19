@@ -425,11 +425,11 @@ public class TeleportHandler
 		}
 		sendTextComponent(player, teleport.getFromName(), teleport.getToName(),
 				plugin.getYamlHandler().getL().getString("CmdTp.IconsI", "")
-				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.TPACCEPT))
+				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.TPACCEPT).trim())
 				.replace("%player%", player.getName())
 				+" &f| "
 				+plugin.getYamlHandler().getL().getString("CmdTp.IconsII", "")
-				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.TPDENY))
+				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.TPDENY).trim())
 				.replace("%player%", player.getName()),
 				false, "");
 		sendObject(player, teleport);
