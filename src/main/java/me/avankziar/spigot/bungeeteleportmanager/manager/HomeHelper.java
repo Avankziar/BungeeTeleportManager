@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
@@ -15,6 +16,7 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler.Type;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler.Mechanics;
@@ -36,7 +38,7 @@ public class HomeHelper
 	
 	public void homeCreate(Player player, String[] args)
 	{
-		if(args.length != 1)
+		if(args.length != 1 && args.length != 2)
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
@@ -58,13 +60,15 @@ public class HomeHelper
 			return;
 		}
 		boolean exist = false;
+		boolean isPrio = false;
+		if(args.length == 2)
+		{
+			isPrio = true;
+		}
 		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.HOME,
 				"`player_uuid` = ? AND `home_name` = ?", player.getUniqueId().toString(), homeName))
 		{
 			exist = true;
-			//player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeNameAlreadyExist")
-			//		.replace("%home%", homeName)));
-			//return;
 		}
 		if(plugin.getHomeHandler().compareHomeAmount(player, true, exist))
 		{
@@ -117,6 +121,16 @@ public class HomeHelper
 			plugin.getMysqlHandler().create(MysqlHandler.Type.HOME, home);
 			player.spigot().sendMessage(ChatApi.tctl(
 					plugin.getYamlHandler().getL().getString("CmdHome.HomeCreate")
+					.replace("%name%", homeName)));
+		}
+		if(isPrio)
+		{
+			Back back = (Back) plugin.getMysqlHandler().getData(MysqlHandler.Type.BACK,
+					"`player_uuid` = ?",  player.getUniqueId().toString());
+			back.setHomePriority(homeName);
+			plugin.getMysqlHandler().updateData(Type.BACK, back, "`player_uuid` = ?", player.getUniqueId().toString());
+			player.spigot().sendMessage(ChatApi.tctl(
+					plugin.getYamlHandler().getL().getString("CmdHome.SetPriority")
 					.replace("%name%", homeName)));
 		}
 		plugin.getUtility().setHomesTabCompleter(player);
@@ -190,7 +204,7 @@ public class HomeHelper
 			@Override
 			public void run()
 			{
-				if(args.length != 1 && args.length != 2)
+				if(args.length != 0 && args.length != 1 && args.length != 2)
 				{
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
@@ -198,7 +212,7 @@ public class HomeHelper
 							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 					return;
 				}
-				String homeName = args[0];
+				String homeName = "";
 				String playeruuid = player.getUniqueId().toString();
 				if(args.length == 2 
 						&& (player.hasPermission(StaticValues.PERM_HOME_OTHER) || args[1].equals(player.getName())))
@@ -210,6 +224,21 @@ public class HomeHelper
 						return;
 					}
 					playeruuid = uuid.toString();
+				}
+				if(args.length < 0)
+				{
+					homeName = args[0];
+				} else
+				{
+					Back back = (Back) plugin.getMysqlHandler().getData(Type.BACK, "`player_uuid` = ?", playeruuid);
+					if(back.getHomePriority() == null
+							|| back.getHomePriority().isEmpty()
+							|| back.getHomePriority().trim().isEmpty())
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.NoHomePriority")));
+						return;
+					}
+					homeName = back.getHomePriority();
 				}
 				if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.HOME,
 						"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName))
@@ -335,7 +364,7 @@ public class HomeHelper
 				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
 						sameWorld+home.getHomeName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
-						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName(),
+						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("GeneralHover")
 						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
@@ -345,7 +374,7 @@ public class HomeHelper
 				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
 						sameServer+home.getHomeName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
-						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName(),
+						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("GeneralHover")
 						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
@@ -355,7 +384,7 @@ public class HomeHelper
 				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
 						infoElse+home.getHomeName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
-						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName(),
+						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
 						plugin.getYamlHandler().getL().getString("GeneralHover")
 						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
@@ -494,5 +523,32 @@ public class HomeHelper
 			plugin.getCommandHelper().pastNextPage(player, "CmdBtm.BaseInfo", page, lastpage, BTMSettings.settings.getCommands(KeyHandler.HOME_LIST));
 		}
 		return;
+	}
+	
+	public void homeSetPriority(Player player, String args[])
+	{
+		if(args.length != 1)
+		{
+			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+			player.spigot().sendMessage(ChatApi.clickEvent(
+					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+			return;
+		}
+		String playeruuid = player.getUniqueId().toString();
+		String homeName = args[0];
+		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.HOME,
+				"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName))
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeNotExist")));
+			return;
+		}
+		Back back = (Back) plugin.getMysqlHandler().getData(MysqlHandler.Type.BACK,
+				"`player_uuid` = ?",  player.getUniqueId().toString());
+		back.setHomePriority(homeName);
+		plugin.getMysqlHandler().updateData(Type.BACK, back, "`player_uuid` = ?", player.getUniqueId().toString());
+		player.spigot().sendMessage(ChatApi.tctl(
+				plugin.getYamlHandler().getL().getString("CmdHome.SetPriority")
+				.replace("%name%", homeName)));
 	}
 }

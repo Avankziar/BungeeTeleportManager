@@ -1,39 +1,116 @@
 Future =========================================================================================================================
-- Wenn der Spieler auf einem Entity sitzt. Sollen die Entitys mitteleportiert werden.
-- Portale
- - Warps mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Befehl ansteuern zu können.
-- EntityTransport
-- EntityTeleport
-- Zählen, welche Warps/home angesteuert werden, um sowas wie Beliebtheit darstellen zu können.
-- Vordefinierte Perms einstellbarmachen für die Warps.
-- Maximalbeträge für Warps an Warpkosten einstellbar machen.
-- Eine einstellbare Einstellung für Warps, dass man von anderen server diese nicht sehen kann.
-- Bypass im tpa/tp für ForbiddenServer/World einbauen.
-- Das Forbidden System so überarbeiten, dass das schon auf dem Spigotserver definiert ist, ob das back/deathback,
-  forbidden ist oder nicht. Dann kann dort ein boolean hochgeschickt werden und fertig.
-  Am besten mach ne einzelne Datei für bestimmte sachen.
-- /tpaccept, ohne Argument möglich machen, damit man den ersten TpA annimmt.
-- /home, ohne Argument möglich machen, damit man das erste Home nimmt.
-- CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
-  ob back übernommen werden soll, oder nicht.
+- xWenn der Spieler auf einem Entity sitzt. Sollen die Entitys mitteleportiert werden. Sicherheitsrisiko
+- Zählen, welche Warps/home angesteuert werden, um sowas wie Beliebtheit darstellen zu können. Verbessernkann Ideentechnisch.
+- Eine einstellbare Einstellung für Warps, dass man von anderen server diese nicht sehen kann. Whitelist boolean, Server Whitelist Liste
 
 Build 6 =======================================================================================================================
+- +NPE bei /warpsetowner <Spielername welcher nicht existiert>, behoben
+- +Home existiert nicht-Fehler bei /homes <Zahl> <Spielername>, behoben
+- +Warplist NPE, behoben
+- github
+  - Sicherer Teleport
+  - Delay zwischen server switch und Tp (Antwort ausstehend)
+- +/tpaccept, ohne Argument möglich machen, damit man den ersten TpA annimmt.
+- +Back Mysql Tabelle erhält neuen Wert. "home_priority". Dieses setzt das Home ein, welches priorisiert wird, falls /home ohne Argument eingesetzt wird.
+- +/home, ohne Argument möglich machen, damit man das erste (priorisierte) Home nimmt.
+  - +/sethome <Homename> [Priorisiert(boolean)]
+  - +/homeprio <Homename> | Einen vorher priorisierten Home, wird entpriorisiert. Andere Spieler Homes können NICHT prio werden. Auch keine bypass
+- /warpsearch [Argument]; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
+  Sollte hinter dem ":" was stehen, wird genau danach gesucht. Falls der eintrag fehlt, wird nach allen gesucht,
+  welche einen server haben. Weitere Argumente sind "owner", "world", "member", "category".
+- Mysql Performance Befehl
+- Warps mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Befehl ansteuern zu können. Gegenteil auch möglich.
+  Aka OnlyPortal, NotPortal, Keine
+- Maximalbeträge für Warps an Warpkosten einstellbar machen.
+- ForbiddenList
+  - Bypass im tpa/tp für ForbiddenServer/World einbauen.
+  - BungeeCord einen YamlHandler einbauen. YamlManager global bauen.
+  - Forbiddenlist in eine seperate Datei bauen.
+  - Verständlicher machen.
+  - Möglichmachen, bestimmte Teleportarten in bestimmten Welten auch nicht auszuführen. Aka von Welt A sich nicht Wegwarpen können oder so.
+  - CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
+  ob back übernommen werden soll, oder nicht.
+- RandomTeleport
+  - Möglichmachen, dass per Config auch "Spezifische" Rtps erstellt und angesteuert werden können per Namen.
+- EntityTransport
+  - Jedes Entity, außer Spieler, benötigen Permission. Gilt auch für Store.
+  - Entitys, welche keine Speziellen namen besitzten, können immer transporiert werden.
+  - Entitys, welche benannt wurden, können nur noch vom Eigentümer/Umbenenner teleportiert werden. Umbenennungen von anderen Spieler im nachhinein geblock.
+  - Entitys, welche benannt wurden, können deren Zugriffsrechte an fremd Spieler freigegeben werden.
+  - Zum Transport, entweder Entity an eine Leine nehmen(prio) oder anschauen.
+  - /entitytransport <x:Name> | Z.B. <w:Spawn> (Owner/Mitglieg sein) o. <h:Lager> o. <p:Avankziar>
+  - Sollte man Entitys zu Spieler teleportieren wollen, muss vorher im RAM vom Zielspieler dieser den anderen Spieler freigeben.
+  - /entitytransporttarget <Spielername> | Erlaubt, das der angegebene Spieler Entityts zu einem selber transportieren kann.
+  - Mysql für Entitys, wer eigentümer und Mitglied ist.
+  - /entitytransportsetowner <Spielername> | Das angeschaute entity wird dem neuen Eigentümer überschrieben.
+  - /entitytransportlist [Seitenzahl] [Spielername] | Listet alle Entitys des Spielers auf.
+  - /entitytransportstore | Verpackt das Entity in die Datenbank. Ist nun ruffähig. Funktioniert nur mit Benannten Entitys. Leine oder anschauen.
+  - /entitytransportcall <Entityname> [Spielername] | Ruft ein Entity aus der Datenbank auf die Stelle des Spielers.
+  - Forbiddenlist Entitytransport hinzufügen, mit EntityTypes einstellbar. Sowie store und call verbieten können pro EntityType.
+  - Wenn ein registrierte Entity getötet wird, wird der Datenbank eintrag gelöscht.
+  - Registerierte EntitytsTeleporter dürfen nicht benannt oder teleportiert werden.
+- EntityTeleport
+  - Entitys, welche nicht benannt sind, aka nicht als EntityTransport registriert sind, können per Befehl als EntityTeleporter
+    registriert werden. WENN das passiert, wird die AI gelöscht(?) und nun per Rechtsklick kann man direkt ODER per Chatnachricht seine Ziele
+    wählen.
+  - /entityteleportset <x:Name> [Direkt(true)] | Ein angeschauter Entity, wird mit dem angegebenen Teleportpunkt verbunden, sodass nun beim Rechtsklick des Npc
+    dieser den Spieler dorthinteleportiert. Z.B. <w:Spawn> o. <p:Portal> o. <rtp> o. <rtp:Name> o. <sp> (Letzten Savepunkt) 
+    o. <sp:Spezifischer SavePoint> o. <l:Server;Welt;x;y;z;yaw;pitch>.
+    WENN Direkt=true, dann wird nach dem Rechtsklick sofort der Spieler teleportiert. Falls nicht, wird eine Chatausgabe dem Spieler
+    vorgetragen, damit dieser per Klick wählen kann, wohin er möchte.
+    Wenn der Spieler eine Auswahl bekommt, muss im RAM vorgelegt werden, dass der Spieler diese Ziele auswählen kann. Sollte der Spieler
+    den befehl nutzen ohne mit einem Entity "gesprochen" zu haben, wird er abgelehnt. Sollte er ANDERE ziele anwählen, welcher der Entity
+    nicht besitzt, so wird er abgelehnt. Dass alles kann per Config geld kosten, sodass sich spieler, das selbst setzten können.
+    Die Anzahl der Teleporter(Entitys) sind per Permission geregelt. Die Anzahl der maximalen Wahlmöglichkeiten sind auch per Permission geregelt.
+    Umso mehr Waglmöglichkeiten ein Entity haben soll, umso teuer wird die hinzufügung eines weiteren Teleportsziel. (Formel?)
+  - /entityteleportadd <x:Name>
+  - /entityteleport <Spielername> <Ziel>
+  - /entityteleportremove <x:Name>
+  - /entityteleportdelete | Der angeschaute Npc verliert alle verbundenen Teleportpunkte
 - FirstSpawn
   - Sind für alle Neuen Spieler.
-  - Man kann nur einen Firstspawn pro Server gemacht werden. Dabei muss keine Mysql genommen werden, sondern per Config.
+  - Man kann nur einen Firstspawn pro Server gemacht werden. Mysql
   - /firstspawnset | Setzt den FirstSpawn für den Server.
-  - /firstspawn | Tp zu Server FirstSpawn.
-  - Wenn der Spieler zum erstem mal Joint, soll eine Liste von Befehlen für diesen (Console) und mit diesem (als er selbst theoretisch)
-    ausgeführt werden einmalig. Beide Listen in der Config einstellbar machen. Es würden nur Spigot Befehle gehen. 
-    Eine Umleitung auf Bungee dauer länger und ist aufwendiger
+  - /firstspawn [server] | Tp zu Server FirstSpawn.
+  - /fristspawninfo | Info zum allen Firstspawns im Netzwerk mit tp.
+  - Wenn der Spieler zum erstem mal Joint (Netzwerk, nicht pro Server),
+    soll eine Liste von Befehlen für diesen (Console) und mit diesem (als er selbst theoretisch)
+    ausgeführt werden einmalig. Beide Listen in der Config (Spigot) einstellbar machen. Replacer für Spieler in Befehlen einbauen.
 - Respawn
   Ist ein SpielerUNspezifischer Speicherpunkt für nach dem Tode.
-  - Alle Config basierten Werte für SavePoints hinzufügen.
+  - Einen Config Wert für respawn am nächsten, entferntesten oder Default Respawn einstellen.
   - /respawncreate <RespawnName> | Erstellt Respawn
   - /respawn <RespawnName> | Tp zum Respawn 
-  - /respawnlist | Liste aller Respawns
+  - /respawnlist [seitenzahl] [server] [welt] | Liste aller Respawns, mit Tp click
   - /respawndelete <RespawnName> | Löscht Respawn
-  Todeszone:
+- BedSpawn (?)
+  - Passiver Speicherpunkt ohne aktive Speicherung/Laden. Heißt, weder Spieler/Admins sollen den speichern können.
+- Portal
+  - Ein Portal soll folgende Eigenschaften haben:
+    - Point 1 & 2, Owner, Perm, Cooldown, TargetType, Cost(Geld), Member, Blacklist, Target, PointOfExist
+  - TargetType: Warp, Deathback, Location, SavePoint, Firstspawn, Respawn, Randomteleport, Command
+  - /portalsetpoints | Toggle um die 2 Punkte des Portals zu setzen
+  - /portalcreate <Portalname> | Erstellt das Portal
+  - /portalsetowner <Portalname> <Spielername> | Überträgt das Eigentumsrecht des Portals. (null ist eine option für keinen Owner)
+  - /portalsetpermission <Portalname> <Permission>
+  - /portalsetmember <Portalname> <Spielername> | Entfernt oder fügt einen Spieler der Mitgliederliste hinzu.
+  - /portalsetcost <Portalname> <Geldbetrag>
+  - /portalsetcooldown <Portalname> <x:Zahl...> | Z.B. <y:1> <M:2> <d:5> <H:12> wären 1 Jahr 2 Monate 5 Tage und 12 Stunden
+  - /portalsettarget <Portalname> <[x:Name Oder Erkennung> ODER <x>] | Z.B. <w:Spawn> = Warp zum Spawnwarppunkt 
+    o. <sp> für den letzten Savepoint
+    - Möglichkeiten sind: <p:portalname>, <w:Name>, <db> (Deatback), <l:Server;Welt;x;y;z;yaw;pitch>, <sp> oder <sp:Name>,
+    - <fsp> firstspawn, <resp> oder <resp:name> Respawn, <rtp> oder <rtp:Name> RandomTeleport>
+  - /portalsetblacklist <Portalname> <Spielername> | Entfernt oder fügt den Spieler der Blacklist hinzu. Bypass
+  - /portalinfo <Portalname>
+  - /portallist [seitenzahl] [server] [welt]
+  - /portals [seitenzahl] [spielername]
+  - /portaldelete <Portalname>
+  - /portalpointofExit <Portalname> | Erstellt den Point of Exit des angegebenen Portals
+  - PermissionLevel für Portale hinzufügen.
+  - Entitys können KEINE Portale betreten.
+  - portal erstellung kann geld kosten.
+  - Das Innenleben der Portale muss ich mir anschauen.
+- Todeszone:
     Eine Todeszone ist ein Bereich, eine Welt oder ein Server, welche als Bedingung für eine Tod zählt.
     Sollte ein Spieler innerhalb dieses Bereichs sterben, so wird der Respawn genommen, welcher Verlinkt ist.
     Sollten sich Todeszonen überschneiden, wird die die höhere Priorität genommen. Bei gleicher Prio, ist es Zufall.
@@ -43,8 +120,6 @@ Build 6 ========================================================================
     - /deathzonedelete <DeathzoneName> | Löscht die Deathzone.
     - Man kann für deathzone spezifisische Potioneffekts einfügen. Sollte man außerhalb der Deathzone sterben, so bekommt man den 
       generellen effekt von der config.yml
-- BedSpawn
-  - Passiver Speicherpunkt ohne aktive Speicherung/Laden. Heißt, weder Spieler/Admins sollen den speichern können.
 - TodesAblaufschema in der Config pro Server oder pro Welt.
   - Hierbei wird pro Welt ein Schema mit Enums der Mechaniken gemacht. Diese geben an, in welcher Reihenfolge 
     die Mechaniken greifen sollen. Bspw. Zuerst SavePoints(Welcher SavePointName), Respawn, BedSpawn, FristSpawn.

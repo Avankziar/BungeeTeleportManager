@@ -155,7 +155,7 @@ public class TeleportHandler
         try {
 			out.writeUTF(StaticValues.TP_ACCEPT);
 			out.writeUTF(teleport.getFromName());
-			out.writeUTF(teleport.getToName());
+			out.writeUTF(teleport.getToName() == null ? "nu" : teleport.getToName());
 			out.writeUTF(returnmessage);
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_DELAY))
 			{

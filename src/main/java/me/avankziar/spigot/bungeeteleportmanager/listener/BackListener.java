@@ -77,7 +77,7 @@ public class BackListener implements Listener
 									player.getLocation().getZ(),
 									player.getLocation().getYaw(),
 									player.getLocation().getPitch());
-							Back back = new Back(player.getUniqueId(), player.getName(), location, false);
+							Back back = new Back(player.getUniqueId(), player.getName(), location, false, "");
 							plugin.getMysqlHandler().create(MysqlHandler.Type.BACK, back);
 							plugin.getBackHandler().sendJoinBackObject(player, back);
 							cancel();

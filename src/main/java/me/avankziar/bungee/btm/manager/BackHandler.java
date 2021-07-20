@@ -98,7 +98,7 @@ public class BackHandler
     	float yaw = in.readFloat();
     	float pitch = in.readFloat();
     	boolean toggle = in.readBoolean();
-    	return new Back(UUID.fromString(uuid), name, new ServerLocation(serverName, worldName, x, y, z, yaw, pitch), toggle);
+    	return new Back(UUID.fromString(uuid), name, new ServerLocation(serverName, worldName, x, y, z, yaw, pitch), toggle, "");
 	}
 	
 	public void teleportBack(String oldserver, String name, String oldworld,

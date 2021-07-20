@@ -202,7 +202,8 @@ public class MysqlSetup
 		        		+ " player_uuid char(36) NOT NULL UNIQUE,"
 		        		+ " player_name varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,"
 		        		+ " back_location text,"
-		        		+ " tp_toggle boolean);";
+		        		+ " tp_toggle boolean,"
+		        		+ " home_priority text);";
 		        query = conn.prepareStatement(data);
 		        query.execute();
 		      } catch (SQLException e) 

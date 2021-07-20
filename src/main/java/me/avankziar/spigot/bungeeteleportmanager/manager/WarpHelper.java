@@ -639,8 +639,13 @@ public class WarpHelper
 			String owner = "";
 			if(warp.getOwner() != null)
 			{
+				String conuuid = Utility.convertUUIDToName(warp.getOwner());
+				if(conuuid == null)
+				{
+					conuuid = "/";
+				}
 				owner = "~!~"+plugin.getYamlHandler().getL().getString("OwnerHover")
-						.replace("%owner%",Utility.convertUUIDToName(warp.getOwner()));
+						.replace("%owner%", conuuid);
 			}
 			if(warp.isHidden())
 			{
@@ -957,7 +962,7 @@ public class WarpHelper
 		}
 		String newowner = args[1];
 		String newowneruuid = "";
-		if(newowner.equals("null")) //ADDME BypassPerm
+		if(newowner.equals("null"))
 		{
 			newowneruuid = null;
 		} else
@@ -965,7 +970,7 @@ public class WarpHelper
 			UUID uuid = Utility.convertNameToUUID(newowner);
 			if(uuid == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.NoPlayerExist")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
 				return;
 			}
 			newowneruuid = uuid.toString();

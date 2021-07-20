@@ -8,13 +8,15 @@ public class Back
 	private String name;
 	private ServerLocation location;
 	private boolean toggle; //Für den Tp_Toggle
+	private String homePriority; //Für die Home Priorisierung bei /home, ohne weiteres Argument
 	
-	public Back(UUID uuid, String name, ServerLocation location, boolean toggle)
+	public Back(UUID uuid, String name, ServerLocation location, boolean toggle, String homePriority)
 	{
 		setUuid(uuid);
 		setName(name);
 		setLocation(location);
 		setToggle(toggle);
+		setHomePriority(homePriority);
 	}
 
 	public UUID getUuid()
@@ -55,5 +57,15 @@ public class Back
 	public void setToggle(boolean toggle)
 	{
 		this.toggle = toggle;
+	}
+
+	public String getHomePriority()
+	{
+		return homePriority;
+	}
+
+	public void setHomePriority(String homePriority)
+	{
+		this.homePriority = homePriority;
 	}
 }

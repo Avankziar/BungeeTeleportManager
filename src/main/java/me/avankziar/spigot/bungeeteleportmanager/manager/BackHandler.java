@@ -41,7 +41,8 @@ public class BackHandler
 	{
 		Back oldback = (Back) plugin.getMysqlHandler().getData(MysqlHandler.Type.BACK,
 				"`player_uuid` = ?",  player.getUniqueId().toString());
-		return new Back(player.getUniqueId(), player.getName(), Utility.getLocation(player.getLocation()), oldback.isToggle());
+		return new Back(player.getUniqueId(), player.getName(), Utility.getLocation(player.getLocation()),
+				oldback.isToggle(), oldback.getHomePriority());
 	}
 	
 	public void sendBackObject(Player player, Back back)

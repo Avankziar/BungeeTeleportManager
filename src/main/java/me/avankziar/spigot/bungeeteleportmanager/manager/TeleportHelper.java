@@ -45,7 +45,10 @@ public class TeleportHelper
 	
 	public void tpAccept(Player player, String[] args)
 	{
-		if(args.length == 1)
+		if(args.length == 0)
+		{
+			
+		} else if(args.length == 1)
 		{
 			Teleport tp = new Teleport(Utility.convertNameToUUID(args[0]), args[0],
 					player.getUniqueId(), player.getName(), Teleport.Type.ACCEPT);

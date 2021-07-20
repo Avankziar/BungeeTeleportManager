@@ -104,37 +104,69 @@ public class TeleportHandler
 	//Player to has accepted
 	public void preTeleportPlayerToPlayer(String fromName, String toName, String errormessage, int delay)
 	{
-		ProxiedPlayer from = plugin.getProxy().getPlayer(fromName); //Player witch execute the /tpa
-		ProxiedPlayer to = plugin.getProxy().getPlayer(toName);
-		if(from == null)
+		if(toName.equals("nu"))
 		{
+			ProxiedPlayer from = plugin.getProxy().getPlayer(fromName); //Player witch execute the /tpa
+			
+			if(from == null)
+			{
+				return;
+			}
+			if(!getPendingTeleports().containsKey(fromName))
+	    	{
+				from.sendMessage(ChatApi.tctl(errormessage));
+				return;
+	    	}
+			Teleport teleport = pendingTeleports.get(fromName);
+			ProxiedPlayer to = plugin.getProxy().getPlayer(teleport.getToName());
+			if(to == null)
+			{
+				from.sendMessage(ChatApi.tctl(errormessage));
+				return;
+			}
+			getPendingTeleports().remove(fromName);
+			if(teleport.getType() == Teleport.Type.TPTO)
+			{
+				teleportPlayer(from, to, delay);
+			} else if(teleport.getType() == Teleport.Type.TPHERE)
+			{
+				teleportPlayer(to, from, delay);
+			}
+			return;
+		} else
+		{
+			ProxiedPlayer from = plugin.getProxy().getPlayer(fromName); //Player witch execute the /tpa
+			ProxiedPlayer to = plugin.getProxy().getPlayer(toName);
+			if(from == null)
+			{
+				return;
+			}
+			if(to == null)
+			{
+				from.sendMessage(ChatApi.tctl(errormessage));
+				return;
+			}
+			if(!getPendingTeleports().containsKey(fromName))
+	    	{
+				to.sendMessage(ChatApi.tctl(errormessage));
+				return;
+	    	}
+			Teleport teleport = pendingTeleports.get(fromName);
+			if(!teleport.getToName().equals(toName))
+			{
+				to.sendMessage(ChatApi.tctl(errormessage));
+				return;
+			}
+			getPendingTeleports().remove(fromName);
+			if(teleport.getType() == Teleport.Type.TPTO)
+			{
+				teleportPlayer(from, to, delay);
+			} else if(teleport.getType() == Teleport.Type.TPHERE)
+			{
+				teleportPlayer(to, from, delay);
+			}
 			return;
 		}
-		if(to == null)
-		{
-			from.sendMessage(ChatApi.tctl(errormessage));
-			return;
-		}
-		if(!getPendingTeleports().containsKey(fromName))
-    	{
-			to.sendMessage(ChatApi.tctl(errormessage));
-			return;
-    	}
-		Teleport teleport = pendingTeleports.get(fromName);
-		if(!teleport.getToName().equals(toName))
-		{
-			to.sendMessage(ChatApi.tctl(errormessage));
-			return;
-		}
-		getPendingTeleports().remove(fromName);
-		if(teleport.getType() == Teleport.Type.TPTO)
-		{
-			teleportPlayer(from, to, delay);
-		} else if(teleport.getType() == Teleport.Type.TPHERE)
-		{
-			teleportPlayer(to, from, delay);
-		}
-		return;
 	}
 	
 	public void preTeleportPlayerToPlayerForceUse(Teleport teleport, String errormessage, int delay)

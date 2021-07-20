@@ -142,6 +142,24 @@ public class HomeCommandExecutor implements CommandExecutor
 			}
 			plugin.getHomeHelper().homeList(player, args);
 			return true;
+		} else if(commandList.containsKey(cmd.getName()) 
+				&& commandList.get(cmd.getName()).getPath().equals("homesetpriority"))
+		{
+			if (!(sender instanceof Player)) 
+			{
+				BungeeTeleportManager.log.info("/homepriority is only for Player!");
+				return false;
+			}
+			Player player = (Player) sender;
+			if(!player.hasPermission(commandList.get(cmd.getName()).getPermission()))
+			{
+				///Du hast dafür keine Rechte!
+				player.spigot().sendMessage(ChatApi.tctl(
+						plugin.getYamlHandler().getL().getString("NoPermission")));
+				return false;
+			}
+			plugin.getHomeHelper().homeSetPriority(player, args);
+			return true;
 		}
 		return false;
 	}

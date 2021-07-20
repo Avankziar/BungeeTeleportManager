@@ -75,13 +75,14 @@ public interface TableIII
 			try 
 			{
 				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameIII 
-						+ "`(`player_uuid`, `player_name`, `back_location`, `tp_toggle`) " 
+						+ "`(`player_uuid`, `player_name`, `back_location`, `tp_toggle`, `home_priority`) " 
 						+ "VALUES(?, ?, ?, ?)";
 				preparedStatement = conn.prepareStatement(sql);
 		        preparedStatement.setString(1, b.getUuid().toString());
 		        preparedStatement.setString(2, b.getName());
 		        preparedStatement.setString(3, Utility.getLocation(b.getLocation()));
 		        preparedStatement.setBoolean(4, b.isToggle());
+		        preparedStatement.setString(5, b.getHomePriority());
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
@@ -125,14 +126,15 @@ public interface TableIII
 			{
 				String data = "UPDATE `" + plugin.getMysqlHandler().tableNameIII
 						+ "` SET `player_uuid` = ?,"
-						+ " `player_name` = ?, `back_location` = ?, `tp_toggle` = ?" 
+						+ " `player_name` = ?, `back_location` = ?, `tp_toggle` = ?, `home_priority` = ?" 
 						+ " WHERE "+whereColumn;
 				preparedStatement = conn.prepareStatement(data);
 				preparedStatement.setString(1, b.getUuid().toString());
 		        preparedStatement.setString(2, b.getName());
 		        preparedStatement.setString(3, Utility.getLocation(b.getLocation()));
 		        preparedStatement.setBoolean(4, b.isToggle());
-		        int i = 5;
+		        preparedStatement.setString(5, b.getHomePriority());
+		        int i = 6;
 		        for(Object o : whereObject)
 		        {
 		        	preparedStatement.setObject(i, o);
@@ -181,8 +183,10 @@ public interface TableIII
 		        while (result.next()) 
 		        {
 		        	return new Back(UUID.fromString(result.getString("player_uuid")),
-		        			result.getString("player_name"), Utility.getLocation(result.getString("back_location")),
-		        			result.getBoolean("tp_toggle"));
+		        			result.getString("player_name"),
+		        			Utility.getLocation(result.getString("back_location")),
+		        			result.getBoolean("tp_toggle"),
+		        			result.getString("home_priority"));
 		        }
 		    } catch (SQLException e) 
 			{
@@ -358,8 +362,10 @@ public interface TableIII
 		        while (result.next()) 
 		        {
 		        	Back el = new Back(UUID.fromString(result.getString("player_uuid")),
-		        			result.getString("player_name"), Utility.getLocation(result.getString("back_location")),
-		        			result.getBoolean("tp_toggle"));
+		        			result.getString("player_name"),
+		        			Utility.getLocation(result.getString("back_location")),
+		        			result.getBoolean("tp_toggle"),
+		        			result.getString("home_priority"));
 		        	list.add(el);
 		        }
 		        return list;
@@ -405,8 +411,10 @@ public interface TableIII
 		        while (result.next()) 
 		        {
 		        	Back el = new Back(UUID.fromString(result.getString("player_uuid")),
-		        			result.getString("player_name"), Utility.getLocation(result.getString("back_location")),
-		        			result.getBoolean("tp_toggle"));
+		        			result.getString("player_name"),
+		        			Utility.getLocation(result.getString("back_location")),
+		        			result.getBoolean("tp_toggle"),
+		        			result.getString("home_priority"));
 		        	list.add(el);
 		        }
 		        return list;

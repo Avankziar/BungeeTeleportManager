@@ -672,6 +672,11 @@ public class YamlManager
 				"&c/homelist [Seitenzahl] &f| Listet alle Homepunkte aller Spieler auf.",
 				"&c/homelist [Seitenzahl] &f| Lists all home points of all players.",
 				"Lists all home points of all players.");
+		commandsInput("homesetpriority", "homesetpriority", "btm.cmd.user.home.setpriority", 
+				"/homesetpriority [homename]", "/homesetpriority ",
+				"&c/homesetpriority [Homename] &f| Setzt das angegebene Home als Priorität. /home führt nun direkt zu diesem Home.",
+				"&c/homesetpriority [homename] &f| Sets the specified home as priority. /home now leads directly to this home.",
+				"Sets the specified home as priority. /home now leads directly to this home.");
 	}
 	
 	private void comRT() //INFO:ComHome
@@ -1012,7 +1017,7 @@ public class YamlManager
 				""}))*/
 	}
 	
-	private void langEconomy() //INFO:LangEconomy
+	private void langEconomy()
 	{
 		languageKeys.put("Economy.EcoIsNull",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -1096,7 +1101,7 @@ public class YamlManager
 						"&eCreation of Warp &f%warp%"}));
 	}
 	
-	private void langBtm() //INFO:LangBtm
+	private void langBtm()
 	{
 		languageKeys.put("CmdBtm.Headline", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -1125,7 +1130,7 @@ public class YamlManager
 						"&eThe back teleport is being processed!"}));
 	}
 	
-	private void langHome() //INFO:LangHome
+	private void langHome()
 	{
 		languageKeys.put("CmdHome.HomeTo",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -1219,9 +1224,17 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&6",
 						"&6"}));
+		languageKeys.put("CmdHome.NoHomePriority",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast kein Home priorisiert!",
+						"&cYou have not prioritized a home!"}));
+		languageKeys.put("CmdHome.SetPriority",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast das Home &f%name% priorisiert!",
+						"&eYou prioritized the home &f%name%&e!"}));
 	}
 	
-	private void langRandomTeleport() //INFO:LangRandomTeleport
+	private void langRandomTeleport()
 	{
 		String path = "CmdRandomTeleport.";
 		languageKeys.put(path+"WarpTo", 
@@ -1246,7 +1259,7 @@ public class YamlManager
 						"&cNo RandomTeleport may be used in this world!"}));
 	}
 	
-	private void langSavePoint() //INFO:LangSavePoint
+	private void langSavePoint()
 	{
 		String path = "CmdSavePoint.";
 		languageKeys.put(path+"RequestInProgress", 
@@ -1347,7 +1360,7 @@ public class YamlManager
 						"&eYou have deleted all savepoints in the world &f%world% &ethe server &f%server% &edeleted! &cDeleted data count = &f%amount%!"}));
 	}
 	
-	private void langTp() //INFO:LangTp
+	private void langTp()
 	{
 		languageKeys.put("CmdTp.SendRequest", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -1471,7 +1484,7 @@ public class YamlManager
 						"&eYour tpaignorelist: &r"}));
 	}
 	
-	private void langWarp() //INFO:LangWarp
+	private void langWarp()
 	{
 		String path = "CmdWarp.";
 		languageKeys.put(path+"WarpTo", 
