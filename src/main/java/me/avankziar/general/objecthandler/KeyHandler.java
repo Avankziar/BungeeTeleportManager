@@ -45,4 +45,5 @@ public class KeyHandler
 	public static String WARP_REMOVEBLACKLIST = "WARP_REMOVEBLACKLIST";
 	public static String WARP_SETCATEGORY = "WARP_SETCATEGORY";
 	public static String WARP_DELETESERVERWORLD = "WARP_DELETESERVERWORLD";
+	public static String WARP_SEARCH = "WARP_SEARCH";
 }

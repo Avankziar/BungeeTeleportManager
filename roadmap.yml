@@ -15,7 +15,8 @@ Build 6 ========================================================================
 - +/home, ohne Argument möglich machen, damit man das erste (priorisierte) Home nimmt.
   - +/sethome <Homename> [Priorisiert(boolean)]
   - +/homeprio <Homename> | Einen vorher priorisierten Home, wird entpriorisiert. Andere Spieler Homes können NICHT prio werden. Auch keine bypass
-- /warpsearch [Argument]; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
+- +Explanation Pfad in der commands.yml wurde entfernt.
+- /warpsearch <Seitenzahl> <xxxx:Value>; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
   Sollte hinter dem ":" was stehen, wird genau danach gesucht. Falls der eintrag fehlt, wird nach allen gesucht,
   welche einen server haben. Weitere Argumente sind "owner", "world", "member", "category".
 - Mysql Performance Befehl

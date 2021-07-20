@@ -19,6 +19,7 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler.Type;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler.Mechanics;
@@ -1485,6 +1486,188 @@ public class WarpHelper
 		{
 			plugin.getUtility().setWarpsTabCompleter(all);
 		}
+		return;
+	}
+	public void warpSearch(Player player, String[] args)
+	{
+		if(args.length > 2)
+		{
+			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+			player.spigot().sendMessage(ChatApi.clickEvent(
+					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+			return;
+		}
+		int page = 0;
+		if(!MatchApi.isInteger(args[0]))
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoNumber")));
+			return;
+		}
+		int start = page*10;
+		int quantity = 10;
+		int i = 1;
+		String query = "";
+		String argPagination = "";
+		ArrayList<Object> whereObjects = new ArrayList<>();
+		while(i < args.length)
+		{
+			if(!args[i].contains(":"))
+			{
+				i++;
+				continue;
+			}
+			String[] arg = args[i].split(":");
+			String option = arg[0];
+			if(i > 1)
+			{
+				query += " AND ";
+				argPagination = " ";
+			}
+			argPagination += args[i];
+			switch(option)
+			{
+			case "server":
+				query += "`server` = ?";
+				whereObjects.add(arg[1]);
+				break;
+			case "world":
+				query += "`world` = ?";
+				whereObjects.add(arg[1]);
+				break;
+			case "owner":
+				query += "`owner` = ?";
+				UUID uuid = Utility.convertNameToUUID(arg[1]);
+				if(uuid == null)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
+					return;
+				}
+				whereObjects.add(uuid.toString());
+				break;
+			case "category":
+				query += "`category` = ?";
+				whereObjects.add(arg[1]);
+				break;
+			case "member":
+				query += "(`comment` LIKE ?)";
+				whereObjects.add("%"+arg[1]+"%");
+				break;
+			default:
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.SearchOptionValues")));
+				return;
+			}
+			i++;
+		}
+		Object[] whereObject = whereObjects.toArray(new Object[whereObjects.size()]);
+		ArrayList<Warp> list = ConvertHandler.convertListV(plugin.getMysqlHandler().getList(
+								Type.WARP, "`id`", start, quantity, query, whereObject));
+		String server = plugin.getYamlHandler().getConfig().getString("ServerName");
+		String world = player.getLocation().getWorld().getName();
+		int last = plugin.getMysqlHandler().lastID(MysqlHandler.Type.WARP);
+		boolean lastpage = false;
+		if((start+quantity) > last)
+		{
+			lastpage = true;
+		}
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.ListHeadline")
+				.replace("%amount%", String.valueOf(last))));
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.ListHelp")));
+		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
+		String sameServer = plugin.getYamlHandler().getL().getString("CmdWarp.ListSameServer");
+		String sameWorld = plugin.getYamlHandler().getL().getString("CmdWarp.ListSameWorld");
+		String infoElse = plugin.getYamlHandler().getL().getString("CmdWarp.ListElse");
+		String hidden = plugin.getYamlHandler().getL().getString("CmdWarp.ListHidden");
+		String blacklist = plugin.getYamlHandler().getL().getString("CmdWarp.ListBlacklist");
+		for(Warp warp : list)
+		{
+			boolean ownerb = false;
+			if(warp.getOwner() != null)
+			{
+				ownerb = warp.getOwner().equals(player.getUniqueId().toString());
+			}
+			String owner = "";
+			if(warp.getOwner() != null)
+			{
+				String conuuid = Utility.convertUUIDToName(warp.getOwner());
+				if(conuuid == null)
+				{
+					conuuid = "/";
+				}
+				owner = "~!~"+plugin.getYamlHandler().getL().getString("OwnerHover")
+						.replace("%owner%", conuuid);
+			}
+			if(warp.isHidden())
+			{
+				if(player.hasPermission(StaticValues.PERM_BYPASS_WARP)
+						|| ownerb
+						|| warp.getMember().contains(player.getUniqueId().toString()))
+				{
+					map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
+							hidden+warp.getName()+" &9| ",
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
+							HoverEvent.Action.SHOW_TEXT, 
+							plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
+							+owner
+							+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
+							.replace("%koords%", Utility.getLocationV2(warp.getLocation()))));
+				}
+			} else if(warp.getBlacklist().contains(player.getUniqueId().toString()))
+			{
+				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
+						blacklist+warp.getName()+" &9| ",
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
+						HoverEvent.Action.SHOW_TEXT, 
+						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
+						+owner
+						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
+						.replace("%koords%", Utility.getLocationV2(warp.getLocation()))));
+			} else if(warp.getLocation().getWordName().equals(world))
+			{
+				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
+						sameWorld+warp.getName()+" &9| ",
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
+						HoverEvent.Action.SHOW_TEXT, 
+						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
+						+owner
+						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
+						.replace("%koords%", Utility.getLocationV2(warp.getLocation()))));
+			} else if(warp.getLocation().getServer().equals(server))
+			{
+				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
+						sameServer+warp.getName()+" &9| ",
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
+						HoverEvent.Action.SHOW_TEXT, 
+						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
+						+owner
+						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
+						.replace("%koords%", Utility.getLocationV2(warp.getLocation()))));
+			} else
+			{
+				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
+						infoElse+warp.getName()+" &9| ",
+						ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.WARP_INFO)+" "+warp.getName(),
+						HoverEvent.Action.SHOW_TEXT, 
+						plugin.getYamlHandler().getL().getString("CmdWarp.ListHover")
+						+owner
+						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
+						.replace("%koords%", Utility.getLocationV2(warp.getLocation()))));
+			}
+		}
+		for(String serverkey : map.keySet())
+		{
+			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = map.get(serverkey);
+			player.spigot().sendMessage(ChatApi.tctl("&c"+serverkey+": "));
+			for(String worldkey : mapmap.keySet())
+			{
+				ArrayList<BaseComponent> bclist = mapmap.get(worldkey);
+				TextComponent tc = ChatApi.tc("");
+				tc.setExtra(bclist);
+				player.spigot().sendMessage(tc);
+			}
+		}
+		plugin.getCommandHelper().pastNextPage(player, "CmdWarp.", page, lastpage,
+				BTMSettings.settings.getCommands(KeyHandler.WARP_SEARCH), argPagination);
 		return;
 	}
 }

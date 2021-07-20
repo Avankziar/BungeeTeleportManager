@@ -329,7 +329,13 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(homelist.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			BTMSettings.settings.addCommands(KeyHandler.HOME_LIST, homelist.getCommandString());
 			
-			addingHelps(sethome, delhome, homecreate, homeremove, homesdeleteserverworld, home, homes, homelist);
+			CommandConstructor homesetpriority = new CommandConstructor("homesetpriority", false);
+			
+			registerCommand(homesetpriority.getName());
+			getCommand(homesetpriority.getName()).setExecutor(new HomeCommandExecutor(plugin, homesetpriority));
+			getCommand(homesetpriority.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			
+			addingHelps(sethome, delhome, homecreate, homeremove, homesdeleteserverworld, home, homes, homelist, homesetpriority);
 		}
 		
 		if(BTMSettings.settings.isPortal())
@@ -615,9 +621,16 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(warpsdeleteserverworld.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			BTMSettings.settings.addCommands(KeyHandler.WARP_DELETESERVERWORLD, warpsdeleteserverworld.getCommandString());
 			
+			CommandConstructor warpsearch = new CommandConstructor("warpsearch", false);
+			
+			registerCommand(warpsearch.getName());
+			getCommand(warpsearch.getName()).setExecutor(new WarpCommandExecutor(plugin, warpsearch));
+			getCommand(warpsearch.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.WARP_SEARCH, warpsearch.getCommandString());
+			
 			addingHelps(warp, warps, warpcreate, warpremove, warplist, warpinfo, warpsetname, warpsetowner, warpsetposition,
 					warpsetpassword, warpsetprice, warphidden, warpaddmember, warpremovemember, warpaddblacklist, warpremoveblacklist,
-					warpsetcategory, warpsdeleteserverworld);
+					warpsetcategory, warpsdeleteserverworld, warpsearch);
 		}
 		
 		/*

@@ -482,22 +482,18 @@ public class YamlManager
 		commandsInput("btm", "btm", "btm.cmd.btm", 
 				"/btm [pagenumber]", "/btm ",
 				"&c/btm &f| Infoseite für alle Befehle.",
-				"&c/btm &f| Info page for all commands.",
-				"Base and Info Command");
+				"&c/btm &f| Info page for all commands.");
 		argumentInput("btm_reload", "reload", "btm.cmd.reload", 
 				"/btm reload", "/btm reload",
 				"&c/btm reload &f| Neuladen aller Yaml-Dateien.",
-				"&c/btm reload &f| Reload all yaml files.", 
-				"Reload all yaml files");
+				"&c/btm reload &f| Reload all yaml files.");
 		commandsInput("back", "back", "btm.cmd.back.back", "/back", "/back ",
 				"&c/back &f| Teleportiert dich zu deinem letzten Rückkehrpunkt.",
-				"&c/back &f| Teleports you to your last return point.",
-				"Warp to your back position");
+				"&c/back &f| Teleports you to your last return point.");
 		commandsInput("deathback", "deathback", "btm.cmd.back.deathback", 
 				"/deathback", "/deathback ",
 				"&c/deathback &f| Teleportiert dich zu deinem Todespunkt.",
-				"&c/deathback &f| Teleports you to your death point.",
-				"Warp to your deathback position");
+				"&c/deathback &f| Teleports you to your death point.");
 		comHome();
 		comRT();
 		comTp();
@@ -635,48 +631,39 @@ public class YamlManager
 		commandsInput("sethome", "sethome", "btm.cmd.user.home.create",
 				"/sethome <homename>", "/sethome ",
 				"&c/sethome <Homename> &f| Erstellt einen Homepunkt.",
-				"&c/sethome <Homename> &f| Creates a home point.",
-				"Create a home or set the position of a existing home");
+				"&c/sethome <Homename> &f| Creates a home point.");
 		commandsInput("delhome", "delhome", "btm.cmd.user.home.remove", 
 				"/delhome <homename>", "/delhome ",
 				"&c/delhome <Homename> &f| Löscht den Homepunkt.",
-				"&c/delhome <Homename> &f| Deletes the home point.",
-				"Delete a home");
+				"&c/delhome <Homename> &f| Deletes the home point.");
 		commandsInput("homecreate", "homecreate", "btm.cmd.user.home.create",
 				"/homecreate <homename>", "/homecreate ",
 				"&c/homecreate <Homename> &f| Erstellt einen Homepunkt.",
-				"&c/homecreate <Homename> &f| Creates a home point.",
-				"Create a home or set the position of a existing home");
+				"&c/homecreate <Homename> &f| Creates a home point.");
 		commandsInput("homeremove", "homeremove", "btm.cmd.user.home.remove",
 				"/homeremove <homename>", "/homeremove ",
 				"&c/homeremove <Homename> &f| Löscht den Homepunkt.",
-				"&c/homeremove <Homename> &f| Deletes the home point.",
-				"Deletes the home point.");
+				"&c/homeremove <Homename> &f| Deletes the home point.");
 		commandsInput("homesdeleteserverworld", "homesdeleteserverworld",
 				"btm.cmd.admin.home.homesdeleteserverworld", "/homesdeleteserverworld <server> <worldname>", "/homesdeleteserverworld",
 				"&c/homesdeleteserverworld <Server> <Weltname> &f| Löscht alle Homes auf den angegebenen Server/Welt.",
-				"&c/homesdeleteserverworld <Server> <Weltname> &f| Deletes all homes on the specified server/world.",
-				"Deletes all homes on the specified server/world.");
+				"&c/homesdeleteserverworld <Server> <Weltname> &f| Deletes all homes on the specified server/world.");
 		commandsInput("homes", "homes", "btm.cmd.user.home.homes.self", 
 				"/homes [page] [playername]", "/homes ",
 				"&c/homes &f| Listet alle eigenen Homepunkte auf.",
-				"&c/homes &f| Lists all own home points.",
-				"Lists all own home points.");
+				"&c/homes &f| Lists all own home points.");
 		commandsInput("home", "home", "btm.cmd.user.home.home.self", 
 				"/home <homename>", "/home ",
 				"&c/home <Homename> &f| Teleportiert dich zu deinem Homepunkt.",
-				"&c/home <Homename> &f| Teleports you to your home point.",
-				"Teleports you to your home point.");
+				"&c/home <Homename> &f| Teleports you to your home point.");
 		commandsInput("homelist", "homelist", "btm.cmd.staff.home.home.list", 
 				"/homelist [page]", "/homelist ",
 				"&c/homelist [Seitenzahl] &f| Listet alle Homepunkte aller Spieler auf.",
-				"&c/homelist [Seitenzahl] &f| Lists all home points of all players.",
-				"Lists all home points of all players.");
+				"&c/homelist [Seitenzahl] &f| Lists all home points of all players.");
 		commandsInput("homesetpriority", "homesetpriority", "btm.cmd.user.home.setpriority", 
 				"/homesetpriority [homename]", "/homesetpriority ",
 				"&c/homesetpriority [Homename] &f| Setzt das angegebene Home als Priorität. /home führt nun direkt zu diesem Home.",
-				"&c/homesetpriority [homename] &f| Sets the specified home as priority. /home now leads directly to this home.",
-				"Sets the specified home as priority. /home now leads directly to this home.");
+				"&c/homesetpriority [homename] &f| Sets the specified home as priority. /home now leads directly to this home.");
 	}
 	
 	private void comRT() //INFO:ComHome
@@ -684,8 +671,7 @@ public class YamlManager
 		commandsInput("randomteleport", "randomteleport", "btm.cmd.user.randomteleport.randomteleport",
 				"/randomteleport", "/randomteleport",
 				"&c/randomteleport &f| Teleportiert euch zu einem zufälligen Ort.",
-				"&c/randomteleport &f| Teleport to a random location.",
-				"Teleport you to a random location, which is configurated in the config.yml");
+				"&c/randomteleport &f| Teleport to a random location.");
 	}
 	
 	private void comSavepoint() //INFO:ComSavePoint
@@ -693,33 +679,27 @@ public class YamlManager
 		commandsInput("savepoint", "savepoint", "btm.cmd.user.savepoint.savepoint.self", 
 				"/savepoint [savepoint] [playername]", "/savepoint ",
 				"&c/savepoint [savepoint] [SpielerName] &f| Teleportiert dich zu deinen Speicherpunkt.",
-				"&c/savepoint [savepoint] [playername] &f| Teleports you to your save point.",
-				"Teleports you to your save point. If is only >/savepoint<, it teleports to your last savepoint");
+				"&c/savepoint [savepoint] [playername] &f| Teleports you to your save point.");
 		commandsInput("savepoints", "savepoints", "btm.cmd.user.savepoint.savepoints.self", 
 				"/savepoints [page] [playername]", "/savepoints ",
 				"&c/savepoints [Seite] [SpielerName] &f| Shows your Savepoints.",
-				"&c/savepoints [page] [playername] &f| Shows your Savepoints.",
-				"Shows your Savepoints.");
+				"&c/savepoints [page] [playername] &f| Shows your Savepoints.");
 		commandsInput("savepointlist", "savepointlist", "btm.cmd.admin.savepoint.savepointlist", 
 				"/savepointlist [page]", "/savepointlist ",
 				"&c/savepointlist [page] &f| Shows all Savepoints",
-				"&c/savepointlist [page] &f| Shows all Savepoints",
-				"Shows all Savepoints");
+				"&c/savepointlist [page] &f| Shows all Savepoints");
 		commandsInput("savepointcreate", "savepointcreate", "btm.cmd.user.savepoint.savepointcreate", 
 				"/savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>]", "/savepoint ",
 				"&c/savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Erstellt einen Speicherpunkt für den Spieler.",
-				"&c/savepointcreate <player> <savepointname> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Create a save point for the player.",
-				"Create a save point for the player. If only player and savepointname set, the position of the player are taken. If the savepoint already exist for the player, it is overriden.");
+				"&c/savepointcreate <player> <savepointname> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Create a save point for the player.");
 		commandsInput("savepointdelete", "savepointdelete", "btm.cmd.user.savepoint.savepointdelete", 
 				"/savepointdelete <Spieler> [SavePointName]", "/savepointdelete ",
 				"&c/savepointdelete <Spieler> [SavePointName] &f| Löscht alle oder einen spezifischen Speicherpunkt von einem Spieler.",
-				"&c/savepointdelete <player> [savepointname] &f| Deletes all or a specific save point from a player.",
-				"Deletes all or a specific save point from a player.");
+				"&c/savepointdelete <player> [savepointname] &f| Deletes all or a specific save point from a player.");
 		commandsInput("savepointdeleteall", "savepointdeleteall", "btm.cmd.user.savepoint.savepointdeleteall", 
 				"/savepointdeleteall <Server> <Welt>", "/savepointdeleteall ",
 				"&c/savepointdeleteall <Server> <Welt> &f| Löscht alle Speicherpunkte in der Welt vom Server.",
-				"&c/savepointdeleteall <server> <world> &f| Deletes all save points in the world from the server.",
-				"Deletes all save points in the world from the server.");
+				"&c/savepointdeleteall <server> <world> &f| Deletes all save points in the world from the server.");
 	}
 	
 	private void comTp() //INFO:ComTp
@@ -727,63 +707,51 @@ public class YamlManager
 		commandsInput("tpa", "tpa", "btm.cmd.user.tp.tpa",
 				"/tpa <playername>", "/tpa ",
 				"&c/tpa <Spielername> &f| Sendet eine Teleportanfrage an den Spieler. (Du zu ihm/ihr)",
-				"&c/tpa <Spielername> &f| Sends a teleport request to the player. (You to him/her)",
-				"Sends a teleport request to the player. (You to him/her)");
+				"&c/tpa <Spielername> &f| Sends a teleport request to the player. (You to him/her)");
 		commandsInput("tpahere", "tpahere", "btm.cmd.user.tp.tpahere",
 				"/tpahere <playername>", "/tpahere",
 				"&c/tpahere <Spielername> &f| Sendet eine Teleportanfrage an den Spieler. (Er/Sie zu dir)",
-				"&c/tpahere <Spielername> &f| Sends a teleport request to the player. (He/She to you)",
-				"Sends a teleport request to the player. (He/She to you)");
+				"&c/tpahere <Spielername> &f| Sends a teleport request to the player. (He/She to you)");
 		commandsInput("tpaccept", "tpaccept", "btm.cmd.user.tp.tpaccept", 
 				"/tpaccept <playername>", "/tpaccept ",
 				"&c/tpaccept <Spielername> &f| Akzeptiert die TPA vom Spieler. (Klickbar im Chat)",
-				"&c/tpaccept <Spielername> &f| Accepts the TPA from the player. (Clickable in chat)",
-				"Accepts the TPA from the player. (Clickable in chat)");
+				"&c/tpaccept <Spielername> &f| Accepts the TPA from the player. (Clickable in chat)");
 		commandsInput("tpdeny", "tpdeny", "btm.cmd.user.tp.tpdeny",
 				"/tpdeny <playername>", "/tpdeny ",
 				"&c/tpadeny <Spielername> &f| Lehnt die TPA vom Spieler ab. (Klickbar im Chat)",
-				"&c/tpadeny <Spielername> &f| Rejects the TPA from the player. (Clickable in chat)",
-				"Rejects the TPA from the player. (Clickable in chat)");
+				"&c/tpadeny <Spielername> &f| Rejects the TPA from the player. (Clickable in chat)");
 		commandsInput("tpaquit", "tpaquit", "btm.cmd.user.tp.tpaquit", 
 				"/tpaquit", "/tpaquit",
 				"&c/tpaquit &f| Bricht alle TPA ab.",
-				"&c/tpaquit &f| Cancel all TPA.",
-				"Cancel all TPA.");
+				"&c/tpaquit &f| Cancel all TPA.");
 		commandsInput("tpatoggle", "tpatoggle", "btm.cmd.user.tp.tpatoggle", 
 				"/tpatoggle", "/tpatoggle",
 				"&c/tpatoggle &f| Wechselt die automatische Ablehnung aller TPAs.",
-				"&c/tpatoggle &f| Switches the automatic rejection of all TPAs.",
-				"Switches the automatic rejection of all TPAs.");
+				"&c/tpatoggle &f| Switches the automatic rejection of all TPAs.");
 		commandsInput("tpaignore", "tpaignore", "btm.cmd.user.tp.tpaignore",
 				"/tpaignore <playername>", "/tpaignore",
 				"&c/tpaignore <Spielername> &f| Toggelt ob man die Tpas vom angegebenen Spieler sofort ablehnt oder nicht.",
-				"&c/tpaignore <playername> &f| Toggles whether the tpas are immediately rejected by the specified player or not.",
-				"Toggles whether the tpas are immediately rejected by the specified player or not.");
+				"&c/tpaignore <playername> &f| Toggles whether the tpas are immediately rejected by the specified player or not.");
 		commandsInput("tpaignorelist", "tpaignorelist", "btm.cmd.user.tp.tpaignorelist", 
 				"/tpaignorelist", "/tpaignorelist",
 				"&c/tpaignorelist &f| Zeigt alle ignorierten Spieler an.",
-				"&c/tpaignorelist &f| Shows all ignored players.",
-				"Shows all ignored players.");
+				"&c/tpaignorelist &f| Shows all ignored players.");
 		commandsInput("tp", "tp", "btm.cmd.staff.tp.tp", 
 				"/tp <playername>", "/tp ",
 				"&c/tp <Spielername> &f| Teleportiert dich ohne Anfrage zu dem Spieler.",
-				"&c/tp <Spielername> &f| Teleports you to the player without request.",
-				"Teleports you to the player without request.");
+				"&c/tp <Spielername> &f| Teleports you to the player without request.");
 		commandsInput("tphere", "tphere", "btm.cmd.staff.tp.tphere", 
 				"/tphere <playername>", "/tphere ",
 				"&c/tphere <Spielername> &f| Teleportiert den Spieler ohne Anfrage zu dir.",
-				"&c/tphere <Spielername> &f| Teleports the player to you without request.",
-				"Teleports the player to you without request.");
+				"&c/tphere <Spielername> &f| Teleports the player to you without request.");
 		commandsInput("tpall", "tpall", "btm.cmd.admin.tp.tpall",
 				"/tpall", "/tpall",
 				"&c/tpall &f| Teleportiert alle Spieler auf allen Servern ohne Anfrage zu dir.",
-				"&c/tpall &f| Teleports all players on all servers to you without request.",
-				"Teleports all players on all servers to you without request.");
+				"&c/tpall &f| Teleports all players on all servers to you without request.");
 		commandsInput("tppos", "tppos", "btm.cmd.staff.tp.tppos",
 				"/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch]", "/tppos ",
 				"&c/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch] &f| Teleportiert dich zu den angegebenen Koordinaten.",
-				"&c/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch] &f| Teleports you to the specified coordinates.",
-				"Teleports you to the specified coordinates.");
+				"&c/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch] &f| Teleports you to the specified coordinates.");
 	}
 	
 	private void comWarp() //INFO:ComWarp
@@ -791,103 +759,88 @@ public class YamlManager
 		commandsInput("warpcreate", "warpcreate", "btm.cmd.user.warp.create",
 				"/warpcreate <warpname>", "/warpcreate ",
 				"&c/warpcreate <Warpname> &f| Erstellt einen Warppunkt.",
-				"&c/warpcreate <Warpname> &f| Creates a warp point.",
-				"Creates a warp point.");
+				"&c/warpcreate <Warpname> &f| Creates a warp point.");
 		commandsInput("warpremove", "warpremove", "btm.cmd.user.warp.remove",
 				"/warpremove <warpname>", "/warpremove ",
 				"&c/warpremove <Warpname> &f| Löscht den Warppunkt.",
-				"&c/warpremove <Warpname> &f| Clear the warp point.",
-				"Clear the warp point.");
+				"&c/warpremove <Warpname> &f| Clear the warp point.");
 		commandsInput("warplist", "warplist", "btm.cmd.user.warp.list",
 				"/warplist [page]", "/warplist ",
 				"&c/warplist [Seitenzahl] &f| Listet alle für dich sichtbaren Warps auf.",
-				"&c/warplist [Seitenzahl] &f| Lists all warps visible to you.",
-				"Lists all warps visible to you.");
+				"&c/warplist [Seitenzahl] &f| Lists all warps visible to you.");
 		commandsInput("warp", "warp", "btm.cmd.user.warp.warp",
 				"/warp <warpname> [confirm]", "/warp ",
 				"&c/warp <Warpname> &f| Teleportiert dich zu dem Warppunkt.",
-				"&c/warp <Warpname> &f| Lists all warps visible to you.",
-				"Lists all warps visible to you.");
+				"&c/warp <Warpname> &f| Lists all warps visible to you.");
 		commandsInput("warps", "warps", "btm.cmd.user.warp.warps",
 				"/warps [page] [playername]", "/warps ",
 				"&c/warps [Seitenzahl] [Spielername] &f| Zeigt seitenbasiert deine Warppunkte an.",
-				"&c/warps [pagenumber] [playername]&f| Displays your warp points based on pages.",
-				"Displays your warp points based on pages.");
+				"&c/warps [pagenumber] [playername]&f| Displays your warp points based on pages.");
 		commandsInput("warpinfo", "warpinfo", "btm.cmd.user.warp.info", "/warpinfo <warpname>",
 				"/warpinfo ",
 				"&c/warpinfo <Warpname> &f| Zeigt alle für dich einsehbaren Infos zum Warp an.",
-				"&c/warpinfo <Warpname> &f| Shows all the information you can see about Warp.",
-				"");
+				"&c/warpinfo <Warpname> &f| Shows all the information you can see about Warp.");
 		commandsInput("warpsetname", "warpsetname", "btm.cmd.user.warp.setname", 
 				"/warpsetname <warpname> <newwarpname>", "/warpsetname ",
 				"&c/warpsetname <Warpname> <NeuerWarpname> &f| Ändert den Namen vom Warp.",
-				"&c/warpsetname <Warpname> <NeuerWarpname> &f| Changes the name of the warp.",
-				"");
+				"&c/warpsetname <Warpname> <NeuerWarpname> &f| Changes the name of the warp.");
 		commandsInput("warpsetposition", "warpsetposition", "btm.cmd.user.warp.setposition", 
 				"/warpsetposition <warpname>", "/warpsetposition ",
 				"&c/warpsetposition <Warpname> &f| Repositioniert den Warp.",
-				"&c/warpsetposition <Warpname> &f| Reposition warp.",
-				"");
+				"&c/warpsetposition <Warpname> &f| Reposition warp.");
 		commandsInput("warpsetowner", "warpsetowner", "btm.cmd.user.warp.setowner",
 				"/warpsetowner <warpname> <playername|null>", "/warpsetowner ",
 				"&c/warpsetowner <Warpname> <Spielername> &f| Überträgt den Eigentümerstatus zu einem anderem Spieler.",
-				"&c/warpsetowner <Warpname> <Spielername> &f| Transfers the ownership status to another player.",
-				"");
+				"&c/warpsetowner <Warpname> <Spielername> &f| Transfers the ownership status to another player.");
 		commandsInput("warpsetpermission", "warpsetpermission", "btm.cmd.admin.warp.setpermission",
 				"/warpsetpermission <warpname> <permission>", "/warpsetpermission ",
 				"&c/warpsetpermission <Warpname> <Permission> &f| Ändert die Zugriffspermission des Warps.",
-				"&c/warpsetpermission <Warpname> <Permission> &f| Changes the access permission of the warp.",
-				"");
+				"&c/warpsetpermission <Warpname> <Permission> &f| Changes the access permission of the warp.");
 		commandsInput("warpsetpassword", "warpsetpassword", "btm.cmd.user.warp.setpassword",
 				"/warpsetpassword <warpname> <password>", "/warpsetpassword ",
 				"&c/warpsetpassword <Warpname> <Passwort> &f| Ändert das Zugriffspassword des Warps.",
-				"&c/warpsetpassword <Warpname> <Passwort> &f| Changes the access password of the warp.",
-				"");
+				"&c/warpsetpassword <Warpname> <Passwort> &f| Changes the access password of the warp.");
 		commandsInput("warpsetprice", "warpsetprice", "btm.cmd.user.warp.setprice",
 				"/warpsetprice <warpname> <price>", "/warpsetprice ",
 				"&c/warpsetprice <Warpname> <Preis> &f| Ändert den Preis für den Teleport zu diesem Warp.",
-				"&c/warpsetprice <Warpname> <Preis> &f| Changes the price for the teleport to this warp.",
-				"");
+				"&c/warpsetprice <Warpname> <Preis> &f| Changes the price for the teleport to this warp.");
 		commandsInput("warphidden", "warphidden", "btm.cmd.user.warp.hidden",
 				"/warphidden <warpname>", "/warphidden ",
 				"&c/warphidden <Warpname> &f| Wechselt den Warp zwischen Privat und Öffentlich.",
-				"&c/warphidden <Warpname> &f| Switches the warp between private and public.",
-				"");
+				"&c/warphidden <Warpname> &f| Switches the warp between private and public.");
 		commandsInput("warpaddmember", "warpaddmember", "btm.cmd.user.warp.addmember",
 				"/warpaddmember <warpname> <playername>", "/warpaddmember",
 				"&c/warpaddmember <Warpname> <Spielername> &f| Fügt einen Spieler als Mitglied zum Warp hinzu.",
-				"&c/warpaddmember <Warpname> <Spielername> &f| Adds a player to Warp as a member.",
-				"");
+				"&c/warpaddmember <Warpname> <Spielername> &f| Adds a player to Warp as a member.");
 		commandsInput("warpremovemember", "warpremovemember", "btm.cmd.user.warp.removemember",
 				"/warpremovemember <warpname> <playername>", "/warpremovemember ",
 				"&c/warpremovemember <Warpname> <Spielername> &f| Entfernt einen Spieler als Mitglied vom Warp.",
-				"&c/warpremovemember <Warpname> <Spielername> &f| Removes a player from warp as a member.",
-				"");
+				"&c/warpremovemember <Warpname> <Spielername> &f| Removes a player from warp as a member.");
 		commandsInput("warpaddblacklist", "warpaddblacklist", "btm.cmd.user.warp.addblacklist",
 				"/warpaddblacklist <warpname> <playername>", "/warpaddblacklist ",
 				"&c/warpaddblacklist <Warpname> <Spielername> &f| Fügt einen Spieler der Blackliste des Warps hinzu.",
-				"&c/warpaddblacklist <Warpname> <Spielername> &f| Adds a player to the warp blacklist.",
-				"");
+				"&c/warpaddblacklist <Warpname> <Spielername> &f| Adds a player to the warp blacklist.");
 		commandsInput("warpremoveblacklist", "warpremoveblacklist", "btm.cmd.user.warp.removeblacklist",
 				"/warpremoveblacklist <warpname> <playername>", "/warpremoveblacklist",
 				"&c/warpremoveblacklist <Warpname> <Spielername> &f| Entfernt einen Spieler von der Blackliste des Warps.",
-				"&c/warpremoveblacklist <Warpname> <Spielername> &f| Removes a player from the warp blacklist.",
-				"");
+				"&c/warpremoveblacklist <Warpname> <Spielername> &f| Removes a player from the warp blacklist.");
 		commandsInput("warpsetcategory", "warpsetcategory", "btm.cmd.user.warp.setcategory",
 				"/warpsetcategory <warpname> <category>", "/warpsetcategory ",
 				"&c/warpsetkategorie <warpname> <kategorie> &f| Setzt die Kategorie des Warps.",
-				"&c/warpsetcategory <warpname> <category> &f| Set the category of the warp.",
-				"");
+				"&c/warpsetcategory <warpname> <category> &f| Set the category of the warp.");
 		commandsInput("warpsdeleteserverworld", "warpsdeleteserverworld", "btm.cmd.user.warp.warpsdeleteserverworld",
 				"/warpsdeleteserverworld <server> <world>", "/warpsdeleteserverworld ",
 				"&c/warpsdeleteserverworld <server> <welt> &f| Löscht alle Warps auf den angegebenen Server/Welt.",
-				"&c/warpsdeleteserverworld <server> <world> &f| Deletes all warps on the specified server/world",
-				"");
+				"&c/warpsdeleteserverworld <server> <world> &f| Deletes all warps on the specified server/world");
+		commandsInput("warpsearch", "warpsearch", "btm.cmd.user.warp.warpsearch",
+				"/warpsearch <Seitenzahl> <xxxx:value>", "/warpsearch ",
+				"&c/warpsearch <Seitenzahl> <xxxx:Wert> &f| Sucht mit den angegeben Argumenten eine Liste aus Warps.",
+				"&c/warpsearch <page> <xxxx:value> &f| Searches a list of warps with the given arguments.");
 	}
 	
 	private void commandsInput(String path, String name, String basePermission, 
 			String suggestion, String commandString,
-			String helpInfoGerman, String helpInfoEnglish, String explanation)
+			String helpInfoGerman, String helpInfoEnglish)
 	{
 		commandsKeys.put(path+".Name"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -905,14 +858,11 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				helpInfoGerman,
 				helpInfoEnglish}));
-		commandsKeys.put(path+".Explanation"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				explanation}));
 	}
 	
 	private void argumentInput(String path, String argument, String basePermission, 
 			String suggestion, String commandString,
-			String helpInfoGerman, String helpInfoEnglish, String explanation)
+			String helpInfoGerman, String helpInfoEnglish)
 	{
 		commandsKeys.put(path+".Argument"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -930,9 +880,6 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				helpInfoGerman,
 				helpInfoEnglish}));
-		commandsKeys.put(path+".Explanation"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				explanation}));
 	}
 	
 	public void initLanguage() //INFO:Languages
@@ -1763,5 +1710,9 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast alle Warps auf der Welt &f%world% &edes Servers &f%server% &egelöscht! &cGelöschte Datenanzahl = &f%amount%",
 						"&eYou have deleted all warps in the world &f%world% &ethe server &f%server% &edeleted! &cDeleted data count = &f%amount%!"}));
+		languageKeys.put(path+"SearchOptionValues",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cEine Falsche SuchWertOption wurde erkannt! Möglich sind: &fserver, world, owner, member und category",
+						"&cAn incorrect searchvalue option was detected! Possible are: &fserver, world, owner, member and category"}));
 	}
 }
