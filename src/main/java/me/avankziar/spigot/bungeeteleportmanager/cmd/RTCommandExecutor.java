@@ -43,7 +43,7 @@ public class RTCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getRandomTeleportHelper().randomTeleportTo(player, args);

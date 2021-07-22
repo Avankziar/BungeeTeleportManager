@@ -6,6 +6,7 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.Teleport;
 import main.java.me.avankziar.general.object.TeleportIgnore;
@@ -16,7 +17,9 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandlerSpigot;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.object.BTMSettings;
 import net.md_5.bungee.api.chat.ClickEvent;
 
@@ -38,7 +41,7 @@ public class TeleportHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 		}
 	}
@@ -57,7 +60,7 @@ public class TeleportHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 		}
 	}
@@ -73,7 +76,7 @@ public class TeleportHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 		}
 	}
@@ -87,7 +90,7 @@ public class TeleportHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 		}
 	}
@@ -98,19 +101,31 @@ public class TeleportHelper
 		{
 			if(player.getName().equals(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.TpaTooYourself")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.TpaTooYourself")));
+				return;
+			}
+			if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.TPA_ONLY, null)
+					&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TPA_ONLY.getLower()))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTPA.ForbiddenServerUse")));
+				return;
+			}
+			if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.TPA_ONLY, player, null)
+					&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TPA_ONLY.getLower()))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTPA.ForbiddenWorldUse")));
 				return;
 			}
 			UUID uuid = Utility.convertNameToUUID(args[0]);
 			if(uuid == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 				return;
 			}
 			String name = Utility.convertUUIDToName(uuid.toString());
 			if(name == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 				return;
 			}
 			TeleportIgnore tpi = new TeleportIgnore(Utility.convertNameToUUID(args[0]), player.getUniqueId());
@@ -119,11 +134,11 @@ public class TeleportHelper
 					tpi.getUUID().toString(), tpi.getIgnoredUUID().toString());
 			if(ignore && !player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_TPATOGGLE))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.Ignored")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.Ignored")));
 				return;
 			} else if(ignore && player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_TPATOGGLE))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.IgnoredBypass")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoredBypass")));
 			}
 			Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
 					uuid, name, type);
@@ -132,7 +147,7 @@ public class TeleportHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 		}
 	}
@@ -148,19 +163,31 @@ public class TeleportHelper
 				{
 					if(player.getName().equals(args[0]))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.TpaTooYourself")));
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.TpaTooYourself")));
+						return;
+					}
+					if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.TELEPORT, null)
+							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenServerUse")));
+						return;
+					}
+					if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.TELEPORT, player, null)
+							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenWorldUse")));
 						return;
 					}
 					UUID uuid = Utility.convertNameToUUID(args[0]);
 					if(uuid == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 						return;
 					}
 					String name = Utility.convertUUIDToName(uuid.toString());
 					if(name == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 						return;
 					}
 					Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
@@ -170,7 +197,7 @@ public class TeleportHelper
 				{
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
-							plugin.getYamlHandler().getL().getString("InputIsWrong"),
+							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 				}
 			}
@@ -185,6 +212,18 @@ public class TeleportHelper
 			@Override
 			public void run()
 			{
+				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.TELEPORT, null)
+						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenServerUse")));
+					return;
+				}
+				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.TELEPORT, player, null)
+						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenWorldUse")));
+					return;
+				}
 				if(args.length == 0)
 				{
 					plugin.getTeleportHandler().tpAll(player, false, "", "");
@@ -195,7 +234,7 @@ public class TeleportHelper
 				{
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
-							plugin.getYamlHandler().getL().getString("InputIsWrong"),
+							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 				}
 			}
@@ -211,17 +250,30 @@ public class TeleportHelper
 			public void run()
 			{
 				ServerLocation sl = null;
+				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.TELEPORT, null)
+						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenServerUse")));
+					return;
+				}
+				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.TELEPORT, player, null)
+						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenWorldUse")));
+					return;
+				}
+				ConfigHandler cfgh = new ConfigHandler(plugin);
 				if(args.length == 3)
 				{
 					if(!MatchApi.isDouble(args[0]) || !MatchApi.isDouble(args[1]) || !MatchApi.isDouble(args[2]))
 					{
 						player.spigot().sendMessage(ChatApi.clickEvent(
-								plugin.getYamlHandler().getL().getString("InputIsWrong"),
+								plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 						return;
 					}
 					sl = new ServerLocation(
-							plugin.getYamlHandler().getConfig().getString("ServerName"),
+							cfgh.getServer(),
 							player.getLocation().getWorld().getName(),
 							Double.parseDouble(args[0]),
 							Double.parseDouble(args[1]),
@@ -232,12 +284,12 @@ public class TeleportHelper
 					if(!MatchApi.isDouble(args[1]) || !MatchApi.isDouble(args[2]) || !MatchApi.isDouble(args[3]))
 					{
 						player.spigot().sendMessage(ChatApi.clickEvent(
-								plugin.getYamlHandler().getL().getString("InputIsWrong"),
+								plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 						return;
 					}
 					sl = new ServerLocation(
-							plugin.getYamlHandler().getConfig().getString("ServerName"),
+							cfgh.getServer(),
 							args[0],
 							Double.parseDouble(args[1]),
 							Double.parseDouble(args[2]),
@@ -248,7 +300,7 @@ public class TeleportHelper
 					if(!MatchApi.isDouble(args[2]) || !MatchApi.isDouble(args[3]) || !MatchApi.isDouble(args[4]))
 					{
 						player.spigot().sendMessage(ChatApi.clickEvent(
-								plugin.getYamlHandler().getL().getString("InputIsWrong"),
+								plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 						return;
 					}
@@ -265,7 +317,7 @@ public class TeleportHelper
 							|| !MatchApi.isInteger(args[5]) || !MatchApi.isInteger(args[6]))
 					{
 						player.spigot().sendMessage(ChatApi.clickEvent(
-								plugin.getYamlHandler().getL().getString("InputIsWrong"),
+								plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 						return;
 					}
@@ -281,7 +333,7 @@ public class TeleportHelper
 				{
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
-							plugin.getYamlHandler().getL().getString("InputIsWrong"),
+							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 				}
 			}
@@ -294,14 +346,14 @@ public class TeleportHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
 		TeleportIgnore tpi = new TeleportIgnore(player.getUniqueId(), Utility.convertNameToUUID(args[0]));
 		if(tpi.getIgnoredUUID() == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 			return;
 		}
 		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.TELEPORTIGNORE,
@@ -311,12 +363,12 @@ public class TeleportHelper
 			plugin.getMysqlHandler().deleteData(MysqlHandler.Type.TELEPORTIGNORE,
 					"`player_uuid` = ? AND `ignore_uuid` = ?",
 					tpi.getUUID().toString(), tpi.getIgnoredUUID().toString());
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.IgnoreDelete")
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoreDelete")
 					.replace("%target%", args[0])));
 		} else
 		{
 			plugin.getMysqlHandler().create(MysqlHandler.Type.TELEPORTIGNORE, tpi);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.IgnoreCreate")
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoreCreate")
 					.replace("%target%", args[0])));
 		}
 		return;
@@ -328,7 +380,7 @@ public class TeleportHelper
 		ArrayList<TeleportIgnore> list = ConvertHandler.convertListVI(plugin.getMysqlHandler().getList(
 				MysqlHandler.Type.TELEPORTIGNORE, "`id` DESC", 0, last,
 				"`player_uuid` = ?",player.getUniqueId().toString()));
-		String msg = plugin.getYamlHandler().getL().getString("CmdTp.IgnoreList");
+		String msg = plugin.getYamlHandler().getLang().getString("CmdTp.IgnoreList");
 		for(TeleportIgnore tpi : list)
 		{
 			String name = Utility.convertUUIDToName(tpi.getIgnoredUUID().toString());

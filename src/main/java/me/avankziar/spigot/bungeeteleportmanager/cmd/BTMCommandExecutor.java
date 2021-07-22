@@ -52,7 +52,7 @@ public class BTMCommandExecutor implements CommandExecutor
 				if(!player.hasPermission(cc.getPermission()))
 				{
 					///Du hast dafür keine Rechte!
-					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getL().getString("NoPermission")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 					return false;
 				}
 				baseCommands(player, Integer.parseInt(args[0])); //Base and Info Command
@@ -63,7 +63,7 @@ public class BTMCommandExecutor implements CommandExecutor
 			if(!player.hasPermission(cc.getPermission()))
 			{
 				///Du hast dafür keine Rechte!
-				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getL().getString("NoPermission")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			baseCommands(player, 0); //Base and Info Command
@@ -104,7 +104,7 @@ public class BTMCommandExecutor implements CommandExecutor
 						} else
 						{
 							///Du hast dafür keine Rechte!
-							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getL().getString("NoPermission")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 							return false;
 						}
 					}/* else if(length > ac.maxArgsConstructor) 
@@ -122,7 +122,7 @@ public class BTMCommandExecutor implements CommandExecutor
 			}
 		}
 		///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
-		player.spigot().sendMessage(ChatApi.clickEvent(plugin.getYamlHandler().getL().getString("InputIsWrong"),
+		player.spigot().sendMessage(ChatApi.clickEvent(plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 				ClickEvent.Action.RUN_COMMAND, BungeeTeleportManager.infoCommand));
 		return false;
 	}
@@ -133,7 +133,7 @@ public class BTMCommandExecutor implements CommandExecutor
 		int start = page*10;
 		int end = page*10+9;
 		int last = 0;
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString(
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(
 				BungeeTeleportManager.infoCommandPath+".Headline")));
 		for(BaseConstructor bc : plugin.getHelpList())
 		{
@@ -160,7 +160,7 @@ public class BTMCommandExecutor implements CommandExecutor
 		player.spigot().sendMessage(ChatApi.apiChat(
 				bc.getHelpInfo(),
 				ClickEvent.Action.SUGGEST_COMMAND, bc.getSuggestion(),
-				HoverEvent.Action.SHOW_TEXT,plugin.getYamlHandler().getL().getString("GeneralHover")));
+				HoverEvent.Action.SHOW_TEXT,plugin.getYamlHandler().getLang().getString("GeneralHover")));
 	}
 	
 	public void pastNextPage(Player player, String path,
@@ -177,7 +177,7 @@ public class BTMCommandExecutor implements CommandExecutor
 		if(page!=0)
 		{
 			TextComponent msg2 = ChatApi.tctl(
-					plugin.getYamlHandler().getL().getString(path+".BaseInfo.Past"));
+					plugin.getYamlHandler().getLang().getString(path+".BaseInfo.Past"));
 			String cmd = cmdstring+" "+String.valueOf(j);
 			for(String o : objects)
 			{
@@ -189,7 +189,7 @@ public class BTMCommandExecutor implements CommandExecutor
 		if(!lastpage)
 		{
 			TextComponent msg1 = ChatApi.tctl(
-					plugin.getYamlHandler().getL().getString(path+".BaseInfo.Next"));
+					plugin.getYamlHandler().getLang().getString(path+".BaseInfo.Next"));
 			String cmd = cmdstring+" "+String.valueOf(i);
 			for(String o : objects)
 			{

@@ -11,10 +11,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.Home;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 import net.md_5.bungee.api.chat.BaseComponent;
 
@@ -42,13 +44,14 @@ public class HomeHandler
 	
 	public void sendPlayerToHome(Player player, Home home)
 	{
-		if(home.getLocation().getServer().equals(plugin.getYamlHandler().getConfig().getString("ServerName")))
+		ConfigHandler cfgh = new ConfigHandler(plugin);
+		if(home.getLocation().getServer().equals(cfgh.getServer()))
 		{
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Home", 2000);
+			int delayed = cfgh.getMinimumTime(Mechanics.HOME);
 			int delay = 1;
-			if(!player.hasPermission(StaticValues.PERM_BYPASS_HOME_DELAY))
+			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.HOME.getLower()))
 			{
 				delay = Math.floorDiv(delayed, 50);
 			}
@@ -58,7 +61,7 @@ public class HomeHandler
 				public void run()
 				{
 					player.teleport(ConvertHandler.getLocation(home.getLocation()));
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeTo")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeTo")
 							.replace("%home%", home.getHomeName())));
 				}
 			}.runTaskLater(plugin, delay);
@@ -78,9 +81,9 @@ public class HomeHandler
 				out.writeDouble(home.getLocation().getZ());
 				out.writeFloat(home.getLocation().getYaw());
 				out.writeFloat(home.getLocation().getPitch());
-				if(!player.hasPermission(StaticValues.PERM_BYPASS_HOME_DELAY))
+				if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.HOME.getLower()))
 				{
-					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Home", 2000));
+					out.writeInt(cfgh.getMinimumTime(Mechanics.HOME));
 				} else
 				{
 					out.writeInt(25);
@@ -97,7 +100,6 @@ public class HomeHandler
 	/*
 	 * if returns true, than the player has more homes, than he should have.
 	 */
-	//FIXME Wenn 3 von 3 Homes vorhanden sind, so kann der home nicht umgesetzt werden. Warp eventuell auch.
 	public boolean compareHomeAmount(Player player, boolean message, boolean exist)
 	{
 		debug(player, "cHA start");
@@ -207,11 +209,11 @@ public class HomeHandler
 		{
 			if(message && exist == false && i >= 0)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesGlobal")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesGlobal")
 						.replace("%amount%", String.valueOf(globalLimit))));
 			} else if(message && exist == true && i > 0)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesGlobal")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesGlobal")
 						.replace("%amount%", String.valueOf(globalLimit))));
 			}
 		}
@@ -225,7 +227,7 @@ public class HomeHandler
 	 */
 	public int compareServerHomes(Player player, boolean message, boolean exist)
 	{
-		String server = plugin.getYamlHandler().getConfig().getString("ServerName");
+		String server = new ConfigHandler(plugin).getServer();
 		String serverCluster = plugin.getYamlHandler().getConfig().getString("ServerCluster");
 		boolean clusterBeforeServer = plugin.getYamlHandler().getConfig().getBoolean("ServerClusterActive", false);
 		int serverLimit = 0;
@@ -275,11 +277,11 @@ public class HomeHandler
 			{
 				if(message && exist == false && i >= 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesServerCluster")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServerCluster")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				} else if(message && exist == true && i > 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesServerCluster")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServerCluster")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -307,11 +309,11 @@ public class HomeHandler
 			{
 				if(message && exist == false && i >= 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesServer")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServer")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				} else if(message && exist == true && i > 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesServer")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServer")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -387,11 +389,11 @@ public class HomeHandler
 			{
 				if(message && exist == false && i >= 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesWorld")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				} else if(message && exist == true && i > 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesWorld")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}
@@ -420,11 +422,11 @@ public class HomeHandler
 				
 				if(message && exist == false && i >= 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesWorld")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				} else if(message && exist == true && i > 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesWorld")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}

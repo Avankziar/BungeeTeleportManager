@@ -43,7 +43,7 @@ public class BackCommandExecutor implements CommandExecutor
 	 			{
 	 				///Du hast dafür keine Rechte!
 	 				player.spigot().sendMessage(ChatApi.tctl(
-	 						plugin.getYamlHandler().getL().getString("NoPermission")));
+	 						plugin.getYamlHandler().getLang().getString("NoPermission")));
 	 				return false;
 	 			}
 	 			plugin.getBackHelper().back(player, args);
@@ -61,7 +61,7 @@ public class BackCommandExecutor implements CommandExecutor
 	 			{
 	 				///Du hast dafür keine Rechte!
 	 				player.spigot().sendMessage(ChatApi.tctl(
-	 						plugin.getYamlHandler().getL().getString("NoPermission")));
+	 						plugin.getYamlHandler().getLang().getString("NoPermission")));
 	 				return false;
 	 			}
 	 			plugin.getBackHelper().deathBack(player, args);

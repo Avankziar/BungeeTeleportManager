@@ -13,10 +13,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.minecart.CommandMinecart;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.SavePoint;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 import net.md_5.bungee.api.chat.BaseComponent;
 
@@ -31,11 +33,12 @@ public class SavePointHandler
 	
 	public void sendPlayerToSavePoint(Player player, SavePoint sp, String playername, String uuid, boolean last)
 	{
-		if(sp.getLocation().getServer().equals(plugin.getYamlHandler().getConfig().getString("ServerName")))
+		ConfigHandler cfgh = new ConfigHandler(plugin);
+		if(sp.getLocation().getServer().equals(cfgh.getServer()))
 		{
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.SavePoint", 2000);
+			int delayed = cfgh.getMinimumTime(Mechanics.SAVEPOINT);
 			int delay = 1;
-			if(!player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_DELAY))
+			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.SAVEPOINT.getLower()))
 			{
 				delay = Math.floorDiv(delayed, 50);
 			}
@@ -47,11 +50,11 @@ public class SavePointHandler
 					player.teleport(ConvertHandler.getLocation(sp.getLocation()));
 					if(last)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.WarpToLast")
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpToLast")
 								.replace("%savepoint%", sp.getSavePointName())));
 					} else
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.WarpTo")
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpTo")
 								.replace("%savepoint%", sp.getSavePointName())));
 					}
 				}
@@ -73,9 +76,9 @@ public class SavePointHandler
 				out.writeFloat(sp.getLocation().getYaw());
 				out.writeFloat(sp.getLocation().getPitch());
 				out.writeBoolean(last);
-				if(!player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_DELAY))
+				if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.SAVEPOINT.getLower()))
 				{
-					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.SavePoint", 2000));
+					out.writeInt(cfgh.getMinimumTime(Mechanics.SAVEPOINT));
 				} else
 				{
 					out.writeInt(25);

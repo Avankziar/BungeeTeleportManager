@@ -4,15 +4,16 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import main.java.me.avankziar.bungee.btm.database.YamlHandler;
 import main.java.me.avankziar.bungee.btm.listener.TeleportListener;
 import main.java.me.avankziar.bungee.btm.manager.BackMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.CustomMessageListener;
-import main.java.me.avankziar.bungee.btm.manager.GeneralMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.HomeMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.RandomTeleportMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.SavePointMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.TeleportMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.WarpMessageListener;
+import main.java.me.avankziar.general.database.YamlManager;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -23,11 +24,20 @@ public class BungeeTeleportManager extends Plugin
 	public static Logger log;
 	public static String pluginName = "BungeeTeleportManager";
 	private static BungeeTeleportManager plugin;
+	private static YamlHandler yamlHandler;
+	private static YamlManager yamlManager;
 	
 	public void onEnable() 
 	{
 		plugin = this;
 		log = getLogger();
+		log.info(" ██████╗ ████████╗███╗   ███╗ | API-Version: "+plugin.getDescription().getVersion());
+		log.info(" ██╔══██╗╚══██╔══╝████╗ ████║ | Author: "+plugin.getDescription().getAuthor());
+		log.info(" ██████╔╝   ██║   ██╔████╔██║ | Plugin Website: https://www.spigotmc.org/resources/bungeeteleportmanager.80677/");
+		log.info(" ██╔══██╗   ██║   ██║╚██╔╝██║ | Depend Plugins: "+plugin.getDescription().getDepends().toString());
+		log.info(" ██████╔╝   ██║   ██║ ╚═╝ ██║ | SoftDepend Plugins: "+plugin.getDescription().getSoftDepends().toString());
+		log.info(" ╚═════╝    ╚═╝   ╚═╝     ╚═╝ | Have Fun^^");
+		yamlHandler = new YamlHandler(plugin);
 		CommandSetup();
 		ListenerSetup();
 	}
@@ -41,6 +51,21 @@ public class BungeeTeleportManager extends Plugin
 	public static BungeeTeleportManager getPlugin()
 	{
 		return plugin;
+	}
+	
+	public YamlHandler getYamlHandler() 
+	{
+		return yamlHandler;
+	}
+	
+	public YamlManager getYamlManager()
+	{
+		return yamlManager;
+	}
+	
+	public void setYamlManager(YamlManager yamlManager)
+	{
+		BungeeTeleportManager.yamlManager = yamlManager;
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -74,9 +99,6 @@ public class BungeeTeleportManager extends Plugin
 	public void ListenerSetup()
 	{
 		PluginManager pm = getProxy().getPluginManager();
-		pm.registerListener(plugin, new GeneralMessageListener(plugin));
-		getProxy().registerChannel(StaticValues.GENERAL_TOBUNGEE);
-		getProxy().registerChannel(StaticValues.GENERAL_TOSPIGOT);
 		pm.registerListener(plugin, new BackMessageListener(plugin));
 		getProxy().registerChannel(StaticValues.BACK_TOBUNGEE);
 		getProxy().registerChannel(StaticValues.BACK_TOSPIGOT);

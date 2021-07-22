@@ -44,7 +44,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpAccept(player, args);
@@ -62,7 +62,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpDeny(player, args);
@@ -80,7 +80,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpCancel(player, args);
@@ -98,7 +98,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpToggle(player, args);
@@ -116,7 +116,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpaIgnore(player, args);
@@ -134,7 +134,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpaIgnoreList(player, args);
@@ -152,7 +152,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpaCmd(player, args, Teleport.Type.TPTO);
@@ -170,7 +170,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpaCmd(player, args, Teleport.Type.TPHERE);
@@ -188,7 +188,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpCmd(player, args, Teleport.Type.TPTO);
@@ -206,7 +206,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpCmd(player, args, Teleport.Type.TPHERE);
@@ -224,7 +224,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpAll(player, args, Teleport.Type.TPALL);
@@ -242,7 +242,7 @@ public class TpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getTeleportHelper().tpPos(player, args, Teleport.Type.TPPOS);

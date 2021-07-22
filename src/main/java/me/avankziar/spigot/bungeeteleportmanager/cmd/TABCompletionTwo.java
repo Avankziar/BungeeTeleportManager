@@ -139,7 +139,7 @@ public class TABCompletionTwo implements TabCompleter
 		{
 			for(String s : tabList)
 			{
-				if(s.startsWith(argsi)) //TODO argsi oder tabList anscheinend null
+				if(s.startsWith(argsi))
 				{
 					list.add(s);
 				}

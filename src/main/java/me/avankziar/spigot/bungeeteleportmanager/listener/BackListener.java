@@ -11,6 +11,7 @@ import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 
 public class BackListener implements Listener
 {
@@ -70,7 +71,7 @@ public class BackListener implements Listener
 						if(player.isOnline())
 						{
 							ServerLocation location = new ServerLocation(
-									plugin.getYamlHandler().getConfig().getString("ServerName"),
+									new ConfigHandler(plugin).getServer(),
 									player.getLocation().getWorld().getName(),
 									player.getLocation().getX(),
 									player.getLocation().getY(),

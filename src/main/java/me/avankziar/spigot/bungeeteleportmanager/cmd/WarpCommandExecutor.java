@@ -44,7 +44,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpCreate(player, args);
@@ -62,7 +62,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpRemove(player, args);
@@ -80,7 +80,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpList(player, args);
@@ -98,7 +98,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpTo(player, args);
@@ -116,7 +116,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warps(player, args);
@@ -134,7 +134,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpInfo(player, args);
@@ -152,7 +152,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpSetName(player, args);
@@ -170,7 +170,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpSetPosition(player, args);
@@ -188,7 +188,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpSetOwner(player, args);
@@ -206,7 +206,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpSetPermission(player, args);
@@ -224,7 +224,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpSetPassword(player, args);
@@ -242,7 +242,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpSetPrice(player, args);
@@ -260,7 +260,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpHidden(player, args);
@@ -279,7 +279,7 @@ public class WarpCommandExecutor implements CommandExecutor
 				{
 					///Du hast dafür keine Rechte!
 					player.spigot().sendMessage(ChatApi.tctl(
-							plugin.getYamlHandler().getL().getString("NoPermission")));
+							plugin.getYamlHandler().getLang().getString("NoPermission")));
 					return false;
 				}
 				plugin.getWarpHelper().warpAddMember(player, args);
@@ -299,7 +299,7 @@ public class WarpCommandExecutor implements CommandExecutor
 				{
 					///Du hast dafür keine Rechte!
 					player.spigot().sendMessage(ChatApi.tctl(
-							plugin.getYamlHandler().getL().getString("NoPermission")));
+							plugin.getYamlHandler().getLang().getString("NoPermission")));
 					return false;
 				}
 				plugin.getWarpHelper().warpRemoveMember(player, args);
@@ -318,7 +318,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpAddBlacklist(player, args);
@@ -336,7 +336,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpRemoveBlacklist(player, args);
@@ -354,7 +354,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpSetCategory(player, args);
@@ -372,7 +372,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpsDeleteServerWorld(player, args);
@@ -390,7 +390,7 @@ public class WarpCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getWarpHelper().warpSearch(player, args);

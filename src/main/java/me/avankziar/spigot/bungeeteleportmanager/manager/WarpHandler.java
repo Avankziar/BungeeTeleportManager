@@ -10,11 +10,13 @@ import java.util.List;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 import net.md_5.bungee.api.chat.BaseComponent;
 
@@ -29,13 +31,14 @@ public class WarpHandler
 	
 	public void sendPlayerToWarp(Player player, Warp warp, String playername, String uuid)
 	{
-		if(warp.getLocation().getServer().equals(plugin.getYamlHandler().getConfig().getString("ServerName")))
+		ConfigHandler cfgh = new ConfigHandler(plugin);
+		if(warp.getLocation().getServer().equals(cfgh.getServer()))
 		{
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Warp", 2000);
+			int delayed = cfgh.getMinimumTime(Mechanics.WARP);
 			int delay = 1;
-			if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP_DELAY))
+			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.WARP.getLower()))
 			{
 				delay = Math.floorDiv(delayed, 50);
 			}
@@ -45,7 +48,7 @@ public class WarpHandler
 				public void run()
 				{
 					player.teleport(ConvertHandler.getLocation(warp.getLocation()));
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.WarpTo")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpTo")
 							.replace("%warp%", warp.getName())));
 				}
 			}.runTaskLater(plugin, delay);
@@ -65,9 +68,9 @@ public class WarpHandler
 				out.writeDouble(warp.getLocation().getZ());
 				out.writeFloat(warp.getLocation().getYaw());
 				out.writeFloat(warp.getLocation().getPitch());
-				if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP_DELAY))
+				if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.WARP.getLower()))
 				{
-					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Warp", 2000));
+					out.writeInt(cfgh.getMinimumTime(Mechanics.WARP));
 				} else
 				{
 					out.writeInt(25);
@@ -160,7 +163,7 @@ public class WarpHandler
 		{
 			if(message)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.TooManyWarpsGlobal")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsGlobal")
 						.replace("%amount%", String.valueOf(globalLimit))));
 			}
 		}
@@ -174,7 +177,7 @@ public class WarpHandler
 	 */
 	public int compareServerWarps(Player player, boolean message)
 	{
-		String server = plugin.getYamlHandler().getConfig().getString("ServerName");
+		String server = new ConfigHandler(plugin).getServer();
 		String serverCluster = plugin.getYamlHandler().getConfig().getString("ServerCluster");
 		boolean clusterBeforeServer = plugin.getYamlHandler().getConfig().getBoolean("ServerClusterActive", false);
 		int serverLimit = 0;
@@ -221,7 +224,7 @@ public class WarpHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.TooManyWarpsServerCluster")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsServerCluster")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -248,7 +251,7 @@ public class WarpHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.TooManyWarpsServer")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsServer")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -328,7 +331,7 @@ public class WarpHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.TooManyWarpsWorld")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}
@@ -356,7 +359,7 @@ public class WarpHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdWarp.TooManyWarpsWorld")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}

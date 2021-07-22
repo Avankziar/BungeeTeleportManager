@@ -1,4 +1,4 @@
-package main.java.me.avankziar.spigot.bungeeteleportmanager.database;
+package main.java.me.avankziar.general.database;
 
 import java.util.LinkedHashMap;
 

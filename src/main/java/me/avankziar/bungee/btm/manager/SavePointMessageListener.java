@@ -5,9 +5,9 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import main.java.me.avankziar.bungee.btm.BungeeTeleportManager;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
-import main.java.me.avankziar.general.objecthandler.ForbiddenHandler.Mechanics;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -54,7 +54,7 @@ public class SavePointMessageListener implements Listener
         	float pitch = in.readFloat();
         	boolean last = in.readBoolean();
         	int delay = in.readInt();
-        	BackHandler.getBack(in, uuid, playerName, Mechanics.NONE);
+        	BackHandler.getBack(in, uuid, playerName, Mechanics.SAVEPOINT);
         	ServerLocation location = new ServerLocation(server, worldName, x, y, z, yaw, pitch);
         	SavePointHandler wh = new SavePointHandler(plugin);
         	wh.teleportPlayerToSavePoint(playerName, warpName, location, delay, last);

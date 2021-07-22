@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler.Mechanics;
+import main.java.me.avankziar.general.object.Mechanics;
 
 public class CustomMessageListener implements PluginMessageListener
 {
@@ -64,11 +64,11 @@ public class CustomMessageListener implements PluginMessageListener
 										}.runTask(plugin);
 										
 										senders.sendMessage(
-												ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
+												ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 												.replace("%playerfrom%", senders.getName())
 												.replace("%playerto%", targets.getName())));
 										targets.sendMessage(
-												ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PlayerTeleport")
+												ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 												.replace("%playerfrom%", senders.getName())
 												.replace("%playerto%", targets.getName())));
 										cancel();
@@ -119,7 +119,7 @@ public class CustomMessageListener implements PluginMessageListener
 										if(Bukkit.getWorld(worldName) == null)
 										{
 											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.WorldNotFound")
+													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 										}
@@ -136,7 +136,7 @@ public class CustomMessageListener implements PluginMessageListener
 										if(messagenull)
 										{
 											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.PositionTeleport")
+													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PositionTeleport")
 													.replace("%server%", serverName)
 													.replace("%world%", worldName)
 													.replace("%coords%", x+" "+y+" "+z+" | "+yaw+" "+pitch)));

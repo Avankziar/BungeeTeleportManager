@@ -19,6 +19,8 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import main.java.me.avankziar.general.database.YamlManager;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.BungeeBridge;
@@ -39,8 +41,8 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.cmd.tree.CommandConst
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlSetup;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.YamlHandler;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.database.YamlManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.AdvancedEconomyHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.BackListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.CustomTeleportListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.PlayerOnCooldownListener;
@@ -50,7 +52,6 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.BackHelper;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.BackMessageListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.CustomHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.CustomMessageListener;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.GeneralHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeHelper;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeMessageListener;
@@ -86,7 +87,6 @@ public class BungeeTeleportManager extends JavaPlugin
 	private Economy eco;
 	private AdvancedEconomyHandler advancedEconomyHandler;
 	
-	private GeneralHandler generalHandler;
 	private BackHandler backHandler;
 	private BackHelper backHelper;
 	private CustomHandler customHandler;
@@ -151,7 +151,6 @@ public class BungeeTeleportManager extends JavaPlugin
 		BTMSettings.initSettings(plugin);
 		bungeeBridge = new BungeeBridge(plugin);
 		commandHelper = new CommandHelper(plugin);
-		generalHandler = new GeneralHandler(plugin);
 		backHelper = new BackHelper(plugin);
 		backHandler = new BackHandler(plugin);
 		customHandler = new CustomHandler(plugin);
@@ -250,7 +249,8 @@ public class BungeeTeleportManager extends JavaPlugin
 		
 		addingHelps(btm);
 		
-		if(BTMSettings.settings.isBack())
+		ConfigHandler cfgh = new ConfigHandler(plugin);
+		if(cfgh.enableCommands(Mechanics.BACK))
 		{
 			CommandConstructor back = new CommandConstructor("back", false);
 			
@@ -261,7 +261,7 @@ public class BungeeTeleportManager extends JavaPlugin
 			addingHelps(back);
 		}
 		
-		if(BTMSettings.settings.isDeathback())
+		if(cfgh.enableCommands(Mechanics.DEATHBACK))
 		{
 			CommandConstructor deathback = new CommandConstructor("deathback", false);
 			
@@ -272,7 +272,7 @@ public class BungeeTeleportManager extends JavaPlugin
 			addingHelps(deathback);
 		}
 		
-		if(BTMSettings.settings.isHome())
+		if(cfgh.enableCommands(Mechanics.HOME))
 		{
 			CommandConstructor sethome = new CommandConstructor("sethome", false);
 			
@@ -338,12 +338,12 @@ public class BungeeTeleportManager extends JavaPlugin
 			addingHelps(sethome, delhome, homecreate, homeremove, homesdeleteserverworld, home, homes, homelist, homesetpriority);
 		}
 		
-		if(BTMSettings.settings.isPortal())
+		if(cfgh.enableCommands(Mechanics.PORTAL))
 		{
 			
 		}
 		
-		if(BTMSettings.settings.isRandomTeleport())
+		if(cfgh.enableCommands(Mechanics.RANDOMTELEPORT))
 		{
 			CommandConstructor randomteleport = new CommandConstructor("randomteleport", false);
 			
@@ -353,12 +353,12 @@ public class BungeeTeleportManager extends JavaPlugin
 			addingHelps(randomteleport);
 		}
 		
-		if(BTMSettings.settings.isRespawnPoint())
+		if(cfgh.enableCommands(Mechanics.RESPAWNPOINT))
 		{
 			
 		}
 		
-		if(BTMSettings.settings.isSavePoint())
+		if(cfgh.enableCommands(Mechanics.SAVEPOINT))
 		{
 			CommandConstructor savepoint = new CommandConstructor("savepoint", false);
 			
@@ -401,7 +401,7 @@ public class BungeeTeleportManager extends JavaPlugin
 			addingHelps(savepoint, savepoints, savepointcreate, savepointdelete, savepointdeleteall, savepointlist);
 		}
 		
-		if(BTMSettings.settings.isTeleport())
+		if(cfgh.enableCommands(Mechanics.TPA_ONLY))
 		{
 			CommandConstructor tpaccept = new CommandConstructor("tpaccept", false);
 			
@@ -456,6 +456,11 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(tpahere.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			BTMSettings.settings.addCommands(KeyHandler.TPAHERE, tpahere.getCommandString());
 			
+			
+		}
+		
+		if(cfgh.enableCommands(Mechanics.TELEPORT))
+		{
 			CommandConstructor tp = new CommandConstructor("tp", false);
 			
 			registerCommand(tp.getName());
@@ -482,11 +487,10 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(tppos.getName()).setExecutor(new TpCommandExecutor(plugin, tppos));
 			getCommand(tppos.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			
-			addingHelps(tpaccept, tpdeny, tpa, tpahere, tpquit, tpatoggle, tpaignore, tpaignorelist,
-					tp, tphere, tpall, tppos);
+			addingHelps(tp, tphere, tpall, tppos);
 		}
 		
-		if(BTMSettings.settings.isWarp())
+		if(cfgh.enableCommands(Mechanics.WARP))
 		{
 			CommandConstructor warpcreate = new CommandConstructor("warpcreate", false);
 			
@@ -645,34 +649,23 @@ public class BungeeTeleportManager extends JavaPlugin
 	public void setupBypassPerm()
 	{
 		String path = "Bypass.";
-		StaticValues.PERM_BYPASS_BACK_COST = yamlHandler.getCom().getString(path+"Back.Cost");
-		StaticValues.PERM_BYPASS_BACK_DELAY = yamlHandler.getCom().getString(path+"Back.Delay");
 		
-		StaticValues.PERM_BYPASS_DEATHBACK_DELAY = yamlHandler.getCom().getString(path+"DeathBack.Delay");
-		
-		StaticValues.PERM_BYPASS_CUSTOM_DELAY = yamlHandler.getCom().getString(path+"Custom.Delay");
+		StaticValues.BYPASS_COST = yamlHandler.getCom().getString(path+"Cost");
+		StaticValues.BYPASS_DELAY = yamlHandler.getCom().getString(path+"Delay");
+		StaticValues.BYPASS_FORBIDDEN_CREATE = yamlHandler.getCom().getString(path+"Forbidden.Create");
+		StaticValues.BYPASS_FORBIDDEN_USE = yamlHandler.getCom().getString(path+"Forbidden.Use");
 		
 		StaticValues.PERM_HOME_OTHER = yamlHandler.getCom().getString(path+"Home.Other");
 		StaticValues.PERM_HOMES_OTHER = yamlHandler.getCom().getString(path+"Home.HomesOther");
 		StaticValues.PERM_BYPASS_HOME = yamlHandler.getCom().getString(path+"Home.Admin");
-		StaticValues.PERM_BYPASS_HOME_COST = yamlHandler.getCom().getString(path+"Home.Cost");
-		StaticValues.PERM_BYPASS_HOME_DELAY = yamlHandler.getCom().getString(path+"Home.Delay");
-		StaticValues.PERM_BYPASS_HOME_FORBIDDEN = yamlHandler.getCom().getString(path+"Home.Forbidden");
 		StaticValues.PERM_BYPASS_HOME_TOOMANY = yamlHandler.getCom().getString(path+"Home.Toomany");
 		StaticValues.PERM_HOME_COUNTHOMES_WORLD = yamlHandler.getCom().getString(path+"Home.Count.World");
 		StaticValues.PERM_HOME_COUNTHOMES_SERVER = yamlHandler.getCom().getString(path+"Home.Count.Server");
 		StaticValues.PERM_HOME_COUNTHOMES_GLOBAL = yamlHandler.getCom().getString(path+"Home.Count.Global");
 		
-		StaticValues.PERM_BYPASS_RANDOMTELEPORT_COST = yamlHandler.getCom().getString(path+"RandomTeleport.Cost");
-		StaticValues.PERM_BYPASS_RANDOMTELEPORT_DELAY = yamlHandler.getCom().getString(path+"RandomTeleport.Delay");
-		
 		StaticValues.PERM_BYPASS_SAVEPOINT_OTHER = yamlHandler.getCom().getString(path+"SavePoint.Other");
 		StaticValues.PERM_BYPASS_SAVEPOINTS_OTHER = yamlHandler.getCom().getString(path+"SavePoint.SavePointsOther");
-		StaticValues.PERM_BYPASS_SAVEPOINT_DELAY = yamlHandler.getCom().getString(path+"SavePoint.Delay");
 		
-		StaticValues.PERM_BYPASS_TELEPORT_COST = yamlHandler.getCom().getString(path+"Tp.Cost");
-		StaticValues.PERM_BYPASS_TELEPORT_DELAY = yamlHandler.getCom().getString(path+"Tp.Delay");
-		StaticValues.PERM_BYPASS_TELEPORT_FORBIDDEN = yamlHandler.getCom().getString(path+"Tp.Forbidden");
 		StaticValues.PERM_BYPASS_TELEPORT_SILENT = yamlHandler.getCom().getString(path+"Tp.Silent");
 		StaticValues.PERM_BYPASS_TELEPORT_TPATOGGLE = yamlHandler.getCom().getString(path+"Tp.Tpatoggle");
 		
@@ -680,9 +673,6 @@ public class BungeeTeleportManager extends JavaPlugin
 		StaticValues.PERM_WARPS_OTHER = yamlHandler.getCom().getString(path+"Warp.WarpsOther");
 		StaticValues.PERM_BYPASS_WARP = yamlHandler.getCom().getString(path+"Warp.Admin");
 		StaticValues.PERM_BYPASS_WARP_BLACKLIST = yamlHandler.getCom().getString(path+"Warp.Blacklist");
-		StaticValues.PERM_BYPASS_WARP_COST = yamlHandler.getCom().getString(path+"Warp.Cost");
-		StaticValues.PERM_BYPASS_WARP_DELAY = yamlHandler.getCom().getString(path+"Warp.Delay");
-		StaticValues.PERM_BYPASS_WARP_FORBIDDEN = yamlHandler.getCom().getString(path+"Warp.Forbidden");
 		StaticValues.PERM_BYPASS_WARP_TOOMANY = yamlHandler.getCom().getString(path+"Warp.Toomany");
 		StaticValues.PERM_WARP_COUNTWARPS_WORLD = yamlHandler.getCom().getString(path+"Warp.Count.World");
 		StaticValues.PERM_WARP_COUNTWARPS_SERVER = yamlHandler.getCom().getString(path+"Warp.Count.Server");
@@ -924,11 +914,6 @@ public class BungeeTeleportManager extends JavaPlugin
 	public CustomHandler getCustomHandler()
 	{
 		return customHandler;
-	}
-	
-	public GeneralHandler getGeneralHandler()
-	{
-		return generalHandler;
 	}
 	
 	public HomeHandler getHomeHandler()

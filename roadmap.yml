@@ -9,28 +9,29 @@ Build 6 ========================================================================
 - +Warplist NPE, behoben
 - github
   - Sicherer Teleport
-  - Delay zwischen server switch und Tp (Antwort ausstehend)
 - +/tpaccept, ohne Argument möglich machen, damit man den ersten TpA annimmt.
 - +Back Mysql Tabelle erhält neuen Wert. "home_priority". Dieses setzt das Home ein, welches priorisiert wird, falls /home ohne Argument eingesetzt wird.
 - +/home, ohne Argument möglich machen, damit man das erste (priorisierte) Home nimmt.
   - +/sethome <Homename> [Priorisiert(boolean)]
   - +/homeprio <Homename> | Einen vorher priorisierten Home, wird entpriorisiert. Andere Spieler Homes können NICHT prio werden. Auch keine bypass
 - +Explanation Pfad in der commands.yml wurde entfernt.
-- /warpsearch <Seitenzahl> <xxxx:Value>; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
-  Sollte hinter dem ":" was stehen, wird genau danach gesucht. Falls der eintrag fehlt, wird nach allen gesucht,
-  welche einen server haben. Weitere Argumente sind "owner", "world", "member", "category".
+- +/warpsearch <Seitenzahl> <xxxx:Value>; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
+    Sollte hinter dem ":" was stehen, wird genau danach gesucht. Falls der eintrag fehlt, wird nach allen gesucht,
+    welche einen server haben. Weitere Argumente sind "owner", "world", "member", "category".
 - Mysql Performance Befehl
 - Warps mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Befehl ansteuern zu können. Gegenteil auch möglich.
   Aka OnlyPortal, NotPortal, Keine
 - Maximalbeträge für Warps an Warpkosten einstellbar machen.
+- +Can. in EnableCommands umbenannt.
+- +TPA und TP befehle nun für das Enablen getrennt.
 - ForbiddenList
-  - Bypass im tpa/tp für ForbiddenServer/World einbauen.
-  - BungeeCord einen YamlHandler einbauen. YamlManager global bauen.
-  - Forbiddenlist in eine seperate Datei bauen.
-  - Verständlicher machen.
-  - Möglichmachen, bestimmte Teleportarten in bestimmten Welten auch nicht auszuführen. Aka von Welt A sich nicht Wegwarpen können oder so.
-  - CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
-  ob back übernommen werden soll, oder nicht.
+  - +Bypass im tpa/tp für ForbiddenServer/World einbauen.
+  - +BungeeCord einen YamlHandler einbauen. YamlManager global bauen.
+  - +Forbiddenlist in eine seperate Datei bauen.
+  - +Verständlicher machen.
+  - +Möglichmachen, bestimmte Teleportarten in bestimmten Welten auch nicht auszuführen. Aka von Welt A sich nicht Wegwarpen können oder so.
+  - +CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
+      ob back übernommen werden soll, oder nicht.
 - RandomTeleport
   - Möglichmachen, dass per Config auch "Spezifische" Rtps erstellt und angesteuert werden können per Namen.
 - EntityTransport

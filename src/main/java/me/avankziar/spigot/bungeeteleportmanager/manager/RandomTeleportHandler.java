@@ -16,7 +16,8 @@ import main.java.me.avankziar.general.object.RandomTeleport;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler.Mechanics;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
+import main.java.me.avankziar.general.object.Mechanics;
 
 public class RandomTeleportHandler
 {
@@ -29,13 +30,14 @@ public class RandomTeleportHandler
 	
 	public void sendPlayerToRT(Player player, RandomTeleport rt, String playername, String uuid)
 	{
-		if(rt.getPoint1().getServer().equals(plugin.getYamlHandler().getConfig().getString("ServerName")))
+		ConfigHandler cfgh = new ConfigHandler(plugin);
+		if(rt.getPoint1().getServer().equals(cfgh.getServer()))
 		{
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
-			int delayed = plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.RandomTeleport", 2000);
+			int delayed = cfgh.getMinimumTime(Mechanics.RANDOMTELEPORT);
 			int delay = 1;
-			if(!player.hasPermission(StaticValues.PERM_BYPASS_RANDOMTELEPORT_DELAY))
+			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.RANDOMTELEPORT.getLower()))
 			{
 				delay = Math.floorDiv(delayed, 50);
 			}
@@ -52,7 +54,7 @@ public class RandomTeleportHandler
 				{
 					plugin.getUtility().givesEffect(player, Mechanics.RANDOMTELEPORT, false, false);
 					player.teleport(loc);
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.WarpTo")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.WarpTo")
 							.replace("%server%", rt.getPoint1().getServer())
 							.replace("%world%", rt.getPoint1().getWordName())));
 				}
@@ -80,9 +82,9 @@ public class RandomTeleportHandler
 				{
 					out.writeInt(rt.getRadius());
 				}
-				if(!player.hasPermission(StaticValues.PERM_BYPASS_RANDOMTELEPORT_DELAY))
+				if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.RANDOMTELEPORT.getLower()))
 				{
-					out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.RandomTeleport", 2000));
+					out.writeInt(cfgh.getMinimumTime(Mechanics.RANDOMTELEPORT));
 				} else
 				{
 					out.writeInt(25);

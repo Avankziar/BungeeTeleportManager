@@ -7,10 +7,12 @@ import java.io.IOException;
 import org.bukkit.entity.Player;
 
 import main.java.me.avankziar.general.object.Back;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.object.BTMSettings;
 
 public class BackHandler
@@ -144,9 +146,9 @@ public class BackHandler
 			out.writeFloat(back.getLocation().getYaw());
 			out.writeFloat(back.getLocation().getPitch());
 			out.writeBoolean(back.isToggle());
-			if(!player.hasPermission(StaticValues.PERM_BYPASS_BACK_DELAY))
+			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.BACK.getLower()))
 			{
-				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.Back", 2000));
+				out.writeInt(new ConfigHandler(plugin).getMinimumTime(Mechanics.BACK));
 			} else
 			{
 				out.writeInt(25);
@@ -157,7 +159,7 @@ public class BackHandler
         player.sendPluginMessage(plugin, StaticValues.BACK_TOBUNGEE, stream.toByteArray());
 	}
 	
-	public void sendPlayerDeathBack(Player player, Back back, boolean deleteDeathBack)
+	public void sendPlayerDeathBack(Player player, Back back)
 	{
 		if(!BTMSettings.settings.isBungee())
 		{
@@ -177,10 +179,9 @@ public class BackHandler
 			out.writeFloat(back.getLocation().getYaw());
 			out.writeFloat(back.getLocation().getPitch());
 			out.writeBoolean(back.isToggle());
-			out.writeBoolean(deleteDeathBack);
-			if(!player.hasPermission(StaticValues.PERM_BYPASS_DEATHBACK_DELAY))
+			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.DEATHBACK.getLower()))
 			{
-				out.writeInt(plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore.DeathBack", 2000));
+				out.writeInt(new ConfigHandler(plugin).getMinimumTime(Mechanics.DEATHBACK));
 			} else
 			{
 				out.writeInt(25);

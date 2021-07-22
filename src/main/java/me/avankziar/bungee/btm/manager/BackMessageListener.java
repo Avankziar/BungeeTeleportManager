@@ -7,9 +7,9 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import main.java.me.avankziar.bungee.btm.BungeeTeleportManager;
+import main.java.me.avankziar.bungee.btm.handler.ForbiddenHandlerBungee;
 import main.java.me.avankziar.general.object.Back;
-import main.java.me.avankziar.general.objecthandler.ForbiddenHandler;
-import main.java.me.avankziar.general.objecthandler.ForbiddenHandler.Mechanics;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
@@ -20,10 +20,12 @@ import net.md_5.bungee.event.EventHandler;
 public class BackMessageListener implements Listener	
 {
 	private BungeeTeleportManager plugin;
+	private boolean deleteDeathBack = true;
 	
 	public BackMessageListener(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
+		deleteDeathBack = plugin.getYamlHandler().getConfig().getBoolean("DeleteDeathBackAfterUsing");
 	}
 	
 	@EventHandler
@@ -49,7 +51,7 @@ public class BackMessageListener implements Listener
         	String uuid = in.readUTF();
         	String name = in.readUTF();
         	Back back = BackHandler.getTaskBack(in, uuid, name);
-        	if(ForbiddenHandler.isForbidden(back, name, Mechanics.BACK, false))
+        	if(ForbiddenHandlerBungee.isForbidden(back, name, Mechanics.BACK, false))
     		{
         		return;
     		}
@@ -63,7 +65,7 @@ public class BackMessageListener implements Listener
         	String uuid = in.readUTF();
         	String name = in.readUTF();
         	Back back = BackHandler.getTaskBack(in, uuid, name);
-        	if(ForbiddenHandler.isForbidden(back, name, Mechanics.BACK, false))
+        	if(ForbiddenHandlerBungee.isForbidden(back, name, Mechanics.BACK, false))
     		{
         		return;
     		}
@@ -95,18 +97,18 @@ public class BackMessageListener implements Listener
         	float oldyaw = oldback.getLocation().getYaw();
         	float oldpitch = oldback.getLocation().getPitch();
         	//INFO Sorgt dafür, dass das Back nicht überschrieben, falls der Spieler in einer Forbidden Welt oder Server ist.
-        	if(!ForbiddenHandler.isForbidden(back, name, Mechanics.BACK, false))
+        	if(!ForbiddenHandlerBungee.isForbidden(back, name, Mechanics.BACK, false))
     		{
         		BackHandler.getBackLocations().replace(name, back);
     		}
         	BackHandler bh = new BackHandler(plugin);
-        	bh.teleportBack(oldserver, name, oldworld, oldx, oldy, oldz, oldyaw, oldpitch, false, delayed, false);
+        	bh.teleportBack(oldserver, name, oldworld, oldx, oldy, oldz, oldyaw, oldpitch, deleteDeathBack, delayed, false);
         } else if(task.equals(StaticValues.BACK_SENDDEATHOBJECT))
         {
         	String uuid = in.readUTF();
         	String name = in.readUTF();
         	Back back = BackHandler.getTaskBack(in, uuid, name);
-        	if(ForbiddenHandler.isForbidden(back, name, Mechanics.DEATHBACK, true))
+        	if(ForbiddenHandlerBungee.isForbidden(back, name, Mechanics.DEATHBACK, true))
     		{
     			return;
     		}
@@ -149,7 +151,6 @@ public class BackMessageListener implements Listener
         	float oldyaw = olddeathback.getLocation().getYaw();
         	float oldpitch = olddeathback.getLocation().getPitch();
         	Back back = BackHandler.getTaskBack(in, uuid, name);
-        	boolean deleteDeathBack = in.readBoolean();
         	int delayed = in.readInt();
 			if(!BackHandler.getBackLocations().containsKey(name))
         	{

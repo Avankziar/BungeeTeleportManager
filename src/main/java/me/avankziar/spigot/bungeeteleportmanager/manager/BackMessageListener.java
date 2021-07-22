@@ -12,10 +12,11 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
 import main.java.me.avankziar.general.object.Back;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler.Mechanics;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 
 public class BackMessageListener implements PluginMessageListener
 {
@@ -31,6 +32,7 @@ public class BackMessageListener implements PluginMessageListener
 	{
 		if(channel.equals(StaticValues.BACK_TOSPIGOT)) 
 		{
+			ConfigHandler cfgh = new ConfigHandler(plugin);
         	ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
             DataInputStream in = new DataInputStream(stream);
             String task = null;
@@ -63,7 +65,7 @@ public class BackMessageListener implements PluginMessageListener
 										if(Bukkit.getWorld(worldName) == null)
 										{
 											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.WorldNotFound")
+													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -81,12 +83,12 @@ public class BackMessageListener implements PluginMessageListener
 										{
 											plugin.getBackHelper().cooldown.replace(
 													player, System.currentTimeMillis()+
-													1000L*plugin.getYamlHandler().getConfig().getLong("BackCooldown", 10));
+													1000L*cfgh.getBackCooldown());
 										} else
 										{
 											plugin.getBackHelper().cooldown.put(
 													player, System.currentTimeMillis()+
-													1000L*plugin.getYamlHandler().getConfig().getLong("BackCooldown", 10));
+													1000L*cfgh.getBackCooldown());
 										}
 										cancel();
 										return;
@@ -128,7 +130,7 @@ public class BackMessageListener implements PluginMessageListener
 										if(Bukkit.getWorld(worldName) == null)
 										{
 											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.WorldNotFound")
+													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -147,12 +149,12 @@ public class BackMessageListener implements PluginMessageListener
 										{
 											plugin.getBackHelper().cooldown.replace(
 													player, System.currentTimeMillis()+
-													1000L*plugin.getYamlHandler().getConfig().getLong("BackCooldown", 10));
+													1000L*cfgh.getBackCooldown());
 										} else
 										{
 											plugin.getBackHelper().cooldown.put(
 													player, System.currentTimeMillis()+
-													1000L*plugin.getYamlHandler().getConfig().getLong("BackCooldown", 10));
+													1000L*cfgh.getBackCooldown());
 										}
 										cancel();
 										return;
@@ -186,7 +188,7 @@ public class BackMessageListener implements PluginMessageListener
             		Player requester = plugin.getServer().getPlayer(playername);
             		if(requester != null)
             		{
-            			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.NoDeathBack")));
+            			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.NoDeathBack")));
             		}
             	    return;
             	}

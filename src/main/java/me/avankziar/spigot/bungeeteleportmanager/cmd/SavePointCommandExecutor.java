@@ -43,7 +43,7 @@ public class SavePointCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getSavePointHelper().savePoint(player, args);
@@ -61,7 +61,7 @@ public class SavePointCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getSavePointHelper().savePoints(player, args);
@@ -79,7 +79,7 @@ public class SavePointCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getSavePointHelper().savePointList(player, args);
@@ -94,7 +94,7 @@ public class SavePointCommandExecutor implements CommandExecutor
 				{
 					///Du hast dafür keine Rechte!
 					player.spigot().sendMessage(ChatApi.tctl(
-							plugin.getYamlHandler().getL().getString("NoPermission")));
+							plugin.getYamlHandler().getLang().getString("NoPermission")));
 					return false;
 				}
 			}
@@ -110,7 +110,7 @@ public class SavePointCommandExecutor implements CommandExecutor
 				{
 					///Du hast dafür keine Rechte!
 					player.spigot().sendMessage(ChatApi.tctl(
-							plugin.getYamlHandler().getL().getString("NoPermission")));
+							plugin.getYamlHandler().getLang().getString("NoPermission")));
 					return false;
 				}
 			}
@@ -126,7 +126,7 @@ public class SavePointCommandExecutor implements CommandExecutor
 				{
 					///Du hast dafür keine Rechte!
 					player.spigot().sendMessage(ChatApi.tctl(
-							plugin.getYamlHandler().getL().getString("NoPermission")));
+							plugin.getYamlHandler().getLang().getString("NoPermission")));
 					return false;
 				}
 			}

@@ -11,8 +11,10 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 
+import main.java.me.avankziar.general.database.Language;
+import main.java.me.avankziar.general.database.YamlManager;
+import main.java.me.avankziar.general.database.Language.ISO639_2B;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.database.Language.ISO639_2B;
 
 public class YamlHandler
 {
@@ -22,6 +24,9 @@ public class YamlHandler
 	
 	private File commands = null;
 	private YamlConfiguration com = new YamlConfiguration();
+	
+	private File forbiddenconfig = null;
+	private YamlConfiguration fbc = new YamlConfiguration();
 	
 	private String languages;
 	private File language = null;
@@ -43,7 +48,12 @@ public class YamlHandler
 		return com;
 	}
 	
-	public YamlConfiguration getL()
+	public YamlConfiguration getForbidden()
+	{
+		return fbc;
+	}
+	
+	public YamlConfiguration getLang()
 	{
 		return lang;
 	}
@@ -65,7 +75,7 @@ public class YamlHandler
 	public boolean mkdirStaticFiles() throws IOException
 	{
 		//Erstellen aller Werte FÜR die Config.yml
-		plugin.setYamlManager(new YamlManager());
+		plugin.setYamlManager(new YamlManager(true));
 		
 		File directory = new File(plugin.getDataFolder()+"");
 		if(!directory.exists())
@@ -94,7 +104,7 @@ public class YamlHandler
 		}
 		
 		//Niederschreiben aller Werte für die Datei
-		writeFile(config, cfg, plugin.getYamlManager().getConfigKey());
+		writeFile(config, cfg, plugin.getYamlManager().getConfigSpigotKey());
 		
 		languages = cfg.getString("Language", "ENG").toUpperCase();
 		
@@ -117,6 +127,26 @@ public class YamlHandler
 			return false;
 		}
 		writeFile(commands, com, plugin.getYamlManager().getCommandsKey());
+		
+		forbiddenconfig = new File(plugin.getDataFolder(), "config_forbiddenlist.yml");
+		if(!forbiddenconfig.exists()) 
+		{
+			BungeeTeleportManager.log.info("Create config_forbiddenlist.yml...");
+			try
+			{
+				//Erstellung einer "leere" config.yml
+				FileUtils.copyToFile(plugin.getResource("default.yml"), forbiddenconfig);
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		if(!loadYamlTask(forbiddenconfig, fbc))
+		{
+			return false;
+		}
+		writeFile(forbiddenconfig, fbc, plugin.getYamlManager().getForbiddenListSpigotKey());
 		return true;
 	}
 	
@@ -197,10 +227,10 @@ public class YamlHandler
 			Language languageObject = keyMap.get(key);
 			if(languageObject.languageValues.containsKey(plugin.getYamlManager().getLanguageType()) == true)
 			{
-				plugin.getYamlManager().setFileInput(yml, keyMap, key, plugin.getYamlManager().getLanguageType());
+				plugin.getYamlManager().setFileInputBukkit(yml, keyMap, key, plugin.getYamlManager().getLanguageType());
 			} else if(languageObject.languageValues.containsKey(plugin.getYamlManager().getDefaultLanguageType()) == true)
 			{
-				plugin.getYamlManager().setFileInput(yml, keyMap, key, plugin.getYamlManager().getDefaultLanguageType());
+				plugin.getYamlManager().setFileInputBukkit(yml, keyMap, key, plugin.getYamlManager().getDefaultLanguageType());
 			}
 		}
 		yml.save(file);

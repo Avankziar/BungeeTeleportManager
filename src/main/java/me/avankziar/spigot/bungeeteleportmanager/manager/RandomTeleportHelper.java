@@ -15,8 +15,9 @@ import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler.Mechanics;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandlerSpigot;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.object.BTMSettings;
 import net.md_5.bungee.api.chat.ClickEvent;
 
@@ -46,7 +47,7 @@ public class RandomTeleportHelper
 				{
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
-							plugin.getYamlHandler().getL().getString("InputIsWrong"),
+							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 					return;
 				}
@@ -68,25 +69,28 @@ public class RandomTeleportHelper
 						return;
 					}
 				}
-				if(ForbiddenHandler.isForbiddenServer(plugin, Mechanics.RANDOMTELEPORT))
+				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.RANDOMTELEPORT, null)
+						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.RANDOMTELEPORT.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ForbiddenRTServer")));
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ForbiddenServerUse")));
 					return;
 				}
-				if(ForbiddenHandler.isForbiddenWorld(plugin, Mechanics.RANDOMTELEPORT, player))
+				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.RANDOMTELEPORT, player, null)
+						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.RANDOMTELEPORT.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ForbiddenRTWorld")));
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ForbiddenWorldUse")));
 					return;
 				}
-				double price = plugin.getYamlHandler().getConfig().getDouble("CostPer.RandomTeleport", 0.0);
+				ConfigHandler cfgh = new ConfigHandler(plugin);
+				double price = cfgh.getCostUse(Mechanics.RANDOMTELEPORT);
 				if(price > 0.0 
-						&& !player.hasPermission(StaticValues.PERM_BYPASS_RANDOMTELEPORT_COST)
+						&& !player.hasPermission(StaticValues.BYPASS_COST+Mechanics.RANDOMTELEPORT.getLower())
 						&& plugin.getEco() != null
-						&& plugin.getYamlHandler().getConfig().getBoolean("useVault", false))
+						&& cfgh.useVault())
 				{
 					if(!plugin.getEco().has(player, price))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("Economy.NoEnoughBalance")));
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 						return;
 					}
 					if(!plugin.getEco().withdrawPlayer(player, price).transactionSuccess())
@@ -95,13 +99,13 @@ public class RandomTeleportHelper
 					}
 					if(plugin.getAdvancedEconomyHandler() != null)
 					{
-						String comment = plugin.getYamlHandler().getL().getString("Economy.RTComment");
+						String comment = plugin.getYamlHandler().getLang().getString("Economy.RTComment");
 						plugin.getAdvancedEconomyHandler().EconomyLogger(
 	        					player.getUniqueId().toString(),
 	        					player.getName(),
-	        					plugin.getYamlHandler().getL().getString("Economy.RTUUID"),
-	        					plugin.getYamlHandler().getL().getString("Economy.RTName"),
-	        					plugin.getYamlHandler().getL().getString("Economy.RTORDERER"),
+	        					plugin.getYamlHandler().getLang().getString("Economy.RTUUID"),
+	        					plugin.getYamlHandler().getLang().getString("Economy.RTName"),
+	        					plugin.getYamlHandler().getLang().getString("Economy.RTORDERER"),
 	        					price,
 	        					"TAKEN",
 	        					comment);
@@ -110,7 +114,7 @@ public class RandomTeleportHelper
 				}
 				if(cooldown.containsKey(player)) cooldown.replace(player, System.currentTimeMillis()+1000L*3);
 				else cooldown.put(player, System.currentTimeMillis()+1000L*3);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.RequestInProgress")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.RequestInProgress")));
 				plugin.getUtility().givesEffect(player, Mechanics.RANDOMTELEPORT, true, true);
 				plugin.getRandomTeleportHandler().sendPlayerToRT(player, rt, playername, playeruuid);
 				return;
@@ -124,12 +128,12 @@ public class RandomTeleportHelper
 		String[] function = rtcode.split("@");
 		if(function.length != 2)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 			return null;
 		}
 		if(!function[0].contains(";"))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 			return null;
 		}
 		String targetServer = function[0].split(";")[0];
@@ -144,12 +148,12 @@ public class RandomTeleportHelper
 			String[] farray = function[1].split("\\[\\]");
 			if(farray.length != 2)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			if(!farray[0].contains(";") || !farray[1].contains(";"))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			point1 = new ServerLocation(targetServer, targetWorld,
@@ -165,12 +169,12 @@ public class RandomTeleportHelper
 			String[] farray = function[1].split("\\(\\)");
 			if(farray.length != 2)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			if(!farray[0].contains(";") || farray[1].contains(";"))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			point1 = new ServerLocation(targetServer, targetWorld,
@@ -181,7 +185,7 @@ public class RandomTeleportHelper
 			radius = Integer.parseInt(farray[1]);
 		} else
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 			return null;
 		}
 		return new RandomTeleport(UUID.fromString(uuid), playername, point1, point2, radius, isArea);
@@ -196,7 +200,7 @@ public class RandomTeleportHelper
 			String[] targetgroup = rtcode.split("\\>\\>");
 			if(targetgroup.length != 2)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			String fromWorld = targetgroup[0];
@@ -207,7 +211,7 @@ public class RandomTeleportHelper
 		}
 		if(possibleTargets.size() == 0)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 			return null;
 		}
 		String rtcode = null;
@@ -222,24 +226,24 @@ public class RandomTeleportHelper
 		String[] function = rtcode.split("@");
 		if(function.length != 2)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 			return null;
 		}
 		if(!function[0].contains(">>"))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 			return null;
 		}
 		String[] farrayOne = function[0].split("\\>\\>");
 		if(!farrayOne[1].contains(";"))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 			return null;
 		}
 		String[] subfunction = farrayOne[1].split(";");
 		if(subfunction.length != 2)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 			return null;
 		}
 		String targetServer = subfunction[0];
@@ -253,12 +257,12 @@ public class RandomTeleportHelper
 			String[] farray = function[1].split("\\[\\]");
 			if(farray.length != 2)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			if(!farray[0].contains(";") || !farray[1].contains(";"))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			point1 = new ServerLocation(targetServer, targetWorld,
@@ -274,12 +278,12 @@ public class RandomTeleportHelper
 			String[] farray = function[1].split("\\(\\)");
 			if(farray.length != 2)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			if(!farray[0].contains(";") || farray[1].contains(";"))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 				return null;
 			}
 			point1 = new ServerLocation(targetServer, targetWorld,
@@ -290,7 +294,7 @@ public class RandomTeleportHelper
 			radius = Integer.parseInt(farray[1]);
 		} else
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.ErrorInConfig")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
 			return null;
 		}
 		return new RandomTeleport(UUID.fromString(uuid), playername, point1, point2, radius, isArea);

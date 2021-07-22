@@ -15,7 +15,8 @@ import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler.Mechanics;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
+import main.java.me.avankziar.general.object.Mechanics;
 
 public class RandomTeleportMessageListener  implements PluginMessageListener
 {
@@ -31,6 +32,7 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
 	{
 		if(channel.equals(StaticValues.RANDOMTELEPORT_TOSPIGOT)) 
 		{
+			ConfigHandler cfgh = new ConfigHandler(plugin);
         	ByteArrayInputStream stream = new ByteArrayInputStream(bytes);
             DataInputStream in = new DataInputStream(stream);
             String task = null;
@@ -45,7 +47,7 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
                 	double x = in.readDouble();
                 	double y = in.readDouble();
                 	double z = in.readDouble();
-                	ServerLocation point1 = new ServerLocation(plugin.getYamlHandler().getConfig().getString("ServerName"), worldName, x, y, z);
+                	ServerLocation point1 = new ServerLocation(cfgh.getServer(), worldName, x, y, z);
                 	ServerLocation point2 = null;
                 	int radius = 0;
                 	if(isArea)
@@ -53,7 +55,7 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
                 		double x2 = in.readDouble();
                     	double y2 = in.readDouble();
                     	double z2 = in.readDouble();
-                		point2 = new ServerLocation(plugin.getYamlHandler().getConfig().getString("ServerName"), worldName, x2, y2, z2);
+                		point2 = new ServerLocation(cfgh.getServer(), worldName, x2, y2, z2);
                 	} else
                 	{
                 		radius = in.readInt();
@@ -80,7 +82,7 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
 										if(Bukkit.getWorld(worldName) == null)
 										{
 											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.WorldNotFound")
+													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -98,8 +100,8 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
 											}
 										}.runTask(plugin);
 										
-										player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdRandomTeleport.WarpTo")
-												.replace("%server%", plugin.getYamlHandler().getConfig().getString("ServerName"))
+										player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.WarpTo")
+												.replace("%server%", cfgh.getServer())
 												.replace("%world%", rt.getPoint1().getWordName())));
 										cancel();
 										return;

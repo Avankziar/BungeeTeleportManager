@@ -45,7 +45,7 @@ public class HomeCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getHomeHelper().homeCreate(player, args);
@@ -65,7 +65,7 @@ public class HomeCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getHomeHelper().homeRemove(player, args);
@@ -83,7 +83,7 @@ public class HomeCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getHomeHelper().homesDeleteServerWorld(player, args);
@@ -101,7 +101,7 @@ public class HomeCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getHomeHelper().homeTo(player, args);
@@ -119,7 +119,7 @@ public class HomeCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getHomeHelper().homes(player, args);
@@ -137,7 +137,7 @@ public class HomeCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getHomeHelper().homeList(player, args);
@@ -155,7 +155,7 @@ public class HomeCommandExecutor implements CommandExecutor
 			{
 				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
-						plugin.getYamlHandler().getL().getString("NoPermission")));
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
 			plugin.getHomeHelper().homeSetPriority(player, args);

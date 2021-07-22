@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.SavePoint;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
@@ -19,7 +20,9 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler.Type;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandlerSpigot;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.object.BTMSettings;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -47,21 +50,33 @@ public class SavePointHelper
 				{
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
-							plugin.getYamlHandler().getL().getString("InputIsWrong"),
+							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 					return;
 				}
 				SavePoint sp = null;
+				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.SAVEPOINT, null)
+						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.SAVEPOINT.getLower()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ForbiddenServerUse")));
+					return;
+				}
+				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.SAVEPOINT, player, null)
+						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.SAVEPOINT.getLower()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ForbiddenWorldUse")));
+					return;
+				}
 				if(args.length == 0)
 				{
 					sp = (SavePoint) plugin.getMysqlHandler().getData(Type.SAVEPOINT, "`player_uuid` = ? ORDER BY `id` DESC",
 							player.getUniqueId().toString());
 					if(sp == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.LastSavePointDontExist")));
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.LastSavePointDontExist")));
 						return;
 					}
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.RequestInProgress")));
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.RequestInProgress")));
 					plugin.getSavePointHandler().sendPlayerToSavePoint(player, sp, player.getName(), player.getUniqueId().toString(), true);
 				} else if(args.length >= 1)
 				{
@@ -73,14 +88,14 @@ public class SavePointHelper
 						UUID uuid = Utility.convertNameToUUID(args[1]);
 						if(uuid == null)
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
+							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 							return;
 						}
 						otherplayeruuid = uuid.toString();
 					} else if(args.length >= 2 && !player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_OTHER) 
 							&& !args[1].equals(player.getName()))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPermission")));
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 						return;
 					}
 					if(!plugin.getMysqlHandler().exist(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?",
@@ -88,18 +103,18 @@ public class SavePointHelper
 					{
 						if(args.length >= 2)
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.SavePointDontExistOther")
+							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDontExistOther")
 									.replace("%player%", args[1])
 									.replace("%savepoint%", savepointname)));
 							return;
 						}
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.SavePointDontExist")
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDontExist")
 								.replace("%savepoint%", savepointname)));
 						return;
 					}
 					sp = (SavePoint) plugin.getMysqlHandler().getData(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?",
 							player.getUniqueId().toString(), savepointname);
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.RequestInProgress")));
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.RequestInProgress")));
 					plugin.getSavePointHandler().sendPlayerToSavePoint(player, sp, player.getName(), player.getUniqueId().toString(), false);
 				}
 				return;
@@ -113,7 +128,7 @@ public class SavePointHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
@@ -124,14 +139,14 @@ public class SavePointHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(plugin.getYamlHandler().getL().getString("NoNumber")
+				player.sendMessage(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0]));
 				return;
 			}
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(plugin.getYamlHandler().getL().getString("IsNegativ")
+				player.sendMessage(plugin.getYamlHandler().getLang().getString("IsNegativ")
 						.replace("%arg%", args[0]));
 				return;
 			}
@@ -144,7 +159,7 @@ public class SavePointHelper
 			UUID uuid = Utility.convertNameToUUID(args[1]);
 			if(uuid == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			playeruuid = uuid.toString();
@@ -157,10 +172,10 @@ public class SavePointHelper
 						playeruuid));
 		if(list.isEmpty())
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.YouHaveNoSavePoints")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.YouHaveNoSavePoints")));
 			return;
 		}
-		String server = plugin.getYamlHandler().getConfig().getString("ServerName");
+		String server = new ConfigHandler(plugin).getServer();
 		String world = player.getLocation().getWorld().getName();
 		int last = plugin.getMysqlHandler().countWhereID(MysqlHandler.Type.SAVEPOINT, "`player_uuid` = ?",playeruuid);
 		boolean lastpage = false;
@@ -168,13 +183,13 @@ public class SavePointHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.SavePointHeadline")
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointHeadline")
 				.replace("%amount%", String.valueOf(last))));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.ListHelp")));
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
-		String sameServer = plugin.getYamlHandler().getL().getString("CmdSavePoint.ListSameServer");
-		String sameWorld = plugin.getYamlHandler().getL().getString("CmdSavePoint.ListSameWorld");
-		String infoElse = plugin.getYamlHandler().getL().getString("CmdSavePoint.ListElse");
+		String sameServer = plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListSameServer");
+		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListSameWorld");
+		String infoElse = plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListElse");
 		for(SavePoint sp  : list)
 		{
 			if(sp.getLocation().getWordName().equals(world))
@@ -184,7 +199,7 @@ public class SavePointHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName(),
 						HoverEvent.Action.SHOW_TEXT, 
-						plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
 			} else if(sp.getLocation().getServer().equals(server))
 			{
@@ -193,7 +208,7 @@ public class SavePointHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName(),
 						HoverEvent.Action.SHOW_TEXT, 
-						plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
 			} else
 			{
@@ -202,7 +217,7 @@ public class SavePointHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName(),
 						HoverEvent.Action.SHOW_TEXT,
-						plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
 			}
 		}
@@ -228,7 +243,7 @@ public class SavePointHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
@@ -237,14 +252,14 @@ public class SavePointHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoNumber")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0])));
 				return;
 			}
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(plugin.getYamlHandler().getL().getString("IsNegativ")
+				player.sendMessage(plugin.getYamlHandler().getLang().getString("IsNegativ")
 						.replace("%arg%", args[0]));
 				return;
 			}
@@ -254,7 +269,7 @@ public class SavePointHelper
 		ArrayList<SavePoint> list = ConvertHandler.convertListVII(
 				plugin.getMysqlHandler().getTop(MysqlHandler.Type.SAVEPOINT,
 						"`server` ASC, `world` ASC", start, quantity));
-		String server = plugin.getYamlHandler().getConfig().getString("ServerName");
+		String server = new ConfigHandler(plugin).getServer();
 		String world = player.getLocation().getWorld().getName();
 		int last = plugin.getMysqlHandler().lastID(MysqlHandler.Type.SAVEPOINT);
 		boolean lastpage = false;
@@ -262,13 +277,13 @@ public class SavePointHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.ListHeadline")
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListHeadline")
 				.replace("%amount%", String.valueOf(last))));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.ListHelp")));
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
-		String sameServer = plugin.getYamlHandler().getL().getString("CmdSavePoint.ListSameServer");
-		String sameWorld = plugin.getYamlHandler().getL().getString("CmdSavePoint.ListSameWorld");
-		String infoElse = plugin.getYamlHandler().getL().getString("CmdSavePoint.ListElse");
+		String sameServer = plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListSameServer");
+		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListSameWorld");
+		String infoElse = plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListElse");
 		for(SavePoint sp : list)
 		{
 			String owner = sp.getPlayerName();
@@ -279,7 +294,7 @@ public class SavePointHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName()+" "+owner,
 						HoverEvent.Action.SHOW_TEXT, 
-						plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
 			} else if(sp.getLocation().getServer().equals(server))
 			{
@@ -288,7 +303,7 @@ public class SavePointHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName()+" "+owner,
 						HoverEvent.Action.SHOW_TEXT,
-						plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
 			} else
 			{
@@ -297,7 +312,7 @@ public class SavePointHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT)+" "+sp.getSavePointName()+" "+owner,
 						HoverEvent.Action.SHOW_TEXT,
-						plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(sp.getLocation()))));
 			}
 		}
@@ -330,7 +345,7 @@ public class SavePointHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			sender.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
@@ -349,11 +364,11 @@ public class SavePointHelper
 			Player otherplayer = Bukkit.getPlayer(playerName);
 			if(otherplayer == null)
 			{
-				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
+				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			uuid = otherplayer.getUniqueId();
-			server = plugin.getYamlHandler().getConfig().getString("ServerName");
+			server = new ConfigHandler(plugin).getServer();
 			world = otherplayer.getLocation().getWorld().getName();
 			x = otherplayer.getLocation().getX();
 			y = otherplayer.getLocation().getY();
@@ -365,7 +380,7 @@ public class SavePointHelper
 			uuid = Utility.convertNameToUUID(playerName);
 			if(uuid == null)
 			{
-				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
+				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			server = args[2];
@@ -376,7 +391,7 @@ public class SavePointHelper
 					|| !MatchApi.isNumber(args[7])
 					|| !MatchApi.isNumber(args[8]))
 			{
-				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoNumberII")));
+				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumberII")));
 				return;
 			}
 			x = Double.parseDouble(args[4]);
@@ -390,27 +405,27 @@ public class SavePointHelper
 		if(plugin.getMysqlHandler().exist(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?", uuid.toString(), savePointName))
 		{
 			plugin.getMysqlHandler().updateData(Type.SAVEPOINT, sp, "`player_uuid` = ? AND `savepoint_name` = ?", uuid.toString(), savePointName);
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.UpdateSavePointConsole")
+			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.UpdateSavePointConsole")
 					.replace("%player%", playerName)
 					.replace("%savepoint%", savePointName)));
 			Player otherplayer = Bukkit.getPlayer(playerName);
 			if(otherplayer != null)
 			{
 				plugin.getUtility().setSavePointsTabCompleter(otherplayer);
-				otherplayer.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.UpdateSavePoint")
+				otherplayer.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.UpdateSavePoint")
 						.replace("%savepoint%", savePointName)));
 			}
 		} else
 		{
 			plugin.getMysqlHandler().create(Type.SAVEPOINT, sp);
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.CreateSavePointConsole")
+			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.CreateSavePointConsole")
 					.replace("%player%", playerName)
 					.replace("%savepoint%", savePointName)));
 			Player otherplayer = Bukkit.getPlayer(playerName);
 			if(otherplayer != null)
 			{
 				plugin.getUtility().setSavePointsTabCompleter(otherplayer);
-				otherplayer.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.CreateSavePoint")
+				otherplayer.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.CreateSavePoint")
 						.replace("%savepoint%", savePointName)));
 			}
 		}
@@ -422,7 +437,7 @@ public class SavePointHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			sender.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
@@ -430,7 +445,7 @@ public class SavePointHelper
 		UUID uuid = Utility.convertNameToUUID(otherplayername);
 		if(uuid == null)
 		{
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("PlayerDontExist")));
+			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 			return;
 		}
 		String savepoints = null;
@@ -442,33 +457,33 @@ public class SavePointHelper
 		{
 			if(!plugin.getMysqlHandler().exist(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?", uuid.toString(), savepoints))
 			{
-				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.SavePointDontExist")
+				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDontExist")
 						.replace("%savepoint%", args[1])));
 				return;
 			}
 			plugin.getMysqlHandler().deleteData(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?", uuid.toString(), savepoints);
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.SavePointDelete")
+			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDelete")
 					.replace("%player%", args[0])
 					.replace("%savepoint%", args[1])));
 			Player player = Bukkit.getPlayer(uuid);
 			if(player != null)
 			{
 				plugin.getUtility().setSavePointsTabCompleter(player);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.YourSavePointDelete")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.YourSavePointDelete")
 						.replace("%savepoint%", args[1])));
 			}
 		} else
 		{
 			final int count = plugin.getMysqlHandler().countWhereID(Type.SAVEPOINT, "`player_uuid` = ?", uuid.toString());
 			plugin.getMysqlHandler().deleteData(Type.SAVEPOINT, "`player_uuid` = ?", uuid.toString());
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.SavePointsDelete")
+			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointsDelete")
 					.replace("%player%", args[0])
 					.replace("%count%", String.valueOf(count))));
 			Player player = Bukkit.getPlayer(uuid);
 			if(player != null)
 			{
 				plugin.getUtility().setSavePointsTabCompleter(player);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.YourSavePointsDelete")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.YourSavePointsDelete")
 						.replace("%count%", String.valueOf(count))));
 			}
 		}
@@ -481,7 +496,7 @@ public class SavePointHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			sender.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
@@ -491,7 +506,7 @@ public class SavePointHelper
 				"`server` = ? AND `world` = ?", serverName, worldName);
 		plugin.getMysqlHandler().deleteData(
 				MysqlHandler.Type.SAVEPOINT, "`server` = ? AND `world` = ?", serverName, worldName);
-		sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.SavePointServerWorldDelete")
+		sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointServerWorldDelete")
 				.replace("%world%", worldName)
 				.replace("%server%", serverName)
 				.replace("%amount%", String.valueOf(count))));

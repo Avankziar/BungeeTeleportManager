@@ -13,7 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler.Mechanics;
+import main.java.me.avankziar.general.object.Mechanics;
 
 public class SavePointMessageListener implements PluginMessageListener
 {
@@ -63,7 +63,7 @@ public class SavePointMessageListener implements PluginMessageListener
 										if(Bukkit.getWorld(worldName) == null)
 										{
 											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdTp.WorldNotFound")
+													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -85,11 +85,11 @@ public class SavePointMessageListener implements PluginMessageListener
 										}.runTask(plugin);
 										if(last)
 										{
-											player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.WarpToLast")
+											player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpToLast")
 													.replace("%savepoint%", savePointName)));
 										} else
 										{
-											player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdSavePoint.WarpTo")
+											player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpTo")
 													.replace("%savepoint%", savePointName)));
 										}
 										cancel();

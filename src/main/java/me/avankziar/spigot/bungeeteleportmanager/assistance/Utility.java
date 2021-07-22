@@ -15,14 +15,15 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Home;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.SavePoint;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler.Mechanics;
 
 public class Utility
 {
@@ -161,7 +162,7 @@ public class Utility
 	public static ServerLocation getLocation(Location loc)
 	{
 		ServerLocation sl = new ServerLocation(
-				plugin.getYamlHandler().getConfig().getString("ServerName"),
+				new ConfigHandler(plugin).getServer(),
 				loc.getWorld().getName(),
 				loc.getX(),
 				loc.getY(),

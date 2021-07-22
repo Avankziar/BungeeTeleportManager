@@ -17,9 +17,10 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler.Type;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandler.Mechanics;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandlerSpigot;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.object.BTMSettings;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -42,21 +43,21 @@ public class HomeHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
 		String homeName = args[0];
-		if(ForbiddenHandler.isForbiddenServer(plugin, Mechanics.HOME)
-				&& !player.hasPermission(StaticValues.PERM_BYPASS_HOME_FORBIDDEN))
+		if(ForbiddenHandlerSpigot.isForbiddenToCreateServer(plugin, Mechanics.HOME)
+				&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_CREATE+Mechanics.HOME.getLower()))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.ForbiddenHomeServer")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.ForbiddenServer")));
 			return;
 		}
-		if(ForbiddenHandler.isForbiddenWorld(plugin, Mechanics.HOME, player)
-				&& !player.hasPermission(StaticValues.PERM_BYPASS_HOME_FORBIDDEN))
+		if(ForbiddenHandlerSpigot.isForbiddenToCreateWorld(plugin, Mechanics.HOME, player)
+				&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_CREATE+Mechanics.HOME.getLower()))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.ForbiddenHomeWorld")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.ForbiddenWorld")));
 			return;
 		}
 		boolean exist = false;
@@ -74,16 +75,17 @@ public class HomeHelper
 		{
 			return;
 		}
+		ConfigHandler cfgh = new ConfigHandler(plugin);
 		Home home = new Home(player.getUniqueId(), player.getName(), homeName, Utility.getLocation(player.getLocation()));
-		if(!player.hasPermission(StaticValues.PERM_BYPASS_HOME_COST) && plugin.getEco() != null
-				&& plugin.getYamlHandler().getConfig().getBoolean("useVault", false))
+		if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.HOME.getLower()) && plugin.getEco() != null
+				&& cfgh.useVault())
 		{
-			double homeCreateCost = plugin.getYamlHandler().getConfig().getDouble("CostPer.HomeCreate", 0.0);
+			double homeCreateCost = cfgh.getCostCreation(Mechanics.HOME);
 			if(homeCreateCost > 0.0)
 			{
 				if(!plugin.getEco().has(player, homeCreateCost))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("Economy.NoEnoughBalance")));
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 					return;
 				}
 				EconomyResponse er = plugin.getEco().withdrawPlayer(player, homeCreateCost);
@@ -94,13 +96,13 @@ public class HomeHelper
 				}
 				if(plugin.getAdvancedEconomyHandler() != null)
 				{
-					String comment = plugin.getYamlHandler().getL().getString("Economy.HCommentCreate")
+					String comment = plugin.getYamlHandler().getLang().getString("Economy.HCommentCreate")
 	    					.replace("%home%", home.getHomeName());
 					plugin.getAdvancedEconomyHandler().EconomyLogger(
 	    					player.getUniqueId().toString(),
 	    					player.getName(),
-	    					plugin.getYamlHandler().getL().getString("Economy.HUUID"),
-	    					plugin.getYamlHandler().getL().getString("Economy.HName"),
+	    					plugin.getYamlHandler().getLang().getString("Economy.HUUID"),
+	    					plugin.getYamlHandler().getLang().getString("Economy.HName"),
 	    					player.getUniqueId().toString(),
 	    					homeCreateCost,
 	    					"TAKEN",
@@ -114,13 +116,13 @@ public class HomeHelper
 			plugin.getMysqlHandler().updateData(MysqlHandler.Type.HOME, home,
 					"`player_uuid` = ? AND `home_name` = ?", player.getUniqueId().toString(), homeName);
 			player.spigot().sendMessage(ChatApi.tctl(
-					plugin.getYamlHandler().getL().getString("CmdHome.HomeNewSet")
+					plugin.getYamlHandler().getLang().getString("CmdHome.HomeNewSet")
 					.replace("%name%", homeName)));
 		} else
 		{
 			plugin.getMysqlHandler().create(MysqlHandler.Type.HOME, home);
 			player.spigot().sendMessage(ChatApi.tctl(
-					plugin.getYamlHandler().getL().getString("CmdHome.HomeCreate")
+					plugin.getYamlHandler().getLang().getString("CmdHome.HomeCreate")
 					.replace("%name%", homeName)));
 		}
 		if(isPrio)
@@ -130,7 +132,7 @@ public class HomeHelper
 			back.setHomePriority(homeName);
 			plugin.getMysqlHandler().updateData(Type.BACK, back, "`player_uuid` = ?", player.getUniqueId().toString());
 			player.spigot().sendMessage(ChatApi.tctl(
-					plugin.getYamlHandler().getL().getString("CmdHome.SetPriority")
+					plugin.getYamlHandler().getLang().getString("CmdHome.SetPriority")
 					.replace("%name%", homeName)));
 		}
 		plugin.getUtility().setHomesTabCompleter(player);
@@ -143,7 +145,7 @@ public class HomeHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
@@ -151,12 +153,12 @@ public class HomeHelper
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.HOME,
 				"`player_uuid` = ? AND `home_name` = ?", player.getUniqueId().toString(), homeName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeNotExist")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeNotExist")));
 			return;
 		}
 		plugin.getMysqlHandler().deleteData(
 				MysqlHandler.Type.HOME, "`player_uuid` = ? AND `home_name` = ?", player.getUniqueId().toString(), homeName);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeDelete")
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeDelete")
 				.replace("%name%", homeName)));
 		plugin.getUtility().setHomesTabCompleter(player);
 		return;
@@ -168,7 +170,7 @@ public class HomeHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
@@ -177,7 +179,7 @@ public class HomeHelper
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.HOME,
 				"`server` = ? AND `world` = ?", serverName, worldName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomesNotExist")
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomesNotExist")
 					.replace("%world%", worldName)
 					.replace("%server%", serverName)));
 			return;
@@ -186,7 +188,7 @@ public class HomeHelper
 				"`server` = ? AND `world` = ?", serverName, worldName);
 		plugin.getMysqlHandler().deleteData(
 				MysqlHandler.Type.HOME, "`server` = ? AND `world` = ?", serverName, worldName);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeServerWorldDelete")
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeServerWorldDelete")
 				.replace("%world%", worldName)
 				.replace("%server%", serverName)
 				.replace("%amount%", String.valueOf(count))));
@@ -208,8 +210,20 @@ public class HomeHelper
 				{
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
-							plugin.getYamlHandler().getL().getString("InputIsWrong"),
+							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					return;
+				}
+				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.HOME, null)
+						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.HOME.getLower()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.ForbiddenServerUse")));
+					return;
+				}
+				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.HOME, player, null)
+						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.HOME.getLower()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.ForbiddenWorldUse")));
 					return;
 				}
 				String homeName = "";
@@ -220,7 +234,7 @@ public class HomeHelper
 					UUID uuid = Utility.convertNameToUUID(args[1]);
 					if(uuid == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 						return;
 					}
 					playeruuid = uuid.toString();
@@ -235,7 +249,7 @@ public class HomeHelper
 							|| back.getHomePriority().isEmpty()
 							|| back.getHomePriority().trim().isEmpty())
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.NoHomePriority")));
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.NoHomePriority")));
 						return;
 					}
 					homeName = back.getHomePriority();
@@ -243,31 +257,32 @@ public class HomeHelper
 				if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.HOME,
 						"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeNotExist")));
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeNotExist")));
 					return;
 				}
+				ConfigHandler cfgh = new ConfigHandler(plugin);
 				Home home = (Home) plugin.getMysqlHandler().getData(MysqlHandler.Type.HOME,
 						"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName);
 				int i = plugin.getHomeHandler().compareHome(player, false);
 				if(i > 0 && !player.hasPermission(StaticValues.PERM_BYPASS_HOME_TOOMANY))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.TooManyHomesToUse")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesToUse")
 							.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.HOMES))
 							.replace("%amount%", String.valueOf(i))));
 					return;
 				}
-				if(!player.hasPermission(StaticValues.PERM_BYPASS_HOME_COST) && plugin.getEco() != null
-						&& plugin.getYamlHandler().getConfig().getBoolean("useVault", false))
+				if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.HOME.getLower()) && plugin.getEco() != null
+						&& cfgh.useVault())
 				{
-					double homeCreateCost = plugin.getYamlHandler().getConfig().getDouble("CostPer.HomeTeleport", 0.0);
-					if(homeCreateCost > 0.0)
+					double homeUseCost = cfgh.getCostUse(Mechanics.HOME);
+					if(homeUseCost > 0.0)
 					{
-						if(!plugin.getEco().has(player, homeCreateCost))
+						if(!plugin.getEco().has(player, homeUseCost))
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("Economy.NoEnoughBalance")));
+							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 							return;
 						}
-						EconomyResponse er = plugin.getEco().withdrawPlayer(player, homeCreateCost);
+						EconomyResponse er = plugin.getEco().withdrawPlayer(player, homeUseCost);
 						if(!er.transactionSuccess())
 						{
 							player.sendMessage(ChatApi.tl(er.errorMessage));
@@ -275,22 +290,22 @@ public class HomeHelper
 						}
 						if(plugin.getAdvancedEconomyHandler() != null)
 						{
-							String comment = plugin.getYamlHandler().getL().getString("Economy.HComment")
+							String comment = plugin.getYamlHandler().getLang().getString("Economy.HComment")
 			    					.replace("%home%", home.getHomeName());
 							plugin.getAdvancedEconomyHandler().EconomyLogger(
 			    					player.getUniqueId().toString(),
 			    					player.getName(),
-			    					plugin.getYamlHandler().getL().getString("Economy.HUUID"),
-			    					plugin.getYamlHandler().getL().getString("Economy.HName"),
+			    					plugin.getYamlHandler().getLang().getString("Economy.HUUID"),
+			    					plugin.getYamlHandler().getLang().getString("Economy.HName"),
 			    					player.getUniqueId().toString(),
-			    					homeCreateCost,
+			    					homeUseCost,
 			    					"TAKEN",
 			    					comment);
-							plugin.getAdvancedEconomyHandler().TrendLogger(player, -homeCreateCost);
+							plugin.getAdvancedEconomyHandler().TrendLogger(player, -homeUseCost);
 						}
 					}
 				}
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.RequestInProgress")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.RequestInProgress")));
 				plugin.getUtility().givesEffect(player, Mechanics.HOME, true, true);
 				plugin.getHomeHandler().sendPlayerToHome(player, home);
 				return;
@@ -304,7 +319,7 @@ public class HomeHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
@@ -315,7 +330,7 @@ public class HomeHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoNumber")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0])));
 				return;
 			}
@@ -327,7 +342,7 @@ public class HomeHelper
 			UUID uuid = Utility.convertNameToUUID(args[1]);
 			if(uuid == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoPlayerExist")));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			playeruuid = uuid.toString();
@@ -339,10 +354,10 @@ public class HomeHelper
 						"`id` ASC", start, quantity, "`player_uuid` = ?", playeruuid));
 		if(list.isEmpty())
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.YouHaveNoHomes")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.YouHaveNoHomes")));
 			return;
 		}
-		String server = plugin.getYamlHandler().getConfig().getString("ServerName");
+		String server = new ConfigHandler(plugin).getServer();
 		String world = player.getLocation().getWorld().getName();
 		int last = plugin.getMysqlHandler().countWhereID(MysqlHandler.Type.HOME, "`player_uuid` = ?", playeruuid);
 		boolean lastpage = false;
@@ -350,13 +365,13 @@ public class HomeHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomesHeadline")
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomesHeadline")
 				.replace("%amount%", String.valueOf(last))));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.ListHelp")));
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
-		String sameServer = plugin.getYamlHandler().getL().getString("CmdHome.ListSameServer");
-		String sameWorld = plugin.getYamlHandler().getL().getString("CmdHome.ListSameWorld");
-		String infoElse = plugin.getYamlHandler().getL().getString("CmdHome.ListElse");
+		String sameServer = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameServer");
+		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameWorld");
+		String infoElse = plugin.getYamlHandler().getLang().getString("CmdHome.ListElse");
 		for(Home home : list)
 		{
 			if(home.getLocation().getWordName().equals(world))
@@ -366,8 +381,8 @@ public class HomeHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
-						plugin.getYamlHandler().getL().getString("GeneralHover")
-						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("GeneralHover")
+						+"~!~"+plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(home.getLocation()))));
 			} else if(home.getLocation().getServer().equals(server))
 			{
@@ -376,8 +391,8 @@ public class HomeHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
-						plugin.getYamlHandler().getL().getString("GeneralHover")
-						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("GeneralHover")
+						+"~!~"+plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(home.getLocation()))));
 			} else
 			{
@@ -386,8 +401,8 @@ public class HomeHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
-						plugin.getYamlHandler().getL().getString("GeneralHover")
-						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("GeneralHover")
+						+"~!~"+plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(home.getLocation()))));
 			}
 		}
@@ -413,7 +428,7 @@ public class HomeHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
@@ -423,14 +438,14 @@ public class HomeHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("NoNumber")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0])));
 				return;
 			}
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(plugin.getYamlHandler().getL().getString("IsNegativ")
+				player.sendMessage(plugin.getYamlHandler().getLang().getString("IsNegativ")
 						.replace("%arg%", args[0]));
 				return;
 			}
@@ -454,7 +469,7 @@ public class HomeHelper
 					plugin.getMysqlHandler().getTop(MysqlHandler.Type.HOME,
 							"`id` DESC", start, quantity));
 		}
-		String server = plugin.getYamlHandler().getConfig().getString("ServerName");
+		String server = new ConfigHandler(plugin).getServer();
 		String world = player.getLocation().getWorld().getName();
 		int last = plugin.getMysqlHandler().lastID(MysqlHandler.Type.HOME);
 		boolean lastpage = false;
@@ -462,13 +477,13 @@ public class HomeHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.ListHeadline")
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.ListHeadline")
 				.replace("%amount%", String.valueOf(last))));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.ListHelp")));
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
-		String sameServer = plugin.getYamlHandler().getL().getString("CmdHome.ListSameServer");
-		String sameWorld = plugin.getYamlHandler().getL().getString("CmdHome.ListSameWorld");
-		String infoElse = plugin.getYamlHandler().getL().getString("CmdHome.ListElse");
+		String sameServer = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameServer");
+		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameWorld");
+		String infoElse = plugin.getYamlHandler().getLang().getString("CmdHome.ListElse");
 		for(Home home : list)
 		{
 			if(home.getLocation().getWordName().equals(world))
@@ -478,8 +493,8 @@ public class HomeHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
-						plugin.getYamlHandler().getL().getString("GeneralHover")
-						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("GeneralHover")
+						+"~!~"+plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(home.getLocation()))));
 			} else if(home.getLocation().getServer().equals(server))
 			{
@@ -488,8 +503,8 @@ public class HomeHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
-						plugin.getYamlHandler().getL().getString("GeneralHover")
-						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("GeneralHover")
+						+"~!~"+plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(home.getLocation()))));
 			} else
 			{
@@ -498,8 +513,8 @@ public class HomeHelper
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
 						HoverEvent.Action.SHOW_TEXT,
-						plugin.getYamlHandler().getL().getString("GeneralHover")
-						+"~!~"+plugin.getYamlHandler().getL().getString("KoordsHover")
+						plugin.getYamlHandler().getLang().getString("GeneralHover")
+						+"~!~"+plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(home.getLocation()))));
 			}
 		}
@@ -531,7 +546,7 @@ public class HomeHelper
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getL().getString("InputIsWrong"),
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
@@ -540,7 +555,7 @@ public class HomeHelper
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.HOME,
 				"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdHome.HomeNotExist")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeNotExist")));
 			return;
 		}
 		Back back = (Back) plugin.getMysqlHandler().getData(MysqlHandler.Type.BACK,
@@ -548,7 +563,7 @@ public class HomeHelper
 		back.setHomePriority(homeName);
 		plugin.getMysqlHandler().updateData(Type.BACK, back, "`player_uuid` = ?", player.getUniqueId().toString());
 		player.spigot().sendMessage(ChatApi.tctl(
-				plugin.getYamlHandler().getL().getString("CmdHome.SetPriority")
+				plugin.getYamlHandler().getLang().getString("CmdHome.SetPriority")
 				.replace("%name%", homeName)));
 	}
 }

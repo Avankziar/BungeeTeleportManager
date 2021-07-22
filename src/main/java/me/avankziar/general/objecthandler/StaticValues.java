@@ -71,16 +71,11 @@ public class StaticValues
 		;
 	
 	public static String
-		
-		//Back
-		PERM_BYPASS_BACK_COST = "btm.bypass.back.cost",
-		PERM_BYPASS_BACK_DELAY = "btm.bypass.back.delay",
-		
-		//Deahback
-		PERM_BYPASS_DEATHBACK_DELAY = "btm.bypass.deathback.delay",
-		
-		//Costum
-		PERM_BYPASS_CUSTOM_DELAY = "btm.bypass.custom.delay",
+	
+		BYPASS_COST = "btm.bypass.cost.",
+		BYPASS_DELAY = "btm.bypass.delay.",
+		BYPASS_FORBIDDEN_CREATE = "btm.bypass.forbidden.create.",
+		BYPASS_FORBIDDEN_USE = "btm.bypass.forbidden.use.",
 		
 		//Home
 		PERM_HOME_OTHER = "btm.cmd.staff.home.home.other",
@@ -92,25 +87,14 @@ public class StaticValues
 		
 		PERM_BYPASS_HOME = "btm.bypass.home.admin",
 		PERM_BYPASS_HOME_TOOMANY = "btm.bypass.home.toomany",
-		PERM_BYPASS_HOME_COST = "btm.bypass.home.cost",
-		PERM_BYPASS_HOME_FORBIDDEN = "btm.bypass.home.forbidden",
-		PERM_BYPASS_HOME_DELAY = "btm.bypass.home.delay",
-		
-		//RandomTeleport
-		PERM_BYPASS_RANDOMTELEPORT_DELAY = "btm.bypass.randomteleport.delay",
-		PERM_BYPASS_RANDOMTELEPORT_COST = "btm.bypass.randomteleport.cost",
 		
 		//SavePoint Bypass
 		PERM_BYPASS_SAVEPOINT_OTHER = "btm.bypass.savepoint.other",
 		PERM_BYPASS_SAVEPOINTS_OTHER = "btm.bypass.savepoint.savepoints.other",
-		PERM_BYPASS_SAVEPOINT_DELAY = "btm.bypass.savepoint.delay",
 	
 		//Teleport
 		PERM_BYPASS_TELEPORT_TPATOGGLE = "btm.bypass.tp.tpatoggle",
-		PERM_BYPASS_TELEPORT_COST = "btm.bypass.tp.cost",
-		PERM_BYPASS_TELEPORT_FORBIDDEN = "btm.bypass.tp.forbidden",
 		PERM_BYPASS_TELEPORT_SILENT = "btm.bypass.tp.silent",
-		PERM_BYPASS_TELEPORT_DELAY = "btm.bypass.tp.delay",
 		
 		
 		
@@ -124,8 +108,5 @@ public class StaticValues
 				
 		PERM_BYPASS_WARP = "btm.bypass.warp.admin",
 		PERM_BYPASS_WARP_BLACKLIST = "btm.bypass.warp.blacklist",
-		PERM_BYPASS_WARP_TOOMANY = "btm.bypass.warp.toomany",
-		PERM_BYPASS_WARP_COST = "btm.bypass.warp.cost",
-		PERM_BYPASS_WARP_FORBIDDEN = "btm.bypass.warp.forbidden",
-		PERM_BYPASS_WARP_DELAY = "btm.bypass.warp.delay";
+		PERM_BYPASS_WARP_TOOMANY = "btm.bypass.warp.toomany";
 }

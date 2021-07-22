@@ -193,7 +193,7 @@ public class ChatApi
 							String hoveraction = function[1];
 							String hoverstringpath = function[2];
 							String hoverstring = ChatApi.tl(
-									BungeeTeleportManager.getPlugin().getYamlHandler().getL().getString(hoverstringpath));
+									BungeeTeleportManager.getPlugin().getYamlHandler().getLang().getString(hoverstringpath));
 							ChatApi.hoverEvent(tc, HoverEvent.Action.valueOf(hoveraction),
 									hoverstring);
 						}
@@ -274,7 +274,7 @@ public class ChatApi
 							String hoveraction = function[1];
 							String hoverstringpath = function[2];
 							String hoverstring = replaceHoverReplacer(ChatApi.tl(
-									BungeeTeleportManager.getPlugin().getYamlHandler().getL().getString(hoverstringpath)),
+									BungeeTeleportManager.getPlugin().getYamlHandler().getLang().getString(hoverstringpath)),
 									hoverReplacer);
 							ChatApi.hoverEvent(tc, HoverEvent.Action.valueOf(hoveraction),
 									hoverstring);

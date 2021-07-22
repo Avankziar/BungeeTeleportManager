@@ -11,9 +11,10 @@ import java.util.concurrent.TimeUnit;
 
 import main.java.me.avankziar.bungee.btm.BungeeTeleportManager;
 import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
+import main.java.me.avankziar.bungee.btm.handler.ForbiddenHandlerBungee;
 import main.java.me.avankziar.general.object.Back;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.ServerLocation;
-import main.java.me.avankziar.general.objecthandler.ForbiddenHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
@@ -62,16 +63,16 @@ public class BackHandler
 		}
 	    player.getServer().sendData(StaticValues.BACK_TOSPIGOT, streamout.toByteArray());
 	}
-	
-	public static void getBack(DataInputStream in, String uuid, String name, ForbiddenHandler.Mechanics mechanics) throws IOException
+
+	public static void getBack(DataInputStream in, String uuid, String name, Mechanics mechanics) throws IOException
 	{
 		Back back = getTaskBack(in, uuid, name);
     	updateBack(back, name, mechanics);
 	}
 	
-	public static void updateBack(Back back, String playername, ForbiddenHandler.Mechanics mechanics)
+	public static void updateBack(Back back, String playername, Mechanics mechanics)
 	{
-		if(ForbiddenHandler.isForbidden(back, playername, mechanics, false))
+		if(ForbiddenHandlerBungee.isForbidden(back, playername, mechanics, false))
 		{
 			return;
 		}
@@ -157,7 +158,7 @@ public class BackHandler
 						e.printStackTrace();
 					}
 				    player.getServer().sendData(StaticValues.BACK_TOSPIGOT, streamout.toByteArray());
-				    if(deleteDeathBack)
+				    if(isDeathback && deleteDeathBack)
 				    {
 				    	BackHandler.getDeathBackLocations().remove(name);
 				    }

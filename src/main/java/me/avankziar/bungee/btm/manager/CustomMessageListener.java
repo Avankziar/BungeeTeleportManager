@@ -10,9 +10,9 @@ import java.util.concurrent.TimeUnit;
 
 import main.java.me.avankziar.bungee.btm.BungeeTeleportManager;
 import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.Teleport;
-import main.java.me.avankziar.general.objecthandler.ForbiddenHandler.Mechanics;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
@@ -56,7 +56,7 @@ public class CustomMessageListener implements Listener
         	String type = in.readUTF();
         	String errormessage = in.readUTF();
         	int delayed = in.readInt();
-        	BackHandler.getBack(in, fromUUID, fromName, Mechanics.NONE);
+        	BackHandler.getBack(in, fromUUID, fromName, Mechanics.CUSTOM);
         	preTeleportPlayerToPlayerForceUse(
         			new Teleport(UUID.fromString(fromUUID), fromName, UUID.fromString(toUUID), toName, Teleport.Type.valueOf(type)),
         			errormessage, delayed);
@@ -74,7 +74,7 @@ public class CustomMessageListener implements Listener
         	float pitch = in.readFloat();
         	String errorServerNotFound = in.readUTF();
         	int delayed = in.readInt();
-        	BackHandler.getBack(in, uuid, playerName, Mechanics.NONE);
+        	BackHandler.getBack(in, uuid, playerName, Mechanics.CUSTOM);
         	boolean messagenull = in.readBoolean();
         	String message = null;
         	if(!messagenull)

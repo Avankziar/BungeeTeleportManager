@@ -35,7 +35,7 @@ public class CommandHelper
 		if(page!=0)
 		{
 			TextComponent msg2 = ChatApi.tctl(
-					plugin.getYamlHandler().getL().getString(path+".Past"));
+					plugin.getYamlHandler().getLang().getString(path+".Past"));
 			String cmd = cmdstring+" "+String.valueOf(j);
 			for(String o : objects)
 			{
@@ -47,7 +47,7 @@ public class CommandHelper
 		if(!lastpage)
 		{
 			TextComponent msg1 = ChatApi.tctl(
-					plugin.getYamlHandler().getL().getString(path+".Next"));
+					plugin.getYamlHandler().getLang().getString(path+".Next"));
 			String cmd = cmdstring+" "+String.valueOf(i);
 			for(String o : objects)
 			{
@@ -68,11 +68,11 @@ public class CommandHelper
 	{
 		if(plugin.reload())
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdBtm.Reload.Success")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdBtm.Reload.Success")));
 			return;
 		} else
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getL().getString("CmdBtm.Reload.Error")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdBtm.Reload.Error")));
 		}
 	}
 }

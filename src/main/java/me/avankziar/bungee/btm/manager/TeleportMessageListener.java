@@ -10,11 +10,11 @@ import java.util.concurrent.TimeUnit;
 
 import main.java.me.avankziar.bungee.btm.BungeeTeleportManager;
 import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
+import main.java.me.avankziar.bungee.btm.handler.ForbiddenHandlerBungee;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.Teleport;
-import main.java.me.avankziar.general.objecthandler.ForbiddenHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
-import main.java.me.avankziar.general.objecthandler.ForbiddenHandler.Mechanics;
 import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PluginMessageEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -56,7 +56,7 @@ public class TeleportMessageListener implements Listener
         	String type = in.readUTF();
         	boolean bypass = in.readBoolean();
         	String error = in.readUTF();
-        	BackHandler.getBack(in, uuid, playername, Mechanics.TELEPORT);
+        	BackHandler.getBack(in, uuid, playername, Mechanics.TPA);
         	if(plugin.getProxy().getPlayer(toName) == null)
         	{
         		if(plugin.getProxy().getPlayer(fromName) != null)
@@ -96,9 +96,9 @@ public class TeleportMessageListener implements Listener
 			    plugin.getProxy().getPlayer(fromName).getServer().sendData(StaticValues.TP_TOSPIGOT, streamout.toByteArray());
         	} else
         	{
-        		if(ForbiddenHandler.getTeleportForbiddenServer().contains(
+        		if(ForbiddenHandlerBungee.getValues(true, Mechanics.TPA).contains(
         				plugin.getProxy().getPlayer(fromName).getServer().getInfo().getName())
-        				|| ForbiddenHandler.getTeleportForbiddenServer().contains(
+        				|| ForbiddenHandlerBungee.getValues(true, Mechanics.TPA).contains(
                 				plugin.getProxy().getPlayer(toName).getServer().getInfo().getName()))
         		{
         			ByteArrayOutputStream streamout = new ByteArrayOutputStream();
@@ -113,9 +113,9 @@ public class TeleportMessageListener implements Listener
     			    return;
         		}
         		
-        		if(ForbiddenHandler.getTeleportForbiddenWorld().contains(
+        		if(ForbiddenHandlerBungee.getValues(false, Mechanics.TPA).contains(
         				TeleportHandler.getPlayerWorld().get(fromName))
-        				|| ForbiddenHandler.getTeleportForbiddenWorld().contains(
+        				|| ForbiddenHandlerBungee.getValues(false, Mechanics.TPA).contains(
         						TeleportHandler.getPlayerWorld().get(toName)))
         		{
         			ByteArrayOutputStream streamout = new ByteArrayOutputStream();

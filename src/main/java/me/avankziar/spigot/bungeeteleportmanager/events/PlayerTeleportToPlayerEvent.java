@@ -14,7 +14,9 @@ public class PlayerTeleportToPlayerEvent extends Event
 	private Player player;
 	private UUID toPlayerUUID;
 	private String toPlayer;
+	private String customAnnotation;
 	
+	@Deprecated
 	public PlayerTeleportToPlayerEvent(Player player, UUID toPlayerUUID, String toPlayer)
 	{
 		setPlayer(player);
@@ -22,6 +24,13 @@ public class PlayerTeleportToPlayerEvent extends Event
 		setToPlayer(toPlayer);
 	}
 	
+	public PlayerTeleportToPlayerEvent(Player player, UUID toPlayerUUID, String toPlayer, String customAnnotation)
+	{
+		setPlayer(player);
+		setToPlayerUUID(toPlayerUUID);
+		setToPlayer(toPlayer);
+		setCustomAnnotation(customAnnotation);
+	}
 
     public UUID getToPlayerUUID()
 	{
@@ -76,5 +85,15 @@ public class PlayerTeleportToPlayerEvent extends Event
 	public void setCancelled(boolean isCancelled)
 	{
 		this.isCancelled = isCancelled;
+	}
+
+	public String getCustomAnnotation()
+	{
+		return customAnnotation;
+	}
+
+	public void setCustomAnnotation(String customAnnotation)
+	{
+		this.customAnnotation = customAnnotation;
 	}
 }
