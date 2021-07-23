@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 public class Warp
 {
+	public enum PortalAccess
+	{
+		ONLY, IRRELEVANT, FORBIDDEN;
+	}
 	private String name;
 	private ServerLocation location;
 	private boolean hidden;
@@ -14,10 +18,11 @@ public class Warp
 	private double price;
 	private ArrayList<String> blacklist;
 	private String category;
+	private PortalAccess portalAccess;
 	
 	public Warp(String name, ServerLocation location, boolean hidden,
 			String owner, String permission, String password,
-			ArrayList<String> member, ArrayList<String> blacklist, double price, String category)
+			ArrayList<String> member, ArrayList<String> blacklist, double price, String category, PortalAccess portalAccess)
 	{
 		setName(name);
 		setLocation(location);
@@ -29,6 +34,7 @@ public class Warp
 		setBlacklist(blacklist);
 		setPrice(price);
 		setCategory(category);
+		setPortalAccess(portalAccess);
 	}
 
 	public String getName()
@@ -133,5 +139,15 @@ public class Warp
 	public void setCategory(String category)
 	{
 		this.category = category;
+	}
+
+	public PortalAccess getPortalAccess()
+	{
+		return portalAccess;
+	}
+
+	public void setPortalAccess(PortalAccess portalAccess)
+	{
+		this.portalAccess = portalAccess;
 	}
 }

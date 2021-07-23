@@ -448,7 +448,7 @@ public class YamlManager
 		}
 		VaultSettings:
 		{
-			configSpigotKeys.put("useVault"
+			configSpigotKeys.put("UseVault"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
 			configSpigotKeys.put("CostPer.Use.Back"
@@ -463,6 +463,9 @@ public class YamlManager
 			configSpigotKeys.put("CostPer.Use.Teleport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					100.0}));
+			configSpigotKeys.put("CostPer.Use.WarpServerAllowedMaximum"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					10000.0}));
 			configSpigotKeys.put("CostPer.Create.Home"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					1000.0}));
@@ -478,6 +481,24 @@ public class YamlManager
 			configSpigotKeys.put("NotifyPlayerWhenUseTPA"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
+		}
+		SafeTeleport:
+		{
+			configSpigotKeys.put("UseSafeTeleport.Custom"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("UseSafeTeleport.Home"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("UseSafeTeleport.RandomTeleport"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("UseSafeTeleport.SavePoint"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("UseSafeTeleport.Warp"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
 		}
 		RandomTeleport:
 		{
@@ -842,9 +863,13 @@ public class YamlManager
 				"&c/warpsdeleteserverworld <server> <welt> &f| Löscht alle Warps auf den angegebenen Server/Welt.",
 				"&c/warpsdeleteserverworld <server> <world> &f| Deletes all warps on the specified server/world");
 		commandsInput("warpsearch", "warpsearch", "btm.cmd.user.warp.warpsearch",
-				"/warpsearch <Seitenzahl> <xxxx:value>", "/warpsearch ",
+				"/warpsearch <page> <xxxx:value>", "/warpsearch ",
 				"&c/warpsearch <Seitenzahl> <xxxx:Wert> &f| Sucht mit den angegeben Argumenten eine Liste aus Warps.",
 				"&c/warpsearch <page> <xxxx:value> &f| Searches a list of warps with the given arguments.");
+		commandsInput("warpsetportalaccess", "warpsetportalaccess", "btm.cmd.user.warp.warpsetportalaccess",
+				"/warpsetportalaccess <portalname> <value>", "/warpsetportalaccess ",
+				"&c/warpsetportalaccess <Portalname> <Wert> &f| Gibt den Zugang eines Portals zu diesem Warp an. Möglich sind: ONLY, IRRELEVANT, FORBIDDEN",
+				"&c/warpsetportalaccess <portalname> <value> &f| Specifies the access of a portal to this warp. Possible are: ONLY, IRRELEVANT, FORBIDDEN");
 	}
 	
 	private void commandsInput(String path, String name, String basePermission, 
@@ -925,10 +950,26 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDas Argument &f%arg% &cmuss eine positive Zahl sein!",
 						"&cThe argument &f%arg% &must be a positive number!"}));
+		languageKeys.put("ToHigh",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDie angegebene Zahl ist zu hoch! Erlaubtes Maximum: %max%",
+						"&cThe specified number is too high! Maximum allowed: %max%"}));
 		languageKeys.put("GeneralHover",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eKlick mich!",
 						"&eClick me!"}));
+		languageKeys.put("NotEnumValue",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cNicht korrekter Wert! Erlaubte Werte sind: %enum%",
+						"&cNot correct value! Permitted values are: %enum%"}));
+		languageKeys.put("NotSafeLocation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Teleport zum angegebenen Ort ist nicht sicher!",
+						"&cThe teleport to the specified location is not safe!"}));
+		languageKeys.put("AlreadyPendingTeleport",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cEin Teleport wird gerade für dich schon durchgeführt!",
+						"&cA teleport is already being performed for you right now!"}));
 		languageKeys.put("KoordsHover",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&bKoordinaten: &r%koords%",
@@ -1666,6 +1707,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePasswort: &r%password% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<Passwort>~hover@SHOW_TEXT@Hover.Message.Change",
 						"&ePassword: &r%password% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<Passwort>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoPortalAccess", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&ePortalAccess: &r%portalaccess% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<ONLY,IRRELEVANT,FORBIDDEN>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePortalAccess: &r%portalaccess% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<ONLY,IRRELEVANT,FORBIDDEN>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoPrice", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePreis: &r%price% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<Preis>~hover@SHOW_TEXT@Hover.Message.Change",
@@ -1790,6 +1835,22 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cEine Falsche SuchWertOption wurde erkannt! Möglich sind: &fserver, world, owner, member und category",
 						"&cAn incorrect searchvalue option was detected! Possible are: &fserver, world, owner, member and category"}));
+		languageKeys.put(path+"OnlyPortal",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Warp &f%warp% &ckann nur per Portal angesteuert werden!",
+						"&cThe warp &f%warp% &ccan only be accessed via portal!"}));
+		languageKeys.put(path+"SetPortalAccess.Forbidden",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Warp &f%warp% &ekann nun nicht mehr als Ziel von Portalen gesetzt werden!",
+						"&eThe warp &f%warp% &ecan now no longer be set as a target of portals!"}));
+		languageKeys.put(path+"SetPortalAccess.Irrelevant",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Warp &f%warp% &ebesitzt nun keine Spezifikation im Umgang mit Portalen!",
+						"&eThe warp &f%warp% &ehas now no specification in dealing with portals!"}));
+		languageKeys.put(path+"SetPortalAccess.Only",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Warp &f%warp% &ekann nur noch von Portalen angesteuert werden!",
+						"&eThe warp &f%warp% &ecan only be accessed by portals!"}));
 	}
 	
 	public void initForbiddenListBungee() //INFO:ForbiddenListBungee
@@ -1818,115 +1879,102 @@ public class YamlManager
 	
 	public void initForbiddenListSpigot() //INFO:ForbiddenListSpigot
 	{
-		forbiddenListBungeeKeys.put("ForbiddenToCreate.Home.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToCreate.Home.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToCreate.Home.World",
+		forbiddenListSpigotKeys.put("ForbiddenToCreate.Home.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToCreate.Portal.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToCreate.Portal.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToCreate.Portak.World",
+		forbiddenListSpigotKeys.put("ForbiddenToCreate.Portal.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToCreate.Warp.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToCreate.Warp.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToCreate.Warp.World",
+		forbiddenListSpigotKeys.put("ForbiddenToCreate.Warp.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
 		
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Back.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Back.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Back.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Back.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Custom.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Custom.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Custom.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Custom.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Deathback.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Deathback.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Deathback.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Deathback.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.EntityTeleport.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTeleport.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.EntityTeleport.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTeleport.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.EntityTransport.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTransport.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.EntityTransport.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTransport.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Home.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Home.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Home.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Home.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Portal.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Portal.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Portal.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Portal.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.RandomTeleport.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.RandomTeleport.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.RandomTeleport.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.RandomTeleport.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.SavePoint.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.SavePoint.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.SavePoint.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.SavePoint.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.TPA.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.TPA.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.TPA.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.TPA.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Teleport.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Teleport.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Teleport.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Teleport.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Warp.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Warp.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Warp.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Warp.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Custom.Server",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Custom.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether", "Explanation: Without a :, all Custom Teleports are forbidden."}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse.Custom.World",
+		forbiddenListSpigotKeys.put("ForbiddenToUse.Custom.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawn","city1", "Explanation: With a :, all Custom Teleports are forbidden, which contains the keyword for the custom Teleport. For example hub:plot etc. The >plot< word must be in use in the plugin plots or whatever."}));
-		
-		forbiddenListBungeeKeys.put("ForbiddenToCreate..Server",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToCreate..World",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse..Server",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"hub","nether"}));
-		forbiddenListBungeeKeys.put("ForbiddenToUse..World",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
 	}
 }

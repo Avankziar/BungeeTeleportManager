@@ -34,6 +34,14 @@ public class WarpHandler
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		if(warp.getLocation().getServer().equals(cfgh.getServer()))
 		{
+			if(cfgh.useSafeTeleport(Mechanics.WARP))
+			{
+				if(!plugin.getSafeLocationHandler().isSafeDestination(warp.getLocation()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotSafeLocation")));
+					return;
+				}
+			}
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
 			int delayed = cfgh.getMinimumTime(Mechanics.WARP);
@@ -54,34 +62,46 @@ public class WarpHandler
 			}.runTaskLater(plugin, delay);
 		} else
 		{
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	        DataOutputStream out = new DataOutputStream(stream);
-	        try {
-				out.writeUTF(StaticValues.WARP_PLAYERTOPOSITION);
-				out.writeUTF(uuid);
-				out.writeUTF(playername);
-				out.writeUTF(warp.getName());
-				out.writeUTF(warp.getLocation().getServer());
-				out.writeUTF(warp.getLocation().getWordName());
-				out.writeDouble(warp.getLocation().getX());
-				out.writeDouble(warp.getLocation().getY());
-				out.writeDouble(warp.getLocation().getZ());
-				out.writeFloat(warp.getLocation().getYaw());
-				out.writeFloat(warp.getLocation().getPitch());
-				if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.WARP.getLower()))
-				{
-					out.writeInt(cfgh.getMinimumTime(Mechanics.WARP));
-				} else
-				{
-					out.writeInt(25);
-				}
-				new BackHandler(plugin).addingBack(player, out);
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(cfgh.useSafeTeleport(Mechanics.WARP))
+			{
+				plugin.getSafeLocationHandler().safeLocationNetworkPending(player, uuid, playername, warp);
+			} else
+			{
+				sendPlayerToWarpPost(player, warp, playername, uuid);
 			}
-	        player.sendPluginMessage(plugin, StaticValues.WARP_TOBUNGEE, stream.toByteArray());
 		}
 		return;
+	}
+	
+	public void sendPlayerToWarpPost(Player player, Warp warp, String playername, String uuid)
+	{
+		ConfigHandler cfgh = new ConfigHandler(plugin);
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(stream);
+        try {
+			out.writeUTF(StaticValues.WARP_PLAYERTOPOSITION);
+			out.writeUTF(uuid);
+			out.writeUTF(playername);
+			out.writeUTF(warp.getName());
+			out.writeUTF(warp.getLocation().getServer());
+			out.writeUTF(warp.getLocation().getWordName());
+			out.writeDouble(warp.getLocation().getX());
+			out.writeDouble(warp.getLocation().getY());
+			out.writeDouble(warp.getLocation().getZ());
+			out.writeFloat(warp.getLocation().getYaw());
+			out.writeFloat(warp.getLocation().getPitch());
+			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.WARP.getLower()))
+			{
+				out.writeInt(cfgh.getMinimumTime(Mechanics.WARP));
+			} else
+			{
+				out.writeInt(25);
+			}
+			new BackHandler(plugin).addingBack(player, out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        player.sendPluginMessage(plugin, StaticValues.WARP_TOBUNGEE, stream.toByteArray());
 	}
 	
 	public boolean compareWarpAmount(Player player, boolean message)

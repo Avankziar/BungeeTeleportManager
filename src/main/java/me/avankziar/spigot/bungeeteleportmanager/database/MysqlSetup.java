@@ -293,7 +293,8 @@ public class MysqlSetup
 		        		+ " member longtext,"
 		        		+ " blacklist longtext,"
 		        		+ " price double DEFAULT '0.00',"
-		        		+ " category text);";
+		        		+ " category text,"
+		        		+ " portalaccess text);";
 		        query = conn.prepareStatement(data);
 		        query.execute();
 		      } catch (SQLException e) 

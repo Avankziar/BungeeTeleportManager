@@ -4,11 +4,15 @@ Future =========================================================================
 - Eine einstellbare Einstellung für Warps, dass man von anderen server diese nicht sehen kann. Whitelist boolean, Server Whitelist Liste
 
 Build 6 =======================================================================================================================
+- Back Tabelle 3: home_priority =>
+- Warp Tabelle 5: portalaccess => 
 - +NPE bei /warpsetowner <Spielername welcher nicht existiert>, behoben
 - +Home existiert nicht-Fehler bei /homes <Zahl> <Spielername>, behoben
 - +Warplist NPE, behoben
 - github
   - Sicherer Teleport
+    - Eine Liste aller Blöcke, welche durchlässig sind.
+    - Für RTP Biome für eine Blackliste schreibbar machen.
 - +/tpaccept, ohne Argument möglich machen, damit man den ersten TpA annimmt.
 - +Back Mysql Tabelle erhält neuen Wert. "home_priority". Dieses setzt das Home ein, welches priorisiert wird, falls /home ohne Argument eingesetzt wird.
 - +/home, ohne Argument möglich machen, damit man das erste (priorisierte) Home nimmt.
@@ -19,12 +23,15 @@ Build 6 ========================================================================
     Sollte hinter dem ":" was stehen, wird genau danach gesucht. Falls der eintrag fehlt, wird nach allen gesucht,
     welche einen server haben. Weitere Argumente sind "owner", "world", "member", "category".
 - Mysql Performance Befehl
-- Warps mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Befehl ansteuern zu können. Gegenteil auch möglich.
-  Aka OnlyPortal, NotPortal, Keine
-- Maximalbeträge für Warps an Warpkosten einstellbar machen.
+- +Warps mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Befehl ansteuern zu können. Gegenteil auch möglich.
+   Aka OnlyPortal, NotPortal, Keine
+- +/warpsetportalaccess <Portalname> <Wert> hinzugefügt
+- +Warps, welche nur durch portale angesteuert werden können, werden nicht mehr im Tab vorgeschlagen.
+- +Warps, welche nur durch portale angesteuert werden können, wird der teleport dahin untersagt.
+- +Maximalbeträge für Warps an Warpkosten einstellbar machen.
 - +Can. in EnableCommands umbenannt.
 - +TPA und TP befehle nun für das Enablen getrennt.
-- ForbiddenList
+- +ForbiddenList
   - +Bypass im tpa/tp für ForbiddenServer/World einbauen.
   - +BungeeCord einen YamlHandler einbauen. YamlManager global bauen.
   - +Forbiddenlist in eine seperate Datei bauen.
@@ -32,6 +39,7 @@ Build 6 ========================================================================
   - +Möglichmachen, bestimmte Teleportarten in bestimmten Welten auch nicht auszuführen. Aka von Welt A sich nicht Wegwarpen können oder so.
   - +CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
       ob back übernommen werden soll, oder nicht.
+- Bei entstandenen Kosten wo man teleports Used (Warp, home, Tpa, RTP, back...) sollte eine nachricht ausgegeben werden, was man gezahlt hat.
 - RandomTeleport
   - Möglichmachen, dass per Config auch "Spezifische" Rtps erstellt und angesteuert werden können per Namen.
 - EntityTransport
@@ -101,13 +109,15 @@ Build 6 ========================================================================
   - /portalsettarget <Portalname> <[x:Name Oder Erkennung> ODER <x>] | Z.B. <w:Spawn> = Warp zum Spawnwarppunkt 
     o. <sp> für den letzten Savepoint
     - Möglichkeiten sind: <p:portalname>, <w:Name>, <db> (Deatback), <l:Server;Welt;x;y;z;yaw;pitch>, <sp> oder <sp:Name>,
-    - <fsp> firstspawn, <resp> oder <resp:name> Respawn, <rtp> oder <rtp:Name> RandomTeleport>
+    - <fsp> firstspawn, <resp> oder <resp:name> Respawn, <rtp> oder <rtp:Name> RandomTeleport>, <c:/warp+spawn>
   - /portalsetblacklist <Portalname> <Spielername> | Entfernt oder fügt den Spieler der Blacklist hinzu. Bypass
   - /portalinfo <Portalname>
   - /portallist [seitenzahl] [server] [welt]
   - /portals [seitenzahl] [spielername]
   - /portaldelete <Portalname>
   - /portalpointofExit <Portalname> | Erstellt den Point of Exit des angegebenen Portals
+  - /portalsettriggerblock <Portalname> [TriggerBlock, ohne Angabe AIR] [true:zum air in triggerblock umwandeln, sonst selber füllen.]
+  - Beim Erstellen des Portals, soll der Infobefehl als ClickBefehl sofort danach gesendet.
   - PermissionLevel für Portale hinzufügen.
   - Entitys können KEINE Portale betreten.
   - portal erstellung kann geld kosten.

@@ -395,6 +395,24 @@ public class WarpCommandExecutor implements CommandExecutor
 			}
 			plugin.getWarpHelper().warpSearch(player, args);
 			return true;
+		} else if(commandList.containsKey(cmd.getName()) 
+				&& commandList.get(cmd.getName()).getPath().equals("warpsetportalaccess"))
+		{
+			if (!(sender instanceof Player)) 
+			{
+				BungeeTeleportManager.log.info("%cmd% is only for Player!".replace("%cmd%", cmd.getName()));
+				return false;
+			}
+			Player player = (Player) sender;
+			if(!player.hasPermission(commandList.get(cmd.getName()).getPermission()))
+			{
+				///Du hast dafür keine Rechte!
+				player.spigot().sendMessage(ChatApi.tctl(
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
+				return false;
+			}
+			plugin.getWarpHelper().warpSetPortalAccess(player, args);
+			return true;
 		}
 		return false;
 	}

@@ -76,8 +76,8 @@ public interface TableV
 			{
 				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameV 
 						+ "`(`warpname`, `server`, `world`, `x`, `y`, `z`, `yaw`, `pitch`,"
-						+ " `hidden`, `owner`, `permission`, `password`, `member`, `blacklist`, `price`, `category`) " 
-						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+						+ " `hidden`, `owner`, `permission`, `password`, `member`, `blacklist`, `price`, `category`, `portalaccess`) " 
+						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				String m = null;
 				if(w.getMember() != null)
 				{
@@ -105,6 +105,7 @@ public interface TableV
 		        preparedStatement.setString(14, b);
 		        preparedStatement.setDouble(15, w.getPrice());
 		        preparedStatement.setString(16, w.getCategory());
+		        preparedStatement.setString(17, w.getPortalAccess().toString());
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
@@ -150,7 +151,7 @@ public interface TableV
 						+ "` SET `warpname` = ?, `server` = ?, `world` = ?,"
 						+ " `x` = ?, `y` = ?, `z` = ?, `yaw` = ?, `pitch` = ?,"
 						+ " `hidden` = ?, `owner` = ?, `permission` = ?, `password` = ?, `member` = ?,"
-						+ " `blacklist` = ?, `price` = ?, `category` = ?" 
+						+ " `blacklist` = ?, `price` = ?, `category` = ?, `portalaccess` = ?" 
 						+ " WHERE "+whereColumn;
 				String m = null;
 				if(w.getMember() != null)
@@ -185,8 +186,9 @@ public interface TableV
 		        preparedStatement.setString(14, b);
 		        preparedStatement.setDouble(15, w.getPrice());
 		        preparedStatement.setString(16, w.getCategory());
+		        preparedStatement.setString(17, w.getPortalAccess().toString());
 		        
-		        int i = 17;
+		        int i = 18;
 		        for(Object o : whereObject)
 		        {
 		        	preparedStatement.setObject(i, o);
@@ -260,7 +262,8 @@ public interface TableV
 		        			m,
 		        			b,
 		        			result.getDouble("price"),
-		        			result.getString("category"));
+		        			result.getString("category"),
+		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")));
 		        }
 		    } catch (SQLException e) 
 			{
@@ -460,7 +463,8 @@ public interface TableV
 		        			m,
 		        			b,
 		        			result.getDouble("price"),
-		        			result.getString("category"));
+		        			result.getString("category"),
+		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")));
 		        	list.add(w);
 		        }
 		        return list;
@@ -532,7 +536,8 @@ public interface TableV
 		        			m,
 		        			b,
 		        			result.getDouble("price"),
-		        			result.getString("category"));
+		        			result.getString("category"),
+		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")));
 		        	list.add(w);
 		        }
 		        return list;

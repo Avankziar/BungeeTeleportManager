@@ -76,7 +76,7 @@ public interface TableIII
 			{
 				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameIII 
 						+ "`(`player_uuid`, `player_name`, `back_location`, `tp_toggle`, `home_priority`) " 
-						+ "VALUES(?, ?, ?, ?)";
+						+ "VALUES(?, ?, ?, ?, ?)";
 				preparedStatement = conn.prepareStatement(sql);
 		        preparedStatement.setString(1, b.getUuid().toString());
 		        preparedStatement.setString(2, b.getName());

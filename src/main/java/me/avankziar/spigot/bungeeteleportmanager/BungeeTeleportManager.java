@@ -43,6 +43,7 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlSetup;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.YamlHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.AdvancedEconomyHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.SafeLocationHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.BackListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.CustomTeleportListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.PlayerOnCooldownListener;
@@ -86,6 +87,8 @@ public class BungeeTeleportManager extends JavaPlugin
 	private CommandHelper commandHelper;
 	private Economy eco;
 	private AdvancedEconomyHandler advancedEconomyHandler;
+	
+	private SafeLocationHandler safeLocationHandler;
 	
 	private BackHandler backHandler;
 	private BackHelper backHelper;
@@ -151,6 +154,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		BTMSettings.initSettings(plugin);
 		bungeeBridge = new BungeeBridge(plugin);
 		commandHelper = new CommandHelper(plugin);
+		safeLocationHandler = new SafeLocationHandler(plugin);
 		backHelper = new BackHelper(plugin);
 		backHandler = new BackHandler(plugin);
 		customHandler = new CustomHandler(plugin);
@@ -632,9 +636,16 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(warpsearch.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			BTMSettings.settings.addCommands(KeyHandler.WARP_SEARCH, warpsearch.getCommandString());
 			
+			CommandConstructor warpsetportalaccess = new CommandConstructor("warpsetportalaccess", false);
+			
+			registerCommand(warpsetportalaccess.getName());
+			getCommand(warpsetportalaccess.getName()).setExecutor(new WarpCommandExecutor(plugin, warpsetportalaccess));
+			getCommand(warpsetportalaccess.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.WARP_SETPORTALACCESS, warpsetportalaccess.getCommandString());
+			
 			addingHelps(warp, warps, warpcreate, warpremove, warplist, warpinfo, warpsetname, warpsetowner, warpsetposition,
 					warpsetpassword, warpsetprice, warphidden, warpaddmember, warpremovemember, warpaddblacklist, warpremoveblacklist,
-					warpsetcategory, warpsdeleteserverworld, warpsearch);
+					warpsetcategory, warpsdeleteserverworld, warpsearch, warpsetportalaccess);
 		}
 		
 		/*
@@ -899,6 +910,11 @@ public class BungeeTeleportManager extends JavaPlugin
 	public BungeeBridge getBungeeBridge()
 	{
 		return bungeeBridge;
+	}
+	
+	public SafeLocationHandler getSafeLocationHandler()
+	{
+		return safeLocationHandler;
 	}
 
 	public BackHelper getBackHelper()

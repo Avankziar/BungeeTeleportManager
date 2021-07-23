@@ -140,6 +140,12 @@ public class WarpHelper
 					return;
 				}
 				Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
+				if(warp.getPortalAccess() == Warp.PortalAccess.ONLY)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.OnlyPortal")
+							.replace("%warp%", warp.getName())));
+					return;
+				}
 				if(warp.getBlacklist() != null)
 				{
 					if(warp.getBlacklist().contains(playeruuid)
@@ -347,7 +353,7 @@ public class WarpHelper
 		}
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		Warp warp = new Warp(warpName, Utility.getLocation(player.getLocation()),
-				false, player.getUniqueId().toString(), null, null, null, null, 0.0, "default");
+				false, player.getUniqueId().toString(), null, null, null, null, 0.0, "default", Warp.PortalAccess.IRRELEVANT);
 		if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.WARP.getLower())
 				&& plugin.getEco() != null
 				&& cfgh.useVault())
@@ -856,6 +862,11 @@ public class WarpHelper
 					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPASSWORD))
 					.replace("%password%", password)
 					.replace("%warp%", warp.getName())));
+			player.spigot().sendMessage(ChatApi.generateTextComponent(
+					plugin.getYamlHandler().getLang().getString("CmdWarp.InfoPortalAccess")
+					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPORTALACCESS))
+					.replace("%portalaccess%", warp.getPortalAccess().toString())
+					.replace("%warp%", warp.getName())));
 			ArrayList<String> member = new ArrayList<>();
 			for(String uuid : warp.getMember())
 			{
@@ -1113,6 +1124,13 @@ public class WarpHelper
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 					.replace("%arg%", args[1])));
+			return;
+		}
+		double maximum = plugin.getYamlHandler().getConfig().getDouble("CostPer.Use.WarpServerAllowedMaximum", 10000.0);
+		if(price > maximum)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ToHigh")
+					.replace("%max%", String.valueOf(maximum))));
 			return;
 		}
 		warp.setPrice(price);
@@ -1685,6 +1703,56 @@ public class WarpHelper
 		}
 		plugin.getCommandHelper().pastNextPage(player, "CmdWarp.", page, lastpage,
 				BTMSettings.settings.getCommands(KeyHandler.WARP_SEARCH), argPagination);
+		return;
+	}
+	
+	public void warpSetPortalAccess(Player player, String[] args)
+	{
+		Warp warp = warpChangeIntro(player, args);
+		if(warp == null)
+		{
+			return;
+		}
+		boolean owner = false;
+		if(warp.getOwner() != null)
+		{
+			owner = warp.getOwner().equals(player.getUniqueId().toString());
+		}
+		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
+				&& !owner)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			return;
+		}
+		String pA = args[1];
+		Warp.PortalAccess portalAccess = Warp.PortalAccess.ONLY;
+		try
+		{
+			portalAccess = Warp.PortalAccess.valueOf(pA);
+			warp.setPortalAccess(portalAccess);
+		} catch(Exception e)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotEnumValue")
+					.replace("%enum%", Warp.PortalAccess.FORBIDDEN.toString()+" "
+					+Warp.PortalAccess.IRRELEVANT.toString()+" "+Warp.PortalAccess.ONLY.toString()+" ")));
+			return;
+		}
+		switch(portalAccess)
+		{
+		case FORBIDDEN:
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPortalAccess.Forbidden")
+					.replace("%warp%", args[0])));
+			break;
+		case IRRELEVANT:
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPortalAccess.Irrelevant")
+					.replace("%warp%", args[0])));
+			break;
+		case ONLY:
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPortalAccess.Only")
+					.replace("%warp%", args[0])));
+			break;
+		}
+		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
 		return;
 	}
 }

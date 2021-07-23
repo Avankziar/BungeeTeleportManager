@@ -256,6 +256,10 @@ public class Utility
 				ArrayList<String> warps = new ArrayList<>();
 				for(Warp w : warp)
 				{
+					if(w.getPortalAccess() == Warp.PortalAccess.ONLY)
+					{
+						continue;
+					}
 					if(w.getBlacklist() != null)
 					{
 						if(w.getBlacklist().contains(player.getUniqueId().toString()))

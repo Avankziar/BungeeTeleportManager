@@ -67,7 +67,13 @@ public class StaticValues
 		//WARP Sending
 		WARP_TOBUNGEE = "btm:warptobungee",
 		WARP_TOSPIGOT = "btm:warptospigot",
-		WARP_PLAYERTOPOSITION = "warp-playertoposition"
+		WARP_PLAYERTOPOSITION = "warp-playertoposition",
+		
+		//SAFE Location Sending
+		SAFE_TOBUNGEE = "btm:safetobungee",
+		SAFE_TOSPIGOT = "btm:safetospigot",
+		SAFE_CHECKPATH = "safe-checkpath",
+		SAFE_CHECKEDPATH = "safe-checkedpath"
 		;
 	
 	public static String

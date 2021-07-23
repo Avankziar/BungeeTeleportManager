@@ -34,7 +34,7 @@ public class ConfigHandler
 	
 	public boolean useVault()
 	{
-		return plugin.getYamlHandler().getConfig().getBoolean("useVault", false);
+		return plugin.getYamlHandler().getConfig().getBoolean("UseVault", false);
 	}
 	
 	public double getCostUse(Mechanics mechanics)
@@ -45,5 +45,10 @@ public class ConfigHandler
 	public double getCostCreation(Mechanics mechanics)
 	{
 		return plugin.getYamlHandler().getConfig().getDouble("CostPer.Create."+mechanics.getKey(), 0.0);
+	}
+	
+	public boolean useSafeTeleport(Mechanics mechanics)
+	{
+		return plugin.getYamlHandler().getConfig().getBoolean("UseSafeTeleport."+mechanics.getKey(), false);
 	}
 }

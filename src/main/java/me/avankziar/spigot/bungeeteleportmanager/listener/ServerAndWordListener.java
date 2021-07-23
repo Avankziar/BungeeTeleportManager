@@ -50,6 +50,7 @@ public class ServerAndWordListener implements Listener
 		BungeeTeleportManager.homes.remove(event.getPlayer().getName());
 		BungeeTeleportManager.savepoints.remove(event.getPlayer().getName());
 		BungeeTeleportManager.warps.remove(event.getPlayer().getName());
+		plugin.getSafeLocationHandler().pending.remove(event.getPlayer().getUniqueId().toString()+"!"+event.getPlayer().getName());
 	}
 
 }
