@@ -484,13 +484,7 @@ public class YamlManager
 		}
 		SafeTeleport:
 		{
-			configSpigotKeys.put("UseSafeTeleport.Custom"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					false}));
 			configSpigotKeys.put("UseSafeTeleport.Home"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					false}));
-			configSpigotKeys.put("UseSafeTeleport.RandomTeleport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
 			configSpigotKeys.put("UseSafeTeleport.SavePoint"
@@ -502,6 +496,21 @@ public class YamlManager
 		}
 		RandomTeleport:
 		{
+			configSpigotKeys.put("RandomTeleport.UseHighestY"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("RandomTeleport.HighestYCanBeLeaves"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("RandomTeleport.ForbiddenBiomes"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"DEEP_COLD_OCEAN",
+					"DEEP_FROZEN_OCEAN",
+					"DEEP_LUKEWARM_OCEAN",
+					"DEEP_OCEAN",
+					"DEEP_WARM_OCEAN",
+					"OCEAN",
+					"WARM_OCEAN"}));
 			configSpigotKeys.put("RandomTeleport.UseSimpleTarget"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
@@ -1275,6 +1284,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Randomteleport wird bearbeitet!",
 						"&eThe random teleport is being processed!"}));
+		languageKeys.put(path+"SecurityBreach", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAchtung! Wegen Sicherheitsbedenken wurder die Suche nach einem RandomTeleport nach dem 500.ten Versuch abgebrochen. Bitte kontaktiere einen Admin, falls dies ein Fehler ist.",
+						"&cAttention! Due to security concerns, the search for a RandomTeleport has been cancelled after the 500th attempt. Please contact an admin if this is a bug."}));
 		languageKeys.put(path+"ErrorInConfig", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cFEHLER! In der Config existiert ein Fehler bei der Definition vom RandomTeleport!",

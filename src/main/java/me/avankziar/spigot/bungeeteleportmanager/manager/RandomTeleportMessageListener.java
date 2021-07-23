@@ -70,7 +70,8 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
 						{
 							if(loc == null)
 	            			{
-	            				player.sendMessage(ChatApi.tl("&cERROR!"));
+								player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.SecurityBreach")));
+								return;
 	            			}
 							if(plugin.getServer().getPlayer(playerName) != null)
 							{
@@ -95,6 +96,7 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
 											public void run()
 											{
 												plugin.getUtility().givesEffect(player, Mechanics.RANDOMTELEPORT, false, false);
+												
 												player.teleport(loc);
 												
 											}

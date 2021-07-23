@@ -42,11 +42,19 @@ public class HomeHandler
 		}
 	}
 	
-	public void sendPlayerToHome(Player player, Home home)
+	public void sendPlayerToHome(Player player, Home home, String playername, String uuid)
 	{
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		if(home.getLocation().getServer().equals(cfgh.getServer()))
 		{
+			if(cfgh.useSafeTeleport(Mechanics.HOME))
+			{
+				if(!plugin.getSafeLocationHandler().isSafeDestination(home.getLocation()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotSafeLocation")));
+					return;
+				}
+			}
 			BackHandler bh = new BackHandler(plugin);
 			bh.sendBackObject(player, bh.getNewBack(player));
 			int delayed = cfgh.getMinimumTime(Mechanics.HOME);
@@ -67,34 +75,46 @@ public class HomeHandler
 			}.runTaskLater(plugin, delay);
 		} else
 		{
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	        DataOutputStream out = new DataOutputStream(stream);
-	        try {
-				out.writeUTF(StaticValues.HOME_PLAYERTOPOSITION);
-				out.writeUTF(player.getUniqueId().toString());
-				out.writeUTF(player.getName());
-				out.writeUTF(home.getHomeName());
-				out.writeUTF(home.getLocation().getServer());
-				out.writeUTF(home.getLocation().getWordName());
-				out.writeDouble(home.getLocation().getX());
-				out.writeDouble(home.getLocation().getY());
-				out.writeDouble(home.getLocation().getZ());
-				out.writeFloat(home.getLocation().getYaw());
-				out.writeFloat(home.getLocation().getPitch());
-				if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.HOME.getLower()))
-				{
-					out.writeInt(cfgh.getMinimumTime(Mechanics.HOME));
-				} else
-				{
-					out.writeInt(25);
-				}
-				new BackHandler(plugin).addingBack(player, out);
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(cfgh.useSafeTeleport(Mechanics.WARP))
+			{
+				plugin.getSafeLocationHandler().safeLocationNetworkPending(player, uuid, playername, home);
+			} else
+			{
+				sendPlayerToHomePost(player, home, playername, uuid);
 			}
-	        player.sendPluginMessage(plugin, StaticValues.HOME_TOBUNGEE, stream.toByteArray());
 		}
         return;
+	}
+	
+	public void sendPlayerToHomePost(Player player, Home home, String playername, String uuid)
+	{
+		ConfigHandler cfgh = new ConfigHandler(plugin);
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(stream);
+        try {
+			out.writeUTF(StaticValues.HOME_PLAYERTOPOSITION);
+			out.writeUTF(player.getUniqueId().toString());
+			out.writeUTF(player.getName());
+			out.writeUTF(home.getHomeName());
+			out.writeUTF(home.getLocation().getServer());
+			out.writeUTF(home.getLocation().getWordName());
+			out.writeDouble(home.getLocation().getX());
+			out.writeDouble(home.getLocation().getY());
+			out.writeDouble(home.getLocation().getZ());
+			out.writeFloat(home.getLocation().getYaw());
+			out.writeFloat(home.getLocation().getPitch());
+			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.HOME.getLower()))
+			{
+				out.writeInt(cfgh.getMinimumTime(Mechanics.HOME));
+			} else
+			{
+				out.writeInt(25);
+			}
+			new BackHandler(plugin).addingBack(player, out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        player.sendPluginMessage(plugin, StaticValues.HOME_TOBUNGEE, stream.toByteArray());
 	}
 	
 	/*

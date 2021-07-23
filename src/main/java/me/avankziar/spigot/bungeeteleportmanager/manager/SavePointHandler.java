@@ -36,6 +36,14 @@ public class SavePointHandler
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		if(sp.getLocation().getServer().equals(cfgh.getServer()))
 		{
+			if(cfgh.useSafeTeleport(Mechanics.SAVEPOINT))
+			{
+				if(!plugin.getSafeLocationHandler().isSafeDestination(sp.getLocation()))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotSafeLocation")));
+					return;
+				}
+			}
 			int delayed = cfgh.getMinimumTime(Mechanics.SAVEPOINT);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.SAVEPOINT.getLower()))
@@ -61,35 +69,46 @@ public class SavePointHandler
 			}.runTaskLater(plugin, delay);
 		} else
 		{
-			ByteArrayOutputStream stream = new ByteArrayOutputStream();
-	        DataOutputStream out = new DataOutputStream(stream);
-	        try {
-				out.writeUTF(StaticValues.SAVEPOINT_PLAYERTOPOSITION);
-				out.writeUTF(uuid);
-				out.writeUTF(playername);
-				out.writeUTF(sp.getSavePointName());
-				out.writeUTF(sp.getLocation().getServer());
-				out.writeUTF(sp.getLocation().getWordName());
-				out.writeDouble(sp.getLocation().getX());
-				out.writeDouble(sp.getLocation().getY());
-				out.writeDouble(sp.getLocation().getZ());
-				out.writeFloat(sp.getLocation().getYaw());
-				out.writeFloat(sp.getLocation().getPitch());
-				out.writeBoolean(last);
-				if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.SAVEPOINT.getLower()))
-				{
-					out.writeInt(cfgh.getMinimumTime(Mechanics.SAVEPOINT));
-				} else
-				{
-					out.writeInt(25);
-				}
-				new BackHandler(plugin).addingBack(player, out);
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(cfgh.useSafeTeleport(Mechanics.SAVEPOINT))
+			{
+				plugin.getSafeLocationHandler().safeLocationNetworkPending(player, uuid, playername, sp);
+			} else
+			{
+				sendPlayerToSavePointPost(player, sp, playername, uuid, last);
 			}
-	        player.sendPluginMessage(plugin, StaticValues.SAVEPOINT_TOBUNGEE, stream.toByteArray());
 		}
 		return;
+	}
+	
+	public void sendPlayerToSavePointPost(Player player, SavePoint sp, String playername, String uuid, boolean last)
+	{
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(stream);
+        try {
+			out.writeUTF(StaticValues.SAVEPOINT_PLAYERTOPOSITION);
+			out.writeUTF(uuid);
+			out.writeUTF(playername);
+			out.writeUTF(sp.getSavePointName());
+			out.writeUTF(sp.getLocation().getServer());
+			out.writeUTF(sp.getLocation().getWordName());
+			out.writeDouble(sp.getLocation().getX());
+			out.writeDouble(sp.getLocation().getY());
+			out.writeDouble(sp.getLocation().getZ());
+			out.writeFloat(sp.getLocation().getYaw());
+			out.writeFloat(sp.getLocation().getPitch());
+			out.writeBoolean(last);
+			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.SAVEPOINT.getLower()))
+			{
+				out.writeInt(new ConfigHandler(plugin).getMinimumTime(Mechanics.SAVEPOINT));
+			} else
+			{
+				out.writeInt(25);
+			}
+			new BackHandler(plugin).addingBack(player, out);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        player.sendPluginMessage(plugin, StaticValues.SAVEPOINT_TOBUNGEE, stream.toByteArray());
 	}
 	
 	public LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> mapping(

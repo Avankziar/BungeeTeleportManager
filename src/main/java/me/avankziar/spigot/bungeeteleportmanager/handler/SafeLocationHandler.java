@@ -26,7 +26,10 @@ import org.bukkit.block.data.type.Snow;
 import org.bukkit.entity.Player;
 
 import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
+import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.Mechanics;
+import main.java.me.avankziar.general.object.RandomTeleport;
+import main.java.me.avankziar.general.object.SavePoint;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
@@ -55,7 +58,15 @@ public class SafeLocationHandler
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AlreadyPendingTeleport")));
 			return;
 		}
-		if(teleportObject instanceof Warp)
+		if(teleportObject instanceof Home)
+		{
+			Home home = (Home) teleportObject;
+			sendData(player, Mechanics.HOME, uuid, playername, home.getLocation());
+		} else if(teleportObject instanceof SavePoint)
+		{
+			SavePoint sp = (SavePoint) teleportObject;
+			sendData(player, Mechanics.SAVEPOINT, uuid, playername, sp.getLocation());
+		} else if(teleportObject instanceof Warp)
 		{
 			Warp warp = (Warp) teleportObject;
 			sendData(player, Mechanics.WARP, uuid, playername, warp.getLocation());
@@ -95,14 +106,23 @@ public class SafeLocationHandler
 			return;
 		}
 		final Object o = pending.get(key);
-		if(o instanceof Warp)
+		Player other = Bukkit.getPlayer(UUID.fromString(uuid));
+		if(other == null)
+		{
+			pending.remove(key);
+			return;
+		}
+		if(o instanceof Home)
+		{
+			final Home home = (Home) pending.get(key);
+			plugin.getHomeHandler().sendPlayerToHomePost(other, home, playername, uuid);
+		} else if(o instanceof Home)
+		{
+			final SavePoint sp = (SavePoint) pending.get(key);
+			plugin.getSavePointHandler().sendPlayerToSavePointPost(other, sp, playername, uuid, false);
+		} else if(o instanceof Warp)
 		{
 			final Warp warp = (Warp) pending.get(key);
-			Player other = Bukkit.getPlayer(UUID.fromString(uuid));
-			if(other == null)
-			{
-				return;
-			}
 			plugin.getWarpHandler().sendPlayerToWarpPost(other, warp, playername, uuid);
 		}		
 		pending.remove(key);

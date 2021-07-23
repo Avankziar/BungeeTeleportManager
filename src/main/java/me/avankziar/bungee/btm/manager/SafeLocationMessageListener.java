@@ -81,6 +81,8 @@ public class SafeLocationMessageListener implements Listener
         	{
         	default:
         		return;
+        	case HOME:
+        	case SAVEPOINT:
         	case WARP:
         		ByteArrayOutputStream streamout = new ByteArrayOutputStream();
 		        DataOutputStream out = new DataOutputStream(streamout);

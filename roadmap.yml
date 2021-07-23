@@ -11,8 +11,14 @@ Build 6 ========================================================================
 - +Warplist NPE, behoben
 - github
   - Sicherer Teleport
-    - Eine Liste aller Blöcke, welche durchlässig sind.
+    - +Eine Liste aller Blöcke, welche durchlässig sind.
+    - +ConfigWert umd die Mechniken SafeTeleport ein- oder auszuschalten.
+    - Für Homes
+    - Für RTP
+    - Für SafePoint
+    - +Für Warps
     - Für RTP Biome für eine Blackliste schreibbar machen.
+    - Für RTP Option für atHighestBlock spawnfähig machen
 - +/tpaccept, ohne Argument möglich machen, damit man den ersten TpA annimmt.
 - +Back Mysql Tabelle erhält neuen Wert. "home_priority". Dieses setzt das Home ein, welches priorisiert wird, falls /home ohne Argument eingesetzt wird.
 - +/home, ohne Argument möglich machen, damit man das erste (priorisierte) Home nimmt.

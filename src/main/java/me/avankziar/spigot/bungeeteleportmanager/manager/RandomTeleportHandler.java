@@ -3,29 +3,44 @@ package main.java.me.avankziar.spigot.bungeeteleportmanager.manager;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.RandomTeleport;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
-import main.java.me.avankziar.general.object.Mechanics;
 
 public class RandomTeleportHandler
 {
 	private BungeeTeleportManager plugin;
+	private ArrayList<Biome> forbiddenBiomes = new ArrayList<>();
 	
 	public RandomTeleportHandler(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
+		for(String s : plugin.getYamlHandler().getConfig().getStringList("RandomTeleport.ForbiddenBiomes"))
+		{
+			try
+			{
+				Biome bio = Biome.valueOf(s);
+				forbiddenBiomes.add(bio);
+			} catch(Exception e)
+			{
+				continue;
+			}
+		}
 	}
 	
 	public void sendPlayerToRT(Player player, RandomTeleport rt, String playername, String uuid)
@@ -44,7 +59,7 @@ public class RandomTeleportHandler
 			Location loc = getRandomTeleport(rt);
 			if(loc == null)
 			{
-				player.sendMessage(ChatApi.tl("&cERROR!"));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.SecurityBreach")));
 				return;
 			}
 			new BukkitRunnable()
@@ -101,8 +116,13 @@ public class RandomTeleportHandler
 	public Location getRandomTeleport(RandomTeleport rt)
 	{
 		Location loc = null;
+		int i = 0;
 		while(loc == null)
 		{
+			if(i > 500)
+			{
+				break;
+			}
 			if(rt.isArea())
 			{
 				double x = Math.min(rt.getPoint1().getX(), rt.getPoint2().getX()) + 
@@ -127,6 +147,7 @@ public class RandomTeleportHandler
 				double z = rt.getPoint1().getZ() + getRoll()*getRandom(new Random(), 0, rt.getRadius());
 				loc = isSafe(new Location(Bukkit.getWorld(rt.getPoint1().getWordName()), x, y, z), minY);
 			}
+			i++;
 		}
 		BungeeTeleportManager.log.info("l: | "+loc.getX()+" | "+loc.getY()+" | "+loc.getZ());
 		return loc;
@@ -138,29 +159,98 @@ public class RandomTeleportHandler
 		Location up = new Location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ());
 		Location down = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
 		Location bottom = new Location(l.getWorld(), l.getX(), l.getY() - 2, l.getZ());
-		int count = 0;
-		while(l.getY() > minY)
+		if(isBlockOutsideWorldBorder(l.getWorld(), l.getBlockX(), l.getBlockZ()))
 		{
+			return null;
+		}
+		if(forbiddenBiomes.contains(loc.getBlock().getBiome()))
+		{
+			return null;
+		}
+		if(plugin.getYamlHandler().getConfig().getBoolean("RandomTeleport.UseHighestY"))
+		{
+			int maxY = loc.getWorld().getHighestBlockYAt(loc)+1;
+			if(maxY > loc.getWorld().getMaxHeight())
+			{
+				maxY = loc.getWorld().getMaxHeight();
+			}
+			up = new Location(l.getWorld(), l.getX(), maxY + 1, l.getZ());
+			down = new Location(l.getWorld(), l.getX(), maxY - 1, l.getZ());
+			bottom = new Location(l.getWorld(), l.getX(), maxY - 2, l.getZ());
 			Block bl = l.getBlock();
 			Block bup = up.getBlock();
 			Block bdown = down.getBlock();
 			Block bbottom = bottom.getBlock();
-			if(bbottom.getType().isSolid() && isTransparant(bdown) && isTransparant(bl))
+			if(!plugin.getYamlHandler().getConfig().getBoolean("RandomTeleport.HighestYCanBeLeaves")
+					&& isLeaves(bdown))
+			{
+				return null;
+			}
+			if(bbottom.getType().isSolid() && isTransparant(bdown) && isTransparant(bl) && isTransparant(bup))
 			{
 				return new Location(loc.getWorld(), bottom.getX(), down.getY(), bottom.getZ());
 			} else if(bdown.getType().isSolid() && isTransparant(bl) && isTransparant(bup))
 			{
 				return new Location(loc.getWorld(), down.getX(), l.getY(), down.getZ());
-			} else if(count >= 25)
-			{
-				return null;
 			}
-			l = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
-			up = new Location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ());
-			down = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
-			bottom = new Location(l.getWorld(), l.getX(), l.getY() - 2, l.getZ());
+		} else
+		{
+			int count = 0;
+			while(l.getY() > minY)
+			{
+				Block bl = l.getBlock();
+				Block bup = up.getBlock();
+				Block bdown = down.getBlock();
+				Block bbottom = bottom.getBlock();
+				if(bbottom.getType().isSolid() && isTransparant(bdown) && isTransparant(bl) && isTransparant(bup))
+				{
+					return new Location(loc.getWorld(), bottom.getX(), down.getY(), bottom.getZ());
+				} else if(bdown.getType().isSolid() && isTransparant(bl) && isTransparant(bup))
+				{
+					return new Location(loc.getWorld(), down.getX(), l.getY(), down.getZ());
+				} else if(count >= 25)
+				{
+					return null;
+				}
+				l = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
+				up = new Location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ());
+				down = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
+				bottom = new Location(l.getWorld(), l.getX(), l.getY() - 2, l.getZ());
+			}
 		}
+		
 		return null;
+	}
+	
+	private static boolean isBlockOutsideWorldBorder(final World world, final int x, final int z)
+	{
+       final Location center = world.getWorldBorder().getCenter();
+       final int radius = (int) world.getWorldBorder().getSize() / 2;
+       final int x1 = center.getBlockX() - radius, x2 = center.getBlockX() + radius;
+       final int z1 = center.getBlockZ() - radius, z2 = center.getBlockZ() + radius;
+       return x < x1 || x > x2 || z < z1 || z > z2;
+    }
+	
+	private boolean isLeaves(Block block)
+	{
+		Material type = block.getType();
+		switch (type) 
+		{
+		case ACACIA_LEAVES:
+			return false;
+		case BIRCH_LEAVES:
+			return false;
+		case SPRUCE_LEAVES:
+			return false;
+		case OAK_LEAVES:
+			return false;
+		case DARK_OAK_LEAVES:
+			return false;
+		case JUNGLE_LEAVES:
+			return false;
+		default:
+			return false;
+		}
 	}
 	
 	private boolean isTransparant(Block block) 
@@ -170,7 +260,7 @@ public class RandomTeleportHandler
 		{
 			case AIR:
 				return true;
-				
+
 			case ACACIA_BUTTON:
 				return true;
 			case OAK_BUTTON:
