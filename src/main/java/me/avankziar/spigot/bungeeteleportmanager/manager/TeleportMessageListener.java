@@ -97,6 +97,13 @@ public class TeleportMessageListener implements PluginMessageListener
 	                            					comment);
 	                            			plugin.getAdvancedEconomyHandler().TrendLogger(from, -price);
 	                            		}
+	                    				if(cfgh.notifyPlayerAfterWithdraw(Mechanics.TPA))
+	                    				{
+	                    					player.sendMessage(
+	                                				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.NotifyAfterWithDraw")
+	                                						.replace("%amount%", String.valueOf(price))
+	                                						.replace("%currency%", plugin.getEco().currencyNamePlural())));
+	                    				}
 		                    		}
 		            			}
 		            		}

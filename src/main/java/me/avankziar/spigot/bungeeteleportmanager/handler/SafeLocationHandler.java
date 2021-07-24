@@ -28,7 +28,6 @@ import org.bukkit.entity.Player;
 import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.Mechanics;
-import main.java.me.avankziar.general.object.RandomTeleport;
 import main.java.me.avankziar.general.object.SavePoint;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.Warp;

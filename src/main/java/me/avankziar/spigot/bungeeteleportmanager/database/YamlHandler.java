@@ -27,6 +27,8 @@ public class YamlHandler
 	
 	private File forbiddenconfig = null;
 	private YamlConfiguration fbc = new YamlConfiguration();
+	private File randomteleportconfig = null;
+	private YamlConfiguration rtpc = new YamlConfiguration();
 	
 	private String languages;
 	private File language = null;
@@ -51,6 +53,11 @@ public class YamlHandler
 	public YamlConfiguration getForbidden()
 	{
 		return fbc;
+	}
+	
+	public YamlConfiguration getRTP()
+	{
+		return rtpc;
 	}
 	
 	public YamlConfiguration getLang()
@@ -147,6 +154,26 @@ public class YamlHandler
 			return false;
 		}
 		writeFile(forbiddenconfig, fbc, plugin.getYamlManager().getForbiddenListSpigotKey());
+		
+		randomteleportconfig = new File(plugin.getDataFolder(), "randomteleports.yml");
+		if(!randomteleportconfig.exists()) 
+		{
+			BungeeTeleportManager.log.info("Create randomteleports.yml...");
+			try
+			{
+				//Erstellung einer "leere" config.yml
+				FileUtils.copyToFile(plugin.getResource("default.yml"), randomteleportconfig);
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		if(!loadYamlTask(randomteleportconfig, rtpc))
+		{
+			return false;
+		}
+		writeFile(randomteleportconfig, rtpc, plugin.getYamlManager().getRTPKey());
 		return true;
 	}
 	

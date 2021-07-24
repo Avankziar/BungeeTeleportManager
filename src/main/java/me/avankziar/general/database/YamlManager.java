@@ -16,6 +16,7 @@ public class YamlManager
 	private static LinkedHashMap<String, Language> commandsKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> languageKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> loggerSettingsKeys = new LinkedHashMap<>(); //Was soll das?
+	private static LinkedHashMap<String, Language> randomTeleportKeys = new LinkedHashMap<>();
 	
 	private static LinkedHashMap<String, Language> forbiddenListSpigotKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> forbiddenListBungeeKeys = new LinkedHashMap<>();
@@ -27,6 +28,8 @@ public class YamlManager
 			initConfigSpigot();
 			initCommands();
 			initLanguage();
+			initRandomTeleport();
+			initForbiddenListSpigot();
 		} else
 		{
 			initConfigBungee();
@@ -73,6 +76,11 @@ public class YamlManager
 	public LinkedHashMap<String, Language> getLoggerSettingsKey()
 	{
 		return loggerSettingsKeys;
+	}
+	
+	public LinkedHashMap<String, Language> getRTPKey()
+	{
+		return randomTeleportKeys;
 	}
 	
 	public LinkedHashMap<String, Language> getForbiddenListSpigotKey()
@@ -472,13 +480,22 @@ public class YamlManager
 			configSpigotKeys.put("CostPer.Create.Warp"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					9142.0}));
-			configSpigotKeys.put("MustConfirmWarpWhereYouPayForIt"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					true}));
-			configSpigotKeys.put("NotifyPlayerWhenUseHome"
+			configSpigotKeys.put("CostPer.NotifyAfterWithdraw.Back"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
-			configSpigotKeys.put("NotifyPlayerWhenUseTPA"
+			configSpigotKeys.put("CostPer.NotifyAfterWithdraw.Home"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("CostPer.NotifyAfterWithdraw.RandomTeleport"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("CostPer.NotifyAfterWithdraw.Teleport"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("CostPer.NotifyAfterWithdraw.Warp"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("MustConfirmWarpWhereYouPayForIt"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
 		}
@@ -493,34 +510,6 @@ public class YamlManager
 			configSpigotKeys.put("UseSafeTeleport.Warp"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
-		}
-		RandomTeleport:
-		{
-			configSpigotKeys.put("RandomTeleport.UseHighestY"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					true}));
-			configSpigotKeys.put("RandomTeleport.HighestYCanBeLeaves"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					true}));
-			configSpigotKeys.put("RandomTeleport.ForbiddenBiomes"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"DEEP_COLD_OCEAN",
-					"DEEP_FROZEN_OCEAN",
-					"DEEP_LUKEWARM_OCEAN",
-					"DEEP_OCEAN",
-					"DEEP_WARM_OCEAN",
-					"OCEAN",
-					"WARM_OCEAN"}));
-			configSpigotKeys.put("RandomTeleport.UseSimpleTarget"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					true}));
-			configSpigotKeys.put("RandomTeleport.SimpleTarget"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"ServerTarget;WorldTarget@500;50;500[]-500;254;-500"}));
-			configSpigotKeys.put("RandomTeleport.ComplexTarget"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"WorldOne>>ServerTarget;WorldTarget@500;50;500[]-500;255;-500",
-					"WorldTwo>>ServerTarget;WorldTarget@500;50;500()50"}));
 		}
 		Generator:
 		{
@@ -1151,6 +1140,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Back benutzt werden!",
 						"&cNo back may be used in this world!"}));
+		languageKeys.put("CmdBack.NotifyAfterWithDraw", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Back-Teleport hat &f%amount% %currency% &egekostet.",
+						"&eThe back teleport cost &f%amount% %currency%&e."}));
 		languageKeys.put("CmdDeathback.ForbiddenServerUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server dürfen kein Deathback benutzt werden!",
@@ -1191,6 +1184,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Homes benutzt werden!",
 						"&cNo homes may be used in this world!"}));
+		languageKeys.put("CmdHome.NotifyAfterWithDraw", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Home-Teleport hat &f%amount% %currency% &egekostet.",
+						"&eThe home teleport cost &f%amount% %currency%&e."}));
 		languageKeys.put("CmdHome.TooManyHomesWorld",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast schon das Maximum von &f%amount% &cHomes für diese Welt erstellt! Bitte lösche vorher einen deiner Homes um fortzufahren!",
@@ -1292,6 +1289,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cFEHLER! In der Config existiert ein Fehler bei der Definition vom RandomTeleport!",
 						"&eERROR! In the Config exists an error at the definition of the RandomTeleport!"}));
+		languageKeys.put(path+"RtpNotExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer RandomTeleport &f%rtp% &cexistiert nicht!",
+						"&cThe RandomTeleport &f%rtp% &cdont exist!"}));
 		languageKeys.put(path+"ForbiddenServerUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server darf kein RandomTeleport benutzt werden!",
@@ -1300,6 +1301,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt darf kein RandomTeleport benutzt werden!",
 						"&cNo RandomTeleport may be used in this world!"}));
+		languageKeys.put(path+"NotifyAfterWithDraw", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer RandomTeleport hat &f%amount% %currency% &egekostet.",
+						"&eThe randomteleport cost &f%amount% %currency%&e."}));
 	}
 	
 	private void langSavePoint()
@@ -1486,6 +1491,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cEntweder du oder der angefragte Spieler sind in Welten, welche Teleportanfragen verbieten!",
 						"&cEither you or the requested player are in worlds that prohibit teleport requests!"}));
+		languageKeys.put(path+"NotifyAfterWithDraw", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Teleport hat &f%amount% %currency% &egekostet.",
+						"&eThe teleport cost &f%amount% %currency%&e."}));
 		languageKeys.put(path+"BackCooldown", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&c%cmd% ist auf Cooldown! Warte noch ein bisschen!",
@@ -1664,6 +1673,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Warps benutzt werden!",
 						"&cNo warps may be used on this world!"}));
+		languageKeys.put(path+"NotifyAfterWithDraw", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Warp-Teleport hat &f%amount% %currency% &egekostet.",
+						"&eThe warp teleport cost &f%amount% %currency%&e."}));
 		languageKeys.put(path+"TooManyWarpsWorld", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast schon das Maximum von &f%amount% &cWarps für diese Welt erstellt! Bitte lösche vorher einen deiner Warps um fortzufahren!",
@@ -1864,6 +1877,38 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Warp &f%warp% &ekann nur noch von Portalen angesteuert werden!",
 						"&eThe warp &f%warp% &ecan only be accessed by portals!"}));
+	}
+	
+	public void initRandomTeleport() //INFO:RandomTeleport
+	{
+		randomTeleportKeys.put("default.PermissionToAccess"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"scc.rtp.default"}));
+		randomTeleportKeys.put("default.UseHighestY"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				true}));
+		randomTeleportKeys.put("default.HighestYCanBeLeaves"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				true}));
+		randomTeleportKeys.put("default.ForbiddenBiomes"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"DEEP_COLD_OCEAN",
+				"DEEP_FROZEN_OCEAN",
+				"DEEP_LUKEWARM_OCEAN",
+				"DEEP_OCEAN",
+				"DEEP_WARM_OCEAN",
+				"OCEAN",
+				"WARM_OCEAN"}));
+		randomTeleportKeys.put("default.UseSimpleTarget"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				true}));
+		randomTeleportKeys.put("default.SimpleTarget"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"ServerTarget;WorldTarget@500;50;500[]-500;254;-500"}));
+		randomTeleportKeys.put("default.ComplexTarget"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"WorldOne>>ServerTarget;WorldTarget@500;50;500[]-500;255;-500",
+				"WorldTwo>>ServerTarget;WorldTarget@500;50;500()50"}));
 	}
 	
 	public void initForbiddenListBungee() //INFO:ForbiddenListBungee

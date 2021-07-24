@@ -51,4 +51,9 @@ public class ConfigHandler
 	{
 		return plugin.getYamlHandler().getConfig().getBoolean("UseSafeTeleport."+mechanics.getKey(), false);
 	}
+	
+	public boolean notifyPlayerAfterWithdraw(Mechanics mechanics)
+	{
+		return plugin.getYamlHandler().getConfig().getBoolean("CostPer.NotifyAfterWithdraw."+mechanics.getKey(), false);
+	}
 }

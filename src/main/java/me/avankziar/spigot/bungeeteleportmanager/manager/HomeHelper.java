@@ -303,6 +303,13 @@ public class HomeHelper
 			    					comment);
 							plugin.getAdvancedEconomyHandler().TrendLogger(player, -homeUseCost);
 						}
+						if(cfgh.notifyPlayerAfterWithdraw(Mechanics.HOME))
+        				{
+        					player.sendMessage(
+                    				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.NotifyAfterWithDraw")
+                    						.replace("%amount%", String.valueOf(homeUseCost))
+                    						.replace("%currency%", plugin.getEco().currencyNamePlural())));
+        				}
 					}
 				}
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.RequestInProgress")));

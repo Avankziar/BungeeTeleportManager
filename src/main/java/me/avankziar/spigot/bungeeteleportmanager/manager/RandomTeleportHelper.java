@@ -43,7 +43,7 @@ public class RandomTeleportHelper
 			@Override
 			public void run()
 			{
-				if(args.length != 0)
+				if(args.length != 0 && args.length != 1)
 				{
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
@@ -54,16 +54,32 @@ public class RandomTeleportHelper
 				String playername = player.getName();
 				String playeruuid = player.getUniqueId().toString();
 				RandomTeleport rt = null;
-				if(plugin.getYamlHandler().getConfig().getBoolean("RandomTeleport.UseSimpleTarget", true))
+				String rtpname = "default";
+				if(args.length == 1)
 				{
-					rt = getSimpleTarget(player, playeruuid, playername);
+					rtpname = args[0];
+					if(plugin.getYamlHandler().getRTP().get(rtpname+".UseSimpleTarget") == null)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.RtpNotExist")
+								.replace("%rtp%", rtpname)));
+						return;
+					}
+					if(!player.hasPermission(plugin.getYamlHandler().getRTP().getString(rtpname+".PermissionToAccess")))
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
+		 				return;
+					}
+				}
+				if(plugin.getYamlHandler().getRTP().getBoolean(rtpname+".UseSimpleTarget", true))
+				{
+					rt = getSimpleTarget(player, playeruuid, playername, rtpname);
 					if(rt == null)
 					{
 						return;
 					}
 				} else
 				{
-					rt = getComplexTarget(player, playeruuid, playername);
+					rt = getComplexTarget(player, playeruuid, playername, rtpname);
 					if(rt == null)
 					{
 						return;
@@ -111,6 +127,13 @@ public class RandomTeleportHelper
 	        					comment);
 						plugin.getAdvancedEconomyHandler().TrendLogger(player, -price);
 					}
+					if(cfgh.notifyPlayerAfterWithdraw(Mechanics.RANDOMTELEPORT))
+    				{
+    					player.sendMessage(
+                				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.NotifyAfterWithDraw")
+                						.replace("%amount%", String.valueOf(price))
+                						.replace("%currency%", plugin.getEco().currencyNamePlural())));
+    				}
 				}
 				if(cooldown.containsKey(player)) cooldown.replace(player, System.currentTimeMillis()+1000L*3);
 				else cooldown.put(player, System.currentTimeMillis()+1000L*3);
@@ -122,9 +145,9 @@ public class RandomTeleportHelper
 		}.runTaskAsynchronously(plugin);
 	}
 	
-	public RandomTeleport getSimpleTarget(Player player, String uuid, String playername)
+	public RandomTeleport getSimpleTarget(Player player, String uuid, String playername, String rtpname)
 	{
-		String rtcode = plugin.getYamlHandler().getConfig().getString("RandomTeleport.SimpleTarget");
+		String rtcode = plugin.getYamlHandler().getRTP().getString(rtpname+".SimpleTarget");
 		String[] function = rtcode.split("@");
 		if(function.length != 2)
 		{
@@ -191,9 +214,14 @@ public class RandomTeleportHelper
 		return new RandomTeleport(UUID.fromString(uuid), playername, point1, point2, radius, isArea);
 	}
 	
-	public RandomTeleport getComplexTarget(Player player, String uuid, String playername)
+	public RandomTeleport getComplexTarget(Player player, String uuid, String playername, String rtpname)
 	{
-		List<String> rtcodes = plugin.getYamlHandler().getConfig().getStringList("RandomTeleport.ComplexTarget");
+		List<String> rtcodes = plugin.getYamlHandler().getRTP().getStringList(rtpname+".ComplexTarget");
+		if(rtcodes.size() == 0)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.ErrorInConfig")));
+			return null;
+		}
 		ArrayList<String> possibleTargets = new ArrayList<>();
 		for(String rtcode : rtcodes)
 		{

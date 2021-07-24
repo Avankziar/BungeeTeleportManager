@@ -91,6 +91,13 @@ public class BackHelper
 		                					comment);
 		        					plugin.getAdvancedEconomyHandler().TrendLogger(player, -price);
 		                		}
+		        				if(cfgh.notifyPlayerAfterWithdraw(Mechanics.BACK))
+		        				{
+		        					player.sendMessage(
+		                    				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdBack.NotifyAfterWithDraw")
+		                    						.replace("%amount%", String.valueOf(price))
+		                    						.replace("%currency%", plugin.getEco().currencyNamePlural())));
+		        				}
 		            		}
 		        		}
 					}

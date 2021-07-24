@@ -9,16 +9,16 @@ Build 6 ========================================================================
 - +NPE bei /warpsetowner <Spielername welcher nicht existiert>, behoben
 - +Home existiert nicht-Fehler bei /homes <Zahl> <Spielername>, behoben
 - +Warplist NPE, behoben
-- github
-  - Sicherer Teleport
+- +github
+  - +Sicherer Teleport
     - +Eine Liste aller Blöcke, welche durchlässig sind.
     - +ConfigWert umd die Mechniken SafeTeleport ein- oder auszuschalten.
-    - Für Homes
-    - Für RTP
-    - Für SafePoint
+    - +Für Homes
+    - +Für RTP, eine Alteration, wo man zwar direkt hingeschickt wird
+    - +Für SafePoint
     - +Für Warps
-    - Für RTP Biome für eine Blackliste schreibbar machen.
-    - Für RTP Option für atHighestBlock spawnfähig machen
+    - +Für RTP Biome für eine Blackliste schreibbar machen.
+    - +Für RTP Option für atHighestBlock spawnfähig machen
 - +/tpaccept, ohne Argument möglich machen, damit man den ersten TpA annimmt.
 - +Back Mysql Tabelle erhält neuen Wert. "home_priority". Dieses setzt das Home ein, welches priorisiert wird, falls /home ohne Argument eingesetzt wird.
 - +/home, ohne Argument möglich machen, damit man das erste (priorisierte) Home nimmt.
@@ -45,9 +45,9 @@ Build 6 ========================================================================
   - +Möglichmachen, bestimmte Teleportarten in bestimmten Welten auch nicht auszuführen. Aka von Welt A sich nicht Wegwarpen können oder so.
   - +CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
       ob back übernommen werden soll, oder nicht.
-- Bei entstandenen Kosten wo man teleports Used (Warp, home, Tpa, RTP, back...) sollte eine nachricht ausgegeben werden, was man gezahlt hat.
-- RandomTeleport
-  - Möglichmachen, dass per Config auch "Spezifische" Rtps erstellt und angesteuert werden können per Namen.
+- +Bei entstandenen Kosten wo man teleports Used (Warp, home, Tpa, RTP, back...) sollte eine nachricht ausgegeben werden, was man gezahlt hat.
+- +RandomTeleport
+  - +Möglichmachen, dass per Config auch "Spezifische" Rtps erstellt und angesteuert werden können per Namen.
 - EntityTransport
   - Jedes Entity, außer Spieler, benötigen Permission. Gilt auch für Store.
   - Entitys, welche keine Speziellen namen besitzten, können immer transporiert werden.

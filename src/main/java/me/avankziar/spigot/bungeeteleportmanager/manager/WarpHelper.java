@@ -300,6 +300,13 @@ public class WarpHelper
 								plugin.getAdvancedEconomyHandler().TrendLogger(player, -warp.getPrice());
 							}
 						}
+						if(cfgh.notifyPlayerAfterWithdraw(Mechanics.WARP))
+        				{
+        					player.sendMessage(
+                    				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotifyAfterWithDraw")
+                    						.replace("%amount%", String.valueOf(warp.getPrice()))
+                    						.replace("%currency%", plugin.getEco().currencyNamePlural())));
+        				}
 					}
 				}
 				if(cooldown.containsKey(player)) cooldown.replace(player, System.currentTimeMillis()+1000L*3);
