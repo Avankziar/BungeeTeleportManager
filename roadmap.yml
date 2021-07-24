@@ -46,7 +46,7 @@ Build 6 ========================================================================
   - +CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
       ob back übernommen werden soll, oder nicht.
 - +Bei entstandenen Kosten wo man teleports Used (Warp, home, Tpa, RTP, back...) sollte eine nachricht ausgegeben werden, was man gezahlt hat.
-- +RandomTeleport
+- RandomTeleport
   - +Möglichmachen, dass per Config auch "Spezifische" Rtps erstellt und angesteuert werden können per Namen.
 - EntityTransport
   - Jedes Entity, außer Spieler, benötigen Permission. Gilt auch für Store.
