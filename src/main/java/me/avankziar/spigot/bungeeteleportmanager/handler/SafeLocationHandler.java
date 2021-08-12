@@ -82,7 +82,7 @@ public class SafeLocationHandler
 			out.writeUTF(playername);
 			out.writeUTF(mechanics.toString());
 			out.writeUTF(loc.getServer());
-			out.writeUTF(loc.getWordName());
+			out.writeUTF(loc.getWorldName());
 			out.writeDouble(loc.getX());
 			out.writeDouble(loc.getY());
 			out.writeDouble(loc.getZ());
@@ -129,7 +129,7 @@ public class SafeLocationHandler
 	
 	public boolean isSafeDestination(final ServerLocation sl)
 	{
-		final Location loc = new Location(Bukkit.getWorld(sl.getWordName()), sl.getX(), sl.getY(), sl.getZ(), sl.getYaw(), sl.getPitch());
+		final Location loc = new Location(Bukkit.getWorld(sl.getWorldName()), sl.getX(), sl.getY(), sl.getZ(), sl.getYaw(), sl.getPitch());
         final World world = loc.getWorld();
         int x = loc.getBlockX();
         int y = (int) Math.round(loc.getY());
@@ -227,7 +227,15 @@ public class SafeLocationHandler
     	HOLLOW_MATERIALS.add(Material.AIR);
         for (final Material mat : Material.values()) 
         {
-        	BlockData block = Bukkit.createBlockData(mat);
+        	BlockData block = null;
+        	try
+        	{
+        		block = Bukkit.createBlockData(mat);
+        	} catch(Exception e) 
+        	{
+        		continue;
+        	}
+        	
         	if(block instanceof Ageable 
         			|| block instanceof Door
         			|| block instanceof Farmland

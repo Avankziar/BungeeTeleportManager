@@ -192,7 +192,7 @@ public class SavePointHelper
 		String infoElse = plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListElse");
 		for(SavePoint sp  : list)
 		{
-			if(sp.getLocation().getWordName().equals(world))
+			if(sp.getLocation().getWorldName().equals(world))
 			{
 				map = plugin.getSavePointHandler().mapping(sp, map, ChatApi.apiChat(
 						sameWorld+sp.getSavePointName()+" &9| ",
@@ -287,7 +287,7 @@ public class SavePointHelper
 		for(SavePoint sp : list)
 		{
 			String owner = sp.getPlayerName();
-			if(sp.getLocation().getWordName().equals(world))
+			if(sp.getLocation().getWorldName().equals(world))
 			{
 				map = plugin.getSavePointHandler().mapping(sp, map, ChatApi.apiChat(
 						sameWorld+owner+"&f|"+sameWorld+sp.getSavePointName()+" &9| ",

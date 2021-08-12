@@ -84,7 +84,7 @@ public class WarpHandler
 			out.writeUTF(playername);
 			out.writeUTF(warp.getName());
 			out.writeUTF(warp.getLocation().getServer());
-			out.writeUTF(warp.getLocation().getWordName());
+			out.writeUTF(warp.getLocation().getWorldName());
 			out.writeDouble(warp.getLocation().getX());
 			out.writeDouble(warp.getLocation().getY());
 			out.writeDouble(warp.getLocation().getZ());
@@ -395,19 +395,19 @@ public class WarpHandler
 		if(map.containsKey(warp.getLocation().getServer()))
 		{
 			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = map.get(warp.getLocation().getServer());
-			if(mapmap.containsKey(warp.getLocation().getWordName()))
+			if(mapmap.containsKey(warp.getLocation().getWorldName()))
 			{
-				ArrayList<BaseComponent> bc = mapmap.get(warp.getLocation().getWordName());
+				ArrayList<BaseComponent> bc = mapmap.get(warp.getLocation().getWorldName());
 				bc.add(bct);
-				mapmap.replace(warp.getLocation().getWordName(), bc);
+				mapmap.replace(warp.getLocation().getWorldName(), bc);
 				map.replace(warp.getLocation().getServer(), mapmap);
 				return map;
 			} else
 			{
 				ArrayList<BaseComponent> bc = new ArrayList<>();
-				bc.add(ChatApi.tctl("  &e"+warp.getLocation().getWordName()+": "));
+				bc.add(ChatApi.tctl("  &e"+warp.getLocation().getWorldName()+": "));
 				bc.add(bct);
-				mapmap.put(warp.getLocation().getWordName(), bc);
+				mapmap.put(warp.getLocation().getWorldName(), bc);
 				map.replace(warp.getLocation().getServer(), mapmap);
 				return map;
 			}
@@ -415,9 +415,9 @@ public class WarpHandler
 		{
 			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = new LinkedHashMap<String, ArrayList<BaseComponent>>();
 			ArrayList<BaseComponent> bc = new ArrayList<>();
-			bc.add(ChatApi.tctl("  &e"+warp.getLocation().getWordName()+": "));
+			bc.add(ChatApi.tctl("  &e"+warp.getLocation().getWorldName()+": "));
 			bc.add(bct);
-			mapmap.put(warp.getLocation().getWordName(), bc);
+			mapmap.put(warp.getLocation().getWorldName(), bc);
 			map.put(warp.getLocation().getServer(), mapmap);
 			return map;
 		}

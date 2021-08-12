@@ -72,7 +72,7 @@ public class WarpHandler
 		        	out.writeUTF(StaticValues.WARP_PLAYERTOPOSITION);
 					out.writeUTF(player.getName());
 					out.writeUTF(warpName);
-					out.writeUTF(location.getWordName());
+					out.writeUTF(location.getWorldName());
 					out.writeDouble(location.getX());
 					out.writeDouble(location.getY());
 					out.writeDouble(location.getZ());

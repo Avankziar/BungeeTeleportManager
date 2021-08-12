@@ -227,10 +227,12 @@ public class HomeHelper
 					return;
 				}
 				String homeName = "";
+				String playername = player.getName();
 				String playeruuid = player.getUniqueId().toString();
 				if(args.length == 2 
 						&& (player.hasPermission(StaticValues.PERM_HOME_OTHER) || args[1].equals(player.getName())))
 				{
+					playername = args[1];
 					UUID uuid = Utility.convertNameToUUID(args[1]);
 					if(uuid == null)
 					{
@@ -314,7 +316,7 @@ public class HomeHelper
 				}
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.RequestInProgress")));
 				plugin.getUtility().givesEffect(player, Mechanics.HOME, true, true);
-				plugin.getHomeHandler().sendPlayerToHome(player, home, playeruuid, args[1]);
+				plugin.getHomeHandler().sendPlayerToHome(player, home, playername, playeruuid);
 				return;
 			}
 		}.runTaskAsynchronously(plugin);
@@ -381,7 +383,7 @@ public class HomeHelper
 		String infoElse = plugin.getYamlHandler().getLang().getString("CmdHome.ListElse");
 		for(Home home : list)
 		{
-			if(home.getLocation().getWordName().equals(world))
+			if(home.getLocation().getWorldName().equals(world))
 			{
 				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
 						sameWorld+home.getHomeName()+" &9| ", 
@@ -493,7 +495,7 @@ public class HomeHelper
 		String infoElse = plugin.getYamlHandler().getLang().getString("CmdHome.ListElse");
 		for(Home home : list)
 		{
-			if(home.getLocation().getWordName().equals(world))
+			if(home.getLocation().getWorldName().equals(world))
 			{
 				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
 						sameWorld+home.getHomeName()+"&f|&7"+home.getPlayerName()+" &9| ", 

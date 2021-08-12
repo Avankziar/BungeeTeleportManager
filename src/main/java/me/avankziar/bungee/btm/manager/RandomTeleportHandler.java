@@ -80,7 +80,7 @@ private BungeeTeleportManager plugin;
 		        	out.writeUTF(StaticValues.RANDOMTELEPORT_PLAYERTOPOSITION);
 					out.writeUTF(player.getName());
 					out.writeBoolean(isArea);
-					out.writeUTF(point1.getWordName());
+					out.writeUTF(point1.getWorldName());
 					out.writeDouble(point1.getX());
 					out.writeDouble(point1.getY());
 					out.writeDouble(point1.getZ());

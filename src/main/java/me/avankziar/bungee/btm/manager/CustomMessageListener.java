@@ -222,7 +222,7 @@ public class CustomMessageListener implements Listener
 					out.writeUTF(StaticValues.CUSTOM_PLAYERTOPOSITION);
 					out.writeUTF(player.getName());
 					out.writeUTF(location.getServer());
-					out.writeUTF(location.getWordName());
+					out.writeUTF(location.getWorldName());
 					out.writeDouble(location.getX());
 					out.writeDouble(location.getY());
 					out.writeDouble(location.getZ());

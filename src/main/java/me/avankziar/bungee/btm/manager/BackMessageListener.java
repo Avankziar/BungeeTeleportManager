@@ -90,7 +90,7 @@ public class BackMessageListener implements Listener
         	
         	Back oldback = BackHandler.getBackLocations().get(name);
         	String oldserver = oldback.getLocation().getServer();
-        	String oldworld = oldback.getLocation().getWordName();
+        	String oldworld = oldback.getLocation().getWorldName();
         	double oldx = oldback.getLocation().getX();
         	double oldy = oldback.getLocation().getY();
         	double oldz = oldback.getLocation().getZ();
@@ -144,7 +144,7 @@ public class BackMessageListener implements Listener
         	}
         	Back olddeathback = BackHandler.getDeathBackLocations().get(name);
         	String oldserver = olddeathback.getLocation().getServer();
-        	String oldworld = olddeathback.getLocation().getWordName();
+        	String oldworld = olddeathback.getLocation().getWorldName();
         	double oldx = olddeathback.getLocation().getX();
         	double oldy = olddeathback.getLocation().getY();
         	double oldz = olddeathback.getLocation().getZ();

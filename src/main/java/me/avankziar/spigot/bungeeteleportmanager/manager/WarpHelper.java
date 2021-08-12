@@ -543,7 +543,7 @@ public class WarpHelper
 						+owner
 						+"~!~"+plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(warp.getLocation()))));
-			} else if(warp.getLocation().getWordName().equals(world))
+			} else if(warp.getLocation().getWorldName().equals(world))
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						sameWorld+warp.getName()+" &9| ",
@@ -703,7 +703,7 @@ public class WarpHelper
 						+owner
 						+"~!~"+plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(warp.getLocation()))));
-			} else if(warp.getLocation().getWordName().equals(world))
+			} else if(warp.getLocation().getWorldName().equals(world))
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						sameWorld+warp.getName()+" &9| ",
@@ -796,19 +796,19 @@ public class WarpHelper
 		{
 			player.spigot().sendMessage(
 					ChatApi.generateTextComponent(plugin.getYamlHandler().getLang().getString("CmdWarp.InfoHeadlineI")
-							.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP))
-							.replace("%cmdII%", BTMSettings.settings.getCommands(KeyHandler.WARP_REMOVE))
+							.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP).trim())
+							.replace("%cmdII%", BTMSettings.settings.getCommands(KeyHandler.WARP_REMOVE).trim())
 							.replace("%warp%", warp.getName())));
 		} else
 		{
 			player.spigot().sendMessage(
 					ChatApi.generateTextComponent(plugin.getYamlHandler().getLang().getString("CmdWarp.InfoHeadlineII")
-							.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP))
+							.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP).trim())
 							.replace("%warp%", warp.getName())));
 		}
 		
 		player.spigot().sendMessage(ChatApi.generateTextComponent(plugin.getYamlHandler().getLang().getString("CmdWarp.InfoLocation")
-				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPOSITION))
+				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPOSITION).trim())
 				.replace("%location%", Utility.getLocationV2(warp.getLocation()))
 				.replace("%warp%", warp.getName())));
 		String owners = "";
@@ -820,24 +820,24 @@ public class WarpHelper
 			owners = Utility.convertUUIDToName(warp.getOwner());
 		}
 		player.spigot().sendMessage(ChatApi.generateTextComponent(plugin.getYamlHandler().getLang().getString("CmdWarp.InfoOwner")
-				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETOWNER))
+				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETOWNER).trim())
 				.replace("%owner%", owners)
 				.replace("%warp%", warp.getName())));
 		player.spigot().sendMessage(ChatApi.generateTextComponent(
 				plugin.getYamlHandler().getLang().getString("CmdWarp.InfoPrice")
-				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPRICE))
+				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPRICE).trim())
 				.replace("%price%", String.valueOf(warp.getPrice()))
 				.replace("%warp%", warp.getName())));
 		if(owner || admin)
 		{
 			player.spigot().sendMessage(ChatApi.generateTextComponent(
 					plugin.getYamlHandler().getLang().getString("CmdWarp.InfoCategory")
-					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETCATEGORY))
+					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETCATEGORY).trim())
 					.replace("%category%", warp.getCategory())
 					.replace("%warp%", warp.getName())));
 			player.spigot().sendMessage(ChatApi.generateTextComponent(
 					plugin.getYamlHandler().getLang().getString("CmdWarp.InfoHidden")
-					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_HIDDEN))
+					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_HIDDEN).trim())
 					.replace("%hidden%", String.valueOf(warp.isHidden()))
 					.replace("%warp%", warp.getName())));
 			if(admin)
@@ -852,7 +852,7 @@ public class WarpHelper
 				}
 				player.spigot().sendMessage(ChatApi.generateTextComponent(
 						plugin.getYamlHandler().getLang().getString("CmdWarp.InfoPermission")
-						.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPERMISSION))
+						.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPERMISSION).trim())
 						.replace("%perm%", permission)
 						.replace("%warp%", warp.getName())));
 			}
@@ -866,12 +866,12 @@ public class WarpHelper
 			}
 			player.spigot().sendMessage(ChatApi.generateTextComponent(
 					plugin.getYamlHandler().getLang().getString("CmdWarp.InfoPassword")
-					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPASSWORD))
+					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPASSWORD).trim())
 					.replace("%password%", password)
 					.replace("%warp%", warp.getName())));
 			player.spigot().sendMessage(ChatApi.generateTextComponent(
 					plugin.getYamlHandler().getLang().getString("CmdWarp.InfoPortalAccess")
-					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPORTALACCESS))
+					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPORTALACCESS).trim())
 					.replace("%portalaccess%", warp.getPortalAccess().toString())
 					.replace("%warp%", warp.getName())));
 			ArrayList<String> member = new ArrayList<>();
@@ -881,8 +881,8 @@ public class WarpHelper
 			}
 			player.spigot().sendMessage(ChatApi.generateTextComponent(
 					plugin.getYamlHandler().getLang().getString("CmdWarp.InfoMember")
-					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_ADDMEMBER))
-					.replace("%cmdII%", BTMSettings.settings.getCommands(KeyHandler.WARP_REMOVEMEMBER))
+					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_ADDMEMBER).trim())
+					.replace("%cmdII%", BTMSettings.settings.getCommands(KeyHandler.WARP_REMOVEMEMBER).trim())
 					.replace("%member%", String.join(", ", member))
 					.replace("%warp%", warp.getName())));
 			ArrayList<String> blacklist = new ArrayList<>();
@@ -892,8 +892,8 @@ public class WarpHelper
 			}
 			player.spigot().sendMessage(ChatApi.generateTextComponent(
 					plugin.getYamlHandler().getLang().getString("CmdWarp.InfoBlacklist")
-					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_ADDBLACKLIST))
-					.replace("%cmdII%", BTMSettings.settings.getCommands(KeyHandler.WARP_REMOVEBLACKLIST))
+					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_ADDBLACKLIST).trim())
+					.replace("%cmdII%", BTMSettings.settings.getCommands(KeyHandler.WARP_REMOVEBLACKLIST).trim())
 					.replace("%blacklist%", String.join(", ", blacklist))
 					.replace("%warp%", warp.getName())));
 		}
@@ -1081,6 +1081,14 @@ public class WarpHelper
 		if(password.equals("null"))
 		{
 			password = null;
+		} else
+		{
+			UUID uuid = Utility.convertNameToUUID(password);
+			if(uuid != null)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.PasswordCannotBeAPlayer")));
+				return;
+			}
 		}
 		warp.setPassword(password);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
@@ -1137,7 +1145,8 @@ public class WarpHelper
 		if(price > maximum)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ToHigh")
-					.replace("%max%", String.valueOf(maximum))));
+					.replace("%max%", String.valueOf(maximum))
+					.replace("%currency%", plugin.getEco().currencyNamePlural())));
 			return;
 		}
 		warp.setPrice(price);
@@ -1532,7 +1541,7 @@ public class WarpHelper
 	}
 	public void warpSearch(Player player, String[] args)
 	{
-		if(args.length > 2)
+		if(args.length < 2)
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
@@ -1552,6 +1561,7 @@ public class WarpHelper
 		String query = "";
 		String argPagination = "";
 		ArrayList<Object> whereObjects = new ArrayList<>();
+		String s = "";
 		while(i < args.length)
 		{
 			if(!args[i].contains(":"))
@@ -1572,28 +1582,44 @@ public class WarpHelper
 			case "server":
 				query += "`server` = ?";
 				whereObjects.add(arg[1]);
+				s += plugin.getYamlHandler().getLang().getString("CmdWarp.SearchValueInfo.Server").replace("%category%", "&b"+arg[1]+"&f");
 				break;
 			case "world":
 				query += "`world` = ?";
 				whereObjects.add(arg[1]);
+				s += plugin.getYamlHandler().getLang().getString("CmdWarp.SearchValueInfo.World").replace("%category%", "&d"+arg[1]+"&f");
 				break;
 			case "owner":
-				query += "`owner` = ?";
-				UUID uuid = Utility.convertNameToUUID(arg[1]);
-				if(uuid == null)
+				if(arg[1].equalsIgnoreCase("null"))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
-					return;
+					query += "`owner` IS NULL";
+					s += plugin.getYamlHandler().getLang().getString("CmdWarp.SearchValueInfo.Owner").replace("%category%", "&4null&f");
+				} else if(arg[1].equalsIgnoreCase("notnull"))
+				{
+					query += "`owner` IS NOT NULL";
+					s += plugin.getYamlHandler().getLang().getString("CmdWarp.SearchValueInfo.Owner").replace("%category%", "&4not null&f");
+				} else
+				{
+					query += "`owner` = ?";
+					UUID uuid = Utility.convertNameToUUID(arg[1]);
+					if(uuid == null)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+						return;
+					}
+					whereObjects.add(uuid.toString());
+					s += plugin.getYamlHandler().getLang().getString("CmdWarp.SearchValueInfo.Owner").replace("%category%", "&c"+arg[1]+"&f");
 				}
-				whereObjects.add(uuid.toString());
 				break;
 			case "category":
 				query += "`category` = ?";
 				whereObjects.add(arg[1]);
+				s += plugin.getYamlHandler().getLang().getString("CmdWarp.SearchValueInfo.Category").replace("%category%", "&6"+arg[1]+"&f");
 				break;
 			case "member":
-				query += "(`comment` LIKE ?)";
+				query += "(`member` LIKE ?)";
 				whereObjects.add("%"+arg[1]+"%");
+				s += plugin.getYamlHandler().getLang().getString("CmdWarp.SearchValueInfo.Member").replace("%category%", "&e"+arg[1]+"&f");
 				break;
 			default:
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SearchOptionValues")));
@@ -1603,7 +1629,7 @@ public class WarpHelper
 		}
 		Object[] whereObject = whereObjects.toArray(new Object[whereObjects.size()]);
 		ArrayList<Warp> list = ConvertHandler.convertListV(plugin.getMysqlHandler().getList(
-								Type.WARP, "`id`", start, quantity, query, whereObject));
+								Type.WARP, "`id` ASC", start, quantity, query, whereObject));
 		String server = new ConfigHandler(plugin).getServer();
 		String world = player.getLocation().getWorld().getName();
 		int last = plugin.getMysqlHandler().lastID(MysqlHandler.Type.WARP);
@@ -1613,7 +1639,8 @@ public class WarpHelper
 			lastpage = true;
 		}
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHeadline")
-				.replace("%amount%", String.valueOf(last))));
+				.replace("%amount%", String.valueOf(list.size()))));
+		player.sendMessage(ChatApi.tl(s));
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdWarp.ListSameServer");
@@ -1664,7 +1691,7 @@ public class WarpHelper
 						+owner
 						+"~!~"+plugin.getYamlHandler().getLang().getString("KoordsHover")
 						.replace("%koords%", Utility.getLocationV2(warp.getLocation()))));
-			} else if(warp.getLocation().getWordName().equals(world))
+			} else if(warp.getLocation().getWorldName().equals(world))
 			{
 				map = plugin.getWarpHandler().mapping(warp, map, ChatApi.apiChat(
 						sameWorld+warp.getName()+" &9| ",

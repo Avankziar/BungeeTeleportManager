@@ -146,12 +146,12 @@ public class Utility
 	
 	public static String getLocation(ServerLocation sl)
 	{
-		return sl.getServer()+";"+sl.getWordName()+";"+sl.getX()+";"+sl.getY()+";"+sl.getZ()+";"+sl.getYaw()+";"+sl.getPitch();
+		return sl.getServer()+";"+sl.getWorldName()+";"+sl.getX()+";"+sl.getY()+";"+sl.getZ()+";"+sl.getYaw()+";"+sl.getPitch();
 	}
 	
 	public static String getLocationV2(ServerLocation sl)
 	{
-		return "&c"+sl.getServer()+" &e"+sl.getWordName()+" &2| &a"+
+		return "&c"+sl.getServer()+" &e"+sl.getWorldName()+" &2| &a"+
 				round(sl.getX(),1)+" "+
 				round(sl.getY(),1)+" "+
 				round(sl.getZ(),1)+" &2| &d"+

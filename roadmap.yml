@@ -4,11 +4,13 @@ Future =========================================================================
 - Eine einstellbare Einstellung für Warps, dass man von anderen server diese nicht sehen kann. Whitelist boolean, Server Whitelist Liste
 
 Build 6 =======================================================================================================================
-- Back Tabelle 3: home_priority =>
-- Warp Tabelle 5: portalaccess => 
-- +NPE bei /warpsetowner <Spielername welcher nicht existiert>, behoben
-- +Home existiert nicht-Fehler bei /homes <Zahl> <Spielername>, behoben
-- +Warplist NPE, behoben
+- ++Back Tabelle 3: home_priority => ALTER TABLE `SecretCraftBTMBack` ADD `home_priority` TEXT NULL DEFAULT NULL AFTER `tp_toggle`; 
+- ++Warp Tabelle 5: portalaccess => ALTER TABLE `SecretCraftBTMWarps` ADD `portalaccess` TEXT NULL DEFAULT NULL AFTER `category`;
+                                => UPDATE `SecretCraftBTMWarps` SET `portalaccess`='IRRELEVANT' WHERE 1
+- ++NPE bei /warpsetowner <Spielername welcher nicht existiert>, behoben
+- ++Home existiert nicht-Fehler bei /homes <Zahl> <Spielername>, behoben
+- ++Warplist NPE, behoben
+- ++PlayerTeleportToPlayerEvent has been deprecated and the new one has a other package.
 - +github
   - +Sicherer Teleport
     - +Eine Liste aller Blöcke, welche durchlässig sind.
@@ -20,23 +22,23 @@ Build 6 ========================================================================
     - +Für RTP Biome für eine Blackliste schreibbar machen.
     - +Für RTP Option für atHighestBlock spawnfähig machen
 - +/tpaccept, ohne Argument möglich machen, damit man den ersten TpA annimmt.
-- +Back Mysql Tabelle erhält neuen Wert. "home_priority". Dieses setzt das Home ein, welches priorisiert wird, falls /home ohne Argument eingesetzt wird.
-- +/home, ohne Argument möglich machen, damit man das erste (priorisierte) Home nimmt.
-  - +/sethome <Homename> [Priorisiert(boolean)]
-  - +/homeprio <Homename> | Einen vorher priorisierten Home, wird entpriorisiert. Andere Spieler Homes können NICHT prio werden. Auch keine bypass
-- +Explanation Pfad in der commands.yml wurde entfernt.
-- +/warpsearch <Seitenzahl> <xxxx:Value>; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
+- ++Back Mysql Tabelle erhält neuen Wert. "home_priority". Dieses setzt das Home ein, welches priorisiert wird, falls /home ohne Argument eingesetzt wird.
+- ++/home, ohne Argument möglich machen, damit man das erste (priorisierte) Home nimmt.
+  - ++/sethome <Homename> [Priorisiert(boolean)]
+  - ++/homeprio <Homename> | Einen vorher priorisierten Home, wird entpriorisiert. Andere Spieler Homes können NICHT prio werden. Auch keine bypass
+- ++Explanation Pfad in der commands.yml wurde entfernt.
+- ++/warpsearch <Seitenzahl> <xxxx:Value>; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
     Sollte hinter dem ":" was stehen, wird genau danach gesucht. Falls der eintrag fehlt, wird nach allen gesucht,
     welche einen server haben. Weitere Argumente sind "owner", "world", "member", "category".
 - Mysql Performance Befehl
-- +Warps mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Befehl ansteuern zu können. Gegenteil auch möglich.
-   Aka OnlyPortal, NotPortal, Keine
-- +/warpsetportalaccess <Portalname> <Wert> hinzugefügt
-- +Warps, welche nur durch portale angesteuert werden können, werden nicht mehr im Tab vorgeschlagen.
-- +Warps, welche nur durch portale angesteuert werden können, wird der teleport dahin untersagt.
-- +Maximalbeträge für Warps an Warpkosten einstellbar machen.
-- +Can. in EnableCommands umbenannt.
-- +TPA und TP befehle nun für das Enablen getrennt.
+- ++Warps mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Befehl ansteuern zu können. Gegenteil auch möglich.
+   Aka OnlyPortal(ONLY), NotPortal(FORBIDDEN), Keine(IRRELEVANT)
+- ++/warpsetportalaccess <Portalname> <Wert> hinzugefügt
+- ++Warps, welche nur durch portale angesteuert werden können, werden nicht mehr im Tab vorgeschlagen.
+- ++Warps, welche nur durch portale angesteuert werden können, wird der teleport dahin untersagt.
+- ++Maximalbeträge für Warps an Warpkosten einstellbar machen.
+- ++Can. in EnableCommands umbenannt.
+- ++TPA und TP befehle nun für das Enablen getrennt.
 - +ForbiddenList
   - +Bypass im tpa/tp für ForbiddenServer/World einbauen.
   - +BungeeCord einen YamlHandler einbauen. YamlManager global bauen.
@@ -46,8 +48,9 @@ Build 6 ========================================================================
   - +CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
       ob back übernommen werden soll, oder nicht.
 - +Bei entstandenen Kosten wo man teleports Used (Warp, home, Tpa, RTP, back...) sollte eine nachricht ausgegeben werden, was man gezahlt hat.
-- RandomTeleport
+- +RandomTeleport
   - +Möglichmachen, dass per Config auch "Spezifische" Rtps erstellt und angesteuert werden können per Namen.
+- /warpsetpassword, das passwort darf kein existierender Spielername sein.
 - EntityTransport
   - Jedes Entity, außer Spieler, benötigen Permission. Gilt auch für Store.
   - Entitys, welche keine Speziellen namen besitzten, können immer transporiert werden.

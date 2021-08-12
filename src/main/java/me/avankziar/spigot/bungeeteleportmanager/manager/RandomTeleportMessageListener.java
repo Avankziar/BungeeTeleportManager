@@ -104,7 +104,7 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
 										
 										player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.WarpTo")
 												.replace("%server%", cfgh.getServer())
-												.replace("%world%", rt.getPoint1().getWordName())));
+												.replace("%world%", rt.getPoint1().getWorldName())));
 										cancel();
 										return;
 									}

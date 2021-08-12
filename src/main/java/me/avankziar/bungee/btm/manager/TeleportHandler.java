@@ -284,7 +284,7 @@ public class TeleportHandler
 					out.writeUTF(StaticValues.TP_PLAYERTOPOSITION);
 					out.writeUTF(player.getName());
 					out.writeUTF(location.getServer());
-					out.writeUTF(location.getWordName());
+					out.writeUTF(location.getWorldName());
 					out.writeDouble(location.getX());
 					out.writeDouble(location.getY());
 					out.writeDouble(location.getZ());

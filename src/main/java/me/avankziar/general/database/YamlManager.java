@@ -950,8 +950,8 @@ public class YamlManager
 						"&cThe argument &f%arg% &must be a positive number!"}));
 		languageKeys.put("ToHigh",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cDie angegebene Zahl ist zu hoch! Erlaubtes Maximum: %max%",
-						"&cThe specified number is too high! Maximum allowed: %max%"}));
+						"&cDie angegebene Zahl ist zu hoch! Erlaubtes Maximum: %max% %currency%",
+						"&cThe specified number is too high! Maximum allowed: %max% %currency%"}));
 		languageKeys.put("GeneralHover",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eKlick mich!",
@@ -1009,6 +1009,7 @@ public class YamlManager
 		
 		langEconomy();
 		langBtm();
+		langEntityTransport();
 		langHome();
 		langRandomTeleport();
 		langSavePoint();
@@ -1152,6 +1153,19 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Deathback benutzt werden!",
 						"&cNo deathback may be used in this world!"}));
+	}
+	
+	private void langEntityTransport()
+	{
+		String path = "CmdEntityTransport.";
+		languageKeys.put(path+"NoSeperatorValue",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDas Argument enthält keinen Seperator, das Ziel kann nicht bestimmt werden.",
+						"&c"}));
+		languageKeys.put(path+"ParameterDontExist",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Parameter für die Mechanik ist nicht bekannt! Möglich ist: &fh = Home, p = Player, w = Warp.",
+						"&c"}));
 	}
 	
 	private void langHome()
@@ -1735,8 +1749,8 @@ public class YamlManager
 						"&ePassword: &r%password% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<Passwort>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoPortalAccess", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&ePortalAccess: &r%portalaccess% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<ONLY,IRRELEVANT,FORBIDDEN>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&ePortalAccess: &r%portalaccess% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<ONLY,IRRELEVANT,FORBIDDEN>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&ePortalAccess: &r%portalaccess% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<IRRELEVANT,ONLY,FORBIDDEN>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePortalAccess: &r%portalaccess% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<IRRELEVANT,ONLY,FORBIDDEN>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoPrice", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePreis: &r%price% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<Preis>~hover@SHOW_TEXT@Hover.Message.Change",
@@ -1801,6 +1815,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDas Passwort vom Warp &f%warp% &awurde entfernt!",
 						"&aThe password from warp &f%warp% &awas removed!"}));
+		languageKeys.put(path+"PasswordCannotBeAPlayer", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDas Passwort darf kein Spielernamen sein!",
+						"&cThe password must not be a player name!"}));
 		languageKeys.put(path+"SetHiddenFalse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDer Warp &f%warp% &aist nun öffentlich!",
@@ -1861,6 +1879,26 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cEine Falsche SuchWertOption wurde erkannt! Möglich sind: &fserver, world, owner, member und category",
 						"&cAn incorrect searchvalue option was detected! Possible are: &fserver, world, owner, member and category"}));
+		languageKeys.put(path+"SearchValueInfo.Server",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cServer: %category%, ",
+						"&cServer: %category%"}));
+		languageKeys.put(path+"SearchValueInfo.World",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cWelt: %category%, ",
+						"&cWorld: %category%"}));
+		languageKeys.put(path+"SearchValueInfo.Owner",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cWelt: %category%, ",
+						"&cWorld: %category%"}));
+		languageKeys.put(path+"SearchValueInfo.Category",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cKategorie: %category%, ",
+						"&cCategory: %category%"}));
+		languageKeys.put(path+"SearchValueInfo.Member",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cMitglieder: %category%, ",
+						"&cMember: %category%"}));
 		languageKeys.put(path+"OnlyPortal",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Warp &f%warp% &ckann nur per Portal angesteuert werden!",

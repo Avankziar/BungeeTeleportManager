@@ -91,7 +91,7 @@ public interface TableV
 				preparedStatement = conn.prepareStatement(sql);
 				preparedStatement.setString(1, w.getName());
 		        preparedStatement.setString(2, w.getLocation().getServer());
-		        preparedStatement.setString(3, w.getLocation().getWordName());
+		        preparedStatement.setString(3, w.getLocation().getWorldName());
 		        preparedStatement.setDouble(4, w.getLocation().getX());
 		        preparedStatement.setDouble(5, w.getLocation().getY());
 		        preparedStatement.setDouble(6, w.getLocation().getZ());
@@ -172,7 +172,7 @@ public interface TableV
 				preparedStatement = conn.prepareStatement(data);
 				preparedStatement.setString(1, w.getName());
 		        preparedStatement.setString(2, w.getLocation().getServer());
-		        preparedStatement.setString(3, w.getLocation().getWordName());
+		        preparedStatement.setString(3, w.getLocation().getWorldName());
 		        preparedStatement.setDouble(4, w.getLocation().getX());
 		        preparedStatement.setDouble(5, w.getLocation().getY());
 		        preparedStatement.setDouble(6, w.getLocation().getZ());

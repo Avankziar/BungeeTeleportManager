@@ -350,7 +350,7 @@ public class TeleportHandler
 					player.sendMessage(
 							ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PositionTeleport")
 							.replace("%server%", sl.getServer())
-							.replace("%world%", sl.getWordName())
+							.replace("%world%", sl.getWorldName())
 							.replace("%coords%", sl.getX()+" "+sl.getY()+" "+sl.getZ()+" | "+sl.getYaw()+" "+sl.getPitch())));
 				}
 			}.runTaskLater(plugin, delay);
@@ -365,7 +365,7 @@ public class TeleportHandler
 				out.writeUTF(player.getUniqueId().toString());
 				out.writeUTF(player.getName());
 				out.writeUTF(sl.getServer());
-				out.writeUTF(sl.getWordName());
+				out.writeUTF(sl.getWorldName());
 				out.writeDouble(sl.getX());
 				out.writeDouble(sl.getY());
 				out.writeDouble(sl.getZ());

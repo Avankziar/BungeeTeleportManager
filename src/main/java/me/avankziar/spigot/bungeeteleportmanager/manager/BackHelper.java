@@ -107,6 +107,38 @@ public class BackHelper
 					plugin.getMysqlHandler().updateData(
 							MysqlHandler.Type.BACK, newback, "`player_uuid` = ?", newback.getUuid().toString());
 					plugin.getBackHandler().sendPlayerBack(player, newback);
+					
+					//REMOVEME
+					/*boolean exist = Mysql.exist(DB.BACK)
+							.select("id")
+							.where(new WO()
+							.and(Column.Base.PLAYERUUID.getStatment("="), player.getUniqueId().toString())
+							.and(Column.Base.PLAYERNAME.getStatment("="), player.getName()))
+							.check(plugin.getMysqlSetup().getConnection());
+					player.sendMessage("Hier der MySQL Test:");
+					player.sendMessage("Exist: "+String.valueOf(exist));
+					Back b = null;
+					try
+					{
+						b = Mysql.get(DB.BACK).where(new WO()
+								.and(Column.Base.PLAYERUUID.getStatment("="), player.getUniqueId().toString())
+								.and(Column.Base.PLAYERNAME.getStatment("="), player.getName()))
+								.get(Back.class, plugin.getMysqlSetup().getConnection());
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException
+							| IllegalArgumentException | InvocationTargetException e)
+					{
+						e.printStackTrace();
+					}
+					player.sendMessage("Get: "+String.valueOf((b != null)));
+					if(b == null)
+					{
+						return;
+					}
+					boolean update = 
+							Mysql.update(DB.BACK).where(new WO()
+								.and(Column.Base.PLAYERUUID.getStatment("="), player.getUniqueId().toString()))
+							.update(plugin.getMysqlSetup().getConnection(), b);
+					player.sendMessage("Update: "+String.valueOf(update));*/
 				} else
 				{
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!

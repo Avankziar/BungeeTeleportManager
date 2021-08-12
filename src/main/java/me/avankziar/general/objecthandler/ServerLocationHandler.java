@@ -6,7 +6,7 @@ public class ServerLocationHandler
 {
 	public static String serialised(ServerLocation location)
 	{
-		return location.getServer()+";"+location.getWordName()+";"
+		return location.getServer()+";"+location.getWorldName()+";"
 				+location.getX()+";"+location.getY()+";"+location.getZ()+";"
 				+location.getYaw()+";"+location.getPitch();
 	}

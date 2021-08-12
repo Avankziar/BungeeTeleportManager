@@ -23,14 +23,6 @@ public class PlayerTeleportToPlayerEvent extends Event
 		setToPlayerUUID(toPlayerUUID);
 		setToPlayer(toPlayer);
 	}
-	
-	public PlayerTeleportToPlayerEvent(Player player, UUID toPlayerUUID, String toPlayer, String customAnnotation)
-	{
-		setPlayer(player);
-		setToPlayerUUID(toPlayerUUID);
-		setToPlayer(toPlayer);
-		setCustomAnnotation(customAnnotation);
-	}
 
     public UUID getToPlayerUUID()
 	{

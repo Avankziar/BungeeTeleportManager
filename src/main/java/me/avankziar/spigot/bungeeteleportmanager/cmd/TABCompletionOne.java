@@ -29,11 +29,103 @@ public class TABCompletionOne implements TabCompleter
 		Player player = (Player)sender;
 		List<String> list = new ArrayList<String>();
 		String command = "/"+lable;
-		if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME))
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_DEL))
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_SET))
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_REMOVE))
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_CREATE))) 
+		//ADDME Wieder reaktivieren sobald command accessable ist
+		/*if(command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.ENTITYTRANSPORT)))
+		{
+			if(args.length == 1)
+			{
+				if (!args[0].equals("")) 
+				{
+					if(args[0].length() < 2)
+					{
+						for(String s : BungeeTeleportManager.entitytransport)
+						{
+							if(s.startsWith(args[0]))
+							{
+								list.add(s);
+							}
+						}
+						return list;
+					} else 
+					{
+						if(args[0].startsWith("h:"))
+						{
+							if(args[0].length() == 2)
+							{
+								list.addAll(BungeeTeleportManager.homes.get(player.getName()));
+								Collections.sort(list);
+								return list;
+							} else 
+							{
+								String arg = args[0].split(":")[1];
+								for (String homeName : BungeeTeleportManager.homes.get(player.getName())) 
+								{
+									if (homeName.startsWith(arg)
+											|| homeName.toLowerCase().startsWith(arg)
+											 || homeName.toUpperCase().startsWith(arg)) 
+									{
+										list.add("h:"+homeName);
+									}
+								}
+								Collections.sort(list);
+								return list;
+							}							
+						} else if(args[0].startsWith("p:"))
+						{
+							if(args[0].length() == 2)
+							{
+								list.addAll(plugin.getMysqlPlayers());
+								Collections.sort(list);
+								return list;
+							} else
+							{
+								String arg = args[0].split(":")[1];
+								for (String name : plugin.getMysqlPlayers()) 
+								{
+									if (name.startsWith(arg)
+											|| name.toLowerCase().startsWith(arg)
+											|| name.toUpperCase().startsWith(arg)) 
+									{
+										list.add(name);
+									}
+								}
+								Collections.sort(list);
+								return list;
+							}
+						} else if(args[0].startsWith("w:"))
+						{
+							if(args[0].length() == 2)
+							{
+								list.addAll(BungeeTeleportManager.warps.get(player.getName()));
+								Collections.sort(list);
+								return list;
+							} else
+							{
+								for (String warpName : BungeeTeleportManager.warps.get(player.getName())) 
+								{
+									if (warpName.startsWith(args[0])
+											|| warpName.toLowerCase().startsWith(args[0])
+											|| warpName.toUpperCase().startsWith(args[0])) 
+									{
+										list.add(warpName);
+									}
+								}
+								Collections.sort(list);
+								return list;
+							}
+						}
+					}
+				} else
+				{
+					return BungeeTeleportManager.entitytransport;
+				}
+			}
+		} else */
+		if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_DEL).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_SET).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_REMOVE).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_CREATE).trim())) 
 		{
 			if(args.length == 1)
 			{
@@ -69,7 +161,7 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT))) 
+		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT).trim())) 
 		{
 			if(args.length == 1)
 			{
@@ -99,8 +191,8 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP))
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_INFO))) 
+		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_INFO).trim())) 
 		{
 			if(args.length == 1)
 			{
@@ -130,11 +222,11 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPA)) 
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAHERE))
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TP)) 
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPHERE))
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAIGNORE))) 
+		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPA).trim()) 
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAHERE).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TP).trim()) 
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPHERE).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAIGNORE).trim())) 
 		{
 			if(args.length == 1)
 			{

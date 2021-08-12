@@ -6,6 +6,8 @@ public class KeyHandler
 	
 	public static String BACK = "BACK";
 	
+	public static String ENTITYTRANSPORT = "ENTITYTRANSPORT";
+	
 	public static String HOME = "HOME";
 	public static String HOMES = "HOMES";
 	public static String HOME_LIST = "HOME_LIST";

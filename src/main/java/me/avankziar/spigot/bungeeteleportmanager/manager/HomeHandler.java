@@ -75,7 +75,7 @@ public class HomeHandler
 			}.runTaskLater(plugin, delay);
 		} else
 		{
-			if(cfgh.useSafeTeleport(Mechanics.WARP))
+			if(cfgh.useSafeTeleport(Mechanics.HOME))
 			{
 				plugin.getSafeLocationHandler().safeLocationNetworkPending(player, uuid, playername, home);
 			} else
@@ -97,7 +97,7 @@ public class HomeHandler
 			out.writeUTF(player.getName());
 			out.writeUTF(home.getHomeName());
 			out.writeUTF(home.getLocation().getServer());
-			out.writeUTF(home.getLocation().getWordName());
+			out.writeUTF(home.getLocation().getWorldName());
 			out.writeDouble(home.getLocation().getX());
 			out.writeDouble(home.getLocation().getY());
 			out.writeDouble(home.getLocation().getZ());
@@ -462,19 +462,19 @@ public class HomeHandler
 		if(map.containsKey(home.getLocation().getServer()))
 		{
 			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = map.get(home.getLocation().getServer());
-			if(mapmap.containsKey(home.getLocation().getWordName()))
+			if(mapmap.containsKey(home.getLocation().getWorldName()))
 			{
-				ArrayList<BaseComponent> bc = mapmap.get(home.getLocation().getWordName());
+				ArrayList<BaseComponent> bc = mapmap.get(home.getLocation().getWorldName());
 				bc.add(bct);
-				mapmap.replace(home.getLocation().getWordName(), bc);
+				mapmap.replace(home.getLocation().getWorldName(), bc);
 				map.replace(home.getLocation().getServer(), mapmap);
 				return map;
 			} else
 			{
 				ArrayList<BaseComponent> bc = new ArrayList<>();
-				bc.add(ChatApi.tctl("  &e"+home.getLocation().getWordName()+": "));
+				bc.add(ChatApi.tctl("  &e"+home.getLocation().getWorldName()+": "));
 				bc.add(bct);
-				mapmap.put(home.getLocation().getWordName(), bc);
+				mapmap.put(home.getLocation().getWorldName(), bc);
 				map.replace(home.getLocation().getServer(), mapmap);
 				return map;
 			}
@@ -482,9 +482,9 @@ public class HomeHandler
 		{
 			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = new LinkedHashMap<String, ArrayList<BaseComponent>>();
 			ArrayList<BaseComponent> bc = new ArrayList<>();
-			bc.add(ChatApi.tctl("  &e"+home.getLocation().getWordName()+": "));
+			bc.add(ChatApi.tctl("  &e"+home.getLocation().getWorldName()+": "));
 			bc.add(bct);
-			mapmap.put(home.getLocation().getWordName(), bc);
+			mapmap.put(home.getLocation().getWorldName(), bc);
 			map.put(home.getLocation().getServer(), mapmap);
 			return map;
 		}

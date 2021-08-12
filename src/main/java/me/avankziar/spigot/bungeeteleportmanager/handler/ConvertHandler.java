@@ -96,6 +96,6 @@ public class ConvertHandler
 	
 	public static Location getLocation(ServerLocation loc)
 	{
-		return new Location(Bukkit.getWorld(loc.getWordName()), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
+		return new Location(Bukkit.getWorld(loc.getWorldName()), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
 	}
 }

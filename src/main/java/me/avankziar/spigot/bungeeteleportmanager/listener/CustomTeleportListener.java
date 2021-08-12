@@ -70,4 +70,54 @@ public class CustomTeleportListener implements Listener
 		event.getPlayer().sendMessage(ChatApi.tl(event.getPreMessage()));
 		plugin.getCustomHandler().sendTpPos(event.getPlayer(), event.getServerlocation(), event.getPostMessage());
 	}
+	
+	@EventHandler (priority = EventPriority.HIGHEST)
+	public void onTeleportToPlayer(main.java.me.avankziar.spigot.btm.events.PlayerTeleportToPlayerEvent event)
+	{
+		if(event.isCancelled())
+		{
+			return;
+		}
+		if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.CUSTOM, event.getCustomAnnotation()))
+		{
+			event.getPlayer().sendMessage(ChatApi.tl(
+					plugin.getYamlHandler().getLang().getString("CustomTeleportEvent.IsForbidden.Server")));
+			return;
+		}
+		if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.CUSTOM, event.getPlayer(), event.getCustomAnnotation()))
+		{
+			event.getPlayer().sendMessage(ChatApi.tl(
+					plugin.getYamlHandler().getLang().getString("CustomTeleportEvent.IsForbidden.Server")));
+			return;
+		}
+		plugin.getUtility().givesEffect(event.getPlayer(), Mechanics.CUSTOM, true, false);
+		plugin.getCustomHandler().sendForceObject(event.getPlayer(),
+				new Teleport(event.getPlayer().getUniqueId(), event.getPlayer().getName(),
+						event.getToPlayerUUID(), event.getToPlayer(), Teleport.Type.TPTO), 
+				plugin.getYamlHandler().getLang().getString("NoPlayerExist", ""));
+	}
+	
+	@EventHandler (priority = EventPriority.HIGHEST)
+	public void onTeleportToPosition(main.java.me.avankziar.spigot.btm.events.PlayerTeleportToPositionEvent event)
+	{
+		if(event.isCancelled())
+		{
+			return;
+		}
+		if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.CUSTOM, event.getCustomAnnotation()))
+		{
+			event.getPlayer().sendMessage(ChatApi.tl(
+					plugin.getYamlHandler().getLang().getString("CustomTeleportEvent.IsForbidden.Server")));
+			return;
+		}
+		if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.CUSTOM, event.getPlayer(), event.getCustomAnnotation()))
+		{
+			event.getPlayer().sendMessage(ChatApi.tl(
+					plugin.getYamlHandler().getLang().getString("CustomTeleportEvent.IsForbidden.Server")));
+			return;
+		}
+		plugin.getUtility().givesEffect(event.getPlayer(), Mechanics.CUSTOM, true, false);
+		event.getPlayer().sendMessage(ChatApi.tl(event.getPreMessage()));
+		plugin.getCustomHandler().sendTpPos(event.getPlayer(), event.getServerlocation(), event.getPostMessage());
+	}
 }

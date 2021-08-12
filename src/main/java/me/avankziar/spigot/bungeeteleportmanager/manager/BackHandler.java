@@ -30,7 +30,7 @@ public class BackHandler
 		plugin.getMysqlHandler().updateData(
 				MysqlHandler.Type.BACK, back, "`player_uuid` = ?", back.getUuid().toString());
 		out.writeUTF(back.getLocation().getServer());
-		out.writeUTF(back.getLocation().getWordName());
+		out.writeUTF(back.getLocation().getWorldName());
 		out.writeDouble(back.getLocation().getX());
 		out.writeDouble(back.getLocation().getY());
 		out.writeDouble(back.getLocation().getZ());
@@ -60,7 +60,7 @@ public class BackHandler
 			out.writeUTF(back.getUuid().toString());
 			out.writeUTF(back.getName());
 			out.writeUTF(back.getLocation().getServer());
-			out.writeUTF(back.getLocation().getWordName());
+			out.writeUTF(back.getLocation().getWorldName());
 			out.writeDouble(back.getLocation().getX());
 			out.writeDouble(back.getLocation().getY());
 			out.writeDouble(back.getLocation().getZ());
@@ -86,7 +86,7 @@ public class BackHandler
 			out.writeUTF(back.getUuid().toString());
 			out.writeUTF(back.getName());
 			out.writeUTF(back.getLocation().getServer());
-			out.writeUTF(back.getLocation().getWordName());
+			out.writeUTF(back.getLocation().getWorldName());
 			out.writeDouble(back.getLocation().getX());
 			out.writeDouble(back.getLocation().getY());
 			out.writeDouble(back.getLocation().getZ());
@@ -112,7 +112,7 @@ public class BackHandler
 			out.writeUTF(back.getUuid().toString());
 			out.writeUTF(back.getName());
 			out.writeUTF(back.getLocation().getServer());
-			out.writeUTF(back.getLocation().getWordName());
+			out.writeUTF(back.getLocation().getWorldName());
 			out.writeDouble(back.getLocation().getX());
 			out.writeDouble(back.getLocation().getY());
 			out.writeDouble(back.getLocation().getZ());
@@ -139,7 +139,7 @@ public class BackHandler
 			out.writeUTF(back.getUuid().toString());
 			out.writeUTF(back.getName());
 			out.writeUTF(back.getLocation().getServer());
-			out.writeUTF(back.getLocation().getWordName());
+			out.writeUTF(back.getLocation().getWorldName());
 			out.writeDouble(back.getLocation().getX());
 			out.writeDouble(back.getLocation().getY());
 			out.writeDouble(back.getLocation().getZ());
@@ -172,7 +172,7 @@ public class BackHandler
 			out.writeUTF(back.getUuid().toString());
 			out.writeUTF(back.getName());
 			out.writeUTF(back.getLocation().getServer());
-			out.writeUTF(back.getLocation().getWordName());
+			out.writeUTF(back.getLocation().getWorldName());
 			out.writeDouble(back.getLocation().getX());
 			out.writeDouble(back.getLocation().getY());
 			out.writeDouble(back.getLocation().getZ());

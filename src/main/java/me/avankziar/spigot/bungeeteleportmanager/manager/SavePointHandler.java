@@ -90,7 +90,7 @@ public class SavePointHandler
 			out.writeUTF(playername);
 			out.writeUTF(sp.getSavePointName());
 			out.writeUTF(sp.getLocation().getServer());
-			out.writeUTF(sp.getLocation().getWordName());
+			out.writeUTF(sp.getLocation().getWorldName());
 			out.writeDouble(sp.getLocation().getX());
 			out.writeDouble(sp.getLocation().getY());
 			out.writeDouble(sp.getLocation().getZ());
@@ -119,19 +119,19 @@ public class SavePointHandler
 		if(map.containsKey(sp.getLocation().getServer()))
 		{
 			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = map.get(sp.getLocation().getServer());
-			if(mapmap.containsKey(sp.getLocation().getWordName()))
+			if(mapmap.containsKey(sp.getLocation().getWorldName()))
 			{
-				ArrayList<BaseComponent> bc = mapmap.get(sp.getLocation().getWordName());
+				ArrayList<BaseComponent> bc = mapmap.get(sp.getLocation().getWorldName());
 				bc.add(bct);
-				mapmap.replace(sp.getLocation().getWordName(), bc);
+				mapmap.replace(sp.getLocation().getWorldName(), bc);
 				map.replace(sp.getLocation().getServer(), mapmap);
 				return map;
 			} else
 			{
 				ArrayList<BaseComponent> bc = new ArrayList<>();
-				bc.add(ChatApi.tctl("  &e"+sp.getLocation().getWordName()+": "));
+				bc.add(ChatApi.tctl("  &e"+sp.getLocation().getWorldName()+": "));
 				bc.add(bct);
-				mapmap.put(sp.getLocation().getWordName(), bc);
+				mapmap.put(sp.getLocation().getWorldName(), bc);
 				map.replace(sp.getLocation().getServer(), mapmap);
 				return map;
 			}
@@ -139,9 +139,9 @@ public class SavePointHandler
 		{
 			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = new LinkedHashMap<String, ArrayList<BaseComponent>>();
 			ArrayList<BaseComponent> bc = new ArrayList<>();
-			bc.add(ChatApi.tctl("  &e"+sp.getLocation().getWordName()+": "));
+			bc.add(ChatApi.tctl("  &e"+sp.getLocation().getWorldName()+": "));
 			bc.add(bct);
-			mapmap.put(sp.getLocation().getWordName(), bc);
+			mapmap.put(sp.getLocation().getWorldName(), bc);
 			map.put(sp.getLocation().getServer(), mapmap);
 			return map;
 		}

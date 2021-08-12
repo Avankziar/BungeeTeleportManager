@@ -104,7 +104,7 @@ public class ForbiddenHandlerBungee
 				return true;
 			}
 			if(getValues(false, Mechanics.BACK).contains(
-					back.getLocation().getWordName()))
+					back.getLocation().getWorldName()))
 			{
 				return true;
 			}
@@ -117,7 +117,7 @@ public class ForbiddenHandlerBungee
 				return true;
 			}
 			if(getValues(false, Mechanics.DEATHBACK).contains(
-					back.getLocation().getWordName()))
+					back.getLocation().getWorldName()))
 			{
 				return true;
 			}
@@ -130,7 +130,7 @@ public class ForbiddenHandlerBungee
 				return true;
 			}
 			if(getValues(false, Mechanics.TPA).contains(
-					back.getLocation().getWordName()))
+					back.getLocation().getWorldName()))
 			{
 				return true;
 			}

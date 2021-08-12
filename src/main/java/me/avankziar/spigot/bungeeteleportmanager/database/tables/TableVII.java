@@ -82,7 +82,7 @@ public interface TableVII
 		        preparedStatement.setString(2, h.getPlayerName());
 		        preparedStatement.setString(3, h.getSavePointName());
 		        preparedStatement.setString(4, h.getLocation().getServer());
-		        preparedStatement.setString(5, h.getLocation().getWordName());
+		        preparedStatement.setString(5, h.getLocation().getWorldName());
 		        preparedStatement.setDouble(6, h.getLocation().getX());
 		        preparedStatement.setDouble(7, h.getLocation().getY());
 		        preparedStatement.setDouble(8, h.getLocation().getZ());
@@ -139,7 +139,7 @@ public interface TableVII
 		        preparedStatement.setString(2, h.getPlayerName());
 		        preparedStatement.setString(3, h.getSavePointName());
 		        preparedStatement.setString(4, h.getLocation().getServer());
-		        preparedStatement.setString(5, h.getLocation().getWordName());
+		        preparedStatement.setString(5, h.getLocation().getWorldName());
 		        preparedStatement.setDouble(6, h.getLocation().getX());
 		        preparedStatement.setDouble(7, h.getLocation().getY());
 		        preparedStatement.setDouble(8, h.getLocation().getZ());

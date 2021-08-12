@@ -104,6 +104,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private WarpHandler warpHandler;
 	private WarpHelper warpHelper;
 	
+	public static ArrayList<String> entitytransport = new ArrayList<>();
 	public static LinkedHashMap<String, ArrayList<String>> homes = new LinkedHashMap<String, ArrayList<String>>();
 	public static LinkedHashMap<String, ArrayList<String>> savepoints = new LinkedHashMap<String, ArrayList<String>>();
 	public static LinkedHashMap<String, ArrayList<String>> warps = new LinkedHashMap<String, ArrayList<String>>();
@@ -176,6 +177,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		ListenerSetup();
 		setupBstats();
 		plugin.getUtility().setTpaPlayersTabCompleter();
+		initEntityTransport();
 	}
 	
 	public void onDisable()
@@ -274,6 +276,16 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(deathback.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			
 			addingHelps(deathback);
+		}
+		
+		if(cfgh.enableCommands(Mechanics.ENTITYTRANSPORT))
+		{
+			/*CommandConstructor entitytransport = new CommandConstructor("entitytransport", false);
+			
+			registerCommand(entitytransport.getName());
+			getCommand(entitytransport.getName()).setExecutor(new HomeCommandExecutor(plugin, entitytransport));
+			getCommand(entitytransport.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.ENTITYTRANSPORT, entitytransport.getCommandString());*/
 		}
 		
 		if(cfgh.enableCommands(Mechanics.HOME))
@@ -900,6 +912,13 @@ public class BungeeTeleportManager extends JavaPlugin
 		{
 			advancedEconomyHandler = null;
 		}
+	}
+	
+	private void initEntityTransport()
+	{
+		entitytransport.add("h:");
+		entitytransport.add("p:");
+		entitytransport.add("w:");
 	}
 	
 	public AdvancedEconomyHandler getAdvancedEconomyHandler()

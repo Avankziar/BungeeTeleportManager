@@ -71,7 +71,7 @@ public class RandomTeleportHandler
 					player.teleport(loc);
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.WarpTo")
 							.replace("%server%", rt.getPoint1().getServer())
-							.replace("%world%", rt.getPoint1().getWordName())));
+							.replace("%world%", rt.getPoint1().getWorldName())));
 				}
 			}.runTaskLater(plugin, delay);
 		} else
@@ -84,7 +84,7 @@ public class RandomTeleportHandler
 				out.writeUTF(playername);
 				out.writeBoolean(rt.isArea());
 				out.writeUTF(rt.getPoint1().getServer());
-				out.writeUTF(rt.getPoint1().getWordName());
+				out.writeUTF(rt.getPoint1().getWorldName());
 				out.writeDouble(rt.getPoint1().getX());
 				out.writeDouble(rt.getPoint1().getY());
 				out.writeDouble(rt.getPoint1().getZ());
@@ -137,7 +137,7 @@ public class RandomTeleportHandler
 						getRandom(new Random(), 0,
 							(int) Math.max(getPositiveInt(rt.getPoint1().getZ()), getPositiveInt(rt.getPoint2().getZ())) -
 							(int) Math.min(getPositiveInt(rt.getPoint1().getZ()), getPositiveInt(rt.getPoint2().getZ())));
-				loc = isSafe(new Location(Bukkit.getWorld(rt.getPoint1().getWordName()), x, y, z), minY);
+				loc = isSafe(new Location(Bukkit.getWorld(rt.getPoint1().getWorldName()), x, y, z), minY);
 			} else
 			{
 				double x = rt.getPoint1().getX() + getRoll()*getRandom(new Random(), 0, rt.getRadius());
@@ -145,7 +145,7 @@ public class RandomTeleportHandler
 				double minY = rt.getPoint1().getY() - rt.getRadius();
 				if(minY <= 0) {minY = 1;}
 				double z = rt.getPoint1().getZ() + getRoll()*getRandom(new Random(), 0, rt.getRadius());
-				loc = isSafe(new Location(Bukkit.getWorld(rt.getPoint1().getWordName()), x, y, z), minY);
+				loc = isSafe(new Location(Bukkit.getWorld(rt.getPoint1().getWorldName()), x, y, z), minY);
 			}
 			i++;
 		}

@@ -52,43 +52,6 @@ public class PlayerTeleportToPositionEvent extends Event
 		setPreMessage(premessage);
 		setPostMessage(postmessage);
 	}
-	
-	public PlayerTeleportToPositionEvent(Player player, String server, String world,
-			double x, double y, double z, float yaw, float pitch, String premessage, String postmessage, String customAnnotation)
-	{
-		setPlayer(player);
-		setServerlocation(new ServerLocation(server, world, x, y, z, yaw, pitch));
-		setPreMessage(premessage);
-		setPostMessage(postmessage);
-		setCustomAnnotation(customAnnotation);
-	}
-	
-	public PlayerTeleportToPositionEvent(Player player, ServerLocation serverLocation, String premessage, String postmessage,
-			String customAnnotation)
-	{
-		setPlayer(player);
-		setServerlocation(serverLocation);
-		setPreMessage(premessage);
-		setPostMessage(postmessage);
-		setCustomAnnotation(customAnnotation);
-	}
-	
-	public PlayerTeleportToPositionEvent(Player player, String server, Location location, String premessage, String postmessage,
-			String customAnnotation)
-	{
-		setPlayer(player);
-		setServerlocation(
-				new ServerLocation(server,
-				location.getWorld().getName(),
-				location.getX(),
-				location.getY(),
-				location.getZ(),
-				location.getYaw(),
-				location.getPitch()));
-		setPreMessage(premessage);
-		setPostMessage(postmessage);
-		setCustomAnnotation(customAnnotation);
-	}	
 
     public Player getPlayer()
 	{

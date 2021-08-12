@@ -68,7 +68,7 @@ public class HomeHandler
 		        	out.writeUTF(StaticValues.HOME_PLAYERTOPOSITION);
 					out.writeUTF(player.getName());
 					out.writeUTF(homeName);
-					out.writeUTF(location.getWordName());
+					out.writeUTF(location.getWorldName());
 					out.writeDouble(location.getX());
 					out.writeDouble(location.getY());
 					out.writeDouble(location.getZ());

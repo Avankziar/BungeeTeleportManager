@@ -3,7 +3,7 @@ package main.java.me.avankziar.general.object;
 public class ServerLocation
 {
 	private String server;
-	private String wordName;
+	private String worldName;
 	private double x;
 	private double y;
 	private double z;
@@ -13,7 +13,7 @@ public class ServerLocation
 	public ServerLocation(String server, String worldName, double x, double y, double z, float yaw, float pitch)
 	{
 		setServer(server);
-		setWordName(worldName);
+		setWorldName(worldName);
 		setX(x);
 		setY(y);
 		setZ(z);
@@ -24,12 +24,20 @@ public class ServerLocation
 	public ServerLocation(String server, String worldName, double x, double y, double z)
 	{
 		setServer(server);
-		setWordName(worldName);
+		setWorldName(worldName);
 		setX(x);
 		setY(y);
 		setZ(z);
 		setYaw(0.0F);
 		setPitch(0.0F);
+	}
+	
+	@Override
+	public String toString()
+	{
+		return "ServerLocation:"+server+";"+worldName+";"
+				+String.valueOf(x)+";"+String.valueOf(y)+";"+String.valueOf(z)+";"
+				+String.valueOf(yaw)+";"+String.valueOf(pitch);
 	}
 
 	public String getServer()
@@ -42,14 +50,14 @@ public class ServerLocation
 		this.server = server;
 	}
 
-	public String getWordName()
+	public String getWorldName()
 	{
-		return wordName;
+		return worldName;
 	}
 
-	public void setWordName(String wordName)
+	public void setWorldName(String worldName)
 	{
-		this.wordName = wordName;
+		this.worldName = worldName;
 	}
 
 	public double getX()
