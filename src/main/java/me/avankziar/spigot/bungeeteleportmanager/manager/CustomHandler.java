@@ -26,14 +26,17 @@ public class CustomHandler
 		this.plugin = plugin;
 	}
 	
-	public void sendForceObject(Player senders, Teleport teleport, String errormessage)
+	public void sendForceObject(Player senders, Teleport teleport, String errormessage, boolean overrideBack)
 	{
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		if(Bukkit.getPlayer(teleport.getToUUID()) != null)
 		{
 			Player targets = Bukkit.getPlayer(teleport.getToUUID());
-			BackHandler bh = new BackHandler(plugin);
-			bh.sendBackObject(senders, bh.getNewBack(senders));
+			if(overrideBack)
+			{
+				BackHandler bh = new BackHandler(plugin);
+				bh.sendBackObject(senders, bh.getNewBack(senders));
+			}			
 			int delayed = cfgh.getMinimumTime(Mechanics.CUSTOM);
 			int delay = 1;
 			if(!senders.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.CUSTOM.getLower()))
@@ -75,6 +78,7 @@ public class CustomHandler
 				{
 					out.writeInt(25);
 				}
+				out.writeBoolean(overrideBack);
 				new BackHandler(plugin).addingBack(senders, out);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -83,13 +87,16 @@ public class CustomHandler
 		}
     }
 	
-	public void sendTpPos(Player player, ServerLocation sl, String message)
+	public void sendTpPos(Player player, ServerLocation sl, String message, boolean overrideBack)
 	{
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		if(sl.getServer().equals(cfgh.getServer()))
 		{
-			BackHandler bh = new BackHandler(plugin);
-			bh.sendBackObject(player, bh.getNewBack(player));
+			if(overrideBack)
+			{
+				BackHandler bh = new BackHandler(plugin);
+				bh.sendBackObject(player, bh.getNewBack(player));
+			}
 			int delayed = cfgh.getMinimumTime(Mechanics.CUSTOM);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.CUSTOM.getLower()))
@@ -140,12 +147,14 @@ public class CustomHandler
 				{
 					out.writeInt(25);
 				}
-				new BackHandler(plugin).addingBack(player, out);
+				
 				out.writeBoolean((message == null));
 				if(message != null)
 				{
 					out.writeUTF(message);
 				}
+				out.writeBoolean(overrideBack);
+				new BackHandler(plugin).addingBack(player, out);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

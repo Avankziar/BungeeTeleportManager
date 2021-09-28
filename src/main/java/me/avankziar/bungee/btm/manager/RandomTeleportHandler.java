@@ -21,17 +21,18 @@ private BungeeTeleportManager plugin;
 	}
 	
 	public void teleportPlayerToRandomTeleport(String playerName, ServerLocation point1, ServerLocation point2,
-			int radius, boolean isArea, int delayed)
+			int radius, boolean isArea, int delayed, String rtpPath)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(playerName);
 		if(player == null)
 		{
 			return;
 		}
-		teleportPlayer(player, delayed, point1, point2, radius, isArea);
+		teleportPlayer(player, delayed, point1, point2, radius, isArea, rtpPath);
 	}
 	
-	public void teleportPlayer(ProxiedPlayer player, int delay, ServerLocation point1, ServerLocation point2, int radius, boolean isArea)
+	public void teleportPlayer(ProxiedPlayer player, int delay, ServerLocation point1, ServerLocation point2, int radius, boolean isArea,
+			String rtpPath)
 	{
 		if(player == null || point1 == null)
 		{
@@ -93,6 +94,7 @@ private BungeeTeleportManager plugin;
 					{
 						out.writeInt(radius);
 					}
+					out.writeUTF(rtpPath);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

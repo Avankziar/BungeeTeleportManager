@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Home;
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.spigot.btm.events.HomePreTeleportEvent;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
@@ -20,7 +23,6 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ForbiddenHandlerSpigot;
-import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.object.BTMSettings;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -241,7 +243,7 @@ public class HomeHelper
 					}
 					playeruuid = uuid.toString();
 				}
-				if(args.length < 0)
+				if(args.length > 0)
 				{
 					homeName = args[0];
 				} else
@@ -316,6 +318,12 @@ public class HomeHelper
 				}
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.RequestInProgress")));
 				plugin.getUtility().givesEffect(player, Mechanics.HOME, true, true);
+				HomePreTeleportEvent hpte = new HomePreTeleportEvent(player, UUID.fromString(playeruuid), playername, home);
+				Bukkit.getPluginManager().callEvent(hpte);
+				if(hpte.isCancelled())
+				{
+					return;
+				}
 				plugin.getHomeHandler().sendPlayerToHome(player, home, playername, playeruuid);
 				return;
 			}

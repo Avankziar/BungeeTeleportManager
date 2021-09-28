@@ -1,5 +1,7 @@
 package main.java.me.avankziar.spigot.bungeeteleportmanager.handler;
 
+import java.util.ArrayList;
+
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 
@@ -15,6 +17,39 @@ public class ConfigHandler
 	public String getServer()
 	{
 		return plugin.getYamlHandler().getConfig().getString("ServerName");
+	}
+	
+	public boolean isServerCluster()
+	{
+		return plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.ServerClusterActive", false);
+	}
+	
+	public ArrayList<String> getServerCluster()
+	{
+		return (ArrayList<String>) plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.Server.ClusterList");
+	}
+	
+	public boolean isWorldCluster()
+	{
+		return plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.World.ClusterActive", false);
+	}
+	
+	public ArrayList<String> getWorldCluster()
+	{
+		if(plugin.getYamlHandler().getConfig().get("PermissionLevel.World.ClusterList") == null)
+		{
+			return new ArrayList<String>();
+		}
+		return (ArrayList<String>) plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.World.ClusterList");
+	}
+	
+	public ArrayList<String> getWorldCluster(String cluster)
+	{
+		if(plugin.getYamlHandler().getConfig().get("PermissionLevel.World."+cluster) == null)
+		{
+			return new ArrayList<String>();
+		}
+		return (ArrayList<String>) plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.World."+cluster);
 	}
 	
 	public boolean enableCommands(Mechanics mechanics)
@@ -49,7 +84,7 @@ public class ConfigHandler
 	
 	public boolean useSafeTeleport(Mechanics mechanics)
 	{
-		return plugin.getYamlHandler().getConfig().getBoolean("UseSafeTeleport."+mechanics.getKey(), false);
+		return plugin.getYamlHandler().getConfig().getBoolean("Use.SafeTeleport."+mechanics.getKey(), false);
 	}
 	
 	public boolean notifyPlayerAfterWithdraw(Mechanics mechanics)

@@ -7,13 +7,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import main.java.me.avankziar.general.object.SavePoint;
-import main.java.me.avankziar.general.object.ServerLocation;
+import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 
-public interface TableVII
+public interface Table03
 {
-	default boolean existVII(BungeeTeleportManager plugin, String whereColumn, Object... object) 
+	
+	default boolean existIII(BungeeTeleportManager plugin, String whereColumn, Object... object) 
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -22,7 +24,7 @@ public interface TableVII
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameVII 
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.BACK.getValue() 
 						+ "` WHERE "+whereColumn+" LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -61,33 +63,27 @@ public interface TableVII
 		return false;
 	}
 	
-	default boolean createVII(BungeeTeleportManager plugin, Object object) 
+	default boolean createIII(BungeeTeleportManager plugin, Object object) 
 	{
-		if(!(object instanceof SavePoint))
+		if(!(object instanceof Back))
 		{
 			return false;
 		}
-		SavePoint h = (SavePoint) object;
+		Back b = (Back) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) {
 			try 
 			{
-				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameVII 
-						+ "`(`player_uuid`, `player_name`, `savepoint_name`,"
-						+ " `server`, `world`, `x`, `y`, `z`, `yaw`, `pitch`) " 
-						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				String sql = "INSERT INTO `" + MysqlHandler.Type.BACK.getValue() 
+						+ "`(`player_uuid`, `player_name`, `back_location`, `tp_toggle`, `home_priority`) " 
+						+ "VALUES(?, ?, ?, ?, ?)";
 				preparedStatement = conn.prepareStatement(sql);
-		        preparedStatement.setString(1, h.getUuid().toString());
-		        preparedStatement.setString(2, h.getPlayerName());
-		        preparedStatement.setString(3, h.getSavePointName());
-		        preparedStatement.setString(4, h.getLocation().getServer());
-		        preparedStatement.setString(5, h.getLocation().getWorldName());
-		        preparedStatement.setDouble(6, h.getLocation().getX());
-		        preparedStatement.setDouble(7, h.getLocation().getY());
-		        preparedStatement.setDouble(8, h.getLocation().getZ());
-		        preparedStatement.setFloat(9, h.getLocation().getYaw());
-		        preparedStatement.setFloat(10, h.getLocation().getPitch());
+		        preparedStatement.setString(1, b.getUuid().toString());
+		        preparedStatement.setString(2, b.getName());
+		        preparedStatement.setString(3, Utility.getLocation(b.getLocation()));
+		        preparedStatement.setBoolean(4, b.isToggle());
+		        preparedStatement.setString(5, b.getHomePriority());
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
@@ -112,9 +108,9 @@ public interface TableVII
 		return false;
 	}
 	
-	default boolean updateDataVII(BungeeTeleportManager plugin, Object object, String whereColumn, Object... whereObject) 
+	default boolean updateDataIII(BungeeTeleportManager plugin, Object object, String whereColumn, Object... whereObject) 
 	{
-		if(!(object instanceof SavePoint))
+		if(!(object instanceof Back))
 		{
 			return false;
 		}
@@ -122,30 +118,24 @@ public interface TableVII
 		{
 			return false;
 		}
-		SavePoint h = (SavePoint) object;
+		Back b = (Back) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) 
 		{
 			try 
 			{
-				String data = "UPDATE `" + plugin.getMysqlHandler().tableNameVII
-						+ "` SET `player_uuid` = ?, `player_name` = ?, `savepoint_name` = ?,"
-						+ " `server` = ?, `world` = ?, `x` = ?, `y` = ?,"
-						+ " `z` = ?, `yaw` = ?, `pitch` = ?" 
+				String data = "UPDATE `" + MysqlHandler.Type.BACK.getValue()
+						+ "` SET `player_uuid` = ?,"
+						+ " `player_name` = ?, `back_location` = ?, `tp_toggle` = ?, `home_priority` = ?" 
 						+ " WHERE "+whereColumn;
 				preparedStatement = conn.prepareStatement(data);
-				preparedStatement.setString(1, h.getUuid().toString());
-		        preparedStatement.setString(2, h.getPlayerName());
-		        preparedStatement.setString(3, h.getSavePointName());
-		        preparedStatement.setString(4, h.getLocation().getServer());
-		        preparedStatement.setString(5, h.getLocation().getWorldName());
-		        preparedStatement.setDouble(6, h.getLocation().getX());
-		        preparedStatement.setDouble(7, h.getLocation().getY());
-		        preparedStatement.setDouble(8, h.getLocation().getZ());
-		        preparedStatement.setFloat(9, h.getLocation().getYaw());
-		        preparedStatement.setFloat(10, h.getLocation().getPitch());
-		        int i = 11;
+				preparedStatement.setString(1, b.getUuid().toString());
+		        preparedStatement.setString(2, b.getName());
+		        preparedStatement.setString(3, Utility.getLocation(b.getLocation()));
+		        preparedStatement.setBoolean(4, b.isToggle());
+		        preparedStatement.setString(5, b.getHomePriority());
+		        int i = 6;
 		        for(Object o : whereObject)
 		        {
 		        	preparedStatement.setObject(i, o);
@@ -171,7 +161,7 @@ public interface TableVII
         return false;
 	}
 	
-	default Object getDataVII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default Object getDataIII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -180,7 +170,7 @@ public interface TableVII
 		{
 			try 
 			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameVII 
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.BACK.getValue() 
 						+ "` WHERE "+whereColumn+" LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -193,18 +183,11 @@ public interface TableVII
 		        result = preparedStatement.executeQuery();
 		        while (result.next()) 
 		        {
-		        	return new SavePoint(
-		        			UUID.fromString(result.getString("player_uuid")),
+		        	return new Back(UUID.fromString(result.getString("player_uuid")),
 		        			result.getString("player_name"),
-		        			result.getString("savepoint_name"),
-		        			new ServerLocation(
-		        					result.getString("server"),
-		        					result.getString("world"),
-		        					result.getDouble("x"),
-		        					result.getDouble("y"),
-		        					result.getDouble("z"),
-		        					result.getFloat("yaw"),
-		        					result.getFloat("pitch")));
+		        			Utility.getLocation(result.getString("back_location")),
+		        			result.getBoolean("tp_toggle"),
+		        			result.getString("home_priority"));
 		        }
 		    } catch (SQLException e) 
 			{
@@ -230,13 +213,13 @@ public interface TableVII
 		return null;
 	}
 	
-	default boolean deleteDataVII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default boolean deleteDataIII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		try 
 		{
-			String sql = "DELETE FROM `" + plugin.getMysqlHandler().tableNameVII + "` WHERE "+whereColumn;
+			String sql = "DELETE FROM `" + MysqlHandler.Type.BACK.getValue() + "` WHERE "+whereColumn;
 			preparedStatement = conn.prepareStatement(sql);
 			int i = 1;
 	        for(Object o : whereObject)
@@ -263,7 +246,7 @@ public interface TableVII
 		return false;
 	}
 	
-	default int lastIDVII(BungeeTeleportManager plugin)
+	default int lastIDIII(BungeeTeleportManager plugin)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -272,7 +255,7 @@ public interface TableVII
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameVII + "` ORDER BY `id` DESC LIMIT 1";
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.BACK.getValue() + "` ORDER BY `id` DESC LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
@@ -305,7 +288,7 @@ public interface TableVII
 		return 0;
 	}
 	
-	default int countWhereIDVII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default int countWhereIDIII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -314,7 +297,7 @@ public interface TableVII
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameVII
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.BACK.getValue() 
 						+ "` WHERE "+whereColumn
 						+ " ORDER BY `id` DESC";
 		        preparedStatement = conn.prepareStatement(sql);
@@ -356,8 +339,8 @@ public interface TableVII
 		return 0;
 	}
 	
-	default ArrayList<SavePoint> getListVII(BungeeTeleportManager plugin, String orderByColumn,
-			int start, int end, String whereColumn, Object...whereObject)
+	default ArrayList<Back> getListIII(BungeeTeleportManager plugin, String orderByColumn,
+			int start, int end, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -365,9 +348,9 @@ public interface TableVII
 		if (conn != null) 
 		{
 			try 
-			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameVII
-						+ "` WHERE "+whereColumn+" ORDER BY "+orderByColumn+" LIMIT "+start+", "+end;
+			{
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.BACK.getValue() 
+						+ "` WHERE "+whereColumn+" ORDER BY "+orderByColumn+" DESC LIMIT "+start+", "+end;
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
 		        for(Object o : whereObject)
@@ -376,22 +359,15 @@ public interface TableVII
 		        	i++;
 		        }
 		        result = preparedStatement.executeQuery();
-		        ArrayList<SavePoint> list = new ArrayList<SavePoint>();
+		        ArrayList<Back> list = new ArrayList<>();
 		        while (result.next()) 
 		        {
-		        	SavePoint ep = new SavePoint(
-		        			UUID.fromString(result.getString("player_uuid")),
+		        	Back el = new Back(UUID.fromString(result.getString("player_uuid")),
 		        			result.getString("player_name"),
-		        			result.getString("savepoint_name"),
-		        			new ServerLocation(
-		        					result.getString("server"),
-		        					result.getString("world"),
-		        					result.getDouble("x"),
-		        					result.getDouble("y"),
-		        					result.getDouble("z"),
-		        					result.getFloat("yaw"),
-		        					result.getFloat("pitch")));
-		        	list.add(ep);
+		        			Utility.getLocation(result.getString("back_location")),
+		        			result.getBoolean("tp_toggle"),
+		        			result.getString("home_priority"));
+		        	list.add(el);
 		        }
 		        return list;
 		    } catch (SQLException e) 
@@ -418,7 +394,7 @@ public interface TableVII
 		return null;
 	}
 	
-	default ArrayList<SavePoint> getTopVII(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
+	default ArrayList<Back> getTopIII(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -426,28 +402,21 @@ public interface TableVII
 		if (conn != null) 
 		{
 			try 
-			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameVII 
+			{	
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.BACK.getValue() 
 						+ "` ORDER BY "+orderByColumn+" LIMIT "+start+", "+end;
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
-		        ArrayList<SavePoint> list = new ArrayList<SavePoint>();
+		        ArrayList<Back> list = new ArrayList<Back>();
 		        while (result.next()) 
 		        {
-		        	SavePoint ep = new SavePoint(
-		        			UUID.fromString(result.getString("player_uuid")),
+		        	Back el = new Back(UUID.fromString(result.getString("player_uuid")),
 		        			result.getString("player_name"),
-		        			result.getString("savepoint_name"),
-		        			new ServerLocation(
-		        					result.getString("server"),
-		        					result.getString("world"),
-		        					result.getDouble("x"),
-		        					result.getDouble("y"),
-		        					result.getDouble("z"),
-		        					result.getFloat("yaw"),
-		        					result.getFloat("pitch")));
-		        	list.add(ep);
+		        			Utility.getLocation(result.getString("back_location")),
+		        			result.getBoolean("tp_toggle"),
+		        			result.getString("home_priority"));
+		        	list.add(el);
 		        }
 		        return list;
 		    } catch (SQLException e) 

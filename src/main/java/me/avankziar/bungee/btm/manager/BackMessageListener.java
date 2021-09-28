@@ -5,8 +5,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.UUID;
 
 import main.java.me.avankziar.bungee.btm.BungeeTeleportManager;
+import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
 import main.java.me.avankziar.bungee.btm.handler.ForbiddenHandlerBungee;
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Mechanics;
@@ -87,8 +89,22 @@ public class BackMessageListener implements Listener
         	String name = in.readUTF();
         	Back back = BackHandler.getTaskBack(in, uuid, name);
         	int delayed = in.readInt();
-        	
-        	Back oldback = BackHandler.getBackLocations().get(name);
+        	String oldbacknull = in.readUTF();
+        	final Back oldback = BackHandler.getBackLocations().get(name);
+        	if(oldback == null)
+        	{
+        		ProxiedPlayer player = plugin.getProxy().getPlayer(UUID.fromString(uuid));
+        		if(player != null)
+        		{
+        			player.sendMessage(ChatApi.tctl(oldbacknull));
+        		}
+        		//INFO Sorgt dafür, dass das Back nicht überschrieben, falls der Spieler in einer Forbidden Welt oder Server ist.
+            	if(!ForbiddenHandlerBungee.isForbidden(back, name, Mechanics.BACK, false))
+        		{
+            		BackHandler.getBackLocations().replace(name, back);
+        		}
+        		return;
+        	}
         	String oldserver = oldback.getLocation().getServer();
         	String oldworld = oldback.getLocation().getWorldName();
         	double oldx = oldback.getLocation().getX();
@@ -99,7 +115,13 @@ public class BackMessageListener implements Listener
         	//INFO Sorgt dafür, dass das Back nicht überschrieben, falls der Spieler in einer Forbidden Welt oder Server ist.
         	if(!ForbiddenHandlerBungee.isForbidden(back, name, Mechanics.BACK, false))
     		{
-        		BackHandler.getBackLocations().replace(name, back);
+        		if(!BackHandler.getBackLocations().containsKey(name))
+            	{
+            		BackHandler.getBackLocations().put(name, back);
+            	} else
+            	{
+            		BackHandler.getBackLocations().replace(name, back);
+            	}
     		}
         	BackHandler bh = new BackHandler(plugin);
         	bh.teleportBack(oldserver, name, oldworld, oldx, oldy, oldz, oldyaw, oldpitch, deleteDeathBack, delayed, false);

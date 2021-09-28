@@ -96,9 +96,9 @@ public class TeleportMessageListener implements Listener
 			    plugin.getProxy().getPlayer(fromName).getServer().sendData(StaticValues.TP_TOSPIGOT, streamout.toByteArray());
         	} else
         	{
-        		if(ForbiddenHandlerBungee.getValues(true, Mechanics.TPA).contains(
+        		if(ForbiddenHandlerBungee.getValues(true, Mechanics.TPA_ONLY).contains(
         				plugin.getProxy().getPlayer(fromName).getServer().getInfo().getName())
-        				|| ForbiddenHandlerBungee.getValues(true, Mechanics.TPA).contains(
+        				|| ForbiddenHandlerBungee.getValues(true, Mechanics.TPA_ONLY).contains(
                 				plugin.getProxy().getPlayer(toName).getServer().getInfo().getName()))
         		{
         			ByteArrayOutputStream streamout = new ByteArrayOutputStream();
@@ -113,9 +113,9 @@ public class TeleportMessageListener implements Listener
     			    return;
         		}
         		
-        		if(ForbiddenHandlerBungee.getValues(false, Mechanics.TPA).contains(
+        		if(ForbiddenHandlerBungee.getValues(false, Mechanics.TPA_ONLY).contains(
         				TeleportHandler.getPlayerWorld().get(fromName))
-        				|| ForbiddenHandlerBungee.getValues(false, Mechanics.TPA).contains(
+        				|| ForbiddenHandlerBungee.getValues(false, Mechanics.TPA_ONLY).contains(
         						TeleportHandler.getPlayerWorld().get(toName)))
         		{
         			ByteArrayOutputStream streamout = new ByteArrayOutputStream();

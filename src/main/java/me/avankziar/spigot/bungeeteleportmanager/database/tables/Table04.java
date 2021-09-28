@@ -5,16 +5,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.UUID;
 
-import main.java.me.avankziar.general.object.Back;
+import main.java.me.avankziar.aep.spigot.handler.ConvertHandler;
+import main.java.me.avankziar.aep.spigot.object.TrendLogger;
+import main.java.me.avankziar.aep.spigot.object.TrendLogger.Type;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 
-public interface TableIII
+public interface Table04
 {
 	
-	default boolean existIII(BungeeTeleportManager plugin, String whereColumn, Object... object) 
+	default boolean existIV(BungeeTeleportManager plugin, String whereColumn, Object... object) 
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -23,7 +24,7 @@ public interface TableIII
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameIII 
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.RESPAWNPOINT.getValue() 
 						+ "` WHERE "+whereColumn+" LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -32,6 +33,7 @@ public interface TableIII
 		        	preparedStatement.setObject(i, o);
 		        	i++;
 		        }
+		        
 		        
 		        result = preparedStatement.executeQuery();
 		        while (result.next()) 
@@ -62,27 +64,29 @@ public interface TableIII
 		return false;
 	}
 	
-	default boolean createIII(BungeeTeleportManager plugin, Object object) 
+	default boolean createIV(BungeeTeleportManager plugin, Object object) 
 	{
-		if(!(object instanceof Back))
+		if(!(object instanceof TrendLogger))
 		{
 			return false;
 		}
-		Back b = (Back) object;
+		TrendLogger tl = (TrendLogger) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) {
 			try 
 			{
-				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameIII 
-						+ "`(`player_uuid`, `player_name`, `back_location`, `tp_toggle`, `home_priority`) " 
-						+ "VALUES(?, ?, ?, ?, ?)";
+				String sql = "INSERT INTO `" + MysqlHandler.Type.RESPAWNPOINT.getValue() 
+						+ "`(`dates`, `trend_type`, `uuidornumber`, `relative_amount_change`,"
+						+ " `firstvalue`, `lastvalue`) " 
+						+ "VALUES(?, ?, ?, ?, ?, ?)";
 				preparedStatement = conn.prepareStatement(sql);
-		        preparedStatement.setString(1, b.getUuid().toString());
-		        preparedStatement.setString(2, b.getName());
-		        preparedStatement.setString(3, Utility.getLocation(b.getLocation()));
-		        preparedStatement.setBoolean(4, b.isToggle());
-		        preparedStatement.setString(5, b.getHomePriority());
+		        preparedStatement.setString(1, ConvertHandler.serialised(tl.getDate()));
+		        preparedStatement.setString(2, tl.getType().toString());
+		        preparedStatement.setString(3, tl.getUUIDOrNumber());
+		        preparedStatement.setDouble(4, tl.getRelativeAmountChange());
+		        preparedStatement.setDouble(5, tl.getFirstValue());
+		        preparedStatement.setDouble(6, tl.getLastValue());
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
@@ -107,9 +111,9 @@ public interface TableIII
 		return false;
 	}
 	
-	default boolean updateDataIII(BungeeTeleportManager plugin, Object object, String whereColumn, Object... whereObject) 
+	default boolean updateDataIV(BungeeTeleportManager plugin, Object object, String whereColumn, Object... whereObject) 
 	{
-		if(!(object instanceof Back))
+		if(!(object instanceof TrendLogger))
 		{
 			return false;
 		}
@@ -117,24 +121,26 @@ public interface TableIII
 		{
 			return false;
 		}
-		Back b = (Back) object;
+		TrendLogger tl = (TrendLogger) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) 
 		{
 			try 
 			{
-				String data = "UPDATE `" + plugin.getMysqlHandler().tableNameIII
-						+ "` SET `player_uuid` = ?,"
-						+ " `player_name` = ?, `back_location` = ?, `tp_toggle` = ?, `home_priority` = ?" 
+				String data = "UPDATE `" + MysqlHandler.Type.RESPAWNPOINT.getValue()
+						+ "` SET `dates` = ?, `trend_type` = ?, `uuidornumber` = ?, `relative_amount_change` = ?,"
+						+ " `firstvalue` = ?, `lastvalue` = ?" 
 						+ " WHERE "+whereColumn;
 				preparedStatement = conn.prepareStatement(data);
-				preparedStatement.setString(1, b.getUuid().toString());
-		        preparedStatement.setString(2, b.getName());
-		        preparedStatement.setString(3, Utility.getLocation(b.getLocation()));
-		        preparedStatement.setBoolean(4, b.isToggle());
-		        preparedStatement.setString(5, b.getHomePriority());
-		        int i = 6;
+				preparedStatement.setString(1, ConvertHandler.serialised(tl.getDate()));
+		        preparedStatement.setString(2, tl.getType().toString());
+		        preparedStatement.setString(3, tl.getUUIDOrNumber());
+		        preparedStatement.setDouble(4, tl.getRelativeAmountChange());
+		        preparedStatement.setDouble(5, tl.getFirstValue());
+		        preparedStatement.setDouble(6, tl.getLastValue());
+		        
+		        int i = 7;
 		        for(Object o : whereObject)
 		        {
 		        	preparedStatement.setObject(i, o);
@@ -160,7 +166,7 @@ public interface TableIII
         return false;
 	}
 	
-	default Object getDataIII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default Object getDataIV(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -169,7 +175,7 @@ public interface TableIII
 		{
 			try 
 			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameIII 
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.RESPAWNPOINT.getValue() 
 						+ "` WHERE "+whereColumn+" LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -182,11 +188,12 @@ public interface TableIII
 		        result = preparedStatement.executeQuery();
 		        while (result.next()) 
 		        {
-		        	return new Back(UUID.fromString(result.getString("player_uuid")),
-		        			result.getString("player_name"),
-		        			Utility.getLocation(result.getString("back_location")),
-		        			result.getBoolean("tp_toggle"),
-		        			result.getString("home_priority"));
+		        	return new TrendLogger(ConvertHandler.deserialisedDate(result.getString("dates")),
+		        			Type.valueOf(result.getString("trend_type")),
+		        			result.getString("uuidornumber"),
+		        			result.getDouble("relative_amount_change"),
+		        			result.getDouble("firstvalue"),
+		        			result.getDouble("lastvalue"));
 		        }
 		    } catch (SQLException e) 
 			{
@@ -212,13 +219,13 @@ public interface TableIII
 		return null;
 	}
 	
-	default boolean deleteDataIII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default boolean deleteDataIV(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		try 
 		{
-			String sql = "DELETE FROM `" + plugin.getMysqlHandler().tableNameIII + "` WHERE "+whereColumn;
+			String sql = "DELETE FROM `" + MysqlHandler.Type.RESPAWNPOINT.getValue() + "` WHERE "+whereColumn;
 			preparedStatement = conn.prepareStatement(sql);
 			int i = 1;
 	        for(Object o : whereObject)
@@ -245,7 +252,7 @@ public interface TableIII
 		return false;
 	}
 	
-	default int lastIDIII(BungeeTeleportManager plugin)
+	default int lastIDIV(BungeeTeleportManager plugin)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -254,7 +261,7 @@ public interface TableIII
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameIII + "` ORDER BY `id` DESC LIMIT 1";
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.RESPAWNPOINT.getValue() + "` ORDER BY `id` DESC LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
@@ -287,7 +294,7 @@ public interface TableIII
 		return 0;
 	}
 	
-	default int countWhereIDIII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default int countWhereIDIV(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -296,7 +303,7 @@ public interface TableIII
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameIII 
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.RESPAWNPOINT.getValue()
 						+ "` WHERE "+whereColumn
 						+ " ORDER BY `id` DESC";
 		        preparedStatement = conn.prepareStatement(sql);
@@ -338,7 +345,7 @@ public interface TableIII
 		return 0;
 	}
 	
-	default ArrayList<Back> getListIII(BungeeTeleportManager plugin, String orderByColumn,
+	default ArrayList<TrendLogger> getListIV(BungeeTeleportManager plugin, String orderByColumn,
 			int start, int end, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
@@ -347,9 +354,9 @@ public interface TableIII
 		if (conn != null) 
 		{
 			try 
-			{
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameIII 
-						+ "` WHERE "+whereColumn+" ORDER BY "+orderByColumn+" DESC LIMIT "+start+", "+end;
+			{			
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.RESPAWNPOINT.getValue() 
+						+ "` WHERE "+whereColumn+" ORDER BY "+orderByColumn+" LIMIT "+start+", "+end;
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
 		        for(Object o : whereObject)
@@ -358,15 +365,16 @@ public interface TableIII
 		        	i++;
 		        }
 		        result = preparedStatement.executeQuery();
-		        ArrayList<Back> list = new ArrayList<>();
+		        ArrayList<TrendLogger> list = new ArrayList<TrendLogger>();
 		        while (result.next()) 
 		        {
-		        	Back el = new Back(UUID.fromString(result.getString("player_uuid")),
-		        			result.getString("player_name"),
-		        			Utility.getLocation(result.getString("back_location")),
-		        			result.getBoolean("tp_toggle"),
-		        			result.getString("home_priority"));
-		        	list.add(el);
+		        	TrendLogger tl = new TrendLogger(ConvertHandler.deserialisedDate(result.getString("dates")),
+		        			Type.valueOf(result.getString("trend_type")),
+		        			result.getString("uuidornumber"),
+		        			result.getDouble("relative_amount_change"),
+		        			result.getDouble("firstvalue"),
+		        			result.getDouble("lastvalue"));
+		        	list.add(tl);
 		        }
 		        return list;
 		    } catch (SQLException e) 
@@ -393,7 +401,7 @@ public interface TableIII
 		return null;
 	}
 	
-	default ArrayList<Back> getTopIII(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
+	default ArrayList<Object> getTopIV(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -401,21 +409,22 @@ public interface TableIII
 		if (conn != null) 
 		{
 			try 
-			{	
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameIII 
+			{			
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.RESPAWNPOINT.getValue() 
 						+ "` ORDER BY "+orderByColumn+" LIMIT "+start+", "+end;
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
-		        ArrayList<Back> list = new ArrayList<Back>();
+		        ArrayList<Object> list = new ArrayList<Object>();
 		        while (result.next()) 
 		        {
-		        	Back el = new Back(UUID.fromString(result.getString("player_uuid")),
-		        			result.getString("player_name"),
-		        			Utility.getLocation(result.getString("back_location")),
-		        			result.getBoolean("tp_toggle"),
-		        			result.getString("home_priority"));
-		        	list.add(el);
+		        	TrendLogger tl = new TrendLogger(ConvertHandler.deserialisedDate(result.getString("dates")),
+		        			Type.valueOf(result.getString("trend_type")),
+		        			result.getString("uuidornumber"),
+		        			result.getDouble("relative_amount_change"),
+		        			result.getDouble("firstvalue"),
+		        			result.getDouble("lastvalue"));
+		        	list.add(tl);
 		        }
 		        return list;
 		    } catch (SQLException e) 

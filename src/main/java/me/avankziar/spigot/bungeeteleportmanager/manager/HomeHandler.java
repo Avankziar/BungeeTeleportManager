@@ -123,7 +123,7 @@ public class HomeHandler
 	public boolean compareHomeAmount(Player player, boolean message, boolean exist)
 	{
 		debug(player, "cHA start");
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseGlobalPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseGlobalLevel", false))
 		{
 			// Vorher >= 0, jetzt nur bei den Homes, dadurch dass man mit /homecreate, das home neu setzten sollen kann.
 			int i = compareGlobalHomes(player, message, exist);
@@ -146,7 +146,7 @@ public class HomeHandler
 				return true;
 			}*/
 		}		
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseServerPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseServerLevel", false))
 		{
 			int i = compareServerHomes(player, message, exist);
 			debug(player, "cHA s i: "+i+" | exist: "+exist);
@@ -158,7 +158,7 @@ public class HomeHandler
 				return true;
 			}
 		}
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseWorldPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseWorldLevel", false))
 		{
 			int i = compareWorldHomes(player, message, exist);
 			debug(player, "cHA w i: "+i+" | exist: "+exist);
@@ -176,7 +176,7 @@ public class HomeHandler
 	public int compareHome(Player player, boolean message)
 	{
 		int i = 0;
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseGlobalPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseGlobalLevel", false))
 		{
 			i = compareGlobalHomes(player, message, true);
 			debug(player, "cH g i: "+i);
@@ -185,7 +185,7 @@ public class HomeHandler
 				return i;
 			}
 		}
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseServerPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseServerLevel", false))
 		{
 			i = compareServerHomes(player, message, true);
 			debug(player, "cH s i: "+i);
@@ -194,7 +194,7 @@ public class HomeHandler
 				return i;
 			}
 		}
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseWorldPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseWorldLevel", false))
 		{
 			i = compareWorldHomes(player, message, true);
 			debug(player, "cH g : "+i);
@@ -248,10 +248,10 @@ public class HomeHandler
 	public int compareServerHomes(Player player, boolean message, boolean exist)
 	{
 		String server = new ConfigHandler(plugin).getServer();
-		String serverCluster = plugin.getYamlHandler().getConfig().getString("ServerCluster");
-		boolean clusterBeforeServer = plugin.getYamlHandler().getConfig().getBoolean("ServerClusterActive", false);
+		String serverCluster = plugin.getYamlHandler().getConfig().getString("PermissionLevel.Server.Cluster");
+		boolean clusterBeforeServer = plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.Server.ClusterActive", false);
 		int serverLimit = 0;
-		List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("ServerClusterList");
+		List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.Server.ClusterList");
 		if(clusterlist == null)
 		{
 			clusterlist = new ArrayList<>();
@@ -344,7 +344,7 @@ public class HomeHandler
 	public int compareWorldHomes(Player player, boolean message, boolean exist)
 	{
 		String world = player.getLocation().getWorld().getName();
-		boolean clusterActive = plugin.getYamlHandler().getConfig().getBoolean("WorldClusterActive", false);
+		boolean clusterActive = plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.World.ClusterActive", false);
 		int worldLimit = 0;
 		
 		boolean worldIsInCluster = false;
@@ -353,14 +353,14 @@ public class HomeHandler
 		
 		if(clusterActive)
 		{
-			List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("WorldClusterList");
+			List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.World.ClusterList");
 			if(clusterlist == null)
 			{
 				clusterlist = new ArrayList<>();
 			}
 			for(String clusters : clusterlist)
 			{
-				List<String> worldclusterlist = plugin.getYamlHandler().getConfig().getStringList(clusters);
+				List<String> worldclusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.World."+clusters);
 				for(String worlds: worldclusterlist)
 				{
 					if(worlds.equals(world))

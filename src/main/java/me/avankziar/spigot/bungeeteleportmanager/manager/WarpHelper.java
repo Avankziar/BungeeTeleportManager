@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -15,6 +16,7 @@ import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.spigot.btm.events.WarpPreTeleportEvent;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
@@ -319,6 +321,196 @@ public class WarpHelper
 				Player other = Bukkit.getPlayer(UUID.fromString(playeruuid));
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.RequestInProgress")));
 				plugin.getUtility().givesEffect(other, Mechanics.WARP, true, true);
+				WarpPreTeleportEvent wpte = new WarpPreTeleportEvent(player, UUID.fromString(playeruuid), playername, warp);
+				Bukkit.getPluginManager().callEvent(wpte);
+				if(wpte.isCancelled())
+				{
+					return;
+				}
+				plugin.getWarpHandler().sendPlayerToWarp(other, warp, playername, playeruuid);
+				return;
+				
+			}
+		}.runTaskAsynchronously(plugin);
+	}
+	
+	public void warpingTo(CommandSender sender, String[] args)
+	{
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				if(args.length < 2)
+				{
+					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+					sender.spigot().sendMessage(ChatApi.clickEvent(
+							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					return;
+				}
+				String warpName = args[0];
+				String playername = args[1];
+				UUID uuid = Utility.convertNameToUUID(playername);
+				if(uuid == null)
+				{
+					sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+					return;
+				}
+				Player other = Bukkit.getPlayer(uuid);
+				OfflinePlayer otheroff = Bukkit.getOfflinePlayer(uuid);
+				String playeruuid = uuid.toString();
+				boolean ignorePortalAccess = true;
+				boolean ignoreBlackList = true;
+				boolean ignoreHasTooMany = true;
+				boolean ignoreCost =  true;
+				boolean ignorePermission = true;
+				boolean ignoreHidden = true;
+				
+				if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
+				{
+					sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+					return;
+				}
+				Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
+				int i = 2;
+				while(i < args.length)
+				{
+					switch(args[i])
+					{
+					case "pa":
+					case "portalaccess":
+						ignorePortalAccess = false;
+						break;
+					case "bl":
+					case "blacklist":
+						ignoreBlackList = false;
+						break;
+					case "ht":
+					case "hastoomany":
+						ignoreHasTooMany = false;
+						break;
+					case "co":
+					case "cost":
+						ignoreCost = false;
+						break;
+					case "pe":
+					case "permission":
+						ignorePermission = false;
+						break;
+					case "hi":
+					case "hidden":
+						ignoreHidden = false;
+						break;
+					}
+				}
+				if(!ignorePortalAccess && warp.getPortalAccess() == Warp.PortalAccess.ONLY)
+				{
+					sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.OnlyPortal")
+							.replace("%warp%", warp.getName())));
+					return;
+				}
+				if(!ignoreBlackList && warp.getBlacklist() != null)
+				{
+					if(warp.getBlacklist().contains(playeruuid))
+					{
+						sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouAreOnTheBlacklist")
+								.replace("%warpname%", warp.getName())));
+						return;
+					}
+				}
+				if(!ignoreHasTooMany 
+						&& other != null)
+				{
+					i = plugin.getWarpHandler().compareWarp(other, false);
+					if(i > 0 && !sender.hasPermission(StaticValues.PERM_BYPASS_WARP_TOOMANY))
+					{
+						sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsToUse")
+								.replace("%amount%", String.valueOf(i))));
+						return;
+					}
+				}
+				if(!ignorePermission && warp.getPermission() != null
+						&& other != null)
+				{
+					if(!other.hasPermission(warp.getPermission()))
+					{
+						///Du hast dafür keine Rechte!
+						sender.spigot().sendMessage(ChatApi.tctl(
+								plugin.getYamlHandler().getLang().getString("NoPermission")));
+						return;
+					}
+				} else if(!ignoreHidden && warp.isHidden() && !warp.getMember().contains(playeruuid))
+				{
+					sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
+					return;
+				}
+				ConfigHandler cfgh = new ConfigHandler(plugin);
+				if(!ignoreCost
+						&& warp.getPrice() > 0.0 
+						&& !warp.getMember().contains(playeruuid)
+						&& plugin.getEco() != null
+						&& cfgh.useVault())
+				{
+					if(!plugin.getEco().has(otheroff, warp.getPrice()))
+					{
+						sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
+						return;
+					}
+					if(!plugin.getEco().withdrawPlayer(otheroff, warp.getPrice()).transactionSuccess())
+					{
+						return;
+					}
+					if(warp.getOwner() != null)
+					{
+						plugin.getEco().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(warp.getOwner())), warp.getPrice());
+					}
+					if(plugin.getAdvancedEconomyHandler() != null)
+					{
+						String comment = plugin.getYamlHandler().getLang().getString("Economy.WComment")
+	        					.replace("%warp%", warp.getName());
+						if(warp.getOwner() != null)
+						{
+							OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(warp.getOwner()));
+							plugin.getAdvancedEconomyHandler().EconomyLogger(
+		        					playeruuid,
+		        					sender.getName(),
+		        					op.getUniqueId().toString(),
+		        					op.getName(),
+		        					plugin.getYamlHandler().getLang().getString("Economy.WORDERER"),
+		        					warp.getPrice(),
+		        					"DEPOSIT_WITHDRAW",
+		        					comment);
+							plugin.getAdvancedEconomyHandler().TrendLogger(otheroff, -warp.getPrice());
+							plugin.getAdvancedEconomyHandler().TrendLogger(op, warp.getPrice());
+						} else
+						{
+							plugin.getAdvancedEconomyHandler().EconomyLogger(
+		        					playeruuid,
+		        					Bukkit.getName(),
+		        					plugin.getYamlHandler().getLang().getString("Economy.WUUID"),
+		        					plugin.getYamlHandler().getLang().getString("Economy.WName"),
+		        					plugin.getYamlHandler().getLang().getString("Economy.WORDERER"),
+		        					warp.getPrice(),
+		        					"TAKEN",
+		        					comment);
+							plugin.getAdvancedEconomyHandler().TrendLogger(otheroff, -warp.getPrice());
+						}
+					}
+					if(cfgh.notifyPlayerAfterWithdraw(Mechanics.WARP))
+    				{
+    					sender.sendMessage(
+                				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotifyAfterWithDraw")
+                						.replace("%amount%", String.valueOf(warp.getPrice()))
+                						.replace("%currency%", plugin.getEco().currencyNamePlural())));
+    				}
+				}
+				
+				if(other != null)
+				{
+					other.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.RequestInProgress")));
+					plugin.getUtility().givesEffect(other, Mechanics.WARP, true, true);
+				}
 				plugin.getWarpHandler().sendPlayerToWarp(other, warp, playername, playeruuid);
 				return;
 			}
@@ -416,6 +608,18 @@ public class WarpHelper
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+			return;
+		}
+		Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
+		boolean owner = false;
+		if(warp.getOwner() != null)
+		{
+			owner = warp.getOwner().equals(player.getUniqueId().toString());
+		}
+		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
+				&& !owner)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
@@ -759,8 +963,6 @@ public class WarpHelper
 		return;
 	}
 	
-	
-	
 	public void warpInfo(Player player, String[] args)
 	{
 		if(args.length != 1)
@@ -818,6 +1020,10 @@ public class WarpHelper
 		} else
 		{
 			owners = Utility.convertUUIDToName(warp.getOwner());
+			if(owners == null)
+			{
+				owners = "&cERROR";
+			}
 		}
 		player.spigot().sendMessage(ChatApi.generateTextComponent(plugin.getYamlHandler().getLang().getString("CmdWarp.InfoOwner")
 				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETOWNER).trim())

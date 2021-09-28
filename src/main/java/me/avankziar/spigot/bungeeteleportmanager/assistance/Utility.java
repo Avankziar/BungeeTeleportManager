@@ -1,17 +1,21 @@
 package main.java.me.avankziar.spigot.bungeeteleportmanager.assistance;
 
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.BlockIterator;
 
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Home;
@@ -70,7 +74,7 @@ public class Utility
 		return null;
 	}
 	
-	public boolean existMethod(Class<?> externclass, String method)
+	/*public boolean existMethod(Class<?> externclass, String method)
 	{
 	    try 
 	    {
@@ -88,7 +92,7 @@ public class Utility
 	    {
 	    	return false;
 	    }
-	}
+	}*/
 	
 	public static String serialised(LocalDateTime dt)
 	{
@@ -212,6 +216,40 @@ public class Utility
 				} else
 				{
 					BungeeTeleportManager.homes.put(player.getName(), homes);
+				}
+			}
+		}.runTaskAsynchronously(plugin);
+	}
+	public void setRTPTabCompleter(Player player)
+	{
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				ArrayList<String> rtps = new ArrayList<>();
+				for(String rtp : plugin.getYamlHandler().getRTP().getKeys(false))
+				{
+					if(rtp.equals("default"))
+					{
+						continue;
+					}
+					String perm = plugin.getYamlHandler().getRTP().getString(rtp+".PermissionToAccess");
+					if(perm != null)
+					{
+						if(!player.hasPermission(perm))
+						{
+							continue;
+						}
+						rtps.add(rtp);
+					}
+				}
+				if(BungeeTeleportManager.rtp.containsKey(player.getName()))
+				{
+					BungeeTeleportManager.rtp.replace(player.getName(), rtps);
+				} else
+				{
+					BungeeTeleportManager.rtp.put(player.getName(), rtps);
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -349,6 +387,130 @@ public class Utility
 		}.runTaskAsynchronously(plugin);
 	}
 	
+	/**
+	 * 
+	 * @param player
+	 * @param permissionLevel 	+0 = proxy(Can everything), 
+	 * 							1 = serverextern (can only from server to server), 
+	 * 							+2 = servercluster (can only from server to server in the clusterlist)
+	 * 							+3 = serverintern (can only server intern, whatever the world is)
+	 * 							+4 = worldcluster (can only from world to world in the clusterlist (same server)
+	 * 							+5 = world (can only teleport worldintern)
+	 * @return
+	 */
+	public int canTeleportSection(Player player, Mechanics mechanic,
+			String serverAtTheMoment, String worldAtTheMoment, String serverTarget, String worldTarget)
+	{
+		if(player.hasPermission(plugin.getYamlHandler().getCom().getString("PermissionLevel.Global")+"*")
+				|| player.hasPermission(plugin.getYamlHandler().getCom().getString("PermissionLevel.Global")+mechanic.toString()))
+		{
+			return -1;
+		}
+		ConfigHandler cfgh = new ConfigHandler(BungeeTeleportManager.getPlugin());
+		if(serverAtTheMoment.equals(serverTarget))
+		{
+			if(worldAtTheMoment.equals(worldTarget))
+			{
+				if(player.hasPermission(plugin.getYamlHandler().getCom().getString("PermissionLevel.World")+"*")
+						|| player.hasPermission(plugin.getYamlHandler().getCom().getString("PermissionLevel.World")+mechanic.toString()))
+				{
+					return -1;
+				}
+				return 5;
+			} else
+			{
+				if(cfgh.isWorldCluster())
+				{
+					for(String s : cfgh.getWorldCluster())
+					{
+						ArrayList<String> cluster = cfgh.getWorldCluster(s);
+						if(cluster.contains(worldAtTheMoment) && cluster.contains(worldTarget))
+						{
+							if(player.hasPermission(plugin.getYamlHandler().getCom()
+									.getString("PermissionLevel.WorldClusterSameServer")+"*")
+									|| player.hasPermission(plugin.getYamlHandler().getCom()
+									.getString("PermissionLevel.WorldClusterSameServer")+mechanic.toString()))
+							{
+								return -1;
+							}
+						}
+					}
+					return 4;
+				} else
+				{
+					if(player.hasPermission(plugin.getYamlHandler().getCom()
+							.getString("PermissionLevel.ServerIntern")+"*")
+							|| player.hasPermission(plugin.getYamlHandler().getCom()
+							.getString("PermissionLevel.ServerIntern")+mechanic.toString()))
+					{
+						return -1;
+					}
+					return 3;
+				}
+			}
+		} else 
+		{
+			if(cfgh.isServerCluster())
+			{
+				ArrayList<String> cluster = cfgh.getServerCluster();
+				if(cluster.contains(serverAtTheMoment) && cluster.contains(serverTarget))
+				{
+					if(player.hasPermission(plugin.getYamlHandler().getCom()
+							.getString("PermissionLevel.ServerCluster")+"*")
+							|| player.hasPermission(plugin.getYamlHandler().getCom()
+							.getString("PermissionLevel.ServerCluster")+mechanic.toString()))
+					{
+						return -1;
+					}
+				}
+				return 2;
+			} else
+			{
+				if(player.hasPermission(plugin.getYamlHandler().getCom()
+						.getString("PermissionLevel.ServerExtern")+"*")
+						|| player.hasPermission(plugin.getYamlHandler().getCom()
+						.getString("PermissionLevel.ServerExtern")+mechanic.toString()))
+				{
+					return -1;
+				}
+				return 1;
+			}
+		}
+	}
+	
+	public String canTeleportSectionAnswer(Player player, int answer, Mechanics mechanic,
+			String serverAtTheMoment, String worldAtTheMoment, String serverTarget, String worldTarget)
+	{
+		if(plugin.getYamlHandler().getCustomLang().get("PermissionLevel.Access.Denied."+mechanic.toString()+"."
+				+serverAtTheMoment+"_"+worldAtTheMoment+"_"+serverTarget+"_"+worldTarget) != null)
+		{
+			return plugin.getYamlHandler().getCustomLang().getString("PermissionLevel.Access.Denied."+mechanic.toString()+"."
+					+serverAtTheMoment+"_"+worldAtTheMoment+"_"+serverTarget+"_"+worldTarget);
+		} else if(plugin.getYamlHandler().getCustomLang().get("PermissionLevel.Access.Denied."+mechanic.toString()+"."
+				+serverAtTheMoment+"_"+worldAtTheMoment+"_"+serverTarget+"_"+worldTarget) != null)
+		{
+			return plugin.getYamlHandler().getCustomLang().getString("PermissionLevel.Access.Denied."+mechanic.toString()+"."
+					+serverAtTheMoment+"_"+worldAtTheMoment+"_"+serverTarget+"_"+worldTarget);
+		} else 
+		{
+			switch(answer)
+			{
+			default:
+				return null;
+			case 1:
+				return plugin.getYamlHandler().getCustomLang().getString("PermissionLevel.Access.Denied.ServerExtern");
+			case 2:
+				return plugin.getYamlHandler().getCustomLang().getString("PermissionLevel.Access.Denied.ServerCluster");
+			case 3:
+				return plugin.getYamlHandler().getCustomLang().getString("PermissionLevel.Access.Denied.ServerIntern");
+			case 4:
+				return plugin.getYamlHandler().getCustomLang().getString("PermissionLevel.Access.Denied.WorldClusterSameServer");
+			case 5:
+				return plugin.getYamlHandler().getCustomLang().getString("PermissionLevel.Access.Denied.WorldIntern");
+			}
+		}
+	}
+	
 	public void givesEffect(Player player, Mechanics mechanics, boolean begin, //INFO begin = true, dann path vorher, false für danach
 			boolean isAsynchron) //async == true, wenn man in einem Async thread ist
 	{
@@ -361,18 +523,21 @@ public class Utility
 				public void run()
 				{
 					String path = mechanics.toString();
+					String boo = path+".Give";
 					if(begin)
 					{
 						path += ".Before";
+						boo += ".Before";
 					} else
 					{
 						path += ".After";
+						boo += ".After";
 					}
-					if(plugin.getYamlHandler().getConfig().getBoolean("GiveEffects."+path, false))
+					if(plugin.getYamlHandler().getConfig().getBoolean("Effects."+boo, false))
 					{
-						if(plugin.getYamlHandler().getConfig().get("Effectlist."+path) != null)
+						if(plugin.getYamlHandler().getConfig().get("Effects."+path) != null)
 						{
-							for(String s : plugin.getYamlHandler().getConfig().getStringList("Effectlist."+path))
+							for(String s : plugin.getYamlHandler().getConfig().getStringList("Effects."+path))
 							{
 								String[] effect = s.split(";");
 								if(effect.length==3)
@@ -397,18 +562,21 @@ public class Utility
 		} else
 		{
 			String path = mechanics.toString();
+			String boo = path+".Give";
 			if(begin)
 			{
 				path += ".Before";
+				boo += ".Before";
 			} else
 			{
 				path += ".After";
+				boo += ".After";
 			}
-			if(plugin.getYamlHandler().getConfig().getBoolean("GiveEffects."+path, false))
+			if(plugin.getYamlHandler().getConfig().getBoolean("Effects."+boo, false))
 			{
-				if(plugin.getYamlHandler().getConfig().get("Effectlist."+path) != null)
+				if(plugin.getYamlHandler().getConfig().get("Effects."+path) != null)
 				{
-					for(String s : plugin.getYamlHandler().getConfig().getStringList("Effectlist."+path))
+					for(String s : plugin.getYamlHandler().getConfig().getStringList("Effects."+path))
 					{
 						String[] effect = s.split(";");
 						if(effect.length==3)
@@ -429,5 +597,62 @@ public class Utility
 				}
 			}
 		}
+	}
+	
+	public LivingEntity getFocusEntity(Player player)
+	{
+		List<Entity> nearbyE = player.getNearbyEntities(10, 10, 10);
+        ArrayList<LivingEntity> livingE = new ArrayList<LivingEntity>();
+  
+        for (Entity e : nearbyE) 
+        {
+            if (e instanceof LivingEntity) 
+            {
+            	LivingEntity ley = (LivingEntity) e;
+            	try 
+            	{
+            		if(ley.getLeashHolder() instanceof Player)
+                	{
+                		Player other = (Player) ley.getLeashHolder();
+                		if(other.getUniqueId().toString().equals(player.getUniqueId().toString()))
+                		{
+                			return ley;
+                		}
+                	}
+            	} catch(IllegalStateException e1)
+            	{
+            		  livingE.add((LivingEntity) e);
+            	}
+            }
+        }
+        BlockIterator bItr = new BlockIterator(player, 12);
+        LivingEntity target = null;
+        Block block;
+        Location loc;
+        int bx, by, bz;
+        double ex, ey, ez;
+        // loop through player's line of sight
+        while (bItr.hasNext()) 
+        {
+            block = bItr.next();
+            bx = block.getX();
+            by = block.getY();
+            bz = block.getZ();
+            // check for entities near this block in the line of sight
+            for (LivingEntity e : livingE) 
+            {
+                    loc = e.getLocation();
+                    ex = loc.getX();
+                    ey = loc.getY();
+                    ez = loc.getZ();
+                    if ((bx-.75 <= ex && ex <= bx+1.75) && (bz-.75 <= ez && ez <= bz+1.75) && (by-1 <= ey && ey <= by+2.5)) 
+                    {
+                            // entity is close enough, set target and stop
+                            target = e;
+                            break;
+                    }
+            }
+        }
+        return target;
 	}
 }

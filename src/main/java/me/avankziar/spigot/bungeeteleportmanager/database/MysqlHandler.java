@@ -3,74 +3,50 @@ package main.java.me.avankziar.spigot.bungeeteleportmanager.database;
 import java.util.ArrayList;
 
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.TableI;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.TableII;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.TableIII;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.TableIV;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.TableV;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.TableVI;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.TableVII;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.Table01;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.Table02;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.Table03;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.Table04;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.Table05;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.Table06;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.Table07;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.Table08;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.tables.Table09;
 
-public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV, TableVI, TableVII
+public class MysqlHandler 
+	implements Table01, Table02, Table03, Table04, Table05, Table06, Table07, Table08, Table09
 {
 	public enum Type
 	{
-		HOME, PORTAL, BACK, RESPAWNPOINT, WARP, TELEPORTIGNORE, SAVEPOINT;
+		HOME("btmHomes"),
+		PORTAL("btmPortals"),
+		BACK("btmBack"),
+		RESPAWNPOINT("btmRespawnPoints"),
+		WARP("btmWarps"),
+		TELEPORTIGNORE("btmTeleportIgnored"),
+		SAVEPOINT("btmSavePoints"),
+		ENTITYTRANSPORT_TARGETACCESS("btmEntityTransportTargetAccess"),
+		ENTITYTRANSPORT_TICKET("btmEntityTransportTicket"),
+		;
+		
+		private Type(String value)
+		{
+			this.value = value;
+		}
+		
+		private final String value;
+
+		public String getValue()
+		{
+			return value;
+		}
 	}
 	
 	private BungeeTeleportManager plugin;
-	public String tableNameI; //Home
-	public String tableNameII; //Portals
-	public String tableNameIII; //Back
-	public String tableNameIV; //Respawn
-	public String tableNameV; //Warps
-	public String tableNameVI; //TeleportIgnore
-	public String tableNameVII; //SavePoint
 	
 	public MysqlHandler(BungeeTeleportManager plugin) 
 	{
 		this.plugin = plugin;
-		loadMysqlHandler();
-	}
-	
-	public boolean loadMysqlHandler()
-	{
-		tableNameI = plugin.getYamlHandler().getConfig().getString("Mysql.TableNameI");
-		if(tableNameI == null)
-		{
-			return false;
-		}
-		tableNameII = plugin.getYamlHandler().getConfig().getString("Mysql.TableNameII");
-		if(tableNameII == null)
-		{
-			return false;
-		}
-		tableNameIII = plugin.getYamlHandler().getConfig().getString("Mysql.TableNameIII");
-		if(tableNameIII == null)
-		{
-			return false;
-		}
-		tableNameIV = plugin.getYamlHandler().getConfig().getString("Mysql.TableNameIV");
-		if(tableNameIV == null)
-		{
-			return false;
-		}
-		tableNameV = plugin.getYamlHandler().getConfig().getString("Mysql.TableNameV");
-		if(tableNameV == null)
-		{
-			return false;
-		}
-		tableNameVI = plugin.getYamlHandler().getConfig().getString("Mysql.TableNameVI");
-		if(tableNameVI == null)
-		{
-			return false;
-		}
-		tableNameVII = plugin.getYamlHandler().getConfig().getString("Mysql.TableNameVII");
-		if(tableNameVII == null)
-		{
-			return false;
-		}
-		return true;
 	}
 	
 	public boolean exist(Type type, String whereColumn, Object... whereObject)
@@ -78,19 +54,23 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV,
 		switch(type)
 		{
 		case HOME:
-			return TableI.super.existI(plugin, whereColumn, whereObject);
+			return Table01.super.existI(plugin, whereColumn, whereObject);
 		case PORTAL:
-			return TableII.super.existII(plugin, whereColumn, whereObject);
+			return Table02.super.existII(plugin, whereColumn, whereObject);
 		case BACK:
-			return TableIII.super.existIII(plugin, whereColumn, whereObject);
+			return Table03.super.existIII(plugin, whereColumn, whereObject);
 		case RESPAWNPOINT:
-			return TableIV.super.existIV(plugin, whereColumn, whereObject);
+			return Table04.super.existIV(plugin, whereColumn, whereObject);
 		case WARP:
-			return TableV.super.existV(plugin, whereColumn, whereObject);
+			return Table05.super.existV(plugin, whereColumn, whereObject);
 		case TELEPORTIGNORE:
-			return TableVI.super.existVI(plugin, whereColumn, whereObject);
+			return Table06.super.existVI(plugin, whereColumn, whereObject);
 		case SAVEPOINT:
-			return TableVII.super.existVII(plugin, whereColumn, whereObject);
+			return Table07.super.existVII(plugin, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TARGETACCESS:
+			return Table08.super.existVIII(plugin, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TICKET:
+			return Table09.super.existIX(plugin, whereColumn, whereObject);
 		}
 		return false;
 	}
@@ -100,19 +80,23 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV,
 		switch(type)
 		{
 		case HOME:
-			return TableI.super.createI(plugin, object);
+			return Table01.super.createI(plugin, object);
 		case PORTAL:
-			return TableII.super.createII(plugin, object);
+			return Table02.super.createII(plugin, object);
 		case BACK:
-			return TableIII.super.createIII(plugin, object);
+			return Table03.super.createIII(plugin, object);
 		case RESPAWNPOINT:
-			return TableIV.super.createIV(plugin, object);
+			return Table04.super.createIV(plugin, object);
 		case WARP:
-			return TableV.super.createV(plugin, object);
+			return Table05.super.createV(plugin, object);
 		case TELEPORTIGNORE:
-			return TableVI.super.createVI(plugin, object);
+			return Table06.super.createVI(plugin, object);
 		case SAVEPOINT:
-			return TableVII.super.createVII(plugin, object);
+			return Table07.super.createVII(plugin, object);
+		case ENTITYTRANSPORT_TARGETACCESS:
+			return Table08.super.createVIII(plugin, object);
+		case ENTITYTRANSPORT_TICKET:
+			return Table09.super.createIX(plugin, object);
 		}
 		return false;
 	}
@@ -122,19 +106,23 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV,
 		switch(type)
 		{
 		case HOME:
-			return TableI.super.updateDataI(plugin, object, whereColumn, whereObject);
+			return Table01.super.updateDataI(plugin, object, whereColumn, whereObject);
 		case PORTAL:
-			return TableII.super.updateDataII(plugin, object, whereColumn, whereObject);
+			return Table02.super.updateDataII(plugin, object, whereColumn, whereObject);
 		case BACK:
-			return TableIII.super.updateDataIII(plugin, object, whereColumn, whereObject);
+			return Table03.super.updateDataIII(plugin, object, whereColumn, whereObject);
 		case RESPAWNPOINT:
-			return TableIV.super.updateDataIV(plugin, object, whereColumn, whereObject);
+			return Table04.super.updateDataIV(plugin, object, whereColumn, whereObject);
 		case WARP:
-			return TableV.super.updateDataV(plugin, object, whereColumn, whereObject);
+			return Table05.super.updateDataV(plugin, object, whereColumn, whereObject);
 		case TELEPORTIGNORE:
-			return TableVI.super.updateDataVI(plugin, object, whereColumn, whereObject);
+			return Table06.super.updateDataVI(plugin, object, whereColumn, whereObject);
 		case SAVEPOINT:
-			return TableVII.super.updateDataVII(plugin, object, whereColumn, whereObject);
+			return Table07.super.updateDataVII(plugin, object, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TARGETACCESS:
+			return Table08.super.updateDataVIII(plugin, object, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TICKET:
+			return Table09.super.updateDataIX(plugin, object, whereColumn, whereObject);
 		}
 		return false;
 	}
@@ -144,19 +132,23 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV,
 		switch(type)
 		{
 		case HOME:
-			return TableI.super.getDataI(plugin, whereColumn, whereObject);
+			return Table01.super.getDataI(plugin, whereColumn, whereObject);
 		case PORTAL:
-			return TableII.super.getDataII(plugin, whereColumn, whereObject);
+			return Table02.super.getDataII(plugin, whereColumn, whereObject);
 		case BACK:
-			return TableIII.super.getDataIII(plugin, whereColumn, whereObject);
+			return Table03.super.getDataIII(plugin, whereColumn, whereObject);
 		case RESPAWNPOINT:
-			return TableIV.super.getDataIV(plugin, whereColumn, whereObject);
+			return Table04.super.getDataIV(plugin, whereColumn, whereObject);
 		case WARP:
-			return TableV.super.getDataV(plugin, whereColumn, whereObject);
+			return Table05.super.getDataV(plugin, whereColumn, whereObject);
 		case TELEPORTIGNORE:
-			return TableVI.super.getDataVI(plugin, whereColumn, whereObject);
+			return Table06.super.getDataVI(plugin, whereColumn, whereObject);
 		case SAVEPOINT:
-			return TableVII.super.getDataVII(plugin, whereColumn, whereObject);
+			return Table07.super.getDataVII(plugin, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TARGETACCESS:
+			return Table08.super.getDataVIII(plugin, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TICKET:
+			return Table09.super.getDataIX(plugin, whereColumn, whereObject);
 		}
 		return null;
 	}
@@ -166,19 +158,23 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV,
 		switch(type)
 		{
 		case HOME:
-			return TableI.super.deleteDataI(plugin, whereColumn, whereObject);
+			return Table01.super.deleteDataI(plugin, whereColumn, whereObject);
 		case PORTAL:
-			return TableII.super.deleteDataII(plugin, whereColumn, whereObject);
+			return Table02.super.deleteDataII(plugin, whereColumn, whereObject);
 		case BACK:
-			return TableIII.super.deleteDataIII(plugin, whereColumn, whereObject);
+			return Table03.super.deleteDataIII(plugin, whereColumn, whereObject);
 		case RESPAWNPOINT:
-			return TableIV.super.deleteDataIV(plugin, whereColumn, whereObject);
+			return Table04.super.deleteDataIV(plugin, whereColumn, whereObject);
 		case WARP:
-			return TableV.super.deleteDataV(plugin, whereColumn, whereObject);
+			return Table05.super.deleteDataV(plugin, whereColumn, whereObject);
 		case TELEPORTIGNORE:
-			return TableVI.super.deleteDataVI(plugin, whereColumn, whereObject);
+			return Table06.super.deleteDataVI(plugin, whereColumn, whereObject);
 		case SAVEPOINT:
-			return TableVII.super.deleteDataVII(plugin, whereColumn, whereObject);
+			return Table07.super.deleteDataVII(plugin, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TARGETACCESS:
+			return Table08.super.deleteDataVIII(plugin, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TICKET:
+			return Table09.super.deleteDataIX(plugin, whereColumn, whereObject);
 		}
 		return false;
 	}
@@ -188,19 +184,23 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV,
 		switch(type)
 		{
 		case HOME:
-			return TableI.super.lastIDI(plugin);
+			return Table01.super.lastIDI(plugin);
 		case PORTAL:
-			return TableII.super.lastIDII(plugin);
+			return Table02.super.lastIDII(plugin);
 		case BACK:
-			return TableIII.super.lastIDIII(plugin);
+			return Table03.super.lastIDIII(plugin);
 		case RESPAWNPOINT:
-			return TableIV.super.lastIDIV(plugin);
+			return Table04.super.lastIDIV(plugin);
 		case WARP:
-			return TableV.super.lastIDV(plugin);
+			return Table05.super.lastIDV(plugin);
 		case TELEPORTIGNORE:
-			return TableVI.super.lastIDVI(plugin);
+			return Table06.super.lastIDVI(plugin);
 		case SAVEPOINT:
-			return TableVII.super.lastIDVII(plugin);
+			return Table07.super.lastIDVII(plugin);
+		case ENTITYTRANSPORT_TARGETACCESS:
+			return Table08.super.lastIDVIII(plugin);
+		case ENTITYTRANSPORT_TICKET:
+			return Table09.super.lastIDIX(plugin);
 		}
 		return 0;
 	}
@@ -210,19 +210,23 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV,
 		switch(type)
 		{
 		case HOME:
-			return TableI.super.countWhereIDI(plugin, whereColumn, whereObject);
+			return Table01.super.countWhereIDI(plugin, whereColumn, whereObject);
 		case PORTAL:
-			return TableII.super.countWhereIDII(plugin, whereColumn, whereObject);
+			return Table02.super.countWhereIDII(plugin, whereColumn, whereObject);
 		case BACK:
-			return TableIII.super.countWhereIDIII(plugin, whereColumn, whereObject);
+			return Table03.super.countWhereIDIII(plugin, whereColumn, whereObject);
 		case RESPAWNPOINT:
-			return TableIV.super.countWhereIDIV(plugin, whereColumn, whereObject);
+			return Table04.super.countWhereIDIV(plugin, whereColumn, whereObject);
 		case WARP:
-			return TableV.super.countWhereIDV(plugin, whereColumn, whereObject);
+			return Table05.super.countWhereIDV(plugin, whereColumn, whereObject);
 		case TELEPORTIGNORE:
-			return TableVI.super.countWhereIDVI(plugin, whereColumn, whereObject);
+			return Table06.super.countWhereIDVI(plugin, whereColumn, whereObject);
 		case SAVEPOINT:
-			return TableVII.super.countWhereIDVII(plugin, whereColumn, whereObject);
+			return Table07.super.countWhereIDVII(plugin, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TARGETACCESS:
+			return Table08.super.countWhereIDVIII(plugin, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TICKET:
+			return Table09.super.countWhereIDIX(plugin, whereColumn, whereObject);
 		}
 		return 0;
 	}
@@ -232,19 +236,23 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV,
 		switch(type)
 		{
 		case HOME:
-			return TableI.super.getListI(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+			return Table01.super.getListI(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		case PORTAL:
-			return TableII.super.getListII(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+			return Table02.super.getListII(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		case BACK:
-			return TableIII.super.getListIII(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+			return Table03.super.getListIII(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		case RESPAWNPOINT:
-			return TableIV.super.getListIV(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+			return Table04.super.getListIV(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		case WARP:
-			return TableV.super.getListV(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+			return Table05.super.getListV(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		case TELEPORTIGNORE:
-			return TableVI.super.getListVI(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+			return Table06.super.getListVI(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		case SAVEPOINT:
-			return TableVII.super.getListVII(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+			return Table07.super.getListVII(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TARGETACCESS:
+			return Table08.super.getListVIII(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+		case ENTITYTRANSPORT_TICKET:
+			return Table09.super.getListIX(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		}
 		return null;
 	}
@@ -254,19 +262,23 @@ public class MysqlHandler implements TableI, TableII, TableIII, TableIV, TableV,
 		switch(type)
 		{
 		case HOME:
-			return TableI.super.getTopI(plugin, orderByColumn, start, end);
+			return Table01.super.getTopI(plugin, orderByColumn, start, end);
 		case PORTAL:
-			return TableII.super.getTopII(plugin, orderByColumn, start, end);
+			return Table02.super.getTopII(plugin, orderByColumn, start, end);
 		case BACK:
-			return TableIII.super.getTopIII(plugin, orderByColumn, start, end);
+			return Table03.super.getTopIII(plugin, orderByColumn, start, end);
 		case RESPAWNPOINT:
-			return TableIV.super.getTopIV(plugin, orderByColumn, start, end);
+			return Table04.super.getTopIV(plugin, orderByColumn, start, end);
 		case WARP:
-			return TableV.super.getTopV(plugin, orderByColumn, start, end);
+			return Table05.super.getTopV(plugin, orderByColumn, start, end);
 		case TELEPORTIGNORE:
-			return TableVI.super.getTopVI(plugin, orderByColumn, start, end);
+			return Table06.super.getTopVI(plugin, orderByColumn, start, end);
 		case SAVEPOINT:
-			return TableVII.super.getTopVII(plugin, orderByColumn, start, end);
+			return Table07.super.getTopVII(plugin, orderByColumn, start, end);
+		case ENTITYTRANSPORT_TARGETACCESS:
+			return Table08.super.getTopVIII(plugin, orderByColumn, start, end);
+		case ENTITYTRANSPORT_TICKET:
+			return Table09.super.getTopIX(plugin, orderByColumn, start, end);
 		}
 		return null;
 	}

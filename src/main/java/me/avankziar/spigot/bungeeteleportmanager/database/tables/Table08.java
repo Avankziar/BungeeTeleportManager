@@ -5,15 +5,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import main.java.me.avankziar.aep.spigot.object.BankAccount;
+import main.java.me.avankziar.general.object.EntityTransport;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 
-public interface TableII
+public interface Table08
 {
-	
-	default boolean existII(BungeeTeleportManager plugin, String whereColumn, Object... object) 
+	default boolean existVIII(BungeeTeleportManager plugin, String whereColumn, Object... object) 
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -22,7 +21,7 @@ public interface TableII
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameII 
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue()
 						+ "` WHERE "+whereColumn+" LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -61,29 +60,24 @@ public interface TableII
 		return false;
 	}
 	
-	default boolean createII(BungeeTeleportManager plugin, Object object) 
+	default boolean createVIII(BungeeTeleportManager plugin, Object object) 
 	{
-		if(!(object instanceof BankAccount))
+		if(!(object instanceof EntityTransport))
 		{
 			return false;
 		}
-		BankAccount ba = (BankAccount) object;
+		EntityTransport.TargetAccess h = (EntityTransport.TargetAccess) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) {
 			try 
 			{
-				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameII 
-						+ "`(`bank_name`, `accountnumber`, `balance`,"
-						+ " `owner_uuid`, `vice_uuid`, `member_uuid`) " 
-						+ "VALUES(?, ?, ?, ?, ?, ?)";
+				String sql = "INSERT INTO `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue() 
+						+ "`(`target_uuid`, `access_uuid`) " 
+						+ "VALUES(?, ?)";
 				preparedStatement = conn.prepareStatement(sql);
-				preparedStatement.setString(1, ba.getName());
-		        preparedStatement.setString(2, ba.getaccountNumber());
-		        preparedStatement.setDouble(3, ba.getBalance());
-		        preparedStatement.setString(4, ba.getOwnerUUID());
-		        preparedStatement.setString(5, String.join(";", ba.getViceUUID()));
-		        preparedStatement.setString(6, String.join(";", ba.getMemberUUID()));
+		        preparedStatement.setString(1, h.getTargetUUID());
+		        preparedStatement.setString(2, h.getAccessUUID());
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
@@ -108,9 +102,9 @@ public interface TableII
 		return false;
 	}
 	
-	default boolean updateDataII(BungeeTeleportManager plugin, Object object, String whereColumn, Object... whereObject) 
+	default boolean updateDataVIII(BungeeTeleportManager plugin, Object object, String whereColumn, Object... whereObject) 
 	{
-		if(!(object instanceof BankAccount))
+		if(!(object instanceof EntityTransport))
 		{
 			return false;
 		}
@@ -118,25 +112,20 @@ public interface TableII
 		{
 			return false;
 		}
-		BankAccount ba = (BankAccount) object;
+		EntityTransport.TargetAccess h = (EntityTransport.TargetAccess) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) 
 		{
 			try 
 			{
-				String data = "UPDATE `" + plugin.getMysqlHandler().tableNameII
-						+ "` SET `bank_name` = ?, `accountnumber` = ?, `balance` = ?,"
-						+ " `owner_uuid` = ?, `vice_uuid` = ?, `member_uuid` = ?" 
+				String data = "UPDATE `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue()
+						+ "` SET `target_uuid` = ?, `access_uuid` = ?" 
 						+ " WHERE "+whereColumn;
 				preparedStatement = conn.prepareStatement(data);
-				preparedStatement.setString(1, ba.getName());
-			    preparedStatement.setString(2, ba.getaccountNumber());
-			    preparedStatement.setDouble(3, ba.getBalance());
-			    preparedStatement.setString(4, ba.getOwnerUUID());
-			    preparedStatement.setString(5, String.join(";", ba.getViceUUID()));
-			    preparedStatement.setString(6, String.join(";", ba.getMemberUUID()));
-			    int i = 7;
+				preparedStatement.setString(1, h.getTargetUUID());
+		        preparedStatement.setString(2, h.getAccessUUID());
+		        int i = 3;
 		        for(Object o : whereObject)
 		        {
 		        	preparedStatement.setObject(i, o);
@@ -162,7 +151,7 @@ public interface TableII
         return false;
 	}
 	
-	default Object getDataII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default Object getDataVIII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -171,7 +160,7 @@ public interface TableII
 		{
 			try 
 			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameII 
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue() 
 						+ "` WHERE "+whereColumn+" LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -184,13 +173,10 @@ public interface TableII
 		        result = preparedStatement.executeQuery();
 		        while (result.next()) 
 		        {
-		        	return new BankAccount(result.getInt("id"),
-		        			result.getString("bank_name"),
-		        			result.getString("accountnumber"),
-		        			result.getDouble("balance"),
-		        			result.getString("owner_uuid"),
-		        			(ArrayList<String>) Arrays.asList(result.getString("vice_uuid").split(";")),
-		        			(ArrayList<String>) Arrays.asList(result.getString("member_uuid").split(";")));
+		        	
+		        	return new EntityTransport(). new TargetAccess(
+		        			result.getString("target_uuid"),
+		        			result.getString("access_uuid"));
 		        }
 		    } catch (SQLException e) 
 			{
@@ -216,13 +202,13 @@ public interface TableII
 		return null;
 	}
 	
-	default boolean deleteDataII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default boolean deleteDataVIII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		try 
 		{
-			String sql = "DELETE FROM `" + plugin.getMysqlHandler().tableNameII + "` WHERE "+whereColumn;
+			String sql = "DELETE FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue() + "` WHERE "+whereColumn;
 			preparedStatement = conn.prepareStatement(sql);
 			int i = 1;
 	        for(Object o : whereObject)
@@ -249,7 +235,7 @@ public interface TableII
 		return false;
 	}
 	
-	default int lastIDII(BungeeTeleportManager plugin)
+	default int lastIDVIII(BungeeTeleportManager plugin)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -258,7 +244,7 @@ public interface TableII
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameII + "` ORDER BY `id` DESC LIMIT 1";
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue() + "` ORDER BY `id` DESC LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
@@ -291,7 +277,7 @@ public interface TableII
 		return 0;
 	}
 	
-	default int countWhereIDII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default int countWhereIDVIII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -300,7 +286,7 @@ public interface TableII
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameII
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue()
 						+ "` WHERE "+whereColumn
 						+ " ORDER BY `id` DESC";
 		        preparedStatement = conn.prepareStatement(sql);
@@ -342,8 +328,8 @@ public interface TableII
 		return 0;
 	}
 	
-	default ArrayList<BankAccount> getListII(BungeeTeleportManager plugin, String orderByColumn,
-			int start, int end, String whereColumn, Object... whereObject)
+	default ArrayList<EntityTransport.TargetAccess> getListVIII(BungeeTeleportManager plugin, String orderByColumn,
+			int start, int end, String whereColumn, Object...whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -352,7 +338,7 @@ public interface TableII
 		{
 			try 
 			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameIII 
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue()
 						+ "` WHERE "+whereColumn+" ORDER BY "+orderByColumn+" LIMIT "+start+", "+end;
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -362,17 +348,13 @@ public interface TableII
 		        	i++;
 		        }
 		        result = preparedStatement.executeQuery();
-		        ArrayList<BankAccount> list = new ArrayList<BankAccount>();
+		        ArrayList<EntityTransport.TargetAccess> list = new ArrayList<EntityTransport.TargetAccess>();
 		        while (result.next()) 
 		        {
-		        	BankAccount ba = new BankAccount(result.getInt("id"),
-		        			result.getString("bank_name"),
-		        			result.getString("accountnumber"),
-		        			result.getDouble("balance"),
-		        			result.getString("owner_uuid"),
-		        			(ArrayList<String>) Arrays.asList(result.getString("vice_uuid").split(";")),
-		        			(ArrayList<String>) Arrays.asList(result.getString("member_uuid").split(";")));
-		        	list.add(ba);
+		        	EntityTransport.TargetAccess ep = new EntityTransport(). new TargetAccess(
+		        			result.getString("target_uuid"),
+		        			result.getString("access_uuid"));
+		        	list.add(ep);
 		        }
 		        return list;
 		    } catch (SQLException e) 
@@ -399,7 +381,7 @@ public interface TableII
 		return null;
 	}
 	
-	default ArrayList<BankAccount> getTopII(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
+	default ArrayList<EntityTransport.TargetAccess> getTopVIII(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -408,22 +390,18 @@ public interface TableII
 		{
 			try 
 			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameII 
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue() 
 						+ "` ORDER BY "+orderByColumn+" LIMIT "+start+", "+end;
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
-		        ArrayList<BankAccount> list = new ArrayList<BankAccount>();
+		        ArrayList<EntityTransport.TargetAccess> list = new ArrayList<EntityTransport.TargetAccess>();
 		        while (result.next()) 
 		        {
-		        	BankAccount ba = new BankAccount(result.getInt("id"),
-		        			result.getString("bank_name"),
-		        			result.getString("accountnumber"),
-		        			result.getDouble("balance"),
-		        			result.getString("owner_uuid"),
-		        			(ArrayList<String>) Arrays.asList(result.getString("vice_uuid").split(";")),
-		        			(ArrayList<String>) Arrays.asList(result.getString("member_uuid").split(";")));
-		        	list.add(ba);
+		        	EntityTransport.TargetAccess ep = new EntityTransport(). new TargetAccess(
+		        			result.getString("target_uuid"),
+		        			result.getString("access_uuid"));
+		        	list.add(ep);
 		        }
 		        return list;
 		    } catch (SQLException e) 

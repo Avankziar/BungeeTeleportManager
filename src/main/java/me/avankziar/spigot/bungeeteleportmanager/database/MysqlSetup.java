@@ -54,6 +54,14 @@ public class MysqlSetup
 		{
 			return false;
 		}
+		if(!setupDatabaseVIII())
+		{
+			return false;
+		}
+		if(!setupDatabaseIX())
+		{
+			return false;
+		}
 		return true;
 	}
 	
@@ -113,7 +121,7 @@ public class MysqlSetup
 			PreparedStatement query = null;
 		      try 
 		      {	        
-		        String data = "CREATE TABLE IF NOT EXISTS `" + plugin.getMysqlHandler().tableNameI
+		        String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.HOME.getValue()
 		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		        		+ " player_uuid char(36) NOT NULL,"
 		        		+ " player_name varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,"
@@ -157,7 +165,7 @@ public class MysqlSetup
 			PreparedStatement query = null;
 		      try 
 		      {	        
-		        String data = "CREATE TABLE IF NOT EXISTS `" + plugin.getMysqlHandler().tableNameII
+		        String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.PORTAL.getValue()
 		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		        		+ " bank_name text,"
 		        		+ " accountnumber text,"
@@ -197,7 +205,7 @@ public class MysqlSetup
 			PreparedStatement query = null;
 		      try 
 		      {	        
-		        String data = "CREATE TABLE IF NOT EXISTS `" + plugin.getMysqlHandler().tableNameIII
+		        String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.BACK.getValue()
 		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		        		+ " player_uuid char(36) NOT NULL UNIQUE,"
 		        		+ " player_name varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,"
@@ -236,7 +244,7 @@ public class MysqlSetup
 			PreparedStatement query = null;
 		      try 
 		      {	        
-		        String data = "CREATE TABLE IF NOT EXISTS `" + plugin.getMysqlHandler().tableNameIV
+		        String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.RESPAWNPOINT.getValue()
 		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		        		+ " dates text,"
 		        		+ " trend_type text,"
@@ -276,7 +284,7 @@ public class MysqlSetup
 			PreparedStatement query = null;
 		      try 
 		      {	        
-		        String data = "CREATE TABLE IF NOT EXISTS `" + plugin.getMysqlHandler().tableNameV
+		        String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.WARP.getValue()
 		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		        		+ " warpname text,"
 		        		+ " server text,"
@@ -327,7 +335,7 @@ public class MysqlSetup
 			PreparedStatement query = null;
 		      try 
 		      {	        
-		        String data = "CREATE TABLE IF NOT EXISTS `" + plugin.getMysqlHandler().tableNameVI
+		        String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.TELEPORTIGNORE.getValue()
 		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		        		+ " player_uuid char(36) NOT NULL,"
 		        		+ " ignore_uuid char(36) NOT NULL);";
@@ -363,7 +371,7 @@ public class MysqlSetup
 			PreparedStatement query = null;
 		      try 
 		      {	        
-		        String data = "CREATE TABLE IF NOT EXISTS `" + plugin.getMysqlHandler().tableNameVII
+		        String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.SAVEPOINT.getValue()
 		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		        		+ " player_uuid char(36) NOT NULL,"
 		        		+ " player_name varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,"
@@ -375,6 +383,80 @@ public class MysqlSetup
 		        		+ " z double,"
 		        		+ " yaw float,"
 		        		+ " pitch float);";
+		        query = conn.prepareStatement(data);
+		        query.execute();
+		      } catch (SQLException e) 
+		      {
+		        e.printStackTrace();
+		        BungeeTeleportManager.log.severe("Error creating tables! Error: " + e.getMessage());
+		        return false;
+		      } finally 
+		      {
+		    	  try 
+		    	  {
+		    		  if (query != null) 
+		    		  {
+		    			  query.close();
+		    		  }
+		    	  } catch (Exception e) 
+		    	  {
+		    		  e.printStackTrace();
+		    		  return false;
+		    	  }
+		      }
+		}
+		return true;
+	}
+	
+	public boolean setupDatabaseVIII() 
+	{
+		if (conn != null) 
+		{
+			PreparedStatement query = null;
+		      try 
+		      {	        
+		        String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue()
+		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
+		        		+ " target_uuid char(36) NOT NULL,"
+		        		+ " access_uuid char(36) NOT NULL);";
+		        query = conn.prepareStatement(data);
+		        query.execute();
+		      } catch (SQLException e) 
+		      {
+		        e.printStackTrace();
+		        BungeeTeleportManager.log.severe("Error creating tables! Error: " + e.getMessage());
+		        return false;
+		      } finally 
+		      {
+		    	  try 
+		    	  {
+		    		  if (query != null) 
+		    		  {
+		    			  query.close();
+		    		  }
+		    	  } catch (Exception e) 
+		    	  {
+		    		  e.printStackTrace();
+		    		  return false;
+		    	  }
+		      }
+		}
+		return true;
+	}
+	
+	public boolean setupDatabaseIX() 
+	{
+		if (conn != null) 
+		{
+			PreparedStatement query = null;
+		      try 
+		      {	        
+		        String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.ENTITYTRANSPORT_TICKET.getValue()
+		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
+		        		+ " player_uuid char(36) NOT NULL,"
+		        		+ " actualamount int,"
+		        		+ " totalbuyedamount int"
+		        		+ " spendedmoney double);";
 		        query = conn.prepareStatement(data);
 		        query.execute();
 		      } catch (SQLException e) 

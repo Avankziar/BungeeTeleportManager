@@ -60,11 +60,12 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
                 	{
                 		radius = in.readInt();
                 	}
+                	String rtpPath = in.readUTF();
                 	RandomTeleport rt = new RandomTeleport(null, playerName, point1, point2, radius, isArea);
                 	new BukkitRunnable()
 					{
             			int i = 0;
-            			final Location loc = plugin.getRandomTeleportHandler().getRandomTeleport(rt);
+            			final Location loc = plugin.getRandomTeleportHandler().getRandomTeleport(rtpPath, rt);
 						@Override
 						public void run()
 						{
@@ -96,7 +97,6 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
 											public void run()
 											{
 												plugin.getUtility().givesEffect(player, Mechanics.RANDOMTELEPORT, false, false);
-												
 												player.teleport(loc);
 												
 											}

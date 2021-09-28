@@ -93,10 +93,10 @@ public class ForbiddenHandlerBungee
 		BungeeTeleportManager plugin = BungeeTeleportManager.getPlugin();
 		switch(mechanics)
 		{
-		default: //Fallthrought
 		case SAVEPOINT:
 			return true;
-		case BACK:
+		default: //Alle Methoden, die NICHT die hier 4 angegebenen sind, ist auto immer BACK, weil die nur hier zwischen den 4 unterschieden
+			//werden soll.
 			if(getValues(true, Mechanics.BACK).contains(
 					plugin.getProxy().getPlayer(playername)
         				.getServer().getInfo().getName()))
@@ -109,27 +109,16 @@ public class ForbiddenHandlerBungee
 				return true;
 			}
 			break;
+		case BACK:
 		case DEATHBACK:
-			if(getValues(true, Mechanics.DEATHBACK).contains(
-					plugin.getProxy().getPlayer(playername)
-        				.getServer().getInfo().getName()))
-			{
-				return true;
-			}
-			if(getValues(false, Mechanics.DEATHBACK).contains(
-					back.getLocation().getWorldName()))
-			{
-				return true;
-			}
-			break;
 		case TPA_ONLY:
-			if(getValues(true, Mechanics.TPA).contains(
+			if(getValues(true, mechanics).contains(
 					plugin.getProxy().getPlayer(playername)
         				.getServer().getInfo().getName()))
 			{
 				return true;
 			}
-			if(getValues(false, Mechanics.TPA).contains(
+			if(getValues(false, mechanics).contains(
 					back.getLocation().getWorldName()))
 			{
 				return true;

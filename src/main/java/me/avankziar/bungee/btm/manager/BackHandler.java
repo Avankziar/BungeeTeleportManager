@@ -70,6 +70,15 @@ public class BackHandler
     	updateBack(back, name, mechanics);
 	}
 	
+	public static void getBackWithChoosing(DataInputStream in, String uuid, String name, Mechanics mechanics, boolean overrideBack) throws IOException
+	{
+		if(overrideBack)
+		{
+			Back back = getTaskBack(in, uuid, name);
+	    	updateBack(back, name, mechanics);
+		}
+	}
+	
 	public static void updateBack(Back back, String playername, Mechanics mechanics)
 	{
 		if(ForbiddenHandlerBungee.isForbidden(back, playername, mechanics, false))

@@ -25,25 +25,14 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler
 public class RandomTeleportHandler
 {
 	private BungeeTeleportManager plugin;
-	private ArrayList<Biome> forbiddenBiomes = new ArrayList<>();
+	
 	
 	public RandomTeleportHandler(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
-		for(String s : plugin.getYamlHandler().getConfig().getStringList("RandomTeleport.ForbiddenBiomes"))
-		{
-			try
-			{
-				Biome bio = Biome.valueOf(s);
-				forbiddenBiomes.add(bio);
-			} catch(Exception e)
-			{
-				continue;
-			}
-		}
 	}
 	
-	public void sendPlayerToRT(Player player, RandomTeleport rt, String playername, String uuid)
+	public void sendPlayerToRT(Player player, String rtpPath, RandomTeleport rt, String playername, String uuid)
 	{
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		if(rt.getPoint1().getServer().equals(cfgh.getServer()))
@@ -56,7 +45,7 @@ public class RandomTeleportHandler
 			{
 				delay = Math.floorDiv(delayed, 50);
 			}
-			Location loc = getRandomTeleport(rt);
+			Location loc = getRandomTeleport(rtpPath, rt);
 			if(loc == null)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.SecurityBreach")));
@@ -104,6 +93,7 @@ public class RandomTeleportHandler
 				{
 					out.writeInt(25);
 				}
+				out.writeUTF(rtpPath);
 				new BackHandler(plugin).addingBack(player, out);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -113,7 +103,7 @@ public class RandomTeleportHandler
 		return;
 	}
 	
-	public Location getRandomTeleport(RandomTeleport rt)
+	public Location getRandomTeleport(String rtpPath, RandomTeleport rt)
 	{
 		Location loc = null;
 		int i = 0;
@@ -137,7 +127,7 @@ public class RandomTeleportHandler
 						getRandom(new Random(), 0,
 							(int) Math.max(getPositiveInt(rt.getPoint1().getZ()), getPositiveInt(rt.getPoint2().getZ())) -
 							(int) Math.min(getPositiveInt(rt.getPoint1().getZ()), getPositiveInt(rt.getPoint2().getZ())));
-				loc = isSafe(new Location(Bukkit.getWorld(rt.getPoint1().getWorldName()), x, y, z), minY);
+				loc = isSafe(rtpPath, new Location(Bukkit.getWorld(rt.getPoint1().getWorldName()), x, y, z), minY);
 			} else
 			{
 				double x = rt.getPoint1().getX() + getRoll()*getRandom(new Random(), 0, rt.getRadius());
@@ -145,15 +135,15 @@ public class RandomTeleportHandler
 				double minY = rt.getPoint1().getY() - rt.getRadius();
 				if(minY <= 0) {minY = 1;}
 				double z = rt.getPoint1().getZ() + getRoll()*getRandom(new Random(), 0, rt.getRadius());
-				loc = isSafe(new Location(Bukkit.getWorld(rt.getPoint1().getWorldName()), x, y, z), minY);
+				loc = isSafe(rtpPath, new Location(Bukkit.getWorld(rt.getPoint1().getWorldName()), x, y, z), minY);
 			}
 			i++;
 		}
-		BungeeTeleportManager.log.info("l: | "+loc.getX()+" | "+loc.getY()+" | "+loc.getZ());
+		//BungeeTeleportManager.log.info("l: | "+loc.getX()+" | "+loc.getY()+" | "+loc.getZ());
 		return loc;
 	}
 	
-	private Location isSafe(Location loc, double minY)
+	private Location isSafe(String rtpPath, Location loc, double minY)
 	{
 		Location l = loc;
 		Location up = new Location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ());
@@ -161,13 +151,27 @@ public class RandomTeleportHandler
 		Location bottom = new Location(l.getWorld(), l.getX(), l.getY() - 2, l.getZ());
 		if(isBlockOutsideWorldBorder(l.getWorld(), l.getBlockX(), l.getBlockZ()))
 		{
+			System.out.println("0"); //REMOVEME
 			return null;
+		}
+		ArrayList<Biome> forbiddenBiomes = new ArrayList<>();
+		for(String s : plugin.getYamlHandler().getRTP().getStringList(rtpPath+".ForbiddenBiomes"))
+		{
+			try
+			{
+				Biome bio = Biome.valueOf(s);
+				forbiddenBiomes.add(bio);
+			} catch(Exception e)
+			{
+				continue;
+			}
 		}
 		if(forbiddenBiomes.contains(loc.getBlock().getBiome()))
 		{
+			System.out.println("1");
 			return null;
 		}
-		if(plugin.getYamlHandler().getConfig().getBoolean("RandomTeleport.UseHighestY"))
+		if(plugin.getYamlHandler().getRTP().getBoolean(rtpPath+".UseHighestY"))
 		{
 			int maxY = loc.getWorld().getHighestBlockYAt(loc)+1;
 			if(maxY > loc.getWorld().getMaxHeight())
@@ -181,9 +185,10 @@ public class RandomTeleportHandler
 			Block bup = up.getBlock();
 			Block bdown = down.getBlock();
 			Block bbottom = bottom.getBlock();
-			if(!plugin.getYamlHandler().getConfig().getBoolean("RandomTeleport.HighestYCanBeLeaves")
+			if(!plugin.getYamlHandler().getRTP().getBoolean(rtpPath+".HighestYCanBeLeaves")
 					&& isLeaves(bdown))
 			{
+				System.out.println("2");
 				return null;
 			}
 			if(bbottom.getType().isSolid() && isTransparant(bdown) && isTransparant(bl) && isTransparant(bup))
@@ -210,6 +215,7 @@ public class RandomTeleportHandler
 					return new Location(loc.getWorld(), down.getX(), l.getY(), down.getZ());
 				} else if(count >= 25)
 				{
+					System.out.println("4");
 					return null;
 				}
 				l = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
@@ -218,7 +224,7 @@ public class RandomTeleportHandler
 				bottom = new Location(l.getWorld(), l.getX(), l.getY() - 2, l.getZ());
 			}
 		}
-		
+		System.out.println("5");
 		return null;
 	}
 	

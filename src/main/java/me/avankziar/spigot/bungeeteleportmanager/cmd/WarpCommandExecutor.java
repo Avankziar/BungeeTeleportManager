@@ -103,6 +103,22 @@ public class WarpCommandExecutor implements CommandExecutor
 			}
 			plugin.getWarpHelper().warpTo(player, args);
 			return true;
+		} else if(commandList.containsKey(lable) 
+				&& commandList.get(lable).getPath().equals("warping"))
+		{
+			if(sender instanceof Player)
+			{
+				Player player = (Player) sender;
+				if(!player.hasPermission(commandList.get(cmd.getName()).getPermission()))
+				{
+					///Du hast dafür keine Rechte!
+					player.spigot().sendMessage(ChatApi.tctl(
+							plugin.getYamlHandler().getLang().getString("NoPermission")));
+					return false;
+				}
+			}
+			plugin.getWarpHelper().warpingTo(sender, args);
+			return true;
 		} else if(commandList.containsKey(cmd.getName()) 
 				&& commandList.get(cmd.getName()).getPath().equals("warps"))
 		{

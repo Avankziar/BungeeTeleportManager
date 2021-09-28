@@ -139,7 +139,7 @@ public class RandomTeleportHelper
 				else cooldown.put(player, System.currentTimeMillis()+1000L*3);
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.RequestInProgress")));
 				plugin.getUtility().givesEffect(player, Mechanics.RANDOMTELEPORT, true, true);
-				plugin.getRandomTeleportHandler().sendPlayerToRT(player, rt, playername, playeruuid);
+				plugin.getRandomTeleportHandler().sendPlayerToRT(player, rtpname, rt, playername, playeruuid);
 				return;
 			}
 		}.runTaskAsynchronously(plugin);

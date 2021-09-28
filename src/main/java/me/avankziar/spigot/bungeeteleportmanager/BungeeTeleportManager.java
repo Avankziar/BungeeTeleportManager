@@ -28,6 +28,7 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.cmd.BTMCommandExecutor;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.cmd.BackCommandExecutor;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.cmd.CommandHelper;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.cmd.EntityTransportCommandExecutor;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.cmd.HomeCommandExecutor;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.cmd.RTCommandExecutor;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.cmd.SavePointCommandExecutor;
@@ -46,6 +47,8 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.SafeLocationHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.BackListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.CustomTeleportListener;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.EntityNameChangeListener;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.EntityTransportListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.PlayerOnCooldownListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.listener.ServerAndWordListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.BackHandler;
@@ -53,6 +56,9 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.BackHelper;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.BackMessageListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.CustomHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.CustomMessageListener;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.EntityTransportHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.EntityTransportHelper;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.EntityTransportMessageListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeHelper;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeMessageListener;
@@ -95,6 +101,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private CustomHandler customHandler;
 	private HomeHandler homeHandler;
 	private HomeHelper homeHelper;
+	private EntityTransportHelper entityTransportHelper;
 	private RandomTeleportHandler randomTeleportHandler;
 	private RandomTeleportHelper randomTeleportHelper;
 	private SavePointHandler savePointHandler;
@@ -106,6 +113,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	
 	public static ArrayList<String> entitytransport = new ArrayList<>();
 	public static LinkedHashMap<String, ArrayList<String>> homes = new LinkedHashMap<String, ArrayList<String>>();
+	public static LinkedHashMap<String, ArrayList<String>> rtp = new LinkedHashMap<String, ArrayList<String>>();
 	public static LinkedHashMap<String, ArrayList<String>> savepoints = new LinkedHashMap<String, ArrayList<String>>();
 	public static LinkedHashMap<String, ArrayList<String>> warps = new LinkedHashMap<String, ArrayList<String>>();
 	
@@ -161,6 +169,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		customHandler = new CustomHandler(plugin);
 		homeHelper = new HomeHelper(plugin);
 		homeHandler = new HomeHandler(plugin);
+		entityTransportHelper = new EntityTransportHelper(plugin);
 		randomTeleportHelper = new RandomTeleportHelper(plugin);
 		randomTeleportHandler = new RandomTeleportHandler(plugin);
 		savePointHelper = new SavePointHelper(plugin);
@@ -178,6 +187,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		setupBstats();
 		plugin.getUtility().setTpaPlayersTabCompleter();
 		initEntityTransport();
+		EntityTransportHandler.initTicketList();
 	}
 	
 	public void onDisable()
@@ -241,7 +251,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		return commandHelper;
 	}
 	
-	private void setupCommandTree()
+	private void setupCommandTree() //INFO:CommandTree
 	{
 		setupBypassPerm();
 		//Zuletzt infoCommand deklarieren
@@ -280,12 +290,33 @@ public class BungeeTeleportManager extends JavaPlugin
 		
 		if(cfgh.enableCommands(Mechanics.ENTITYTRANSPORT))
 		{
-			/*CommandConstructor entitytransport = new CommandConstructor("entitytransport", false);
+			CommandConstructor entitytransport = new CommandConstructor("entitytransport", false);
 			
 			registerCommand(entitytransport.getName());
-			getCommand(entitytransport.getName()).setExecutor(new HomeCommandExecutor(plugin, entitytransport));
+			getCommand(entitytransport.getName()).setExecutor(new EntityTransportCommandExecutor(plugin, entitytransport));
 			getCommand(entitytransport.getName()).setTabCompleter(new TABCompletionOne(plugin));
-			BTMSettings.settings.addCommands(KeyHandler.ENTITYTRANSPORT, entitytransport.getCommandString());*/
+			BTMSettings.settings.addCommands(KeyHandler.ENTITYTRANSPORT, entitytransport.getCommandString());
+			
+			CommandConstructor entitytransportsetaccess = new CommandConstructor("entitytransportsetaccess", false);
+			
+			registerCommand(entitytransportsetaccess.getName());
+			getCommand(entitytransportsetaccess.getName()).setExecutor(new EntityTransportCommandExecutor(plugin, entitytransportsetaccess));
+			getCommand(entitytransportsetaccess.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.ENTITYTRANSPORT_SETACCESS, entitytransportsetaccess.getCommandString());
+			
+			CommandConstructor entitytransportaccesslist = new CommandConstructor("entitytransportaccesslist", false);
+			
+			registerCommand(entitytransportaccesslist.getName());
+			getCommand(entitytransportaccesslist.getName()).setExecutor(new EntityTransportCommandExecutor(plugin, entitytransportaccesslist));
+			getCommand(entitytransportaccesslist.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			
+			CommandConstructor entitytransportsetowner = new CommandConstructor("entitytransportsetowner", false);
+			
+			registerCommand(entitytransportsetowner.getName());
+			getCommand(entitytransportsetowner.getName()).setExecutor(new EntityTransportCommandExecutor(plugin, entitytransportsetowner));
+			getCommand(entitytransportsetowner.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			
+			addingHelps(entitytransport, entitytransportsetaccess, entitytransportaccesslist, entitytransportsetowner);
 		}
 		
 		if(cfgh.enableCommands(Mechanics.HOME))
@@ -366,6 +397,7 @@ public class BungeeTeleportManager extends JavaPlugin
 			registerCommand(randomteleport.getName());
 			getCommand(randomteleport.getName()).setExecutor(new RTCommandExecutor(plugin, randomteleport));
 			getCommand(randomteleport.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.RANDOMTELEPORT, randomteleport.getCommandString());
 			addingHelps(randomteleport);
 		}
 		
@@ -536,6 +568,12 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(warp.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			BTMSettings.settings.addCommands(KeyHandler.WARP, warp.getCommandString());
 			
+			CommandConstructor warping = new CommandConstructor("warping", true);
+			
+			registerCommand(warping.getName());
+			getCommand(warping.getName()).setExecutor(new WarpCommandExecutor(plugin, warping));
+			getCommand(warping.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			
 			CommandConstructor warps = new CommandConstructor("warps", false);
 			
 			registerCommand(warps.getName());
@@ -669,7 +707,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		 */
 	}
 	
-	public void setupBypassPerm()
+	public void setupBypassPerm() //INFO:BypassPerm
 	{
 		String path = "Bypass.";
 		
@@ -677,6 +715,9 @@ public class BungeeTeleportManager extends JavaPlugin
 		StaticValues.BYPASS_DELAY = yamlHandler.getCom().getString(path+"Delay");
 		StaticValues.BYPASS_FORBIDDEN_CREATE = yamlHandler.getCom().getString(path+"Forbidden.Create");
 		StaticValues.BYPASS_FORBIDDEN_USE = yamlHandler.getCom().getString(path+"Forbidden.Use");
+		
+		StaticValues.BYPASS_ENTITYTRANSPORT_ACCESSLIST = yamlHandler.getCom().getString(path+"EntityTransport.AccessList");
+		StaticValues.BYPASS_ENTITYTRANSPORT_SERIALIZATION = yamlHandler.getCom().getString(path+"EntityTransport.Serialization");
 		
 		StaticValues.PERM_HOME_OTHER = yamlHandler.getCom().getString(path+"Home.Other");
 		StaticValues.PERM_HOMES_OTHER = yamlHandler.getCom().getString(path+"Home.HomesOther");
@@ -820,6 +861,8 @@ public class BungeeTeleportManager extends JavaPlugin
 		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.BACK_TOSPIGOT, new BackMessageListener(this));
 		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.CUSTOM_TOBUNGEE);
 		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.CUSTOM_TOSPIGOT, new CustomMessageListener(this));
+		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.ENTITYTRANSPORT_TOBUNGEE);
+		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.ENTITYTRANSPORT_TOSPIGOT, new EntityTransportMessageListener());
 		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.HOME_TOBUNGEE);
 		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.HOME_TOSPIGOT, new HomeMessageListener(this));
 		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.RANDOMTELEPORT_TOBUNGEE);
@@ -834,6 +877,8 @@ public class BungeeTeleportManager extends JavaPlugin
 		pm.registerEvents(new ServerAndWordListener(plugin), plugin);
 		pm.registerEvents(new CustomTeleportListener(plugin), plugin);
 		pm.registerEvents(new PlayerOnCooldownListener(plugin), plugin);
+		pm.registerEvents(new EntityNameChangeListener(plugin), plugin);
+		pm.registerEvents(new EntityTransportListener(plugin), plugin);
 	}
 	
 	public boolean reload() throws IOException
@@ -845,10 +890,6 @@ public class BungeeTeleportManager extends JavaPlugin
 		if(yamlHandler.getConfig().getBoolean("Mysql.Status", false))
 		{
 			mysqlSetup.closeConnection();
-			if(!mysqlHandler.loadMysqlHandler())
-			{
-				return false;
-			}
 			if(!mysqlSetup.loadMysqlSetup())
 			{
 				return false;
@@ -959,6 +1000,11 @@ public class BungeeTeleportManager extends JavaPlugin
 	public HomeHelper getHomeHelper()
 	{
 		return homeHelper;
+	}
+	
+	public EntityTransportHelper getEntityTransportHelper()
+	{
+		return entityTransportHelper;
 	}
 	
 	public RandomTeleportHelper getRandomTeleportHelper()

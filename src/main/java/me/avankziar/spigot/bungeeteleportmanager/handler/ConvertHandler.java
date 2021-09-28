@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
 import main.java.me.avankziar.general.object.Back;
+import main.java.me.avankziar.general.object.EntityTransport;
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.SavePoint;
 import main.java.me.avankziar.general.object.ServerLocation;
@@ -86,6 +87,22 @@ public class ConvertHandler
 			if(o instanceof SavePoint)
 			{
 				el.add((SavePoint) o);
+			} else
+			{
+				return null;
+			}
+		}
+		return el;
+	}
+	
+	public static ArrayList<EntityTransport.TargetAccess> convertListVIII(ArrayList<?> list)
+	{
+		ArrayList<EntityTransport.TargetAccess> el = new ArrayList<>();
+		for(Object o : list)
+		{
+			if(o instanceof EntityTransport.TargetAccess)
+			{
+				el.add((EntityTransport.TargetAccess) o);
 			} else
 			{
 				return null;

@@ -5,9 +5,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import main.java.me.avankziar.bungee.btm.database.YamlHandler;
+import main.java.me.avankziar.bungee.btm.handler.ForbiddenHandlerBungee;
 import main.java.me.avankziar.bungee.btm.listener.TeleportListener;
 import main.java.me.avankziar.bungee.btm.manager.BackMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.CustomMessageListener;
+import main.java.me.avankziar.bungee.btm.manager.EntityTransportMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.HomeMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.RandomTeleportMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.SavePointMessageListener;
@@ -40,6 +42,7 @@ public class BungeeTeleportManager extends Plugin
 		yamlHandler = new YamlHandler(plugin);
 		CommandSetup();
 		ListenerSetup();
+		ForbiddenHandlerBungee.init(plugin);
 	}
 	
 	public void onDisable()
@@ -105,6 +108,9 @@ public class BungeeTeleportManager extends Plugin
 		pm.registerListener(plugin, new CustomMessageListener(plugin));
 		getProxy().registerChannel(StaticValues.CUSTOM_TOBUNGEE);
 		getProxy().registerChannel(StaticValues.CUSTOM_TOSPIGOT);
+		pm.registerListener(plugin, new EntityTransportMessageListener(plugin));
+		getProxy().registerChannel(StaticValues.ENTITYTRANSPORT_TOBUNGEE);
+		getProxy().registerChannel(StaticValues.ENTITYTRANSPORT_TOSPIGOT);
 		pm.registerListener(plugin, new HomeMessageListener(plugin));
 		getProxy().registerChannel(StaticValues.HOME_TOBUNGEE);
 		getProxy().registerChannel(StaticValues.HOME_TOSPIGOT);

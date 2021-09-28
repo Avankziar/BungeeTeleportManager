@@ -161,6 +161,36 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
+		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RANDOMTELEPORT).trim())) 
+		{
+			if(args.length == 1)
+			{
+				if (!args[0].equals("")) 
+				{
+					if(BungeeTeleportManager.rtp.containsKey(player.getName()))
+					{
+						for (String rtp : BungeeTeleportManager.rtp.get(player.getName())) 
+						{
+							if (rtp.startsWith(args[0])
+									|| rtp.toLowerCase().startsWith(args[0])
+									|| rtp.toUpperCase().startsWith(args[0])) 
+							{
+								list.add(rtp);
+							}
+						}
+						Collections.sort(list);
+						return list;
+					}
+				} else
+				{
+					if(BungeeTeleportManager.rtp.get(player.getName()) != null)
+					{
+						list.addAll(BungeeTeleportManager.rtp.get(player.getName()));
+						Collections.sort(list);
+					}
+					return list;
+				}
+			}
 		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT).trim())) 
 		{
 			if(args.length == 1)

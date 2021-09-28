@@ -33,6 +33,8 @@ public class YamlHandler
 	private String languages;
 	private File language = null;
 	private YamlConfiguration lang = new YamlConfiguration();
+	private File clanguage = null;
+	private YamlConfiguration clang = new YamlConfiguration();
 
 	public YamlHandler(BungeeTeleportManager plugin) throws IOException 
 	{
@@ -63,6 +65,11 @@ public class YamlHandler
 	public YamlConfiguration getLang()
 	{
 		return lang;
+	}
+	
+	public YamlConfiguration getCustomLang()
+	{
+		return clang;
 	}
 	
 	public boolean loadYamlHandler() throws IOException
@@ -227,6 +234,26 @@ public class YamlHandler
 		}
 		//Niederschreiben aller Werte in die Datei
 		writeFile(language, lang, plugin.getYamlManager().getLanguageKey());
+		
+		clanguage = new File(directory.getPath(), "custom_"+languageString+".yml");
+		if(!clanguage.exists()) 
+		{
+			BungeeTeleportManager.log.info("Create %lang%.yml...".replace("%lang%", "custom_"+languageString));
+			try
+			{
+				FileUtils.copyToFile(plugin.getResource("default.yml"), clanguage);
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		//Laden der Datei
+		if(!loadYamlTask(clanguage, clang))
+		{
+			return false;
+		}
+		//Niederschreiben aller Werte in die Datei
+		writeFile(clanguage, clang, plugin.getYamlManager().getCustomLanguageKey());
 		return true;
 	}
 	

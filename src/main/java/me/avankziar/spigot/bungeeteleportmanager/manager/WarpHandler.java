@@ -32,7 +32,19 @@ public class WarpHandler
 	public void sendPlayerToWarp(Player player, Warp warp, String playername, String uuid)
 	{
 		ConfigHandler cfgh = new ConfigHandler(plugin);
-		if(warp.getLocation().getServer().equals(cfgh.getServer()))
+		int canCheck = plugin.getUtility().canTeleportSection(player, Mechanics.WARP,
+				cfgh.getServer(), player.getWorld().getName(), warp.getLocation().getServer(), warp.getLocation().getWorldName());
+		if(canCheck > 0)
+		{
+			String answer = plugin.getUtility().canTeleportSectionAnswer(player, canCheck, Mechanics.WARP,
+					cfgh.getServer(), player.getWorld().getName(), warp.getLocation().getServer(), warp.getLocation().getWorldName());
+			if(answer != null)
+			{
+				player.sendMessage(ChatApi.tl(answer));
+			}
+			return;
+		}
+		if(warp.getLocation().getServer().equals(cfgh.getServer()) && player != null)
 		{
 			if(cfgh.useSafeTeleport(Mechanics.WARP))
 			{
@@ -106,21 +118,21 @@ public class WarpHandler
 	
 	public boolean compareWarpAmount(Player player, boolean message)
 	{
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseGlobalPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseGlobalLevel", false))
 		{
 			if(compareGlobalWarps(player, message) >= 0 )
 			{
 				return false;
 			}
 		}		
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseServerPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseServerLevel", false))
 		{
 			if(compareServerWarps(player, message) >= 0)
 			{
 				return false;
 			}
 		}
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseWorldPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseWorldLevel", false))
 		{
 			if(compareWorldWarps(player, message) >= 0)
 			{
@@ -133,7 +145,7 @@ public class WarpHandler
 	public int compareWarp(Player player, boolean message)
 	{
 		int i = 0;
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseGlobalPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseGlobalLevel", false))
 		{
 			i = compareGlobalWarps(player, message);
 			if(i > 0)
@@ -141,7 +153,7 @@ public class WarpHandler
 				return i;
 			}
 		}
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseServerPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseServerLevel", false))
 		{
 			i = compareServerWarps(player, message);
 			if(i > 0)
@@ -149,7 +161,7 @@ public class WarpHandler
 				return i;
 			}
 		}		
-		if(plugin.getYamlHandler().getConfig().getBoolean("UseWorldPermissionLevel", false))
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseWorldLevel", false))
 		{
 			i = compareWorldWarps(player, message);
 			if(i > 0)
@@ -198,10 +210,10 @@ public class WarpHandler
 	public int compareServerWarps(Player player, boolean message)
 	{
 		String server = new ConfigHandler(plugin).getServer();
-		String serverCluster = plugin.getYamlHandler().getConfig().getString("ServerCluster");
-		boolean clusterBeforeServer = plugin.getYamlHandler().getConfig().getBoolean("ServerClusterActive", false);
+		String serverCluster = plugin.getYamlHandler().getConfig().getString("PermissionLevel.Server.Cluster");
+		boolean clusterBeforeServer = plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.Server.ClusterActive", false);
 		int serverLimit = 0;
-		List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("ServerClusterList");
+		List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.Server.ClusterList");
 		if(clusterlist == null)
 		{
 			clusterlist = new ArrayList<>();
@@ -282,7 +294,7 @@ public class WarpHandler
 	public int compareWorldWarps(Player player, boolean message)
 	{
 		String world = player.getLocation().getWorld().getName();
-		boolean clusterActive = plugin.getYamlHandler().getConfig().getBoolean("WorldClusterActive", false);
+		boolean clusterActive = plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.World.ClusterActive", false);
 		int worldLimit = 0;
 		
 		boolean worldIsInCluster = false;
@@ -291,14 +303,14 @@ public class WarpHandler
 		
 		if(clusterActive)
 		{
-			List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("WorldClusterList");
+			List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.World.ClusterList");
 			if(clusterlist == null)
 			{
 				clusterlist = new ArrayList<>();
 			}
 			for(String clusters : clusterlist)
 			{
-				List<String> worldclusterlist = plugin.getYamlHandler().getConfig().getStringList(clusters);
+				List<String> worldclusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.World."+clusters);
 				for(String worlds: worldclusterlist)
 				{
 					if(worlds.equals(world))

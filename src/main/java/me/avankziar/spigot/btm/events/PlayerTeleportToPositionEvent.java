@@ -16,30 +16,34 @@ public class PlayerTeleportToPositionEvent extends Event
 	private ServerLocation serverlocation;
 	private String premessage;
 	private String postmessage;
-	private String customAnnotation;
+	private boolean overrideBack;
+	private String customBackAnnotation;
 	
 	public PlayerTeleportToPositionEvent(Player player, String server, String world,
-			double x, double y, double z, float yaw, float pitch, String premessage, String postmessage, String customAnnotation)
+			double x, double y, double z, float yaw, float pitch, String premessage, String postmessage,
+			boolean overrideBack, String customBackAnnotation)
 	{
 		setPlayer(player);
 		setServerlocation(new ServerLocation(server, world, x, y, z, yaw, pitch));
 		setPreMessage(premessage);
 		setPostMessage(postmessage);
-		setCustomAnnotation(customAnnotation);
+		setOverrideBack(overrideBack);
+		setCustomBackAnnotation(customBackAnnotation);
 	}
 	
 	public PlayerTeleportToPositionEvent(Player player, ServerLocation serverLocation, String premessage, String postmessage,
-			String customAnnotation)
+			boolean overrideBack, String customBackAnnotation)
 	{
 		setPlayer(player);
 		setServerlocation(serverLocation);
 		setPreMessage(premessage);
 		setPostMessage(postmessage);
-		setCustomAnnotation(customAnnotation);
+		setOverrideBack(overrideBack);
+		setCustomBackAnnotation(customBackAnnotation);
 	}
 	
 	public PlayerTeleportToPositionEvent(Player player, String server, Location location, String premessage, String postmessage,
-			String customAnnotation)
+			boolean overrideBack, String customBackAnnotation)
 	{
 		setPlayer(player);
 		setServerlocation(
@@ -52,7 +56,8 @@ public class PlayerTeleportToPositionEvent extends Event
 				location.getPitch()));
 		setPreMessage(premessage);
 		setPostMessage(postmessage);
-		setCustomAnnotation(customAnnotation);
+		setOverrideBack(overrideBack);
+		setCustomBackAnnotation(customBackAnnotation);
 	}	
 
     public Player getPlayer()
@@ -118,13 +123,23 @@ public class PlayerTeleportToPositionEvent extends Event
 		this.postmessage = postmessage;
 	}
 
-	public String getCustomAnnotation()
+	public boolean isOverrideBack()
 	{
-		return customAnnotation;
+		return overrideBack;
 	}
 
-	public void setCustomAnnotation(String customAnnotation)
+	public void setOverrideBack(boolean overrideBack)
 	{
-		this.customAnnotation = customAnnotation;
+		this.overrideBack = overrideBack;
+	}
+
+	public String getCustomBackAnnotation()
+	{
+		return customBackAnnotation;
+	}
+
+	public void setCustomBackAnnotation(String customBackAnnotation)
+	{
+		this.customBackAnnotation = customBackAnnotation;
 	}
 }

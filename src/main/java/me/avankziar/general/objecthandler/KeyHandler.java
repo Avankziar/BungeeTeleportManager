@@ -7,6 +7,7 @@ public class KeyHandler
 	public static String BACK = "BACK";
 	
 	public static String ENTITYTRANSPORT = "ENTITYTRANSPORT";
+	public static String ENTITYTRANSPORT_SETACCESS = "ENTITYTRANSPORT_SETACCESS";
 	
 	public static String HOME = "HOME";
 	public static String HOMES = "HOMES";
@@ -15,6 +16,8 @@ public class KeyHandler
 	public static String HOME_CREATE = "HOME_CREATE";
 	public static String HOME_DEL = "HOME_DEL";
 	public static String HOME_REMOVE = "HOME_REMOVE";
+	
+	public static String RANDOMTELEPORT = "RANDOMTELEPORT";
 	
 	public static String SAVEPOINT = "SAVEPOINT";
 	public static String SAVEPOINTS = "SAVEPOINTS";

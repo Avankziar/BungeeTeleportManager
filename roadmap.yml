@@ -4,9 +4,11 @@ Future =========================================================================
 - Eine einstellbare Einstellung für Warps, dass man von anderen server diese nicht sehen kann. Whitelist boolean, Server Whitelist Liste
 
 Build 6 =======================================================================================================================
-- ++Back Tabelle 3: home_priority => ALTER TABLE `SecretCraftBTMBack` ADD `home_priority` TEXT NULL DEFAULT NULL AFTER `tp_toggle`; 
-- ++Warp Tabelle 5: portalaccess => ALTER TABLE `SecretCraftBTMWarps` ADD `portalaccess` TEXT NULL DEFAULT NULL AFTER `category`;
-                                => UPDATE `SecretCraftBTMWarps` SET `portalaccess`='IRRELEVANT' WHERE 1
+- +Mysql Tabellen Namen wurden alle aus der config genommen. Nur noch default namen sind akzeptiert.
+- +config werte wurden um- und zusammengeordnet.
+- ++Back Tabelle 3: home_priority => ALTER TABLE `btmBack` ADD `home_priority` TEXT NULL DEFAULT NULL AFTER `tp_toggle`; 
+- ++Warp Tabelle 5: portalaccess => ALTER TABLE `btmWarps` ADD `portalaccess` TEXT NULL DEFAULT NULL AFTER `category`;
+                                => UPDATE `btmWarps` SET `portalaccess`='IRRELEVANT' WHERE 1
 - ++NPE bei /warpsetowner <Spielername welcher nicht existiert>, behoben
 - ++Home existiert nicht-Fehler bei /homes <Zahl> <Spielername>, behoben
 - ++Warplist NPE, behoben
@@ -34,40 +36,46 @@ Build 6 ========================================================================
 - ++Warps mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Befehl ansteuern zu können. Gegenteil auch möglich.
    Aka OnlyPortal(ONLY), NotPortal(FORBIDDEN), Keine(IRRELEVANT)
 - ++/warpsetportalaccess <Portalname> <Wert> hinzugefügt
+- +/warping <Warpname> <Spielername> [Optionen...] hinzugefügt. Admin/Console Befehl, um Spieler zu teleportieren. Die Optionen ermöglichen,
+  die Funktionen (portalaccess, blacklist, hastoomany, cost, permission und hidden) zu berücksichtigen. Bedeutet, ein /warping ohne
+  irgendwelche Optionsangaben ignoriert alle zuvorgenannten Abfragen.
 - ++Warps, welche nur durch portale angesteuert werden können, werden nicht mehr im Tab vorgeschlagen.
 - ++Warps, welche nur durch portale angesteuert werden können, wird der teleport dahin untersagt.
 - ++Maximalbeträge für Warps an Warpkosten einstellbar machen.
 - ++Can. in EnableCommands umbenannt.
 - ++TPA und TP befehle nun für das Enablen getrennt.
 - +ForbiddenList
-  - +Bypass im tpa/tp für ForbiddenServer/World einbauen.
-  - +BungeeCord einen YamlHandler einbauen. YamlManager global bauen.
-  - +Forbiddenlist in eine seperate Datei bauen.
-  - +Verständlicher machen.
-  - +Möglichmachen, bestimmte Teleportarten in bestimmten Welten auch nicht auszuführen. Aka von Welt A sich nicht Wegwarpen können oder so.
-  - +CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
+  - XBypass im tpa/tp für ForbiddenServer/World einbauen.
+  - ++BungeeCord einen YamlHandler einbauen. YamlManager global bauen.
+  - ++Forbiddenlist in eine seperate Datei bauen.
+  - ++Verständlicher machen.
+  - ++Möglichmachen, bestimmte Teleportarten in bestimmten Welten auch nicht auszuführen. Aka von Welt A sich nicht Wegwarpen können oder so.
+  - ++CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
       ob back übernommen werden soll, oder nicht.
-- +Bei entstandenen Kosten wo man teleports Used (Warp, home, Tpa, RTP, back...) sollte eine nachricht ausgegeben werden, was man gezahlt hat.
-- +RandomTeleport
+- ++Bei entstandenen Kosten wo man teleports Used (Warp, home, Tpa, RTP, back...) sollte eine nachricht ausgegeben werden, was man gezahlt hat.
+- ++RandomTeleport
   - +Möglichmachen, dass per Config auch "Spezifische" Rtps erstellt und angesteuert werden können per Namen.
-- /warpsetpassword, das passwort darf kein existierender Spielername sein.
+- ++/warpsetpassword, das passwort darf kein existierender Spielername sein.
+- ++/warpremove, hat nun Abfragen, dass nur der Eigentümer und der Admin den Warp entfernen darf.
+- +Permission einbauen, die steuern ob man die mechanik intern nur auf dem Server warpen kann, crosscluster oder proxy.
+- +WICHTIG! Permission "btm.permlevel.global.*"
 - EntityTransport
-  - Jedes Entity, außer Spieler, benötigen Permission. Gilt auch für Store.
-  - Entitys, welche keine Speziellen namen besitzten, können immer transporiert werden.
-  - Entitys, welche benannt wurden, können nur noch vom Eigentümer/Umbenenner teleportiert werden. Umbenennungen von anderen Spieler im nachhinein geblock.
-  - Entitys, welche benannt wurden, können deren Zugriffsrechte an fremd Spieler freigegeben werden.
-  - Zum Transport, entweder Entity an eine Leine nehmen(prio) oder anschauen.
-  - /entitytransport <x:Name> | Z.B. <w:Spawn> (Owner/Mitglieg sein) o. <h:Lager> o. <p:Avankziar>
-  - Sollte man Entitys zu Spieler teleportieren wollen, muss vorher im RAM vom Zielspieler dieser den anderen Spieler freigeben.
-  - /entitytransporttarget <Spielername> | Erlaubt, das der angegebene Spieler Entityts zu einem selber transportieren kann.
-  - Mysql für Entitys, wer eigentümer und Mitglied ist.
+  - +Jedes Entity, außer Spieler, benötigen Permission.
+  - +Entitys, welche benannt wurden, können nur noch vom Eigentümer/Umbenenner teleportiert werden. Umbenennungen von anderen Spieler im nachhinein geblock.
+  - +Zum Transport, entweder Entity an eine Leine nehmen(prio) oder anschauen.
+  - +/entitytransport <x:Name> | Z.B. <w:Spawn> (Owner/Mitglieg sein) o. <h:Lager> o. <pl:Avankziar>
+  - +Sollte man Entitys zu Spieler teleportieren wollen, muss vorher im MYSQL vom Zielspieler dieser den anderen Spieler freigeben.
+  - +/entitytransportsetaccess <Spielername> | Erlaubt, das der angegebene Spieler Entityts zu einem selber transportieren kann.
+  - +/entitytransportaccesslist [Seitenzahl] [Spielernamen] | Zeigt alle Spieler an, welche einen Teleportzugriff für Entity haben, sowie
+    werden alle Spieler angezeigt, wo der Spieler Zugriff hat.
   - /entitytransportsetowner <Spielername> | Das angeschaute entity wird dem neuen Eigentümer überschrieben.
-  - /entitytransportlist [Seitenzahl] [Spielername] | Listet alle Entitys des Spielers auf.
-  - /entitytransportstore | Verpackt das Entity in die Datenbank. Ist nun ruffähig. Funktioniert nur mit Benannten Entitys. Leine oder anschauen.
-  - /entitytransportcall <Entityname> [Spielername] | Ruft ein Entity aus der Datenbank auf die Stelle des Spielers.
-  - Forbiddenlist Entitytransport hinzufügen, mit EntityTypes einstellbar. Sowie store und call verbieten können pro EntityType.
-  - Wenn ein registrierte Entity getötet wird, wird der Datenbank eintrag gelöscht.
-  - Registerierte EntitytsTeleporter dürfen nicht benannt oder teleportiert werden.
+  - /entitytransportbuytickets <Zahl> [Spielername] [mustpay Boolean] | Kauft die x Anzahl an benutzbaren EntityTransport. Muss Console fähig sein.
+    mustpay gibt an ob, wenn Admin oder Console es für andere Spieler ausführt, der Spieler das zahlen muss. Sonst ist es gratis.
+  - +Forbiddenlist Entitytransport hinzufügen, mit EntityTypes einstellbar.
+  - +Registerierte EntitytsTeleporter dürfen nicht benannt oder teleportiert werden.
+  - +Custom Event schreiben, was den externen Teleport von Entity gewährt. Dabei kann Eigentumsrechte, ForbiddenList und Anzahl benutzbarer EntityTransporte berücksicht werden.
+  - +Config Wert einbauen, welcher es erlaubt, per Mysql Tracking, die Anzahl an EntityTransport zu begrenzen.
+  - +Entitys haben verschiedene gegenwerte an tickets.
 - EntityTeleport
   - Entitys, welche nicht benannt sind, aka nicht als EntityTransport registriert sind, können per Befehl als EntityTeleporter
     registriert werden. WENN das passiert, wird die AI gelöscht(?) und nun per Rechtsklick kann man direkt ODER per Chatnachricht seine Ziele

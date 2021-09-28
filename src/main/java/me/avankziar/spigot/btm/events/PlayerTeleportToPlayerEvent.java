@@ -14,14 +14,17 @@ public class PlayerTeleportToPlayerEvent extends Event
 	private Player player;
 	private UUID toPlayerUUID;
 	private String toPlayer;
-	private String customAnnotation;
+	private boolean overrideBack;
+	private String customBackAnnotation;
 	
-	public PlayerTeleportToPlayerEvent(Player player, UUID toPlayerUUID, String toPlayer, String customAnnotation)
+	public PlayerTeleportToPlayerEvent(Player player, UUID toPlayerUUID, String toPlayer,
+			boolean overrideBack, String customBackAnnotation)
 	{
 		setPlayer(player);
 		setToPlayerUUID(toPlayerUUID);
 		setToPlayer(toPlayer);
-		setCustomAnnotation(customAnnotation);
+		setOverrideBack(overrideBack);
+		setCustomBackAnnotation(customBackAnnotation);
 	}
 
     public UUID getToPlayerUUID()
@@ -79,13 +82,23 @@ public class PlayerTeleportToPlayerEvent extends Event
 		this.isCancelled = isCancelled;
 	}
 
-	public String getCustomAnnotation()
+	public boolean isOverrideBack()
 	{
-		return customAnnotation;
+		return overrideBack;
 	}
 
-	public void setCustomAnnotation(String customAnnotation)
+	public void setOverrideBack(boolean overrideBack)
 	{
-		this.customAnnotation = customAnnotation;
+		this.overrideBack = overrideBack;
+	}
+
+	public String getCustomBackAnnotation()
+	{
+		return customBackAnnotation;
+	}
+
+	public void setCustomBackAnnotation(String customBackAnnotation)
+	{
+		this.customBackAnnotation = customBackAnnotation;
 	}
 }

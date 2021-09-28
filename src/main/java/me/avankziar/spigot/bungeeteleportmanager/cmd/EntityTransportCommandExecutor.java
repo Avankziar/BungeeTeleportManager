@@ -46,10 +46,10 @@ public class EntityTransportCommandExecutor implements CommandExecutor
 						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
-			//plugin.getHomeHelper().homeCreate(player, args);
+			plugin.getEntityTransportHelper().entityTransportTo(player, args);
 			return true;
 		} else if((commandList.containsKey(cmd.getName()) 
-				&& commandList.get(cmd.getName()).getPath().equals("entitytransporttarget")))
+				&& commandList.get(cmd.getName()).getPath().equals("entitytransportsetaccess")))
 		{
 			if (!(sender instanceof Player)) 
 			{
@@ -64,7 +64,59 @@ public class EntityTransportCommandExecutor implements CommandExecutor
 						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
 			}
-			//plugin.getHomeHelper().homeRemove(player, args);
+			plugin.getEntityTransportHelper().entityTransportSetAccess(player, args);
+			return true;
+		} else if((commandList.containsKey(cmd.getName()) 
+				&& commandList.get(cmd.getName()).getPath().equals("entitytransportaccesslist")))
+		{
+			if (!(sender instanceof Player)) 
+			{
+				BungeeTeleportManager.log.info("%cmd% is only for Player!".replace("%cmd%", cmd.getName()));
+				return false;
+			}
+			Player player = (Player) sender;
+			if(!player.hasPermission(commandList.get(cmd.getName()).getPermission()))
+			{
+				///Du hast dafür keine Rechte!
+				player.spigot().sendMessage(ChatApi.tctl(
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
+				return false;
+			}
+			plugin.getEntityTransportHelper().entityTransportAccessList(player, args);
+			return true;
+		} else if((commandList.containsKey(cmd.getName()) 
+				&& commandList.get(cmd.getName()).getPath().equals("entitytransportsetowner")))
+		{
+			if (!(sender instanceof Player)) 
+			{
+				BungeeTeleportManager.log.info("%cmd% is only for Player!".replace("%cmd%", cmd.getName()));
+				return false;
+			}
+			Player player = (Player) sender;
+			if(!player.hasPermission(commandList.get(cmd.getName()).getPermission()))
+			{
+				///Du hast dafür keine Rechte!
+				player.spigot().sendMessage(ChatApi.tctl(
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
+				return false;
+			}
+			plugin.getEntityTransportHelper().entityTransportSetOwner(player, args);
+			return true;
+		} else if((commandList.containsKey(cmd.getName()) 
+				&& commandList.get(cmd.getName()).getPath().equals("entitytransportbuytickets")))
+		{
+			if (sender instanceof Player)
+			{
+				Player player = (Player) sender;
+				if(!player.hasPermission(commandList.get(cmd.getName()).getPermission()))
+				{
+					///Du hast dafür keine Rechte!
+					player.spigot().sendMessage(ChatApi.tctl(
+							plugin.getYamlHandler().getLang().getString("NoPermission")));
+					return false;
+				}
+			}
+			plugin.getEntityTransportHelper().entityTransportBuyTickets(sender, args);
 			return true;
 		}
 		return false;

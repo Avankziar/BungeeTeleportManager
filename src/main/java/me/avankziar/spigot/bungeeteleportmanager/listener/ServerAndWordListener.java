@@ -34,6 +34,7 @@ public class ServerAndWordListener implements Listener
 			plugin.getUtility().setTpaPlayersTabCompleter();
 		}
 		plugin.getUtility().setHomesTabCompleter(player);
+		plugin.getUtility().setRTPTabCompleter(player);
 		plugin.getUtility().setSavePointsTabCompleter(player);
 		plugin.getUtility().setWarpsTabCompleter(player);
 	}

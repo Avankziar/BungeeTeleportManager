@@ -5,15 +5,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.UUID;
 
+import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.ServerLocation;
-import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 
-public interface TableV
+public interface Table01
 {
-	default boolean existV(BungeeTeleportManager plugin, String whereColumn, Object... object) 
+	
+	default boolean existI(BungeeTeleportManager plugin, String whereColumn, Object... object) 
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -22,7 +24,7 @@ public interface TableV
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameV 
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.HOME.getValue()
 						+ "` WHERE "+whereColumn+" LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -31,7 +33,6 @@ public interface TableV
 		        	preparedStatement.setObject(i, o);
 		        	i++;
 		        }
-		        
 		        
 		        result = preparedStatement.executeQuery();
 		        while (result.next()) 
@@ -62,50 +63,33 @@ public interface TableV
 		return false;
 	}
 	
-	default boolean createV(BungeeTeleportManager plugin, Object object) 
+	default boolean createI(BungeeTeleportManager plugin, Object object) 
 	{
-		if(!(object instanceof Warp))
+		if(!(object instanceof Home))
 		{
 			return false;
 		}
-		Warp w = (Warp) object;
+		Home h = (Home) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) {
 			try 
 			{
-				String sql = "INSERT INTO `" + plugin.getMysqlHandler().tableNameV 
-						+ "`(`warpname`, `server`, `world`, `x`, `y`, `z`, `yaw`, `pitch`,"
-						+ " `hidden`, `owner`, `permission`, `password`, `member`, `blacklist`, `price`, `category`, `portalaccess`) " 
-						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-				String m = null;
-				if(w.getMember() != null)
-				{
-					m = String.join(";", w.getMember());
-				}
-				String b = null;
-				if(w.getBlacklist() != null)
-				{
-					b = String.join(";", w.getBlacklist());
-				}
+				String sql = "INSERT INTO `" + MysqlHandler.Type.HOME.getValue() 
+						+ "`(`player_uuid`, `player_name`, `home_name`,"
+						+ " `server`,`world`, `x`, `y`, `z`, `yaw`, `pitch`) " 
+						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				preparedStatement = conn.prepareStatement(sql);
-				preparedStatement.setString(1, w.getName());
-		        preparedStatement.setString(2, w.getLocation().getServer());
-		        preparedStatement.setString(3, w.getLocation().getWorldName());
-		        preparedStatement.setDouble(4, w.getLocation().getX());
-		        preparedStatement.setDouble(5, w.getLocation().getY());
-		        preparedStatement.setDouble(6, w.getLocation().getZ());
-		        preparedStatement.setFloat(7, w.getLocation().getYaw());
-		        preparedStatement.setFloat(8, w.getLocation().getPitch());
-		        preparedStatement.setBoolean(9, w.isHidden());
-		        preparedStatement.setString(10, w.getOwner());
-		        preparedStatement.setString(11, w.getPermission());
-		        preparedStatement.setString(12, w.getPassword());
-		        preparedStatement.setString(13, m);
-		        preparedStatement.setString(14, b);
-		        preparedStatement.setDouble(15, w.getPrice());
-		        preparedStatement.setString(16, w.getCategory());
-		        preparedStatement.setString(17, w.getPortalAccess().toString());
+		        preparedStatement.setString(1, h.getUuid().toString());
+		        preparedStatement.setString(2, h.getPlayerName());
+		        preparedStatement.setString(3, h.getHomeName());
+		        preparedStatement.setString(4, h.getLocation().getServer());
+		        preparedStatement.setString(5, h.getLocation().getWorldName());
+		        preparedStatement.setDouble(6, h.getLocation().getX());
+		        preparedStatement.setDouble(7, h.getLocation().getY());
+		        preparedStatement.setDouble(8, h.getLocation().getZ());
+		        preparedStatement.setFloat(9, h.getLocation().getYaw());
+		        preparedStatement.setFloat(10, h.getLocation().getPitch());
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
@@ -130,9 +114,9 @@ public interface TableV
 		return false;
 	}
 	
-	default boolean updateDataV(BungeeTeleportManager plugin, Object object, String whereColumn, Object... whereObject) 
+	default boolean updateDataI(BungeeTeleportManager plugin, Object object, String whereColumn, Object... whereObject) 
 	{
-		if(!(object instanceof Warp))
+		if(!(object instanceof Home))
 		{
 			return false;
 		}
@@ -140,55 +124,30 @@ public interface TableV
 		{
 			return false;
 		}
-		Warp w = (Warp) object;
+		Home h = (Home) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) 
 		{
 			try 
 			{
-				String data = "UPDATE `" + plugin.getMysqlHandler().tableNameV
-						+ "` SET `warpname` = ?, `server` = ?, `world` = ?,"
-						+ " `x` = ?, `y` = ?, `z` = ?, `yaw` = ?, `pitch` = ?,"
-						+ " `hidden` = ?, `owner` = ?, `permission` = ?, `password` = ?, `member` = ?,"
-						+ " `blacklist` = ?, `price` = ?, `category` = ?, `portalaccess` = ?" 
+				String data = "UPDATE `" + MysqlHandler.Type.HOME.getValue()
+						+ "` SET `player_uuid` = ?, `player_name` = ?, `home_name` = ?,"
+						+ " `server` = ?, `world` = ?, `x` = ?, `y` = ?,"
+						+ " `z` = ?, `yaw` = ?, `pitch` = ?" 
 						+ " WHERE "+whereColumn;
-				String m = null;
-				if(w.getMember() != null)
-				{
-					if(!w.getMember().isEmpty())
-					{
-						m = String.join(";", w.getMember());
-					}
-				}
-				String b = null;
-				if(w.getBlacklist() != null)
-				{
-					if(!w.getBlacklist().isEmpty())
-					{
-						b = String.join(";", w.getBlacklist());
-					}					
-				}
 				preparedStatement = conn.prepareStatement(data);
-				preparedStatement.setString(1, w.getName());
-		        preparedStatement.setString(2, w.getLocation().getServer());
-		        preparedStatement.setString(3, w.getLocation().getWorldName());
-		        preparedStatement.setDouble(4, w.getLocation().getX());
-		        preparedStatement.setDouble(5, w.getLocation().getY());
-		        preparedStatement.setDouble(6, w.getLocation().getZ());
-		        preparedStatement.setFloat(7, w.getLocation().getYaw());
-		        preparedStatement.setFloat(8, w.getLocation().getPitch());
-		        preparedStatement.setBoolean(9, w.isHidden());
-		        preparedStatement.setString(10, w.getOwner());
-		        preparedStatement.setString(11, w.getPermission());
-		        preparedStatement.setString(12, w.getPassword());
-		        preparedStatement.setString(13, m);
-		        preparedStatement.setString(14, b);
-		        preparedStatement.setDouble(15, w.getPrice());
-		        preparedStatement.setString(16, w.getCategory());
-		        preparedStatement.setString(17, w.getPortalAccess().toString());
-		        
-		        int i = 18;
+				preparedStatement.setString(1, h.getUuid().toString());
+		        preparedStatement.setString(2, h.getPlayerName());
+		        preparedStatement.setString(3, h.getHomeName());
+		        preparedStatement.setString(4, h.getLocation().getServer());
+		        preparedStatement.setString(5, h.getLocation().getWorldName());
+		        preparedStatement.setDouble(6, h.getLocation().getX());
+		        preparedStatement.setDouble(7, h.getLocation().getY());
+		        preparedStatement.setDouble(8, h.getLocation().getZ());
+		        preparedStatement.setFloat(9, h.getLocation().getYaw());
+		        preparedStatement.setFloat(10, h.getLocation().getPitch());
+		        int i = 11;
 		        for(Object o : whereObject)
 		        {
 		        	preparedStatement.setObject(i, o);
@@ -214,7 +173,7 @@ public interface TableV
         return false;
 	}
 	
-	default Object getDataV(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default Object getDataI(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -223,7 +182,7 @@ public interface TableV
 		{
 			try 
 			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameV 
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.HOME.getValue() 
 						+ "` WHERE "+whereColumn+" LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -236,17 +195,10 @@ public interface TableV
 		        result = preparedStatement.executeQuery();
 		        while (result.next()) 
 		        {
-		        	ArrayList<String> m = new ArrayList<>();
-					if(result.getString("member") != null)
-					{
-						m = new ArrayList<String>(Arrays.asList(result.getString("member").split(";")));
-					}
-					ArrayList<String> b = new ArrayList<>();
-					if(result.getString("blacklist") != null)
-					{
-						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
-					}
-		        	return new Warp(result.getString("warpname"),
+		        	return new Home(
+		        			UUID.fromString(result.getString("player_uuid")),
+		        			result.getString("player_name"),
+		        			result.getString("home_name"),
 		        			new ServerLocation(
 		        					result.getString("server"),
 		        					result.getString("world"),
@@ -254,16 +206,7 @@ public interface TableV
 		        					result.getDouble("y"),
 		        					result.getDouble("z"),
 		        					result.getFloat("yaw"),
-		        					result.getFloat("pitch")),
-		        			result.getBoolean("hidden"),
-		        			result.getString("owner"),
-		        			result.getString("permission"),
-		        			result.getString("password"),
-		        			m,
-		        			b,
-		        			result.getDouble("price"),
-		        			result.getString("category"),
-		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")));
+		        					result.getFloat("pitch")));
 		        }
 		    } catch (SQLException e) 
 			{
@@ -289,13 +232,13 @@ public interface TableV
 		return null;
 	}
 	
-	default boolean deleteDataV(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default boolean deleteDataI(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		try 
 		{
-			String sql = "DELETE FROM `" + plugin.getMysqlHandler().tableNameV + "` WHERE "+whereColumn;
+			String sql = "DELETE FROM `" + MysqlHandler.Type.HOME.getValue() + "` WHERE "+whereColumn;
 			preparedStatement = conn.prepareStatement(sql);
 			int i = 1;
 	        for(Object o : whereObject)
@@ -322,7 +265,7 @@ public interface TableV
 		return false;
 	}
 	
-	default int lastIDV(BungeeTeleportManager plugin)
+	default int lastIDI(BungeeTeleportManager plugin)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -331,7 +274,7 @@ public interface TableV
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameV + "` ORDER BY `id` DESC LIMIT 1";
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.HOME.getValue() + "` ORDER BY `id` DESC LIMIT 1";
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
@@ -364,7 +307,7 @@ public interface TableV
 		return 0;
 	}
 	
-	default int countWhereIDV(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
+	default int countWhereIDI(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -373,8 +316,9 @@ public interface TableV
 		{
 			try 
 			{			
-				String sql = "SELECT `id` FROM `" + plugin.getMysqlHandler().tableNameV
-						+ "` WHERE "+whereColumn+" ORDER BY `id` DESC";
+				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.HOME.getValue()
+						+ "` WHERE "+whereColumn
+						+ " ORDER BY `id` DESC";
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
 		        for(Object o : whereObject)
@@ -414,8 +358,8 @@ public interface TableV
 		return 0;
 	}
 	
-	default ArrayList<Warp> getListV(BungeeTeleportManager plugin, String orderByColumn,
-			int start, int end, String whereColumn, Object... whereObject)
+	default ArrayList<Home> getListI(BungeeTeleportManager plugin, String orderByColumn,
+			int start, int end, String whereColumn, Object...whereObject)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -424,7 +368,7 @@ public interface TableV
 		{
 			try 
 			{			
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameV 
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.HOME.getValue()
 						+ "` WHERE "+whereColumn+" ORDER BY "+orderByColumn+" LIMIT "+start+", "+end;
 		        preparedStatement = conn.prepareStatement(sql);
 		        int i = 1;
@@ -434,20 +378,13 @@ public interface TableV
 		        	i++;
 		        }
 		        result = preparedStatement.executeQuery();
-		        ArrayList<Warp> list = new ArrayList<Warp>();
+		        ArrayList<Home> list = new ArrayList<Home>();
 		        while (result.next()) 
 		        {
-		        	ArrayList<String> m = new ArrayList<>();
-					if(result.getString("member") != null)
-					{
-						m = new ArrayList<String>(Arrays.asList(result.getString("member").split(";")));
-					}
-					ArrayList<String> b = new ArrayList<>();
-					if(result.getString("blacklist") != null)
-					{
-						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
-					}
-		        	Warp w = new Warp(result.getString("warpname"),
+		        	Home ep = new Home(
+		        			UUID.fromString(result.getString("player_uuid")),
+		        			result.getString("player_name"),
+		        			result.getString("home_name"),
 		        			new ServerLocation(
 		        					result.getString("server"),
 		        					result.getString("world"),
@@ -455,17 +392,8 @@ public interface TableV
 		        					result.getDouble("y"),
 		        					result.getDouble("z"),
 		        					result.getFloat("yaw"),
-		        					result.getFloat("pitch")),
-		        			result.getBoolean("hidden"),
-		        			result.getString("owner"),
-		        			result.getString("permission"),
-		        			result.getString("password"),
-		        			m,
-		        			b,
-		        			result.getDouble("price"),
-		        			result.getString("category"),
-		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")));
-		        	list.add(w);
+		        					result.getFloat("pitch")));
+		        	list.add(ep);
 		        }
 		        return list;
 		    } catch (SQLException e) 
@@ -492,7 +420,7 @@ public interface TableV
 		return null;
 	}
 	
-	default ArrayList<Object> getTopV(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
+	default ArrayList<Home> getTopI(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -500,27 +428,19 @@ public interface TableV
 		if (conn != null) 
 		{
 			try 
-			{
-				String sql = "SELECT * FROM `" + plugin.getMysqlHandler().tableNameV 
+			{			
+				String sql = "SELECT * FROM `" + MysqlHandler.Type.HOME.getValue() 
 						+ "` ORDER BY "+orderByColumn+" LIMIT "+start+", "+end;
-				
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
-		        ArrayList<Object> list = new ArrayList<Object>();
+		        ArrayList<Home> list = new ArrayList<Home>();
 		        while (result.next()) 
 		        {
-		        	ArrayList<String> m = new ArrayList<>();
-					if(result.getString("member") != null)
-					{
-						m = new ArrayList<String>(Arrays.asList(result.getString("member").split(";")));
-					}
-					ArrayList<String> b = new ArrayList<>();
-					if(result.getString("blacklist") != null)
-					{
-						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
-					}
-		        	Warp w = new Warp(result.getString("warpname"),
+		        	Home ep = new Home(
+		        			UUID.fromString(result.getString("player_uuid")),
+		        			result.getString("player_name"),
+		        			result.getString("home_name"),
 		        			new ServerLocation(
 		        					result.getString("server"),
 		        					result.getString("world"),
@@ -528,17 +448,8 @@ public interface TableV
 		        					result.getDouble("y"),
 		        					result.getDouble("z"),
 		        					result.getFloat("yaw"),
-		        					result.getFloat("pitch")),
-		        			result.getBoolean("hidden"),
-		        			result.getString("owner"),
-		        			result.getString("permission"),
-		        			result.getString("password"),
-		        			m,
-		        			b,
-		        			result.getDouble("price"),
-		        			result.getString("category"),
-		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")));
-		        	list.add(w);
+		        					result.getFloat("pitch")));
+		        	list.add(ep);
 		        }
 		        return list;
 		    } catch (SQLException e) 

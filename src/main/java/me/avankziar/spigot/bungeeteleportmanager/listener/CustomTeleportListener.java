@@ -44,7 +44,7 @@ public class CustomTeleportListener implements Listener
 		plugin.getCustomHandler().sendForceObject(event.getPlayer(),
 				new Teleport(event.getPlayer().getUniqueId(), event.getPlayer().getName(),
 						event.getToPlayerUUID(), event.getToPlayer(), Teleport.Type.TPTO), 
-				plugin.getYamlHandler().getLang().getString("NoPlayerExist", ""));
+				plugin.getYamlHandler().getLang().getString("NoPlayerExist", ""), true);
 	}
 	
 	@EventHandler (priority = EventPriority.HIGHEST)
@@ -68,7 +68,7 @@ public class CustomTeleportListener implements Listener
 		}
 		plugin.getUtility().givesEffect(event.getPlayer(), Mechanics.CUSTOM, true, false);
 		event.getPlayer().sendMessage(ChatApi.tl(event.getPreMessage()));
-		plugin.getCustomHandler().sendTpPos(event.getPlayer(), event.getServerlocation(), event.getPostMessage());
+		plugin.getCustomHandler().sendTpPos(event.getPlayer(), event.getServerlocation(), event.getPostMessage(), true);
 	}
 	
 	@EventHandler (priority = EventPriority.HIGHEST)
@@ -78,13 +78,13 @@ public class CustomTeleportListener implements Listener
 		{
 			return;
 		}
-		if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.CUSTOM, event.getCustomAnnotation()))
+		if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.CUSTOM, event.getCustomBackAnnotation()))
 		{
 			event.getPlayer().sendMessage(ChatApi.tl(
 					plugin.getYamlHandler().getLang().getString("CustomTeleportEvent.IsForbidden.Server")));
 			return;
 		}
-		if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.CUSTOM, event.getPlayer(), event.getCustomAnnotation()))
+		if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.CUSTOM, event.getPlayer(), event.getCustomBackAnnotation()))
 		{
 			event.getPlayer().sendMessage(ChatApi.tl(
 					plugin.getYamlHandler().getLang().getString("CustomTeleportEvent.IsForbidden.Server")));
@@ -94,7 +94,7 @@ public class CustomTeleportListener implements Listener
 		plugin.getCustomHandler().sendForceObject(event.getPlayer(),
 				new Teleport(event.getPlayer().getUniqueId(), event.getPlayer().getName(),
 						event.getToPlayerUUID(), event.getToPlayer(), Teleport.Type.TPTO), 
-				plugin.getYamlHandler().getLang().getString("NoPlayerExist", ""));
+				plugin.getYamlHandler().getLang().getString("NoPlayerExist", ""), event.isOverrideBack());
 	}
 	
 	@EventHandler (priority = EventPriority.HIGHEST)
@@ -104,13 +104,13 @@ public class CustomTeleportListener implements Listener
 		{
 			return;
 		}
-		if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.CUSTOM, event.getCustomAnnotation()))
+		if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.CUSTOM, event.getCustomBackAnnotation()))
 		{
 			event.getPlayer().sendMessage(ChatApi.tl(
 					plugin.getYamlHandler().getLang().getString("CustomTeleportEvent.IsForbidden.Server")));
 			return;
 		}
-		if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.CUSTOM, event.getPlayer(), event.getCustomAnnotation()))
+		if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.CUSTOM, event.getPlayer(), event.getCustomBackAnnotation()))
 		{
 			event.getPlayer().sendMessage(ChatApi.tl(
 					plugin.getYamlHandler().getLang().getString("CustomTeleportEvent.IsForbidden.Server")));
@@ -118,6 +118,6 @@ public class CustomTeleportListener implements Listener
 		}
 		plugin.getUtility().givesEffect(event.getPlayer(), Mechanics.CUSTOM, true, false);
 		event.getPlayer().sendMessage(ChatApi.tl(event.getPreMessage()));
-		plugin.getCustomHandler().sendTpPos(event.getPlayer(), event.getServerlocation(), event.getPostMessage());
+		plugin.getCustomHandler().sendTpPos(event.getPlayer(), event.getServerlocation(), event.getPostMessage(), event.isOverrideBack());
 	}
 }

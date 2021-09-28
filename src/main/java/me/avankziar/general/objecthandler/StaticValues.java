@@ -25,6 +25,11 @@ public class StaticValues
 		BACK_REQUESTNEWBACK = "back-requestnewback",
 		BACK_NODEATHBACK = "back-nodeathback",
 		
+		ENTITYTRANSPORT_TOBUNGEE = "btm:entitytransporttobungee",
+		ENTITYTRANSPORT_TOSPIGOT = "btm:entitytransporttospigot",
+		ENTITYTRANSPORT_ENTITYTOPOSITION = "entitytransport-entitytoposition",
+		ENTITYTRANSPORT_ENTITYTOPLAYER = "entitytransport-entitytoplayer",
+		
 		//Home Sending
 		HOME_TOBUNGEE = "btm:hometobungee",
 		HOME_TOSPIGOT = "btm:hometospigot",
@@ -82,6 +87,10 @@ public class StaticValues
 		BYPASS_DELAY = "btm.bypass.delay.",
 		BYPASS_FORBIDDEN_CREATE = "btm.bypass.forbidden.create.",
 		BYPASS_FORBIDDEN_USE = "btm.bypass.forbidden.use.",
+		
+		//EntityTransport
+		BYPASS_ENTITYTRANSPORT_ACCESSLIST = "btm.bypass.entitytransport.accesslist",
+		BYPASS_ENTITYTRANSPORT_SERIALIZATION = "btm.bypass.entitytransport.serialization.",
 		
 		//Home
 		PERM_HOME_OTHER = "btm.cmd.staff.home.home.other",

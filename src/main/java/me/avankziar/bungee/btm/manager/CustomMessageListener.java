@@ -56,7 +56,8 @@ public class CustomMessageListener implements Listener
         	String type = in.readUTF();
         	String errormessage = in.readUTF();
         	int delayed = in.readInt();
-        	BackHandler.getBack(in, fromUUID, fromName, Mechanics.CUSTOM);
+        	boolean overrideBack = in.readBoolean();
+        	BackHandler.getBackWithChoosing(in, fromUUID, fromName, Mechanics.CUSTOM, overrideBack);
         	preTeleportPlayerToPlayerForceUse(
         			new Teleport(UUID.fromString(fromUUID), fromName, UUID.fromString(toUUID), toName, Teleport.Type.valueOf(type)),
         			errormessage, delayed);
@@ -74,13 +75,14 @@ public class CustomMessageListener implements Listener
         	float pitch = in.readFloat();
         	String errorServerNotFound = in.readUTF();
         	int delayed = in.readInt();
-        	BackHandler.getBack(in, uuid, playerName, Mechanics.CUSTOM);
         	boolean messagenull = in.readBoolean();
         	String message = null;
         	if(!messagenull)
         	{
         		message = in.readUTF();
         	}
+        	boolean overrideBack = in.readBoolean();
+        	BackHandler.getBackWithChoosing(in, uuid, playerName, Mechanics.CUSTOM, overrideBack);
         	ServerLocation location = new ServerLocation(server, worldName, x, y, z, yaw, pitch);
         	teleportPlayerToPosition(playerName, location, errorServerNotFound, message, delayed);
         	return;

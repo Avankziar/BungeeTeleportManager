@@ -15,7 +15,7 @@ public class YamlManager
 	private static LinkedHashMap<String, Language> configBungeeKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> commandsKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> languageKeys = new LinkedHashMap<>();
-	private static LinkedHashMap<String, Language> loggerSettingsKeys = new LinkedHashMap<>(); //Was soll das?
+	private static LinkedHashMap<String, Language> customLanguageKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> randomTeleportKeys = new LinkedHashMap<>();
 	
 	private static LinkedHashMap<String, Language> forbiddenListSpigotKeys = new LinkedHashMap<>();
@@ -30,12 +30,12 @@ public class YamlManager
 			initLanguage();
 			initRandomTeleport();
 			initForbiddenListSpigot();
+			initCustomLanguage();
 		} else
 		{
 			initConfigBungee();
 			initForbiddenListBungee();
-		}
-		
+		}	
 	}
 	
 	public ISO639_2B getLanguageType()
@@ -73,9 +73,9 @@ public class YamlManager
 		return languageKeys;
 	}
 	
-	public LinkedHashMap<String, Language> getLoggerSettingsKey()
+	public LinkedHashMap<String, Language> getCustomLanguageKey()
 	{
-		return loggerSettingsKeys;
+		return customLanguageKeys;
 	}
 	
 	public LinkedHashMap<String, Language> getRTPKey()
@@ -197,40 +197,7 @@ public class YamlManager
 					"hub"}));
 		}
 	
-		Level:
-		{
-			configSpigotKeys.put("UseGlobalPermissionLevel"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					true}));
-			configSpigotKeys.put("UseServerPermissionLevel"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					true}));
-			configSpigotKeys.put("UseWorldPermissionLevel"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					true}));
-			
-			configSpigotKeys.put("ServerClusterActive"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					false}));
-			configSpigotKeys.put("ServerCluster"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"economyrange"}));
-			configSpigotKeys.put("ServerClusterList"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"hub", "hubTwo"}));
-			configSpigotKeys.put("WorldClusterActive"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					false}));
-			configSpigotKeys.put("WorldClusterList"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"hubCluster", "farmweltCluster"}));
-			configSpigotKeys.put("hubCluster"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"hubWorld", "hubNether"}));
-			configSpigotKeys.put("farmweltCluster"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"farmworld_1", "farmworld_2"}));
-		}
+		
 	
 		Mysql:
 		{
@@ -261,28 +228,43 @@ public class YamlManager
 			configSpigotKeys.put("Mysql.Password"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"not_0123456789"}));
-			configSpigotKeys.put("Mysql.TableNameI"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"btmHomes"}));
-			configSpigotKeys.put("Mysql.TableNameII"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"btmPortals"}));
-			configSpigotKeys.put("Mysql.TableNameIII"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"btmBack"}));
-			configSpigotKeys.put("Mysql.TableNameIV"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"btmRespawnPoints"}));
-			configSpigotKeys.put("Mysql.TableNameV"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"btmWarps"}));
-			configSpigotKeys.put("Mysql.TableNameVI"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"btmTeleportIgnored"}));
-			configSpigotKeys.put("Mysql.TableNameVII"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"btmSavePoints"}));
 		}
+		
+		Level:
+		{
+			configSpigotKeys.put("PermissionLevel.UseGlobalLevel"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("PermissionLevel.UseServerLevel"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("PermissionLevel.UseWorldLevel"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			
+			configSpigotKeys.put("PermissionLevel.ServerClusterActive"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("PermissionLevel.Server.Cluster"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"economyrange"}));
+			configSpigotKeys.put("PermissionLevel.Server.ClusterList"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"hub", "hubTwo"}));
+			configSpigotKeys.put("PermissionLevel.World.ClusterActive"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("PermissionLevel.World.ClusterList"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"hubCluster", "farmweltCluster"}));
+			configSpigotKeys.put("PermissionLevel.World.hubCluster"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"hubWorld", "hubNether"}));
+			configSpigotKeys.put("PermissionLevel.World.farmweltCluster"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"farmworld_1", "farmworld_2"}));
+		}
+		
 		MechanicSettings:
 		{
 			configSpigotKeys.put("EnableCommands.Back"
@@ -333,88 +315,94 @@ public class YamlManager
 			configSpigotKeys.put("TPJoinCooldown"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					5}));
-			configSpigotKeys.put("GiveEffects.BACK.Before"
+			configSpigotKeys.put("Effects.BACK.Give.Before"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.BACK.After"
+			configSpigotKeys.put("Effects.BACK.Give.After"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.DEATHBACK.Before"
+			configSpigotKeys.put("Effects.BACK.Before"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.BACK.After"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.DEATHBACK.Give.Before"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.DEATHBACK.After"
+			configSpigotKeys.put("Effects.DEATHBACK.Give.After"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.CUSTOM.Before"
+			configSpigotKeys.put("Effects.DEATHBACK.Before"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.DEATHBACK.After"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.CUSTOM.Give.Before"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.CUSTOM.After"
+			configSpigotKeys.put("Effects.CUSTOM.Give.After"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.HOME.Before"
+			configSpigotKeys.put("Effects.CUSTOM.Before"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.CUSTOM.After"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.HOME.Give.Before"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.HOME.After"
+			configSpigotKeys.put("Effects.HOME.Give.After"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.SAVEPOINT.Before"
+			configSpigotKeys.put("Effects.HOME.Before"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.HOME.After"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.RANDOMTELEPORT.Give.Before"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.SAVEPOINT.After"
+			configSpigotKeys.put("Effects.RANDOMTELEPORT.Give.After"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.TELEPORT.After"
+			configSpigotKeys.put("Effects.RANDOMTELEPORT.Before"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.RANDOMTELEPORT.After"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.SAVEPOINT.Give.Before"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.WARP.Before"
+			configSpigotKeys.put("Effects.SAVEPOINT.Give.After"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("GiveEffects.WARP.After"
+			configSpigotKeys.put("Effects.SAVEPOINT.Before"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.SAVEPOINT.After"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.TELEPORT.Give.After"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("Effectlist.BACK.Before"
+			configSpigotKeys.put("Effects.TELEPORT.After"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.BACK.After"
+			configSpigotKeys.put("Effects.WARP.Give.Before"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Effects.WARP.Give.After"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Effects.WARP.Before"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.DEATHBACK.Before"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.DEATHBACK.After"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.CUSTOM.Before"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.CUSTOM.After"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.HOME.Before"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.HOME.After"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.RANDOMTELEPORT.Before"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.RANDOMTELEPORT.After"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.SAVEPOINT.Before"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.SAVEPOINT.After"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.TELEPORT.After"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.WARP.Before"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-			configSpigotKeys.put("Effectlist.WARP.After"
+			configSpigotKeys.put("Effects.WARP.After"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
 			configSpigotKeys.put("CancelInviteRun"
@@ -462,6 +450,9 @@ public class YamlManager
 			configSpigotKeys.put("CostPer.Use.Back"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					100.0}));
+			configSpigotKeys.put("CostPer.Use.EntityTransport"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					100.0}));
 			configSpigotKeys.put("CostPer.Use.Home"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					100.0}));
@@ -499,17 +490,30 @@ public class YamlManager
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
 		}
-		SafeTeleport:
+		Use:
 		{
-			configSpigotKeys.put("UseSafeTeleport.Home"
+			configSpigotKeys.put("Use.EntityTransport.TicketMechanic"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
-			configSpigotKeys.put("UseSafeTeleport.SavePoint"
+			configSpigotKeys.put("Use.SafeTeleport.Home"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
-			configSpigotKeys.put("UseSafeTeleport.Warp"
+			configSpigotKeys.put("Use.SafeTeleport.SavePoint"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
+			configSpigotKeys.put("Use.SafeTeleport.Warp"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			
+		}
+		EntityTransportTicket:
+		{
+			configSpigotKeys.put("EntityTransport.DefaultTicketPerEntity"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					1}));
+			configSpigotKeys.put("EntityTransport.TicketList"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"COW;2", "SHEEP:3", "SKELETON:25"}));
 		}
 		Generator:
 		{
@@ -561,6 +565,7 @@ public class YamlManager
 				"/deathback", "/deathback ",
 				"&c/deathback &f| Teleportiert dich zu deinem Todespunkt.",
 				"&c/deathback &f| Teleports you to your death point.");
+		comETr();
 		comHome();
 		comRT();
 		comTp();
@@ -570,6 +575,24 @@ public class YamlManager
 	
 	private void comBypass()
 	{
+		commandsKeys.put("PermissionLevel.Global"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.permlevel.global."}));
+		commandsKeys.put("PermissionLevel.ServerExtern"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.permlevel.serverextern."}));
+		commandsKeys.put("PermissionLevel.ServerCluster"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.permlevel.servercluster."}));
+		commandsKeys.put("PermissionLevel.ServerIntern"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.permlevel.serverintern."}));
+		commandsKeys.put("PermissionLevel.World"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.permlevel.world."}));
+		commandsKeys.put("PermissionLevel.WorldClusterSameServer"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.permlevel.worldclustersameserver."}));
 		String path = "Bypass.";
 		commandsKeys.put(path+"Cost"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -583,6 +606,13 @@ public class YamlManager
 		commandsKeys.put(path+"Forbidden.Use"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.forbidden.use."}));
+		
+		commandsKeys.put(path+"EntityTransport.AccessList"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.bypass.entitytransport.accesslist"}));
+		commandsKeys.put(path+"EntityTransport.Serialization"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.bypass.entitytransport.serialization."}));
 		
 		commandsKeys.put(path+"Home.Other"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -652,6 +682,26 @@ public class YamlManager
 		/*commandsKeys.put(path+""
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				""}));*/
+	}
+	
+	private void comETr()
+	{
+		commandsInput("entitytransport", "entitytransport", "btm.cmd.user.entitytransport.entitytransport", 
+				"/entitytransport [shortcut:target]", "/entitytransport ",
+				"&c/entitytransport [Kürzel:Ziel] &f| Teleportiert das angeleihnte oder angeschaute Entity zum Home, Spieler oder Warp (h/pl/w)",
+				"&c/entitytransport [shortcut:target] &f| Teleports the leashed or viewed entity to the home, player or warp (h/pl/w).");
+		commandsInput("entitytransportsetaccess", "entitytransportsetaccess", "btm.cmd.user.entitytransport.setaccess", 
+				"/entitytransportsetaccess <playername>", "/entitytransportsetaccess ",
+				"&c/entitytransportsetaccess <Spielername> &f| Gibt oder nimmt dem Spieler die Erlaubnis, Entitys zu seinem Aufenthaltsort zu schicken.",
+				"&c/entitytransportsetaccess <playername> &f| Gives or takes away the player's permission to send entities to their location.");
+		commandsInput("entitytransportaccesslist", "entitytransportaccesslist", "btm.cmd.user.entitytransport.accesslist", 
+				"/entitytransportaccesslist [playername]", "/entitytransportaccesslist ",
+				"&c/entitytransportaccesslist [Spielername] &f| Zeigt alle Spieler mit einer Entitytransport Erlaubnis bei diesem Spieler auf.",
+				"&c/entitytransportaccesslist [playername] &f| Shows all players with an entity transport permission with this player.");
+		commandsInput("entitytransportsetowner", "entitytransportsetowner", "btm.cmd.user.entitytransport.setowner", 
+				"/entitytransportsetowner <playername>", "/entitytransportsetowner ",
+				"&c/entitytransportsetowner <Spielername> &f| Überträgt die Eigentümerrechte des Entity auf den angegebenen Spieler.",
+				"&c/entitytransportsetowner <playername> &f| Transfers the ownership rights of the entity to the specified player.");
 	}
 	
 	private void comHome()
@@ -799,7 +849,11 @@ public class YamlManager
 		commandsInput("warp", "warp", "btm.cmd.user.warp.warp",
 				"/warp <warpname> [confirm]", "/warp ",
 				"&c/warp <Warpname> &f| Teleportiert dich zu dem Warppunkt.",
-				"&c/warp <Warpname> &f| Lists all warps visible to you.");
+				"&c/warp <Warpname> &f| Teleports you to the warppoint.");
+		commandsInput("warping", "warping", "btm.cmd.staff.warp.warping",
+				"/warp <warpname> <playername> [Values...]", "/warping ",
+				"&c/warping <Warpname> <Spielername> [Werte...] &f| Teleportiert den Spieler zu dem Warppunkt.",
+				"&c/warping <warpname> <playername> [values...] &f| Teleports the player to the warppoint.");
 		commandsInput("warps", "warps", "btm.cmd.user.warp.warps",
 				"/warps [page] [playername]", "/warps ",
 				"&c/warps [Seitenzahl] [Spielername] &f| Zeigt seitenbasiert deine Warppunkte an.",
@@ -1006,7 +1060,7 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDie Teleportnutzung auf dieser Welt ist verboten!",
 						"&cTeleport use on this world is forbidden!"}));
-		
+		//INFO:OtherLanguageParts
 		langEconomy();
 		langBtm();
 		langEntityTransport();
@@ -1032,6 +1086,22 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast nicht genug Geld dafür!",
 						"&cYou don not have enough money for it!"}));
+		languageKeys.put("Economy.ETrUUID",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"EntityTransportTicket",
+						"EntityTransportTicket"}));
+		languageKeys.put("Economy.ETrName",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"EntityTransportTicket",
+						"EntityTransportTicket"}));
+		languageKeys.put("Economy.ETrORDERER",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"EntityTransportTicket",
+						"EntityTransportTicket"}));
+		languageKeys.put("Economy.ETrComment",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eKauft von &f%tickets% &eEntityTransportTickets",
+						"&ePurchases from &f%tickets% &eEntityTransportTickets"}));
 		languageKeys.put("Economy.HUUID",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Homes",
@@ -1133,6 +1203,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Backteleport wird bearbeitet!",
 						"&eThe back teleport is being processed!"}));
+		languageKeys.put("CmdBack.OldbackNull",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Backteleport ist abgebrochen, da der letzte Backpunkt nicht existiert!",
+						"&cThe backteleport is aborted because the last backpoint does not exist!"}));
 		languageKeys.put("CmdBack.ForbiddenServerUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server dürfen kein Back benutzt werden!",
@@ -1157,7 +1231,7 @@ public class YamlManager
 	
 	private void langEntityTransport()
 	{
-		String path = "CmdEntityTransport.";
+		String path = "CmdEntityTransport."; 
 		languageKeys.put(path+"NoSeperatorValue",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDas Argument enthält keinen Seperator, das Ziel kann nicht bestimmt werden.",
@@ -1165,6 +1239,102 @@ public class YamlManager
 		languageKeys.put(path+"ParameterDontExist",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Parameter für die Mechanik ist nicht bekannt! Möglich ist: &fh = Home, p = Player, w = Warp.",
+						"&c"}));
+		languageKeys.put(path+"NoEntityAtLeashOrFocused",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast kein Entity an der Leine oder in deinem Fadenkreuz!",
+						"&c"}));
+		languageKeys.put(path+"EntityCannotBeSerialized",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cEs können nur lebende Entitys transportiert werden. Mit Ausnahme vom Shuker!",
+						"&c"}));
+		languageKeys.put(path+"ValueLenghtNotRight",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Wert muss aus 2 Angaben bestehen. Bespielsweise: h:Lager (h = Home, Lager = Name des Home)",
+						"&c"}));
+		languageKeys.put(path+"ForbiddenServerUse", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAuf diesem Server dürfen keine Entitys teleportiert werden!",
+						"&cEntities cannot be teleported on this server!"}));
+		languageKeys.put(path+"ForbiddenWorldUse", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAuf dieser Welt dürfen keine Entitys teleportiert werden!",
+						"&cEntities cannot be teleported on this world!"}));
+		languageKeys.put(path+"EntityIsARegisteredEntityTeleport",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDieses Entity kann nicht teleportiert werden, da es ein regestriertes Entity ist, welche Spieler Teleportiert.",
+						"&c"}));
+		languageKeys.put(path+"HasNoRightToSerializeThatType",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu kannst den Entitytyp &f%type% &cnicht teleportieren!",
+						"&c"}));
+		languageKeys.put(path+"HasNoOwner",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDas Entity hat keinen Eigentümer!",
+						"&c"}));
+		languageKeys.put(path+"NotOwner",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu bist nicht der Eigentümer des Entitys!",
+						"&c"}));
+		languageKeys.put(path+"NotOwnerOrMember",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu bist nicht als Eigentümer oder Mitglied dieses Entity eingetragen!",
+						"&c"}));
+		languageKeys.put(path+"HasNoAccess",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast keinen Zugriff auf die Spielerlocation des Spielers &f%player%&c.",
+						"&c"}));
+		languageKeys.put(path+"NotEnoughTickets",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast nicht genug Tickets für den Teleport des Entitys! (&f%actual%&f/&4%needed%&c)",
+						"&c"}));
+		languageKeys.put(path+"HomeNotExist",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDas angesteuerte Home existiert nicht!",
+						"&c"}));
+		languageKeys.put(path+"ToPosition",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDas Entity wurden zur angegebenen Position teleportiert.",
+						"&e"}));
+		languageKeys.put(path+"ToHome",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDas Entity wurden zum Home &f%target% &eteleportiert.",
+						"&e"}));
+		languageKeys.put(path+"ToPlayer",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDas Entity wurden zum Spieler &f%target% &eteleportiert.",
+						"&e"}));
+		languageKeys.put(path+"ToWarp",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDas Entity wurden zum Warp &f%target% &eteleportiert.",
+						"&e"}));
+		languageKeys.put(path+"AddAccess",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast dem Spieler &f%player% &edie Erlaubnis gegeben, Entitys an deine Aufenthaltspunkt zu schicken.",
+						"&e"}));
+		languageKeys.put(path+"RemoveAccess",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast dem Spieler &f%player% &edie Erlaubnis genommen, Entitys an deine Aufenthaltspunkt zu schicken.",
+						"&e"}));
+		languageKeys.put(path+"NoAccessInList",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast keinem Spieler eine Erlaubnis gegeben, um ein Entity an deinen Aufenthalsort zu schicken.",
+						"&c"}));
+		languageKeys.put(path+"AccessListHover",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bKlicke hier um den Spieler &f%player% &bdie Erlaubnis ~!~&bfür den Entity Transport auf denen Aufenthaltsort zu entziehen.",
+						"&c"}));
+		languageKeys.put(path+"AccessListHeadline",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e====&bErteilte Erlaubnisse von &f%player%&e====",
+						"&e====&bPermits issued by &f%player%&e===="}));
+		languageKeys.put(path+"SetOwner",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Eigentümer des Entitys ist nun &f%player%&e.",
+						"&c"}));
+		languageKeys.put(path+"BuyTickets",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast &f%amount% &eTickets gekauft!",
 						"&c"}));
 	}
 	
@@ -1455,7 +1625,7 @@ public class YamlManager
 						"&cReject+✖~click@RUN_COMMAND@%cmd%+%player%~hover@SHOW_TEXT@&cClick+here+to+reject+the+teleport+request!"}));
 		languageKeys.put(path+"InviteRunOut",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cDie Teleportanfrage mit &f%player% &cist abgelaufen!",
+						"&cDie Teleportanfrage an &f%player% &cist abgelaufen!",
 						"&cThe teleport request with &f%player% &chas expired!"}));
 		languageKeys.put(path+"RequestInProgress", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -1917,11 +2087,43 @@ public class YamlManager
 						"&eThe warp &f%warp% &ecan only be accessed by portals!"}));
 	}
 	
+	public void initCustomLanguage() //INFO:CustomLanguages
+	{
+		customLanguageKeys.put("PermissionLevel.Access.Denied.ServerExtern",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu kannst dich nicht von Server zu Server teleportieren!",
+						"&cYou cannot teleport from server to server!"}));
+		customLanguageKeys.put("PermissionLevel.Access.Denied.ServerCluster",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu kannst dich nicht innerhalb des ServerCluster teleportieren!",
+						"&cYou cannot teleport within the server cluster!"}));
+		customLanguageKeys.put("PermissionLevel.Access.Denied.ServerIntern",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu kannst dich nicht Server intern teleportieren!",
+						"&cYou cannot teleport server internally!"}));
+		customLanguageKeys.put("PermissionLevel.Access.Denied.WorldClusterSameServer",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu kannst dich nicht innerhalb des WeltenCluster teleportieren!",
+						"&cYou cannot teleport within the world cluster!"}));
+		customLanguageKeys.put("PermissionLevel.Access.Denied.WorldIntern",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu kannst dich nicht Welten intern teleportieren!",
+						"&cYou cannot teleport worlds internally!"}));
+		customLanguageKeys.put("PermissionLevel.Access.Denied.BACK.hub_spawn_nether_spawn",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu kannst nicht vom Server Hub, Welt Spawn zum Server Nether Welt Spawn dein Back benutzen!",
+						"&cYou cannot use your back from Server Hub, World Spawn to Server Nether World Spawn!"}));
+		customLanguageKeys.put("PermissionLevel.Access.Denied.hub_spawn_nether_spawn",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu kannst dich nicht vom Server Hub, Welt Spawn zum Server Nether Welt Spawn teleportieren!",
+						"&cYou cannot teleport from Server Hub, World Spawn to Server Nether World Spawn!"}));
+	}
+	
 	public void initRandomTeleport() //INFO:RandomTeleport
 	{
 		randomTeleportKeys.put("default.PermissionToAccess"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"scc.rtp.default"}));
+				"btm.rtp.default"}));
 		randomTeleportKeys.put("default.UseHighestY"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
@@ -1956,20 +2158,20 @@ public class YamlManager
 						"hub","nether"}));
 		forbiddenListBungeeKeys.put("ForbiddenToCreate.Back.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListBungeeKeys.put("ForbiddenToCreate.Deathback.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListBungeeKeys.put("ForbiddenToCreate.Deathback.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		
 		forbiddenListBungeeKeys.put("ForbiddenToUse.TPA.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListBungeeKeys.put("ForbiddenToUse.TPA.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		
 	}
 	
@@ -1980,97 +2182,97 @@ public class YamlManager
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToCreate.Home.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToCreate.Portal.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToCreate.Portal.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToCreate.Warp.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToCreate.Warp.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Back.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Back.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Custom.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Custom.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Deathback.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Deathback.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTeleport.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTeleport.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTransport.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTransport.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Home.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Home.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Portal.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Portal.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.RandomTeleport.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.RandomTeleport.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.SavePoint.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.SavePoint.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.TPA.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.TPA.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Teleport.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Teleport.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Warp.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Warp.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1"}));
+						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Custom.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether", "Explanation: Without a :, all Custom Teleports are forbidden."}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Custom.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawn","city1", "Explanation: With a :, all Custom Teleports are forbidden, which contains the keyword for the custom Teleport. For example hub:plot etc. The >plot< word must be in use in the plugin plots or whatever."}));
+						"spawnworld","city1", "Explanation: With a :, all Custom Teleports are forbidden, which contains the keyword for the custom Teleport. For example hub:plot etc. The >plot< word must be in use in the plugin plots or whatever."}));
 	}
 }
