@@ -9,8 +9,8 @@ import org.bukkit.event.Listener;
 
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
-import main.java.me.avankziar.spigot.btm.events.EntityTeleportToPlayerEvent;
-import main.java.me.avankziar.spigot.btm.events.EntityTeleportToPositionEvent;
+import main.java.me.avankziar.spigot.btm.events.miscellaneous.EntityTeleportToPlayerEvent;
+import main.java.me.avankziar.spigot.btm.events.miscellaneous.EntityTeleportToPositionEvent;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;

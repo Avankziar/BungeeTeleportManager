@@ -3,6 +3,7 @@ package main.java.me.avankziar.spigot.bungeeteleportmanager.manager;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.LivingEntity;
@@ -68,7 +69,10 @@ public class EntityTransportHelper
 			String data = LivingEntitySerialization.serializeEntityAsString(target);
 			player.sendMessage(ChatApi.tl("&c============================================="));
 			player.sendMessage(ChatApi.tl("&6LivingEntity Serialization:"));
-			player.sendMessage(data);
+			//player.sendMessage(data);
+			//TODO
+			System.out.println("DataSTART:"+data+":DataEND");
+			LivingEntitySerialization.spawnEntity(player.getLocation(), data);
 			player.sendMessage(ChatApi.tl("&c============================================="));
 			return;
 		}
@@ -367,16 +371,19 @@ public class EntityTransportHelper
 		}
 		amount = Integer.parseInt(args[0]);
 		String playername = null;
+		UUID uuid = null;
 		if(sender instanceof Player)
 		{
 			Player player = (Player) sender;
 			playername = player.getName();
+			uuid = player.getUniqueId();
 		}
 		if(args.length >= 2)
 		{
 			playername = args[1];
+			uuid = Utility.convertNameToUUID(playername);
 		}
-		UUID uuid = Utility.convertNameToUUID(playername);
+		
 		if(uuid == null)
 		{
 			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
@@ -390,6 +397,31 @@ public class EntityTransportHelper
 				mustpay = true;
 			}
 		}
-		EntityTransportHandler.addingTickets(sender, uuid.toString(), amount, mustpay);
+		EntityTransportHandler.addingTickets(sender, uuid.toString(), playername, amount, mustpay);
+		if(sender instanceof Player)
+		{
+			Player player = (Player) sender;
+			if(uuid.toString().equals(player.getUniqueId().toString()))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.GetTickets")
+						.replace("%amount%", String.valueOf(amount))));
+			} else
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.OtherGetTickets")
+						.replace("%amount%", String.valueOf(amount))
+						.replace("%player%", playername)));
+			}
+		} else
+		{
+			Player other = Bukkit.getPlayer(uuid);
+			if(other != null)
+			{
+				other.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.GetTickets")
+						.replace("%amount%", String.valueOf(amount))));
+			}
+			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.OtherGetTickets")
+					.replace("%amount%", String.valueOf(amount))
+					.replace("%player%", playername)));
+		}		
 	}
 }

@@ -59,7 +59,6 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.CustomMessage
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.EntityTransportHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.EntityTransportHelper;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.EntityTransportMessageListener;
-import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeHelper;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeMessageListener;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.RandomTeleportHandler;
@@ -78,28 +77,32 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.metric.Metrics;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.object.BTMSettings;
 import net.milkbowl.vault.economy.Economy;
 
+@SuppressWarnings("deprecation")
 public class BungeeTeleportManager extends JavaPlugin
 {
+	private static BungeeTeleportManager plugin;
 	public static Logger log;
 	public String pluginName = "BungeeTeleportManager";
+	
 	private YamlHandler yamlHandler;
 	private static YamlManager yamlManager;
 	private MysqlSetup mysqlSetup;
 	private MysqlHandler mysqlHandler;
+	
 	private Utility utility;
-	private static BungeeTeleportManager plugin;
 	//private static BackgroundTask backgroundTask;
+	
 	private BungeeBridge bungeeBridge;
-	private CommandHelper commandHelper;
+	
 	private Economy eco;
 	private AdvancedEconomyHandler advancedEconomyHandler;
 	
 	private SafeLocationHandler safeLocationHandler;
+	private CommandHelper commandHelper;
 	
 	private BackHandler backHandler;
 	private BackHelper backHelper;
 	private CustomHandler customHandler;
-	private HomeHandler homeHandler;
 	private HomeHelper homeHelper;
 	private EntityTransportHelper entityTransportHelper;
 	private RandomTeleportHandler randomTeleportHandler;
@@ -111,7 +114,6 @@ public class BungeeTeleportManager extends JavaPlugin
 	private WarpHandler warpHandler;
 	private WarpHelper warpHelper;
 	
-	public static ArrayList<String> entitytransport = new ArrayList<>();
 	public static LinkedHashMap<String, ArrayList<String>> homes = new LinkedHashMap<String, ArrayList<String>>();
 	public static LinkedHashMap<String, ArrayList<String>> rtp = new LinkedHashMap<String, ArrayList<String>>();
 	public static LinkedHashMap<String, ArrayList<String>> savepoints = new LinkedHashMap<String, ArrayList<String>>();
@@ -129,7 +131,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		plugin = this;
 		log = getLogger();
 		
-		//https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=AEP
+		//https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=BTM
 		log.info(" ██████╗ ████████╗███╗   ███╗ | API-Version: "+plugin.getDescription().getAPIVersion());
 		log.info(" ██╔══██╗╚══██╔══╝████╗ ████║ | Author: "+plugin.getDescription().getAuthors().toString());
 		log.info(" ██████╔╝   ██║   ██╔████╔██║ | Plugin Website: "+plugin.getDescription().getWebsite());
@@ -161,14 +163,16 @@ public class BungeeTeleportManager extends JavaPlugin
 			return;
 		}
 		BTMSettings.initSettings(plugin);
+		
 		bungeeBridge = new BungeeBridge(plugin);
+		
 		commandHelper = new CommandHelper(plugin);
 		safeLocationHandler = new SafeLocationHandler(plugin);
+		
 		backHelper = new BackHelper(plugin);
 		backHandler = new BackHandler(plugin);
 		customHandler = new CustomHandler(plugin);
 		homeHelper = new HomeHelper(plugin);
-		homeHandler = new HomeHandler(plugin);
 		entityTransportHelper = new EntityTransportHelper(plugin);
 		randomTeleportHelper = new RandomTeleportHelper(plugin);
 		randomTeleportHandler = new RandomTeleportHandler(plugin);
@@ -186,7 +190,6 @@ public class BungeeTeleportManager extends JavaPlugin
 		ListenerSetup();
 		setupBstats();
 		plugin.getUtility().setTpaPlayersTabCompleter();
-		initEntityTransport();
 		EntityTransportHandler.initTicketList();
 	}
 	
@@ -288,7 +291,8 @@ public class BungeeTeleportManager extends JavaPlugin
 			addingHelps(deathback);
 		}
 		
-		if(cfgh.enableCommands(Mechanics.ENTITYTRANSPORT))
+		boolean boo = false;
+		if(boo && cfgh.enableCommands(Mechanics.ENTITYTRANSPORT))
 		{
 			CommandConstructor entitytransport = new CommandConstructor("entitytransport", false);
 			
@@ -316,7 +320,14 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(entitytransportsetowner.getName()).setExecutor(new EntityTransportCommandExecutor(plugin, entitytransportsetowner));
 			getCommand(entitytransportsetowner.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			
-			addingHelps(entitytransport, entitytransportsetaccess, entitytransportaccesslist, entitytransportsetowner);
+			CommandConstructor entitytransportbuytickets = new CommandConstructor("entitytransportbuytickets", true);
+			
+			registerCommand(entitytransportbuytickets.getName());
+			getCommand(entitytransportbuytickets.getName()).setExecutor(new EntityTransportCommandExecutor(plugin, entitytransportbuytickets));
+			getCommand(entitytransportbuytickets.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			
+			addingHelps(entitytransport, entitytransportsetaccess, entitytransportaccesslist, entitytransportsetowner,
+					entitytransportbuytickets);
 		}
 		
 		if(cfgh.enableCommands(Mechanics.HOME))
@@ -955,13 +966,6 @@ public class BungeeTeleportManager extends JavaPlugin
 		}
 	}
 	
-	private void initEntityTransport()
-	{
-		entitytransport.add("h:");
-		entitytransport.add("p:");
-		entitytransport.add("w:");
-	}
-	
 	public AdvancedEconomyHandler getAdvancedEconomyHandler()
 	{
 		return advancedEconomyHandler;
@@ -990,11 +994,6 @@ public class BungeeTeleportManager extends JavaPlugin
 	public CustomHandler getCustomHandler()
 	{
 		return customHandler;
-	}
-	
-	public HomeHandler getHomeHandler()
-	{
-		return homeHandler;
 	}
 
 	public HomeHelper getHomeHelper()
@@ -1055,5 +1054,5 @@ public class BungeeTeleportManager extends JavaPlugin
 	public void setMysqlPlayers(ArrayList<String> players)
 	{
 		this.players = players;
-	}	
+	}
 }

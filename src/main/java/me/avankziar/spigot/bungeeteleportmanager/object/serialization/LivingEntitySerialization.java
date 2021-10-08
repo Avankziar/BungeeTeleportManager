@@ -65,7 +65,6 @@ public class LivingEntitySerialization
 	//Bekannt fehlende dinge:
 	/*
 	 * Attributable
-	 * Damageable
 	 * 
 	 */
 	private enum TAG
@@ -75,6 +74,7 @@ public class LivingEntitySerialization
 		ENTITYTYPE("ENTITYTYPE"),
 		FIRETICKS("INT"), FREEZETICKS("INT"),
 		GLOWING("BOOLEAN"), GRAVITY("BOOLEAN"),
+		ATTRIBUTE_MAXHEALTH("DOUBLE"), //Change to ATTRIBUTE
 		HEALTH("DOUBLE"),
 		INVISIBLE("BOOLEAN"), INVULNERABLE("BOOLEAN"),
 		MAXIMUMAIR("INT"),
@@ -143,6 +143,7 @@ public class LivingEntitySerialization
 		return false;
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static String serializeEntityAsString(LivingEntity ley) 
 	{
 		// Wenn ?, dann klären ob sich das lohnt
@@ -163,6 +164,39 @@ public class LivingEntitySerialization
 		tagmap.put(TAG.FREEZETICKS, ley.getFreezeTicks());
 		tagmap.put(TAG.GLOWING, ley.isGlowing());
 		tagmap.put(TAG.GRAVITY, ley.hasGravity());
+		/*if(ley instanceof Attributable)
+		{
+			Attributable att = (Attributable) ley;
+			List<Attribute> attributeList = new ArrayList<Attribute>(EnumSet.allOf(Attribute.class));
+			for(Attribute a : attributeList)
+			{
+				AttributeInstance ati = att.getAttribute(Attribute.GENERIC_ARMOR);
+				if(ati == null)
+				{
+					continue;
+				}
+				String s = "";
+				s += ati.getBaseValue();
+				int i = 0;
+				int end = ati.getModifiers().size();
+				if(end > 0)
+				{
+					s += "°";
+				}
+				for(AttributeModifier am : ati.getModifiers())
+				{
+					
+				}
+				switch(a)
+				{
+				case GENERIC_ARMOR:
+					//tagmap.put(TAG.GENERIC_ARMOR, );
+					break;
+					//...
+				}
+			}			
+		}*/
+		tagmap.put(TAG.ATTRIBUTE_MAXHEALTH, ley.getMaxHealth());
 		tagmap.put(TAG.HEALTH, ley.getHealth());
 		tagmap.put(TAG.INVISIBLE, ley.isInvisible());
 		tagmap.put(TAG.INVULNERABLE, ley.isInvulnerable());
@@ -196,20 +230,6 @@ public class LivingEntitySerialization
 			Ageable age = (Ageable) ley;
 			tagmap.put(TAG.AGEABLE_ADULT, age.isAdult());
 			tagmap.put(TAG.AGEABLE_AGE, age.getAge());
-		}
-		if(ley instanceof AbstractHorse)
-		{
-			AbstractHorse ah = (AbstractHorse) ley;
-			tagmap.put(TAG.AH_DOMESTICATION, ah.getDomestication());
-			tagmap.put(TAG.AH_INVENTORY, toBase64itemStackArray(ah.getInventory().getContents()));
-			tagmap.put(TAG.AH_JUMPSTRENGTH, ah.getJumpStrength());
-			tagmap.put(TAG.AH_MAXDOMESTICATION, ah.getMaxDomestication());
-			tagmap.put(TAG.AH_SADDLE, toBase64itemStack(ah.getInventory().getSaddle()));
-		}
-		if(ley instanceof AbstractVillager)
-		{
-			AbstractVillager av = (AbstractVillager) ley;
-			tagmap.put(TAG.AV_INVENTORY, toBase64itemStackArray(av.getInventory().getContents()));
 		}
 		if(ley instanceof Axolotl)
 		{
@@ -392,10 +412,39 @@ public class LivingEntitySerialization
 			}
 			tagmap.put(TAG.ZOMBIEVILLAGER_TYPE, zv.getVillagerType().toString());
 		}
-		return tagmap.toString();
+		//Is down here, because other things must become before
+		if(ley instanceof AbstractHorse)
+		{
+			AbstractHorse ah = (AbstractHorse) ley;
+			tagmap.put(TAG.AH_DOMESTICATION, ah.getDomestication());
+			tagmap.put(TAG.AH_INVENTORY, toBase64itemStackArray(ah.getInventory().getContents()));
+			tagmap.put(TAG.AH_JUMPSTRENGTH, ah.getJumpStrength());
+			tagmap.put(TAG.AH_MAXDOMESTICATION, ah.getMaxDomestication());
+			if(ah.getInventory().getSaddle() != null)
+			{
+				tagmap.put(TAG.AH_SADDLE, toBase64itemStack(ah.getInventory().getSaddle()));
+			}
+		}
+		if(ley instanceof AbstractVillager)
+		{
+			AbstractVillager av = (AbstractVillager) ley;
+			tagmap.put(TAG.AV_INVENTORY, toBase64itemStackArray(av.getInventory().getContents()));
+		}
+		int i = 0;
+		int end = tagmap.size();
+		String re = "";
+		for(Entry<TAG, Object> tag : tagmap.entrySet())
+		{
+			re += tag.getKey().toString()+":"+tag.getValue();
+			if(i+1 < end)
+			{
+				re += ",";
+			}
+		}
+		return re;
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public static void spawnEntity(Location location, String serializeEntity)
 	{
 		LinkedHashMap<TAG, Object> tagmap = getEntityMap(serializeEntity);
@@ -404,6 +453,8 @@ public class LivingEntitySerialization
 		for(Entry<TAG, Object> tag : tagmap.entrySet())
 		{
 			Object tagVO = tag.getValue();
+			BungeeTeleportManager.log.info("Tag:"+tag.getKey().toString());
+		    BungeeTeleportManager.log.info("Value:"+(tagVO.toString() != null ? tagVO.toString() : "null"));
 			switch(tag.getKey())
 			{
 			case ABSORPTION:
@@ -444,6 +495,9 @@ public class LivingEntitySerialization
 			case GRAVITY:
 				ley.setGravity((Boolean) tagVO);
 				break;
+			case ATTRIBUTE_MAXHEALTH:
+				ley.setMaxHealth((Double) tagVO);
+				break;
 			case HEALTH:
 				ley.setHealth((Double) tagVO);
 				break;
@@ -460,20 +514,10 @@ public class LivingEntitySerialization
 				ley.setPersistent((Boolean) tagVO);
 				break;
 			case PERSISTENTDATACONTAINER:
-				String split = (String) tagVO;
 				PersistentDataContainer pdc = ley.getPersistentDataContainer();
-				if(!split.contains("!"))
-				{
-					pdc.set(new NamespacedKey(BungeeTeleportManager.getPlugin(), EntityTransportHelper.OWNER),
-							PersistentDataType.STRING, split);
-				} else
-				{
-					String[] splitt = split.split("!");
-					pdc.set(new NamespacedKey(BungeeTeleportManager.getPlugin(), EntityTransportHelper.OWNER),
-							PersistentDataType.STRING, splitt[0]);
-					pdc.set(new NamespacedKey(BungeeTeleportManager.getPlugin(), EntityTransportHelper.MEMBERS),
-							PersistentDataType.STRING, splitt[1]);
-				}
+				pdc.set(new NamespacedKey(BungeeTeleportManager.getPlugin(), EntityTransportHelper.OWNER),
+						PersistentDataType.STRING, (String) tagVO);
+				break;
 			case REMAININGAIR:
 				ley.setRemainingAir((Integer) tagVO);
 				break;
@@ -482,6 +526,7 @@ public class LivingEntitySerialization
 				break;
 			case SILENT:
 				ley.setSilent((Boolean) tagVO);
+				break;
 			case TICKSLIVED:
 				ley.setTicksLived((Integer) tagVO);
 				break;
@@ -550,6 +595,7 @@ public class LivingEntitySerialization
 					AbstractVillager av = (AbstractVillager) ley;
 					av.getInventory().setContents((ItemStack[]) tagVO);
 				}
+				break;
 			case AXOLOTL_VARIANT:
 				if(ley instanceof Axolotl)
 				{
@@ -682,6 +728,7 @@ public class LivingEntitySerialization
 					Merchant mer = (Merchant) ley;
 					mer.setRecipes((List<MerchantRecipe>) tagVO);
 				}
+				break;
 			case MOB_AWARE:
 				if(ley instanceof Mob)
 				{
@@ -947,13 +994,18 @@ public class LivingEntitySerialization
 		    	try
 				{
 					map.put(tag, fromBase64itemStack(keyValue[1]));
-				} catch (IOException e){e.printStackTrace();}
+				} catch (IOException e)
+		    	{
+					e.printStackTrace();
+				}
 		    	break;
 		    case "ITEMSTACKARRAY":
 		    	try
 				{
 					map.put(tag, fromBase64itemStackArray(keyValue[1]));
-				} catch (IOException e){e.printStackTrace();}
+				} catch (IOException e){
+					e.printStackTrace();
+				}
 		    	break;
 		    case "ANIMALTAMER":
 		    	String[] split = keyValue[1].split("!");

@@ -13,56 +13,7 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 
 public interface Table01
-{
-	
-	default boolean existI(BungeeTeleportManager plugin, String whereColumn, Object... object) 
-	{
-		PreparedStatement preparedStatement = null;
-		ResultSet result = null;
-		Connection conn = plugin.getMysqlSetup().getConnection();
-		if (conn != null) 
-		{
-			try 
-			{			
-				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.HOME.getValue()
-						+ "` WHERE "+whereColumn+" LIMIT 1";
-		        preparedStatement = conn.prepareStatement(sql);
-		        int i = 1;
-		        for(Object o : object)
-		        {
-		        	preparedStatement.setObject(i, o);
-		        	i++;
-		        }
-		        
-		        result = preparedStatement.executeQuery();
-		        while (result.next()) 
-		        {
-		        	return true;
-		        }
-		    } catch (SQLException e) 
-			{
-				  BungeeTeleportManager.log.warning("Error: " + e.getMessage());
-				  e.printStackTrace();
-		    } finally 
-			{
-		    	  try 
-		    	  {
-		    		  if (result != null) 
-		    		  {
-		    			  result.close();
-		    		  }
-		    		  if (preparedStatement != null) 
-		    		  {
-		    			  preparedStatement.close();
-		    		  }
-		    	  } catch (Exception e) {
-		    		  e.printStackTrace();
-		    	  }
-		      }
-		}
-		return false;
-	}
-	
+{	
 	default boolean createI(BungeeTeleportManager plugin, Object object) 
 	{
 		if(!(object instanceof Home))
@@ -232,132 +183,6 @@ public interface Table01
 		return null;
 	}
 	
-	default boolean deleteDataI(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
-	{
-		PreparedStatement preparedStatement = null;
-		Connection conn = plugin.getMysqlSetup().getConnection();
-		try 
-		{
-			String sql = "DELETE FROM `" + MysqlHandler.Type.HOME.getValue() + "` WHERE "+whereColumn;
-			preparedStatement = conn.prepareStatement(sql);
-			int i = 1;
-	        for(Object o : whereObject)
-	        {
-	        	preparedStatement.setObject(i, o);
-	        	i++;
-	        }
-			preparedStatement.execute();
-			return true;
-		} catch (Exception e) 
-		{
-			e.printStackTrace();
-		} finally 
-		{
-			try {
-				if (preparedStatement != null) 
-				{
-					preparedStatement.close();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return false;
-	}
-	
-	default int lastIDI(BungeeTeleportManager plugin)
-	{
-		PreparedStatement preparedStatement = null;
-		ResultSet result = null;
-		Connection conn = plugin.getMysqlSetup().getConnection();
-		if (conn != null) 
-		{
-			try 
-			{			
-				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.HOME.getValue() + "` ORDER BY `id` DESC LIMIT 1";
-		        preparedStatement = conn.prepareStatement(sql);
-		        
-		        result = preparedStatement.executeQuery();
-		        while(result.next())
-		        {
-		        	return result.getInt("id");
-		        }
-		    } catch (SQLException e) 
-			{
-		    	e.printStackTrace();
-		    	return 0;
-		    } finally 
-			{
-		    	  try 
-		    	  {
-		    		  if (result != null) 
-		    		  {
-		    			  result.close();
-		    		  }
-		    		  if (preparedStatement != null) 
-		    		  {
-		    			  preparedStatement.close();
-		    		  }
-		    	  } catch (Exception e) 
-		    	  {
-		    		  e.printStackTrace();
-		    	  }
-		      }
-		}
-		return 0;
-	}
-	
-	default int countWhereIDI(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
-	{
-		PreparedStatement preparedStatement = null;
-		ResultSet result = null;
-		Connection conn = plugin.getMysqlSetup().getConnection();
-		if (conn != null) 
-		{
-			try 
-			{			
-				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.HOME.getValue()
-						+ "` WHERE "+whereColumn
-						+ " ORDER BY `id` DESC";
-		        preparedStatement = conn.prepareStatement(sql);
-		        int i = 1;
-		        for(Object o : whereObject)
-		        {
-		        	preparedStatement.setObject(i, o);
-		        	i++;
-		        }
-		        result = preparedStatement.executeQuery();
-		        int count = 0;
-		        while(result.next())
-		        {
-		        	count++;
-		        }
-		        return count;
-		    } catch (SQLException e) 
-			{
-		    	e.printStackTrace();
-		    	return 0;
-		    } finally 
-			{
-		    	  try 
-		    	  {
-		    		  if (result != null) 
-		    		  {
-		    			  result.close();
-		    		  }
-		    		  if (preparedStatement != null) 
-		    		  {
-		    			  preparedStatement.close();
-		    		  }
-		    	  } catch (Exception e) 
-		    	  {
-		    		  e.printStackTrace();
-		    	  }
-		      }
-		}
-		return 0;
-	}
-	
 	default ArrayList<Home> getListI(BungeeTeleportManager plugin, String orderByColumn,
 			int start, int end, String whereColumn, Object...whereObject)
 	{
@@ -455,6 +280,75 @@ public interface Table01
 		    } catch (SQLException e) 
 			{
 				  BungeeTeleportManager.log.warning("Error: " + e.getMessage());
+				  e.printStackTrace();
+		    } finally 
+			{
+		    	  try 
+		    	  {
+		    		  if (result != null) 
+		    		  {
+		    			  result.close();
+		    		  }
+		    		  if (preparedStatement != null) 
+		    		  {
+		    			  preparedStatement.close();
+		    		  }
+		    	  } catch (Exception e) {
+		    		  e.printStackTrace();
+		    	  }
+		      }
+		}
+		return null;
+	}
+	
+	default ArrayList<Home> getAllListAtI(BungeeTeleportManager plugin, String orderByColumn,
+			boolean desc, String whereColumn, Object...whereObject)
+	{
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+		Connection conn = plugin.getMysqlSetup().getConnection();
+		if (conn != null) 
+		{
+			try 
+			{			
+				String sql = "";
+				if(desc)
+				{
+					sql = "SELECT * FROM `" + MysqlHandler.Type.HOME.getValue()
+							+ "` WHERE "+whereColumn+" ORDER BY "+orderByColumn+" DESC";
+				} else
+				{
+					sql = "SELECT * FROM `" + MysqlHandler.Type.HOME.getValue()
+							+ "` WHERE "+whereColumn+" ORDER BY "+orderByColumn+" ASC";
+				}
+		        preparedStatement = conn.prepareStatement(sql);
+		        int i = 1;
+		        for(Object o : whereObject)
+		        {
+		        	preparedStatement.setObject(i, o);
+		        	i++;
+		        }
+		        result = preparedStatement.executeQuery();
+		        ArrayList<Home> list = new ArrayList<Home>();
+		        while (result.next()) 
+		        {
+		        	Home ep = new Home(
+		        			UUID.fromString(result.getString("player_uuid")),
+		        			result.getString("player_name"),
+		        			result.getString("home_name"),
+		        			new ServerLocation(
+		        					result.getString("server"),
+		        					result.getString("world"),
+		        					result.getDouble("x"),
+		        					result.getDouble("y"),
+		        					result.getDouble("z"),
+		        					result.getFloat("yaw"),
+		        					result.getFloat("pitch")));
+		        	list.add(ep);
+		        }
+		        return list;
+		    } catch (SQLException e) 
+			{
 				  e.printStackTrace();
 		    } finally 
 			{

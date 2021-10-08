@@ -16,11 +16,13 @@ import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
-import main.java.me.avankziar.spigot.btm.events.WarpPreTeleportEvent;
+import main.java.me.avankziar.spigot.btm.events.PlayerToPosition.WarpPreTeleportEvent;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.AccessPermissionHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.AccessPermissionHandler.ReturnStatment;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler.Type;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
@@ -163,6 +165,15 @@ public class WarpHelper
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsToUse")
 							.replace("%amount%", String.valueOf(i))));
+					return;
+				}
+				ReturnStatment rsOne = AccessPermissionHandler.isAccessPermissionDenied(UUID.fromString(playeruuid), Mechanics.WARP);
+				if(rsOne.returnValue)
+				{
+					if(rsOne.callBackMessage != null)
+					{
+						player.sendMessage(ChatApi.tl(rsOne.callBackMessage));
+					}
 					return;
 				}
 				boolean owner = false;
@@ -319,17 +330,16 @@ public class WarpHelper
 					return;
 				}
 				Player other = Bukkit.getPlayer(UUID.fromString(playeruuid));
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.RequestInProgress")));
-				plugin.getUtility().givesEffect(other, Mechanics.WARP, true, true);
 				WarpPreTeleportEvent wpte = new WarpPreTeleportEvent(player, UUID.fromString(playeruuid), playername, warp);
 				Bukkit.getPluginManager().callEvent(wpte);
 				if(wpte.isCancelled())
 				{
 					return;
 				}
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.RequestInProgress")));
+				plugin.getUtility().givesEffect(other, Mechanics.WARP, true, true);
 				plugin.getWarpHandler().sendPlayerToWarp(other, warp, playername, playeruuid);
 				return;
-				
 			}
 		}.runTaskAsynchronously(plugin);
 	}
@@ -646,15 +656,15 @@ public class WarpHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(plugin.getYamlHandler().getLang().getString("NoNumber")
-						.replace("%arg%", args[0]));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+						.replace("%arg%", args[0])));
 				return;
 			}
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(plugin.getYamlHandler().getLang().getString("IsNegativ")
-						.replace("%arg%", args[0]));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+						.replace("%arg%", args[0])));
 				return;
 			}
 			
@@ -1016,13 +1026,13 @@ public class WarpHelper
 		String owners = "";
 		if(warp.getOwner() == null)
 		{
-			owners = "/";
+			owners = "N.A.";
 		} else
 		{
 			owners = Utility.convertUUIDToName(warp.getOwner());
 			if(owners == null)
 			{
-				owners = "&cERROR";
+				owners = "N.A.";
 			}
 		}
 		player.spigot().sendMessage(ChatApi.generateTextComponent(plugin.getYamlHandler().getLang().getString("CmdWarp.InfoOwner")

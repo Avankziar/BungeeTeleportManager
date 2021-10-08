@@ -15,6 +15,8 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+@Deprecated
+//Veraltet seit Build 6-0
 public class BungeeBridge
 {
 	private static BungeeTeleportManager plugin;
@@ -51,7 +53,6 @@ public class BungeeBridge
 		return message.split("µ");
 	}
 	
-	@SuppressWarnings("deprecation")
 	public static String generateMessage(List<BaseComponent> list)
 	{
 		String idclick = "click";

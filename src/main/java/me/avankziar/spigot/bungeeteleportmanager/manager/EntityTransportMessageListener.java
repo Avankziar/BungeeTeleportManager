@@ -35,11 +35,11 @@ public class EntityTransportMessageListener implements PluginMessageListener
                 	double z = in.readDouble();
                 	float yaw = in.readFloat();
                 	float pitch = in.readFloat();
-                	Location loc = new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
                 	if(Bukkit.getWorld(worldName) == null)
 					{
 						return;
 					}
+                	Location loc = new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
 					LivingEntitySerialization.spawnEntity(loc, data);
             		return;
             	} else if(task.equals(StaticValues.ENTITYTRANSPORT_ENTITYTOPLAYER))

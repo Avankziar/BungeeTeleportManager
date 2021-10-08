@@ -73,8 +73,9 @@ public class ForbiddenHandlerSpigot
 			for(String s : plugin.getYamlHandler().getForbidden().getStringList("ForbiddenToUse.Custom.Server"))
 			{
 				if(s.contains(server)
-						&& !s.contains(":") && customAnnotation == null)
+						&& !s.contains(":"))
 				{
+					//FIXME Hier ist noch ein fehler
 					return true;
 				} else if(s.contains(server)
 						&& s.contains(":") && s.contains(customAnnotation))

@@ -20,7 +20,7 @@ public class EntityTransportHandler
 		this.plugin = plugin;
 	}
 	
-	public void teleportEntityToPosition(String data, ServerLocation location)
+	public void teleportEntityToPosition(final String data, final ServerLocation location)
 	{
 		if(data == null || data.isEmpty() || data.isBlank())
 		{

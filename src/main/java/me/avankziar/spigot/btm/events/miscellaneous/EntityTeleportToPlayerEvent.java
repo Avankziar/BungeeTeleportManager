@@ -1,4 +1,4 @@
-package main.java.me.avankziar.spigot.btm.events;
+package main.java.me.avankziar.spigot.btm.events.miscellaneous;
 
 import java.util.UUID;
 
@@ -199,6 +199,11 @@ public class EntityTeleportToPlayerEvent extends Event
 	{
 		return HANDLERS;
 	}
+	
+	public static HandlerList getHandlerList() 
+    {
+        return HANDLERS;
+    }
 
 	public boolean isSendErrorMessageToSender()
 	{

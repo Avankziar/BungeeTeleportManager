@@ -3,6 +3,7 @@ package main.java.me.avankziar.spigot.bungeeteleportmanager.manager;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -12,7 +13,11 @@ import main.java.me.avankziar.general.object.Teleport;
 import main.java.me.avankziar.general.object.TeleportIgnore;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.spigot.btm.events.PlayerToPlayer.TpAPreRequestEvent;
+import main.java.me.avankziar.spigot.btm.events.PlayerToPlayer.TpPreTeleportEvent;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.AccessPermissionHandler;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.AccessPermissionHandler.ReturnStatment;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
@@ -50,7 +55,7 @@ public class TeleportHelper
 	{
 		if(args.length == 0)
 		{
-			
+			//FIXME
 		} else if(args.length == 1)
 		{
 			Teleport tp = new Teleport(Utility.convertNameToUUID(args[0]), args[0],
@@ -128,6 +133,20 @@ public class TeleportHelper
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 				return;
 			}
+			ReturnStatment rsOne = AccessPermissionHandler.isAccessPermissionDenied(player.getUniqueId(), Mechanics.TPA);
+			ReturnStatment rsTwo = AccessPermissionHandler.isAccessPermissionDenied(uuid, Mechanics.TPA);
+			if(rsOne.returnValue || rsTwo.returnValue)
+			{
+				if(rsOne.callBackMessage != null)
+				{
+					player.sendMessage(ChatApi.tl(rsOne.callBackMessage));
+				}
+				if(rsTwo.callBackMessage != null)
+				{
+					player.sendMessage(ChatApi.tl(rsTwo.callBackMessage));
+				}
+				return;
+			}
 			TeleportIgnore tpi = new TeleportIgnore(Utility.convertNameToUUID(args[0]), player.getUniqueId());
 			boolean ignore = plugin.getMysqlHandler().exist(MysqlHandler.Type.TELEPORTIGNORE,
 					"`player_uuid` = ? AND `ignore_uuid` = ?",
@@ -139,6 +158,23 @@ public class TeleportHelper
 			} else if(ignore && player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_TPATOGGLE))
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoredBypass")));
+			}
+			if(type == Teleport.Type.TPTO)
+			{
+				TpAPreRequestEvent tpa = new TpAPreRequestEvent(player, uuid, uuid);
+				Bukkit.getPluginManager().callEvent(tpa);
+				if(tpa.isCancelled())
+				{
+					return;
+				}
+			} else if(type == Teleport.Type.TPHERE)
+			{
+				TpAPreRequestEvent tpa = new TpAPreRequestEvent(player, player.getUniqueId(), uuid);
+				Bukkit.getPluginManager().callEvent(tpa);
+				if(tpa.isCancelled())
+				{
+					return;
+				}
 			}
 			Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
 					uuid, name, type);
@@ -189,6 +225,37 @@ public class TeleportHelper
 					{
 						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 						return;
+					}
+					ReturnStatment rsOne = AccessPermissionHandler.isAccessPermissionDenied(player.getUniqueId(), Mechanics.TELEPORT);
+					ReturnStatment rsTwo = AccessPermissionHandler.isAccessPermissionDenied(uuid, Mechanics.TELEPORT);
+					if(rsOne.returnValue || rsTwo.returnValue)
+					{
+						if(rsOne.callBackMessage != null)
+						{
+							player.sendMessage(ChatApi.tl(rsOne.callBackMessage));
+						}
+						if(rsTwo.callBackMessage != null)
+						{
+							player.sendMessage(ChatApi.tl(rsTwo.callBackMessage));
+						}
+						return;
+					}
+					if(type == Teleport.Type.TPTO)
+					{
+						TpPreTeleportEvent tp = new TpPreTeleportEvent(player, uuid, uuid);
+						Bukkit.getPluginManager().callEvent(tp);
+						if(tp.isCancelled())
+						{
+							return;
+						}
+					} else if(type == Teleport.Type.TPHERE)
+					{
+						TpPreTeleportEvent tp = new TpPreTeleportEvent(player, player.getUniqueId(), uuid);
+						Bukkit.getPluginManager().callEvent(tp);
+						if(tp.isCancelled())
+						{
+							return;
+						}
 					}
 					Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
 							uuid, name, type);

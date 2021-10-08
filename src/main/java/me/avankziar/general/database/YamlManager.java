@@ -242,7 +242,7 @@ public class YamlManager
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
 			
-			configSpigotKeys.put("PermissionLevel.ServerClusterActive"
+			configSpigotKeys.put("PermissionLevel.Server.ClusterActive"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
 			configSpigotKeys.put("PermissionLevel.Server.Cluster"
@@ -309,6 +309,9 @@ public class YamlManager
 			configSpigotKeys.put("EnableCommands.Warp"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
+			configSpigotKeys.put("Enable.AccessPermission"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
 		}
 		Settings:
 		{
@@ -702,6 +705,10 @@ public class YamlManager
 				"/entitytransportsetowner <playername>", "/entitytransportsetowner ",
 				"&c/entitytransportsetowner <Spielername> &f| Überträgt die Eigentümerrechte des Entity auf den angegebenen Spieler.",
 				"&c/entitytransportsetowner <playername> &f| Transfers the ownership rights of the entity to the specified player.");
+		commandsInput("entitytransportbuytickets", "entitytransportsetowner", "btm.cmd.user.entitytransport.setowner", 
+				"/entitytransportbuytickets <amount> [playername]", "/entitytransportbuytickets ",
+				"&c/entitytransportbuytickets <Anzahl> [Spielername] &f| Kauft Entitytransporttickets für einen Preis x an.",
+				"&c/entitytransportbuytickets <amount> [playername] &f| Purchases entity transport tickets for a price x.");
 	}
 	
 	private void comHome()
@@ -1235,23 +1242,23 @@ public class YamlManager
 		languageKeys.put(path+"NoSeperatorValue",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDas Argument enthält keinen Seperator, das Ziel kann nicht bestimmt werden.",
-						"&c"}));
+						"&cThe argument does not contain a separator, the target cannot be determined."}));
 		languageKeys.put(path+"ParameterDontExist",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Parameter für die Mechanik ist nicht bekannt! Möglich ist: &fh = Home, p = Player, w = Warp.",
-						"&c"}));
+						"&cThe parameter for the mechanics is not known! Possible is: &fh = Home, p = Player, w = Warp."}));
 		languageKeys.put(path+"NoEntityAtLeashOrFocused",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast kein Entity an der Leine oder in deinem Fadenkreuz!",
-						"&c"}));
+						"&cYou don't have an entity on the line or in your crosshairs!"}));
 		languageKeys.put(path+"EntityCannotBeSerialized",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cEs können nur lebende Entitys transportiert werden. Mit Ausnahme vom Shuker!",
-						"&c"}));
+						"&cEs können nur lebende Entitys transportiert werden.",
+						"&cOnly live entities can be transported."}));
 		languageKeys.put(path+"ValueLenghtNotRight",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Wert muss aus 2 Angaben bestehen. Bespielsweise: h:Lager (h = Home, Lager = Name des Home)",
-						"&c"}));
+						"&cThe value must consist of 2 specifications. For example: h:Warehouse (h = Home, Warehouse = Name of the Home)"}));
 		languageKeys.put(path+"ForbiddenServerUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server dürfen keine Entitys teleportiert werden!",
@@ -1263,35 +1270,35 @@ public class YamlManager
 		languageKeys.put(path+"EntityIsARegisteredEntityTeleport",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDieses Entity kann nicht teleportiert werden, da es ein regestriertes Entity ist, welche Spieler Teleportiert.",
-						"&c"}));
+						"&cThis entity cannot be teleported, because it is a registered entity that teleports players."}));
 		languageKeys.put(path+"HasNoRightToSerializeThatType",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu kannst den Entitytyp &f%type% &cnicht teleportieren!",
-						"&c"}));
+						"&cYou cannot teleport the entity type &f%type% &c!"}));
 		languageKeys.put(path+"HasNoOwner",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDas Entity hat keinen Eigentümer!",
-						"&c"}));
+						"&cThe entity has no owner!"}));
 		languageKeys.put(path+"NotOwner",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu bist nicht der Eigentümer des Entitys!",
-						"&c"}));
+						"&cYou are not the owner of the entity!"}));
 		languageKeys.put(path+"NotOwnerOrMember",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu bist nicht als Eigentümer oder Mitglied dieses Entity eingetragen!",
-						"&c"}));
+						"&cYou are not registered as owner or member of this entity!"}));
 		languageKeys.put(path+"HasNoAccess",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast keinen Zugriff auf die Spielerlocation des Spielers &f%player%&c.",
-						"&c"}));
+						"&cYou do not have access to the player location of the player &f%player%&c."}));
 		languageKeys.put(path+"NotEnoughTickets",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast nicht genug Tickets für den Teleport des Entitys! (&f%actual%&f/&4%needed%&c)",
-						"&c"}));
+						"&cYou don't have enough tickets to teleport the entity! (&f%actual%&f/&4%needed%&c)"}));
 		languageKeys.put(path+"HomeNotExist",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDas angesteuerte Home existiert nicht!",
-						"&c"}));
+						"&cThe controlled Home does not exist!"}));
 		languageKeys.put(path+"ToPosition",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDas Entity wurden zur angegebenen Position teleportiert.",
@@ -1299,31 +1306,31 @@ public class YamlManager
 		languageKeys.put(path+"ToHome",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDas Entity wurden zum Home &f%target% &eteleportiert.",
-						"&e"}));
+						"&eThe entity cannot be teleported to the specified position."}));
 		languageKeys.put(path+"ToPlayer",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDas Entity wurden zum Spieler &f%target% &eteleportiert.",
-						"&e"}));
+						"&eThe entity was &eteleported to the player &f%target%&e."}));
 		languageKeys.put(path+"ToWarp",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDas Entity wurden zum Warp &f%target% &eteleportiert.",
-						"&e"}));
+						"&eThe entity were teleported to the warp &f%target%&e."}));
 		languageKeys.put(path+"AddAccess",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast dem Spieler &f%player% &edie Erlaubnis gegeben, Entitys an deine Aufenthaltspunkt zu schicken.",
-						"&e"}));
+						"&eYou have given the player &f%player% &epermission to send entities to your whereabouts point."}));
 		languageKeys.put(path+"RemoveAccess",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast dem Spieler &f%player% &edie Erlaubnis genommen, Entitys an deine Aufenthaltspunkt zu schicken.",
-						"&e"}));
+						"&eYou have taken away the players &f%player% &epermission to send entities to your whereabouts point."}));
 		languageKeys.put(path+"NoAccessInList",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast keinem Spieler eine Erlaubnis gegeben, um ein Entity an deinen Aufenthalsort zu schicken.",
-						"&c"}));
+						"&cYou have not given permission to any player to send an entity to your stay location."}));
 		languageKeys.put(path+"AccessListHover",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bKlicke hier um den Spieler &f%player% &bdie Erlaubnis ~!~&bfür den Entity Transport auf denen Aufenthaltsort zu entziehen.",
-						"&c"}));
+						"&bKlicke hier um den Spieler &f%player% &bdie Erlaubnis ~!~&bfür den Entity Transport auf deinem Aufenthaltsort zu entziehen.",
+						"&bClick here to allow the player &f%player% &bthe permission ~!~&bfor the entity transport on your location."}));
 		languageKeys.put(path+"AccessListHeadline",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&e====&bErteilte Erlaubnisse von &f%player%&e====",
@@ -1331,11 +1338,19 @@ public class YamlManager
 		languageKeys.put(path+"SetOwner",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Eigentümer des Entitys ist nun &f%player%&e.",
-						"&c"}));
+						"&eThe owner of the entity is now &f%player%&e."}));
 		languageKeys.put(path+"BuyTickets",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDu hast &f%amount% &eTickets gekauft!",
-						"&c"}));
+						"&eDu hast &f%sum% %currency% &egezahlt!",
+						"&eYou paid &f%sum% %currency&e!"}));
+		languageKeys.put(path+"GetTickets",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast &f%amount% &eTickets erhalten!",
+						"&eYou have received &f%amount% &etickets!"}));
+		languageKeys.put(path+"OtherGetTickets",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Spieler &f%player% &ehat &f%amount% &eTickets erhalten!",
+						"&eThe player &f%player% &ehas received &f%amount% &etickets!"}));
 	}
 	
 	private void langHome()
@@ -2204,10 +2219,10 @@ public class YamlManager
 						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Custom.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"hub","nether"}));
+						"dummy1","dummy2"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Custom.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawnworld","city1"}));
+						"dummy1","dummy2"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Deathback.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));

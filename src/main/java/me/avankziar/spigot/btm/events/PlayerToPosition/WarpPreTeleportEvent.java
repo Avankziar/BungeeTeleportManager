@@ -1,35 +1,25 @@
-package main.java.me.avankziar.spigot.btm.events;
+package main.java.me.avankziar.spigot.btm.events.PlayerToPosition;
 
 import java.util.UUID;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 
 import main.java.me.avankziar.general.object.Warp;
+import main.java.me.avankziar.spigot.btm.events.BasePlayerTeleportToPositionPreTeleportEvent;
 
-public class WarpPreTeleportEvent extends Event
+public class WarpPreTeleportEvent extends BasePlayerTeleportToPositionPreTeleportEvent
 {
-	private static final HandlerList HANDLERS = new HandlerList();
-	
 	private boolean isCancelled;
-	private Player player;
 	private UUID targetPlayerUUID;
 	private String targetPlayerName;
 	private Warp warp;
 
 	public WarpPreTeleportEvent(Player player, UUID targetPlayerUUID, String targetPlayerName, Warp warp)
 	{
-		super(true);
-		setPlayer(player);
+		super(player, warp.getLocation());
 		setTargetPlayerUUID(targetPlayerUUID);
 		setTargetPlayerName(targetPlayerName);
 		setWarp(warp);
-	}
-
-	public HandlerList getHandlers()
-	{
-		return HANDLERS;
 	}
 
 	public boolean isCancelled()
@@ -40,16 +30,6 @@ public class WarpPreTeleportEvent extends Event
 	public void setCancelled(boolean isCancelled)
 	{
 		this.isCancelled = isCancelled;
-	}
-
-	public Player getPlayer()
-	{
-		return player;
-	}
-
-	public void setPlayer(Player player)
-	{
-		this.player = player;
 	}
 
 	public UUID getTargetPlayerUUID()

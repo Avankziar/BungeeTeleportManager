@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+import main.java.me.avankziar.general.object.AccessPermission;
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.EntityTransport;
 import main.java.me.avankziar.general.object.Home;
@@ -103,6 +104,22 @@ public class ConvertHandler
 			if(o instanceof EntityTransport.TargetAccess)
 			{
 				el.add((EntityTransport.TargetAccess) o);
+			} else
+			{
+				return null;
+			}
+		}
+		return el;
+	}
+	
+	public static ArrayList<AccessPermission> convertListX(ArrayList<?> list)
+	{
+		ArrayList<AccessPermission> el = new ArrayList<>();
+		for(Object o : list)
+		{
+			if(o instanceof AccessPermission)
+			{
+				el.add((AccessPermission) o);
 			} else
 			{
 				return null;

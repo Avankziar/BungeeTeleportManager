@@ -1,4 +1,4 @@
-package main.java.me.avankziar.spigot.btm.events;
+package main.java.me.avankziar.spigot.btm.events.custommechanic;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

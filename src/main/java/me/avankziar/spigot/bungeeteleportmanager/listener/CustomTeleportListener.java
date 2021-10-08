@@ -72,7 +72,7 @@ public class CustomTeleportListener implements Listener
 	}
 	
 	@EventHandler (priority = EventPriority.HIGHEST)
-	public void onTeleportToPlayer(main.java.me.avankziar.spigot.btm.events.PlayerTeleportToPlayerEvent event)
+	public void onTeleportToPlayer(main.java.me.avankziar.spigot.btm.events.custommechanic.PlayerTeleportToPlayerEvent event)
 	{
 		if(event.isCancelled())
 		{
@@ -98,7 +98,7 @@ public class CustomTeleportListener implements Listener
 	}
 	
 	@EventHandler (priority = EventPriority.HIGHEST)
-	public void onTeleportToPosition(main.java.me.avankziar.spigot.btm.events.PlayerTeleportToPositionEvent event)
+	public void onTeleportToPosition(main.java.me.avankziar.spigot.btm.events.custommechanic.PlayerTeleportToPositionEvent event)
 	{
 		if(event.isCancelled())
 		{

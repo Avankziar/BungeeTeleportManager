@@ -62,6 +62,10 @@ public class MysqlSetup
 		{
 			return false;
 		}
+		if(!setupDatabaseX())
+		{
+			return false;
+		}
 		return true;
 	}
 	
@@ -455,8 +459,46 @@ public class MysqlSetup
 		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		        		+ " player_uuid char(36) NOT NULL,"
 		        		+ " actualamount int,"
-		        		+ " totalbuyedamount int"
+		        		+ " totalbuyedamount int,"
 		        		+ " spendedmoney double);";
+		        query = conn.prepareStatement(data);
+		        query.execute();
+		      } catch (SQLException e) 
+		      {
+		        e.printStackTrace();
+		        BungeeTeleportManager.log.severe("Error creating tables! Error: " + e.getMessage());
+		        return false;
+		      } finally 
+		      {
+		    	  try 
+		    	  {
+		    		  if (query != null) 
+		    		  {
+		    			  query.close();
+		    		  }
+		    	  } catch (Exception e) 
+		    	  {
+		    		  e.printStackTrace();
+		    		  return false;
+		    	  }
+		      }
+		}
+		return true;
+	}
+	
+	public boolean setupDatabaseX() 
+	{
+		if (conn != null) 
+		{
+			PreparedStatement query = null;
+		      try 
+		      {	        
+		        String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.ACCESSPERMISSION.getValue()
+		        		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
+		        		+ " player_uuid char(36) NOT NULL,"
+		        		+ " mechanics text,"
+		        		+ " timesinceactive BIGINT,"
+		        		+ " callbackmessage longtext);";
 		        query = conn.prepareStatement(data);
 		        query.execute();
 		      } catch (SQLException e) 

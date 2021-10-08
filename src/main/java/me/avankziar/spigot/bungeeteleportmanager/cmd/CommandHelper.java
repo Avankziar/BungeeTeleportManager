@@ -1,6 +1,5 @@
 package main.java.me.avankziar.spigot.bungeeteleportmanager.cmd;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,17 +61,5 @@ public class CommandHelper
 		}
 		MSG.setExtra(pages);	
 		player.spigot().sendMessage(MSG);
-	}
-	
-	public void reload(Player player) throws IOException
-	{
-		if(plugin.reload())
-		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdBtm.Reload.Success")));
-			return;
-		} else
-		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdBtm.Reload.Error")));
-		}
 	}
 }

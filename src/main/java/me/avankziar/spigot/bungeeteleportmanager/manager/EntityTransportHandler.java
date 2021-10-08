@@ -193,7 +193,7 @@ public class EntityTransportHandler
 		return false;
 	}
 	
-	public static void addingTickets(CommandSender sender, String targetuuid, int amount, boolean mustpay)
+	public static void addingTickets(CommandSender sender, String targetuuid, String targetname, int amount, boolean mustpay)
 	{
 		BungeeTeleportManager plugin = BungeeTeleportManager.getPlugin();
 		if(!plugin.getMysqlHandler()
@@ -235,8 +235,8 @@ public class EntityTransportHandler
 				String comment = plugin.getYamlHandler().getLang().getString("Economy.ETrComment")
     					.replace("%ticket%", String.valueOf(amount));
 				plugin.getAdvancedEconomyHandler().EconomyLogger(
-    					player.getUniqueId().toString(),
-    					player.getName(),
+    					targetuuid,
+    					targetname,
     					plugin.getYamlHandler().getLang().getString("Economy.ETrUUID"),
     					plugin.getYamlHandler().getLang().getString("Economy.ETrName"),
     					plugin.getYamlHandler().getLang().getString("Economy.ETrORDERER"),
@@ -246,7 +246,9 @@ public class EntityTransportHandler
 				plugin.getAdvancedEconomyHandler().TrendLogger(player, -sum);
 			}
 			ticket.setSpendedMoney(ticket.getSpendedMoney()+sum);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.")));			
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.BuyTickets")
+					.replace("%sum%", String.valueOf(amount))
+					.replace("%currency%", plugin.getEco().currencyNamePlural())));			
 		}
 		ticket.setActualAmount(ticket.getActualAmount()+amount);
 		ticket.setTotalBuyedAmount(ticket.getTotalBuyedAmount()+amount);

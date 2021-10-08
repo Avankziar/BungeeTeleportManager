@@ -13,11 +13,13 @@ import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
-import main.java.me.avankziar.spigot.btm.events.HomePreTeleportEvent;
+import main.java.me.avankziar.spigot.btm.events.PlayerToPosition.HomePreTeleportEvent;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.AccessPermissionHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.ChatApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.MatchApi;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.AccessPermissionHandler.ReturnStatment;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler.Type;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
@@ -73,7 +75,7 @@ public class HomeHelper
 		{
 			exist = true;
 		}
-		if(plugin.getHomeHandler().compareHomeAmount(player, true, exist))
+		if(new HomeHandler(plugin).compareHomeAmount(player, true, exist))
 		{
 			return;
 		}
@@ -267,12 +269,21 @@ public class HomeHelper
 				ConfigHandler cfgh = new ConfigHandler(plugin);
 				Home home = (Home) plugin.getMysqlHandler().getData(MysqlHandler.Type.HOME,
 						"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName);
-				int i = plugin.getHomeHandler().compareHome(player, false);
+				int i = new HomeHandler(plugin).compareHome(player, false);
 				if(i > 0 && !player.hasPermission(StaticValues.PERM_BYPASS_HOME_TOOMANY))
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesToUse")
 							.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.HOMES))
 							.replace("%amount%", String.valueOf(i))));
+					return;
+				}
+				ReturnStatment rsOne = AccessPermissionHandler.isAccessPermissionDenied(UUID.fromString(playeruuid), Mechanics.HOME);
+				if(rsOne.returnValue)
+				{
+					if(rsOne.callBackMessage != null)
+					{
+						player.sendMessage(ChatApi.tl(rsOne.callBackMessage));
+					}
 					return;
 				}
 				if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.HOME.getLower()) && plugin.getEco() != null
@@ -318,13 +329,13 @@ public class HomeHelper
 				}
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.RequestInProgress")));
 				plugin.getUtility().givesEffect(player, Mechanics.HOME, true, true);
-				HomePreTeleportEvent hpte = new HomePreTeleportEvent(player, UUID.fromString(playeruuid), playername, home);
+				HomePreTeleportEvent hpte = new HomePreTeleportEvent(player, home);
 				Bukkit.getPluginManager().callEvent(hpte);
 				if(hpte.isCancelled())
 				{
 					return;
 				}
-				plugin.getHomeHandler().sendPlayerToHome(player, home, playername, playeruuid);
+				new HomeHandler(plugin).sendPlayerToHome(player, home, playername, playeruuid);
 				return;
 			}
 		}.runTaskAsynchronously(plugin);
@@ -389,11 +400,12 @@ public class HomeHelper
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameWorld");
 		String infoElse = plugin.getYamlHandler().getLang().getString("CmdHome.ListElse");
+		HomeHandler hh = new HomeHandler(plugin);
 		for(Home home : list)
 		{
 			if(home.getLocation().getWorldName().equals(world))
 			{
-				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
+				map = hh.mapping(home, map, ChatApi.apiChat(
 						sameWorld+home.getHomeName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
@@ -403,7 +415,7 @@ public class HomeHelper
 						.replace("%koords%", Utility.getLocationV2(home.getLocation()))));
 			} else if(home.getLocation().getServer().equals(server))
 			{
-				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
+				map = hh.mapping(home, map, ChatApi.apiChat(
 						sameServer+home.getHomeName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
@@ -413,7 +425,7 @@ public class HomeHelper
 						.replace("%koords%", Utility.getLocationV2(home.getLocation()))));
 			} else
 			{
-				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
+				map = hh.mapping(home, map, ChatApi.apiChat(
 						infoElse+home.getHomeName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
@@ -501,11 +513,12 @@ public class HomeHelper
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameWorld");
 		String infoElse = plugin.getYamlHandler().getLang().getString("CmdHome.ListElse");
+		HomeHandler hh = new HomeHandler(plugin);
 		for(Home home : list)
 		{
 			if(home.getLocation().getWorldName().equals(world))
 			{
-				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
+				map = hh.mapping(home, map, ChatApi.apiChat(
 						sameWorld+home.getHomeName()+"&f|&7"+home.getPlayerName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
@@ -515,7 +528,7 @@ public class HomeHelper
 						.replace("%koords%", Utility.getLocationV2(home.getLocation()))));
 			} else if(home.getLocation().getServer().equals(server))
 			{
-				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
+				map = hh.mapping(home, map, ChatApi.apiChat(
 						sameServer+home.getHomeName()+"&f|&7"+home.getPlayerName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),
@@ -525,7 +538,7 @@ public class HomeHelper
 						.replace("%koords%", Utility.getLocationV2(home.getLocation()))));
 			} else
 			{
-				map = plugin.getHomeHandler().mapping(home, map, ChatApi.apiChat(
+				map = hh.mapping(home, map, ChatApi.apiChat(
 						infoElse+home.getHomeName()+"&f|&7"+home.getPlayerName()+" &9| ", 
 						ClickEvent.Action.RUN_COMMAND,
 						BTMSettings.settings.getCommands(KeyHandler.HOME)+home.getHomeName()+" "+home.getPlayerName(),

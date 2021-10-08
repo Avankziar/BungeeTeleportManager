@@ -33,6 +33,7 @@ import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.manager.HomeHandler;
 
 public class SafeLocationHandler
 {
@@ -114,7 +115,7 @@ public class SafeLocationHandler
 		if(o instanceof Home)
 		{
 			final Home home = (Home) pending.get(key);
-			plugin.getHomeHandler().sendPlayerToHomePost(other, home, playername, uuid);
+			new HomeHandler(plugin).sendPlayerToHomePost(other, home, playername, uuid);
 		} else if(o instanceof Home)
 		{
 			final SavePoint sp = (SavePoint) pending.get(key);

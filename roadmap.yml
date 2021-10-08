@@ -59,6 +59,10 @@ Build 6 ========================================================================
 - ++/warpremove, hat nun Abfragen, dass nur der Eigentümer und der Admin den Warp entfernen darf.
 - +Permission einbauen, die steuern ob man die mechanik intern nur auf dem Server warpen kann, crosscluster oder proxy.
 - +WICHTIG! Permission "btm.permlevel.global.*"
+- /homesetpriority tab fehler
+- /warpsearch %arg% replacerfehler
+- Preis => Benutzungspreis => /warpinfo
+- CustomEvents für Tpa etx.
 - EntityTransport
   - +Jedes Entity, außer Spieler, benötigen Permission.
   - +Entitys, welche benannt wurden, können nur noch vom Eigentümer/Umbenenner teleportiert werden. Umbenennungen von anderen Spieler im nachhinein geblock.
@@ -68,7 +72,7 @@ Build 6 ========================================================================
   - +/entitytransportsetaccess <Spielername> | Erlaubt, das der angegebene Spieler Entityts zu einem selber transportieren kann.
   - +/entitytransportaccesslist [Seitenzahl] [Spielernamen] | Zeigt alle Spieler an, welche einen Teleportzugriff für Entity haben, sowie
     werden alle Spieler angezeigt, wo der Spieler Zugriff hat.
-  - /entitytransportsetowner <Spielername> | Das angeschaute entity wird dem neuen Eigentümer überschrieben.
+  - +/entitytransportsetowner <Spielername> | Das angeschaute entity wird dem neuen Eigentümer überschrieben.
   - /entitytransportbuytickets <Zahl> [Spielername] [mustpay Boolean] | Kauft die x Anzahl an benutzbaren EntityTransport. Muss Console fähig sein.
     mustpay gibt an ob, wenn Admin oder Console es für andere Spieler ausführt, der Spieler das zahlen muss. Sonst ist es gratis.
   - +Forbiddenlist Entitytransport hinzufügen, mit EntityTypes einstellbar.

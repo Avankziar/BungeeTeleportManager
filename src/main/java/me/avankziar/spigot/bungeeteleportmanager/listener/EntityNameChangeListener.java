@@ -49,12 +49,18 @@ public class EntityNameChangeListener implements Listener
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotOwner")));
 				return;
+			} else
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.SetOwner")
+						.replace("%player%", player.getName())));
 			}
 		} else
 		{
 			PersistentDataContainer pdc = ent.getPersistentDataContainer();
 			pdc.set(new NamespacedKey(BungeeTeleportManager.getPlugin(), EntityTransportHelper.OWNER),
 					PersistentDataType.STRING, player.getUniqueId().toString());
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.SetOwner")
+					.replace("%player%", player.getName())));
 		}
 	}
 }

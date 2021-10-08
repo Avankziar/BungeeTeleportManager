@@ -12,54 +12,6 @@ import main.java.me.avankziar.spigot.bungeeteleportmanager.database.MysqlHandler
 
 public interface Table08
 {
-	default boolean existVIII(BungeeTeleportManager plugin, String whereColumn, Object... object) 
-	{
-		PreparedStatement preparedStatement = null;
-		ResultSet result = null;
-		Connection conn = plugin.getMysqlSetup().getConnection();
-		if (conn != null) 
-		{
-			try 
-			{			
-				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue()
-						+ "` WHERE "+whereColumn+" LIMIT 1";
-		        preparedStatement = conn.prepareStatement(sql);
-		        int i = 1;
-		        for(Object o : object)
-		        {
-		        	preparedStatement.setObject(i, o);
-		        	i++;
-		        }
-		        
-		        result = preparedStatement.executeQuery();
-		        while (result.next()) 
-		        {
-		        	return true;
-		        }
-		    } catch (SQLException e) 
-			{
-				  BungeeTeleportManager.log.warning("Error: " + e.getMessage());
-				  e.printStackTrace();
-		    } finally 
-			{
-		    	  try 
-		    	  {
-		    		  if (result != null) 
-		    		  {
-		    			  result.close();
-		    		  }
-		    		  if (preparedStatement != null) 
-		    		  {
-		    			  preparedStatement.close();
-		    		  }
-		    	  } catch (Exception e) {
-		    		  e.printStackTrace();
-		    	  }
-		      }
-		}
-		return false;
-	}
-	
 	default boolean createVIII(BungeeTeleportManager plugin, Object object) 
 	{
 		if(!(object instanceof EntityTransport))
@@ -202,132 +154,6 @@ public interface Table08
 		return null;
 	}
 	
-	default boolean deleteDataVIII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
-	{
-		PreparedStatement preparedStatement = null;
-		Connection conn = plugin.getMysqlSetup().getConnection();
-		try 
-		{
-			String sql = "DELETE FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue() + "` WHERE "+whereColumn;
-			preparedStatement = conn.prepareStatement(sql);
-			int i = 1;
-	        for(Object o : whereObject)
-	        {
-	        	preparedStatement.setObject(i, o);
-	        	i++;
-	        }
-			preparedStatement.execute();
-			return true;
-		} catch (Exception e) 
-		{
-			e.printStackTrace();
-		} finally 
-		{
-			try {
-				if (preparedStatement != null) 
-				{
-					preparedStatement.close();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		return false;
-	}
-	
-	default int lastIDVIII(BungeeTeleportManager plugin)
-	{
-		PreparedStatement preparedStatement = null;
-		ResultSet result = null;
-		Connection conn = plugin.getMysqlSetup().getConnection();
-		if (conn != null) 
-		{
-			try 
-			{			
-				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue() + "` ORDER BY `id` DESC LIMIT 1";
-		        preparedStatement = conn.prepareStatement(sql);
-		        
-		        result = preparedStatement.executeQuery();
-		        while(result.next())
-		        {
-		        	return result.getInt("id");
-		        }
-		    } catch (SQLException e) 
-			{
-		    	e.printStackTrace();
-		    	return 0;
-		    } finally 
-			{
-		    	  try 
-		    	  {
-		    		  if (result != null) 
-		    		  {
-		    			  result.close();
-		    		  }
-		    		  if (preparedStatement != null) 
-		    		  {
-		    			  preparedStatement.close();
-		    		  }
-		    	  } catch (Exception e) 
-		    	  {
-		    		  e.printStackTrace();
-		    	  }
-		      }
-		}
-		return 0;
-	}
-	
-	default int countWhereIDVIII(BungeeTeleportManager plugin, String whereColumn, Object... whereObject)
-	{
-		PreparedStatement preparedStatement = null;
-		ResultSet result = null;
-		Connection conn = plugin.getMysqlSetup().getConnection();
-		if (conn != null) 
-		{
-			try 
-			{			
-				String sql = "SELECT `id` FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue()
-						+ "` WHERE "+whereColumn
-						+ " ORDER BY `id` DESC";
-		        preparedStatement = conn.prepareStatement(sql);
-		        int i = 1;
-		        for(Object o : whereObject)
-		        {
-		        	preparedStatement.setObject(i, o);
-		        	i++;
-		        }
-		        result = preparedStatement.executeQuery();
-		        int count = 0;
-		        while(result.next())
-		        {
-		        	count++;
-		        }
-		        return count;
-		    } catch (SQLException e) 
-			{
-		    	e.printStackTrace();
-		    	return 0;
-		    } finally 
-			{
-		    	  try 
-		    	  {
-		    		  if (result != null) 
-		    		  {
-		    			  result.close();
-		    		  }
-		    		  if (preparedStatement != null) 
-		    		  {
-		    			  preparedStatement.close();
-		    		  }
-		    	  } catch (Exception e) 
-		    	  {
-		    		  e.printStackTrace();
-		    	  }
-		      }
-		}
-		return 0;
-	}
-	
 	default ArrayList<EntityTransport.TargetAccess> getListVIII(BungeeTeleportManager plugin, String orderByColumn,
 			int start, int end, String whereColumn, Object...whereObject)
 	{
@@ -407,6 +233,66 @@ public interface Table08
 		    } catch (SQLException e) 
 			{
 				  BungeeTeleportManager.log.warning("Error: " + e.getMessage());
+				  e.printStackTrace();
+		    } finally 
+			{
+		    	  try 
+		    	  {
+		    		  if (result != null) 
+		    		  {
+		    			  result.close();
+		    		  }
+		    		  if (preparedStatement != null) 
+		    		  {
+		    			  preparedStatement.close();
+		    		  }
+		    	  } catch (Exception e) {
+		    		  e.printStackTrace();
+		    	  }
+		      }
+		}
+		return null;
+	}
+	
+	default ArrayList<EntityTransport.TargetAccess> getAllListAtVIII(BungeeTeleportManager plugin, String orderByColumn,
+			boolean desc, String whereColumn, Object...whereObject)
+	{
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+		Connection conn = plugin.getMysqlSetup().getConnection();
+		if (conn != null) 
+		{
+			try 
+			{			
+				String sql = "";
+				if(desc)
+				{
+					sql = "SELECT * FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue()
+							+ "` WHERE "+whereColumn+" ORDER BY "+orderByColumn+" DESC";
+				} else
+				{
+					sql = "SELECT * FROM `" + MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS.getValue()
+							+ "` WHERE "+whereColumn+" ORDER BY "+orderByColumn+" ASC";
+				}
+		        preparedStatement = conn.prepareStatement(sql);
+		        int i = 1;
+		        for(Object o : whereObject)
+		        {
+		        	preparedStatement.setObject(i, o);
+		        	i++;
+		        }
+		        result = preparedStatement.executeQuery();
+		        ArrayList<EntityTransport.TargetAccess> list = new ArrayList<EntityTransport.TargetAccess>();
+		        while (result.next()) 
+		        {
+		        	EntityTransport.TargetAccess ep = new EntityTransport(). new TargetAccess(
+		        			result.getString("target_uuid"),
+		        			result.getString("access_uuid"));
+		        	list.add(ep);
+		        }
+		        return list;
+		    } catch (SQLException e) 
+			{
 				  e.printStackTrace();
 		    } finally 
 			{

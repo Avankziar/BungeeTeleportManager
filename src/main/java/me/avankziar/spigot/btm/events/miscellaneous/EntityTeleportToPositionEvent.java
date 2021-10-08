@@ -1,4 +1,4 @@
-package main.java.me.avankziar.spigot.btm.events;
+package main.java.me.avankziar.spigot.btm.events.miscellaneous;
 
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -225,6 +225,11 @@ public class EntityTeleportToPositionEvent extends Event
 	{
 		return HANDLERS;
 	}
+	
+	public static HandlerList getHandlerList() 
+    {
+        return HANDLERS;
+    }
 
 	public boolean isSendErrorMessageToSender()
 	{
