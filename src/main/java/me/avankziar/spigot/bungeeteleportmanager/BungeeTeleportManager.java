@@ -23,6 +23,7 @@ import main.java.me.avankziar.general.database.YamlManager;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.AccessPermissionHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.BungeeBridge;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.assistance.Utility;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.cmd.BTMCommandExecutor;
@@ -191,6 +192,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		setupBstats();
 		plugin.getUtility().setTpaPlayersTabCompleter();
 		EntityTransportHandler.initTicketList();
+		AccessPermissionHandler.initBackgroundTask(plugin);
 	}
 	
 	public void onDisable()

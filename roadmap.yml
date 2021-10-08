@@ -62,7 +62,16 @@ Build 6 ========================================================================
 - /homesetpriority tab fehler
 - /warpsearch %arg% replacerfehler
 - Preis => Benutzungspreis => /warpinfo
-- CustomEvents für Tpa etx.
+- +CustomEvents added and call within the respective commands:
+  - +BasePlayerTeleportToPlayerPreTeleportEvent
+  - +BasePlayerToPositionPreTeleportEvent
+  - +TpAPreRequestEvent
+  - +TpPreTeleportEvent
+  - +HomePreTeleportEvent
+  - +WarpPreTeleportEvent
+- +AccessPermission Submechanic added.
+- +AccessPermission Mysql and HashMap added.
+- +AccessPermissionHandler added.
 - EntityTransport
   - +Jedes Entity, außer Spieler, benötigen Permission.
   - +Entitys, welche benannt wurden, können nur noch vom Eigentümer/Umbenenner teleportiert werden. Umbenennungen von anderen Spieler im nachhinein geblock.
