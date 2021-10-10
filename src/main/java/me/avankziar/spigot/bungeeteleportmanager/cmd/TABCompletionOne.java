@@ -9,8 +9,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.bungeeteleportmanager.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.bungeeteleportmanager.object.BTMSettings;
 
 
@@ -29,6 +31,7 @@ public class TABCompletionOne implements TabCompleter
 		Player player = (Player)sender;
 		List<String> list = new ArrayList<String>();
 		String command = "/"+lable;
+		ConfigHandler cfgh = new ConfigHandler(plugin);
 		//ADDME Wieder reaktivieren sobald command accessable ist
 		/*if(command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.ENTITYTRANSPORT)))
 		{
@@ -121,11 +124,11 @@ public class TABCompletionOne implements TabCompleter
 				}
 			}
 		} else */
-		if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME).trim())
+		if (cfgh.enableCommands(Mechanics.HOME) && (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME).trim())
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_DEL).trim())
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_SET).trim())
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_REMOVE).trim())
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_CREATE).trim())) 
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_CREATE).trim())))
 		{
 			if(args.length == 1)
 			{
@@ -161,7 +164,8 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RANDOMTELEPORT).trim())) 
+		} else if (cfgh.enableCommands(Mechanics.RANDOMTELEPORT) 
+				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RANDOMTELEPORT).trim()))) 
 		{
 			if(args.length == 1)
 			{
@@ -191,7 +195,8 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT).trim())) 
+		} else if (cfgh.enableCommands(Mechanics.SAVEPOINT) 
+				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT).trim())))
 		{
 			if(args.length == 1)
 			{
@@ -221,8 +226,9 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP).trim())
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_INFO).trim())) 
+		} else if (cfgh.enableCommands(Mechanics.WARP) 
+				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_INFO).trim())))
 		{
 			if(args.length == 1)
 			{
@@ -252,11 +258,12 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPA).trim()) 
+		} else if (cfgh.enableCommands(Mechanics.TPA_ONLY) 
+				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPA).trim()) 
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAHERE).trim())
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TP).trim()) 
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPHERE).trim())
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAIGNORE).trim())) 
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAIGNORE).trim())))
 		{
 			if(args.length == 1)
 			{

@@ -75,6 +75,7 @@ Build 6 ========================================================================
 - EntityTransport
   - +Jedes Entity, außer Spieler, benötigen Permission.
   - +Entitys, welche benannt wurden, können nur noch vom Eigentümer/Umbenenner teleportiert werden. Umbenennungen von anderen Spieler im nachhinein geblock.
+  - Entitys die einen CustomNamen haben DÜRFEN NICHT tp werden.
   - +Zum Transport, entweder Entity an eine Leine nehmen(prio) oder anschauen.
   - +/entitytransport <x:Name> | Z.B. <w:Spawn> (Owner/Mitglieg sein) o. <h:Lager> o. <pl:Avankziar>
   - +Sollte man Entitys zu Spieler teleportieren wollen, muss vorher im MYSQL vom Zielspieler dieser den anderen Spieler freigeben.
