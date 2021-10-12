@@ -151,7 +151,6 @@ public class RandomTeleportHandler
 		Location bottom = new Location(l.getWorld(), l.getX(), l.getY() - 2, l.getZ());
 		if(isBlockOutsideWorldBorder(l.getWorld(), l.getBlockX(), l.getBlockZ()))
 		{
-			System.out.println("0"); //REMOVEME
 			return null;
 		}
 		ArrayList<Biome> forbiddenBiomes = new ArrayList<>();
@@ -168,7 +167,6 @@ public class RandomTeleportHandler
 		}
 		if(forbiddenBiomes.contains(loc.getBlock().getBiome()))
 		{
-			System.out.println("1");
 			return null;
 		}
 		if(plugin.getYamlHandler().getRTP().getBoolean(rtpPath+".UseHighestY"))
@@ -188,7 +186,6 @@ public class RandomTeleportHandler
 			if(!plugin.getYamlHandler().getRTP().getBoolean(rtpPath+".HighestYCanBeLeaves")
 					&& isLeaves(bdown))
 			{
-				System.out.println("2");
 				return null;
 			}
 			if(bbottom.getType().isSolid() && isTransparant(bdown) && isTransparant(bl) && isTransparant(bup))
@@ -215,7 +212,6 @@ public class RandomTeleportHandler
 					return new Location(loc.getWorld(), down.getX(), l.getY(), down.getZ());
 				} else if(count >= 25)
 				{
-					System.out.println("4");
 					return null;
 				}
 				l = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
@@ -224,7 +220,6 @@ public class RandomTeleportHandler
 				bottom = new Location(l.getWorld(), l.getX(), l.getY() - 2, l.getZ());
 			}
 		}
-		System.out.println("5");
 		return null;
 	}
 	

@@ -15,6 +15,7 @@ public class BasePlayerTeleportToPlayerPreTeleportEvent extends Event
 	
 	public BasePlayerTeleportToPlayerPreTeleportEvent(Player whoRequested, UUID whoIsTargeted, UUID whoIsIncluded)
 	{
+		super(true);
 		setWhoRequested(whoRequested);
 		setWhoIsTargeted(whoIsTargeted);
 		setWhoIsIncluded(whoIsIncluded);

@@ -14,6 +14,7 @@ public class BasePlayerTeleportToPositionPreTeleportEvent extends Event
 	
 	public BasePlayerTeleportToPositionPreTeleportEvent(Player whoRequested, ServerLocation destination)
 	{
+		super(true);
 		setWhoRequested(whoRequested);
 		setDestination(destination);
 	}
