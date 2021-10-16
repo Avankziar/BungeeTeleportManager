@@ -1,5 +1,5 @@
 name: BungeeTeleportManager
-main: main.java.me.avankziar.spigot.bungeeteleportmanager.BungeeTeleportManager
+main: main.java.me.avankziar.spigot.btm.BungeeTeleportManager
 version: 6
 author: Avankziar
 api-version: 1.17
