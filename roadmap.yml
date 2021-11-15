@@ -4,6 +4,9 @@ Future =========================================================================
 - Eine einstellbare Einstellung für Warps, dass man von anderen server diese nicht sehen kann. Whitelist boolean, Server Whitelist Liste
 
 Build 6 =======================================================================================================================
+- Bungee wie Spigot MysqlSetup connection und Reconnection treiber updaten, siehe Scc
+- beim teleport soll geschaut werden ob server, world etc. existieren.
+- +/warps wird die Kategorie am ende nun bei der nächsten seite mitübernommen.
 - +Mysql Tabellen Namen wurden alle aus der config genommen. Nur noch default namen sind akzeptiert.
 - +config werte wurden um- und zusammengeordnet.
 - ++Back Tabelle 3: home_priority => ALTER TABLE `btmBack` ADD `home_priority` TEXT NULL DEFAULT NULL AFTER `tp_toggle`; 
@@ -72,6 +75,7 @@ Build 6 ========================================================================
 - +AccessPermission Submechanic added.
 - +AccessPermission Mysql and HashMap added.
 - +AccessPermissionHandler added.
+- Home, Warps und Portal count perm kummulativ per Configboolean gestalten.
 - EntityTransport (befehle alle nochmal testen)
   - +Jedes Entity, außer Spieler, benötigen Permission.
   - +Entitys, welche benannt wurden, können nur noch vom Eigentümer/Umbenenner teleportiert werden. Umbenennungen von anderen Spieler im nachhinein geblock.
@@ -130,31 +134,35 @@ Build 6 ========================================================================
   - Ein Portal soll folgende Eigenschaften haben:
     - +Owner, Perm, Cooldown, Cost(Geld), Member, Blacklist, Target, PointOfExit, Point 1 & 2, TargetType(Destination),
   - TargetType: Warp, Deathback, Location, SavePoint, Firstspawn, Respawn, Randomteleport, Command
-  - /portalsetpoints | Toggle um die 2 Punkte des Portals zu setzen
-  - /portalcreate <Portalname> | Erstellt das Portal
+  - /portalsetpointsmode | Toggle um die 2 Punkte des Portals zu setzen
+  - +/portalcreate <Portalname> | Erstellt das Portal
   - /portalsetowner <Portalname> <Spielername> | Überträgt das Eigentumsrecht des Portals. (null ist eine option für keinen Owner)
   - /portalsetpermission <Portalname> <Permission>
-  - /portalsetmember <Portalname> <Spielername> | Entfernt oder fügt einen Spieler der Mitgliederliste hinzu.
+  - /portaladdmember|removemember <Portalname> <Spielername> | Entfernt oder fügt einen Spieler der Mitgliederliste hinzu.
   - /portalsetcost <Portalname> <Geldbetrag>
   - /portalsetcooldown <Portalname> <x:Zahl...> | Z.B. <y:1> <M:2> <d:5> <H:12> wären 1 Jahr 2 Monate 5 Tage und 12 Stunden
-  - /portalsettarget <Portalname> <[x:Name Oder Erkennung> ODER <x>] | Z.B. <w:Spawn> = Warp zum Spawnwarppunkt o. <sp> für den letzten Savepoint
+  - /portalsettarget <Portalname> <Erkennung> [Zusatzinfo] | Z.B. <w:Spawn> = Warp zum Spawnwarppunkt o. <sp> für den letzten Savepoint
     - Möglichkeiten sind: <p:portalname>, <w:Name>, <db> (Deatback), <l:Server;Welt;x;y;z;yaw;pitch>, <sp> oder <sp:Name>,
     <fsp> firstspawn, <resp> oder <resp:name> Respawn, <rtp> oder <rtp:Name> RandomTeleport>, <c:/warp+spawn>
-  - /portalsetblacklist <Portalname> <Spielername> | Entfernt oder fügt den Spieler der Blacklist hinzu. Bypass
+  - /portaladdblacklist|removeblacklist <Portalname> <Spielername> | Entfernt oder fügt den Spieler der Blacklist hinzu. Bypass
+  - /portalsetpostteleportmessage <Portalname> <Nachricht...>
   - /portalsetaccessdenialmessage <Portalname> <Nachricht...>
+  - /portalsearch <Seitenzahl> <xxxx:Value>; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
+    Sollte hinter dem ":" was stehen, wird genau danach gesucht. Falls der eintrag fehlt, wird nach allen gesucht,
+    welche einen server haben. Weitere Argumente sind "owner", "world", "member", "category".
   - /portalinfo <Portalname>
   - /portallist [seitenzahl] [server] [welt]
-  - /portals [seitenzahl] [spielername]
-  - /portaldelete <Portalname>
-  - /portalpointofExit <Portalname> | Erstellt den Point of Exit des angegebenen Portals
+  - +/portals [seitenzahl] [spielername]
+  - /portalremove <Portalname>
+  - /portalsetpoints <Portalname> | Versetzt die zwei Punkte des Portals zu den neuen Punkten.
+  - /portalsetpointofExit <Portalname> | Erstellt den Point of Exit des angegebenen Portals
   - /portalsettriggerblock <Portalname> [TriggerBlock, ohne Angabe AIR] [true:zum air in triggerblock umwandeln, sonst selber füllen.]
-  - /portalupdate <Portalname>, ein befehl, falls man auf einem Anderen Server Änderungen am Portal durchgeführt hat um es auf dem eigenen Server zu updaten.
-  - /portalreload , ein befehl um alle Portal auf dem eigenen Server neu zu laden.
-  - Beim Erstellen des Portals, soll der Infobefehl als ClickBefehl sofort danach gesendet.
+  - +/portalitem, gibt ein Item, welches Netherportalblöcke rotieren lässt.
+  - +Beim Erstellen des Portals, soll der Infobefehl als ClickBefehl sofort danach gesendet.
   - PermissionLevel für Portale hinzufügen.
-  - Entitys können KEINE Portale betreten.
-  - portal erstellung kann geld kosten.
+  - +portal erstellung kann geld kosten.
   - Das Innenleben der Portale muss ich mir anschauen.
+  - Portale können auch von LivingEntity benutzt werden.
 - Todeszone:
     Eine Todeszone ist ein Bereich, eine Welt oder ein Server, welche als Bedingung für eine Tod zählt.
     Sollte ein Spieler innerhalb dieses Bereichs sterben, so wird der Respawn genommen, welcher Verlinkt ist.

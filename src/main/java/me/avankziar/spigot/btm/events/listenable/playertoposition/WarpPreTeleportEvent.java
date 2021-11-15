@@ -5,11 +5,11 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 
 import main.java.me.avankziar.general.object.Warp;
-import main.java.me.avankziar.spigot.btm.events.BasePlayerTeleportToPositionPreTeleportEvent;
+import main.java.me.avankziar.spigot.btm.events.listenable.BasePlayerTeleportToPositionPreTeleportEvent;
 
 public class WarpPreTeleportEvent extends BasePlayerTeleportToPositionPreTeleportEvent
 {
-	private boolean isCancelled;
+	private boolean isCancelled = false;
 	private UUID targetPlayerUUID;
 	private String targetPlayerName;
 	private Warp warp;

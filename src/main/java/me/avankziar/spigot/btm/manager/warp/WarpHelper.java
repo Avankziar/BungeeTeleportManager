@@ -153,12 +153,26 @@ public class WarpHelper
 				if(warp.getBlacklist() != null)
 				{
 					if(warp.getBlacklist().contains(playeruuid)
+							&& !warp.getOwner().equals(player.getUniqueId().toString())
 							&& !player.hasPermission(StaticValues.PERM_BYPASS_WARP_BLACKLIST))
 					{
 						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouAreOnTheBlacklist")
 								.replace("%warpname%", warp.getName())));
 						return;
 					}
+				}
+				ConfigHandler cfgh = new ConfigHandler(plugin);
+				int canCheck = plugin.getUtility().canTeleportSection(player, Mechanics.WARP,
+						player.getWorld().getName(), warp.getLocation().getServer(), warp.getLocation().getWorldName());
+				if(canCheck > 0)
+				{
+					String answer = plugin.getUtility().canTeleportSectionAnswer(player, canCheck, Mechanics.WARP,
+							cfgh.getServer(), player.getWorld().getName(), warp.getLocation().getServer(), warp.getLocation().getWorldName());
+					if(answer != null)
+					{
+						player.sendMessage(ChatApi.tl(answer));
+					}
+					return;
 				}
 				int i = plugin.getWarpHandler().compareWarp(player, false);
 				if(i > 0 && !player.hasPermission(StaticValues.PERM_BYPASS_WARP_TOOMANY))
@@ -192,13 +206,15 @@ public class WarpHelper
 									plugin.getYamlHandler().getLang().getString("NoPermission")));
 							return;
 						}
-					} else if(warp.isHidden() && !warp.getMember().contains(player.getUniqueId().toString()))
+					} 
+					if(warp.isHidden() && !warp.getMember().contains(player.getUniqueId().toString()))
 					{
 						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
 						return;
-					} else if(warp.getPassword() != null)
+					}
+					if(warp.getPassword() != null)
 					{
-						if(password == null)
+						if(password == null && !warp.getMember().contains(player.getUniqueId().toString()))
 						{
 							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.PasswordIsNeeded")));
 							return;
@@ -209,7 +225,6 @@ public class WarpHelper
 							return;
 						}
 					}
-					ConfigHandler cfgh = new ConfigHandler(plugin);
 					if(warp.getPrice() > 0.0 
 							&& !player.hasPermission(StaticValues.BYPASS_COST+Mechanics.WARP.getLower()) 
 							&& !warp.getMember().contains(player.getUniqueId().toString())
@@ -555,8 +570,8 @@ public class WarpHelper
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNameAlreadyExist")));
 			return;
 		}
-		if(!plugin.getWarpHandler().compareWarpAmount(player, true) 
-				&& !player.hasPermission(StaticValues.PERM_BYPASS_WARP_TOOMANY))
+		if(!plugin.getPortalHandler().comparePortalAmount(player, true) 
+				&& !player.hasPermission(StaticValues.PERM_BYPASS_PORTAL_TOOMANY))
 		{
 			return;
 		}
@@ -801,7 +816,15 @@ public class WarpHelper
 				player.spigot().sendMessage(tc);
 			}
 		}
-		plugin.getCommandHelper().pastNextPage(player, "CmdWarp.", page, lastpage, BTMSettings.settings.getCommands(KeyHandler.WARPS), playername);
+		if(category != null)
+		{
+			plugin.getCommandHelper().pastNextPage(player, "CmdWarp.", page, lastpage,
+					BTMSettings.settings.getCommands(KeyHandler.WARPS), playername, category);
+		} else
+		{
+			plugin.getCommandHelper().pastNextPage(player, "CmdWarp.", page, lastpage,
+					BTMSettings.settings.getCommands(KeyHandler.WARPS), playername);
+		}
 		return;
 	}
 	

@@ -4,11 +4,11 @@ import java.util.UUID;
 
 import org.bukkit.entity.Player;
 
-import main.java.me.avankziar.spigot.btm.events.BasePlayerTeleportToPlayerPreTeleportEvent;
+import main.java.me.avankziar.spigot.btm.events.listenable.BasePlayerTeleportToPlayerPreTeleportEvent;
 
 public class TpPreTeleportEvent extends BasePlayerTeleportToPlayerPreTeleportEvent
 {
-	private boolean isCancelled;
+	private boolean isCancelled = false;
 	
 	public TpPreTeleportEvent(Player whoRequested, UUID whoIsTargeted, UUID whoIsIncluded)
 	{

@@ -35,6 +35,11 @@ public class StaticValues
 		HOME_TOSPIGOT = "btm:hometospigot",
 		HOME_PLAYERTOPOSITION = "home-playertoposition",
 		
+		//WARP Sending
+		PORTAL_TOBUNGEE = "btm:portaltobungee",
+		PORTAL_TOSPIGOT = "btm:portaltospigot",
+		PORTAL_PLAYERTOPOSITION = "portal-playertoposition",
+		
 		//RandomTeleport
 		RANDOMTELEPORT_TOBUNGEE = "btm:randomteleporttobungee",
 		RANDOMTELEPORT_TOSPIGOT = "btm:randomteleporttospigot",
@@ -102,6 +107,16 @@ public class StaticValues
 		
 		PERM_BYPASS_HOME = "btm.bypass.home.admin",
 		PERM_BYPASS_HOME_TOOMANY = "btm.bypass.home.toomany",
+		
+		//ADDME in yaml
+		PERM_BYPASS_PORTAL = "btm.bypass.portal.admin",
+		PERM_PORTALS_OTHER = "btm.bypass.portal.portals.other",
+		PERM_BYPASS_PORTAL_BLACKLIST = "btm.bypass.portal.blacklist",
+		PERM_BYPASS_PORTAL_TOOMANY = "btm.bypass.portal.toomany",
+		
+		PERM_PORTAL_COUNTWARPS_WORLD = "btm.count.portal.world.",
+		PERM_PORTAL_COUNTWARPS_SERVER = "btm.count.portal.server.",
+		PERM_PORTAL_COUNTWARPS_GLOBAL = "btm.count.portal.global.",
 		
 		//SavePoint Bypass
 		PERM_BYPASS_SAVEPOINT_OTHER = "btm.bypass.savepoint.other",

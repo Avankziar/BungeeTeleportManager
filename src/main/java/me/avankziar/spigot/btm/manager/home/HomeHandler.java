@@ -17,6 +17,7 @@ import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
+import main.java.me.avankziar.spigot.btm.handler.ConfigHandler.CountType;
 import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.btm.manager.back.BackHandler;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -217,13 +218,28 @@ public class HomeHandler
 		{
 			return -1;
 		}
-		for(int i = 500; i >= 0; i--)
+		CountType ct = new ConfigHandler(plugin).getCountPermType(Mechanics.HOME);
+		switch(ct)
 		{
-			if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_GLOBAL+i))
+		case ADDUP:
+			for(int i = 500; i >= 0; i--)
 			{
-				globalLimit = i;
-				break;
+				if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_GLOBAL+i))
+				{
+					globalLimit += i;
+				}
 			}
+			break;
+		case HIGHEST:
+			for(int i = 500; i >= 0; i--)
+			{
+				if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_GLOBAL+i))
+				{
+					globalLimit = i;
+					break;
+				}
+			}
+			break;
 		}
 		int i = globalHomeCount-globalLimit;
 		if(i >= 0 || globalLimit == 0)
@@ -284,13 +300,28 @@ public class HomeHandler
 				debug(player, "cSH have Admin-Permission");
 				return -1;
 			}
-			for(int i = 500; i >= 0; i--)
+			CountType ct = new ConfigHandler(plugin).getCountPermType(Mechanics.HOME);
+			switch(ct)
 			{
-				if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_SERVER+serverCluster+"."+i))
+			case ADDUP:
+				for(int i = 500; i >= 0; i--)
 				{
-					serverLimit = i;
-					break;
+					if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_SERVER+serverCluster+"."+i))
+					{
+						serverLimit += i;
+					}
 				}
+				break;
+			case HIGHEST:
+				for(int i = 500; i >= 0; i--)
+				{
+					if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_SERVER+serverCluster+"."+i))
+					{
+						serverLimit = i;
+						break;
+					}
+				}
+				break;
 			}
 			int i = serverHomeCount-serverLimit;
 			debug(player, "cSH sHC-sL: "+serverHomeCount+" - "+serverLimit +" = "+i);
@@ -317,13 +348,28 @@ public class HomeHandler
 			{
 				return -1;
 			}
-			for(int i = 500; i >= 0; i--)
+			CountType ct = new ConfigHandler(plugin).getCountPermType(Mechanics.HOME);
+			switch(ct)
 			{
-				if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_SERVER+server+"."+i))
+			case ADDUP:
+				for(int i = 500; i >= 0; i--)
 				{
-					serverLimit = i;
-					break;
+					if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_SERVER+server+"."+i))
+					{
+						serverLimit += i;
+					}
 				}
+				break;
+			case HIGHEST:
+				for(int i = 500; i >= 0; i--)
+				{
+					if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_SERVER+server+"."+i))
+					{
+						serverLimit = i;
+						break;
+					}
+				}
+				break;
 			}
 			int i = serverHomeCount-serverLimit;
 			if(i >= 0 || serverLimit == 0)
@@ -397,13 +443,28 @@ public class HomeHandler
 			{
 				return -1;
 			}
-			for(int i = 500; i >= 0; i--)
+			CountType ct = new ConfigHandler(plugin).getCountPermType(Mechanics.HOME);
+			switch(ct)
 			{
-				if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_WORLD+cluster+"."+i))
+			case ADDUP:
+				for(int i = 500; i >= 0; i--)
 				{
-					worldLimit = i;
-					break;
+					if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_WORLD+cluster+"."+i))
+					{
+						worldLimit += i;
+					}
 				}
+				break;
+			case HIGHEST:
+				for(int i = 500; i >= 0; i--)
+				{
+					if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_WORLD+cluster+"."+i))
+					{
+						worldLimit = i;
+						break;
+					}
+				}
+				break;
 			}
 			int i = worldHomeCount-worldLimit;
 			if(i >= 0 || worldLimit == 0)
@@ -429,13 +490,28 @@ public class HomeHandler
 			{
 				return -1;
 			}
-			for(int i = 500; i >= 0; i--)
+			CountType ct = new ConfigHandler(plugin).getCountPermType(Mechanics.HOME);
+			switch(ct)
 			{
-				if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_WORLD+world+"."+i))
+			case ADDUP:
+				for(int i = 500; i >= 0; i--)
 				{
-					worldLimit = i;
-					break;
+					if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_WORLD+world+"."+i))
+					{
+						worldLimit += i;
+					}
 				}
+				break;
+			case HIGHEST:
+				for(int i = 500; i >= 0; i--)
+				{
+					if(player.hasPermission(StaticValues.PERM_HOME_COUNTHOMES_WORLD+world+"."+i))
+					{
+						worldLimit = i;
+						break;
+					}
+				}
+				break;
 			}
 			int i = worldHomeCount-worldLimit;
 			if(i >= 0 || worldLimit == 0)

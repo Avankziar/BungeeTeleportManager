@@ -9,6 +9,7 @@ import main.java.me.avankziar.general.object.AccessPermission;
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.EntityTransport;
 import main.java.me.avankziar.general.object.Home;
+import main.java.me.avankziar.general.object.Portal;
 import main.java.me.avankziar.general.object.SavePoint;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.TeleportIgnore;
@@ -24,9 +25,19 @@ public class ConvertHandler
 			if(o instanceof Home)
 			{
 				el.add((Home) o);
-			} else
+			}
+		}
+		return el;
+	}
+	
+	public static ArrayList<Portal> convertListII(ArrayList<?> list)
+	{
+		ArrayList<Portal> el = new ArrayList<>();
+		for(Object o : list)
+		{
+			if(o instanceof Portal)
 			{
-				return null;
+				el.add((Portal) o);
 			}
 		}
 		return el;
@@ -40,9 +51,6 @@ public class ConvertHandler
 			if(o instanceof Back)
 			{
 				el.add((Back) o);
-			} else
-			{
-				return null;
 			}
 		}
 		return el;
@@ -56,9 +64,6 @@ public class ConvertHandler
 			if(o instanceof Warp)
 			{
 				el.add((Warp) o);
-			} else
-			{
-				return null;
 			}
 		}
 		return el;
@@ -88,9 +93,6 @@ public class ConvertHandler
 			if(o instanceof SavePoint)
 			{
 				el.add((SavePoint) o);
-			} else
-			{
-				return null;
 			}
 		}
 		return el;
@@ -104,9 +106,6 @@ public class ConvertHandler
 			if(o instanceof EntityTransport.TargetAccess)
 			{
 				el.add((EntityTransport.TargetAccess) o);
-			} else
-			{
-				return null;
 			}
 		}
 		return el;
@@ -120,9 +119,6 @@ public class ConvertHandler
 			if(o instanceof AccessPermission)
 			{
 				el.add((AccessPermission) o);
-			} else
-			{
-				return null;
 			}
 		}
 		return el;

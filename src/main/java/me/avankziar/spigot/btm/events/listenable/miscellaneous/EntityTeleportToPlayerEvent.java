@@ -13,7 +13,7 @@ public class EntityTeleportToPlayerEvent extends Event
 {
 	private static final HandlerList HANDLERS = new HandlerList();
 	
-	private boolean isCancelled;
+	private boolean isCancelled = false;
 	private Player sender;
 	private UUID toPlayerUUID;
 	private String toPlayerName;

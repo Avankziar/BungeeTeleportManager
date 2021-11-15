@@ -20,6 +20,7 @@ import org.bukkit.util.BlockIterator;
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.Mechanics;
+import main.java.me.avankziar.general.object.Portal;
 import main.java.me.avankziar.general.object.SavePoint;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.Warp;
@@ -220,6 +221,79 @@ public class Utility
 			}
 		}.runTaskAsynchronously(plugin);
 	}
+	
+	public void setPortalsTabCompleter(Player player)
+	{
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				ArrayList<Portal> portal = ConvertHandler.convertListII(
+						plugin.getMysqlHandler().getTop(MysqlHandler.Type.PORTAL,
+								"`id` DESC", 0,
+								plugin.getMysqlHandler().lastID(MysqlHandler.Type.PORTAL)));
+				ArrayList<String> portals = new ArrayList<>();
+				for(Portal p : portal)
+				{
+					if(p.getBlacklist() != null)
+					{
+						if(p.getBlacklist().contains(player.getUniqueId().toString()))
+						{
+							continue;
+						}
+					}
+					if(p.getOwner() != null)
+					{
+						if(p.getOwner().equals(player.getUniqueId().toString()))
+						{
+							portals.add(p.getName());
+							continue;
+						}
+					}
+					if(p.getPermission() != null)
+					{
+						if(player.hasPermission(p.getPermission()))
+						{
+							portals.add(p.getName());
+							continue;
+						} else if(p.getMember().contains(player.getUniqueId().toString()))
+						{
+							portals.add(p.getName());
+							continue;
+						} else if(player.hasPermission(StaticValues.PERM_BYPASS_PORTAL))
+						{
+							portals.add(p.getName());
+							continue;
+						}
+					} else
+					{
+						if(p.getMember() != null)
+						{
+							if(p.getMember().contains(player.getUniqueId().toString()))
+							{
+								portals.add(p.getName());
+								continue;
+							}
+						} else
+						{
+							continue;
+						}
+					}
+				}
+				if(BungeeTeleportManager.portals.containsKey(player.getName()))
+				{
+					BungeeTeleportManager.portals.replace(player.getName(), portals);
+				} else
+				{
+					BungeeTeleportManager.portals.put(player.getName(), portals);
+				}
+			}
+		}.runTaskAsynchronously(plugin);
+	}
+	
+	
+	
 	public void setRTPTabCompleter(Player player)
 	{
 		new BukkitRunnable()
@@ -399,7 +473,7 @@ public class Utility
 	 * @return
 	 */
 	public int canTeleportSection(Player player, Mechanics mechanic,
-			String serverAtTheMoment, String worldAtTheMoment, String serverTarget, String worldTarget)
+			String worldAtTheMoment, String serverTarget, String worldTarget)
 	{
 		if(player.hasPermission(plugin.getYamlHandler().getCom().getString("PermissionLevel.Global")+"*")
 				|| player.hasPermission(plugin.getYamlHandler().getCom().getString("PermissionLevel.Global")+mechanic.toString()))
@@ -407,6 +481,7 @@ public class Utility
 			return -1;
 		}
 		ConfigHandler cfgh = new ConfigHandler(BungeeTeleportManager.getPlugin());
+		final String serverAtTheMoment = cfgh.getServer();
 		if(serverAtTheMoment.equals(serverTarget))
 		{
 			if(worldAtTheMoment.equals(worldTarget))

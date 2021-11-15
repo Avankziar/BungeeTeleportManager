@@ -17,6 +17,27 @@ public class KeyHandler
 	public static String HOME_DEL = "HOME_DEL";
 	public static String HOME_REMOVE = "HOME_REMOVE";
 	
+	public static String PORTAL_CREATE = "PORTAL_CREATE";
+	public static String PORTALS = "PORTALS";
+	public static String PORTAL_LIST = "PORTAL_LIST";
+	public static String PORTAL_REMOVE = "PORTAL_REMOVE";
+	public static String PORTAL_INFO = "PORTAL_INFO";
+	public static String PORTAL_SETOWNEXITPOINT = "PORTAL_SETOWNEXITPOINT";
+	public static String PORTAL_SETPOSITIONS = "PORTAL_SETPOSITIONS";
+	public static String PORTAL_SETOWNER = "PORTAL_SETOWNER";
+	public static String PORTAL_SETPRICE = "PORTAL_SETPRICE";
+	public static String PORTAL_SETCATEGORY = "PORTAL_SETCATEGORY";
+	public static String PORTAL_SETPERMISSION = "PORTAL_SETPERMISSION";
+	public static String PORTAL_ADDMEMBER = "PORTAL_ADDMEMBER";
+	public static String PORTAL_REMOVEMEMBER = "PORTAL_REMOVEMEMBER";
+	public static String PORTAL_ADDBLACKLIST = "PORTAL_ADDBLACKLIST";
+	public static String PORTAL_REMOVEBLACKLIST = "PORTAL_REMOVEBLACKLIST";
+	public static String PORTAL_SETTARGET = "PORTAL_SETTARGET";
+	public static String PORTAL_SETTHROWBACK = "PORTAL_SETTHROWBACK";
+	public static String PORTAL_SETPORTALPROTECTION = "PORTAL_SETPORTALPROTECTION";
+	public static String PORTAL_SETPORTALSOUND = "PORTAL_SETPORTALSOUND";
+	public static String PORTAL_SETPOSTTELEPORTMSG = "PORTAL_SETPOSTTELEPORTMSG";
+	
 	public static String RANDOMTELEPORT = "RANDOMTELEPORT";
 	
 	public static String SAVEPOINT = "SAVEPOINT";

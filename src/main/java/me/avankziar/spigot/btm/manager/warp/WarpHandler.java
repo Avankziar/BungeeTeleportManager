@@ -33,18 +33,6 @@ public class WarpHandler
 	public void sendPlayerToWarp(Player player, Warp warp, String playername, String uuid)
 	{
 		ConfigHandler cfgh = new ConfigHandler(plugin);
-		int canCheck = plugin.getUtility().canTeleportSection(player, Mechanics.WARP,
-				cfgh.getServer(), player.getWorld().getName(), warp.getLocation().getServer(), warp.getLocation().getWorldName());
-		if(canCheck > 0)
-		{
-			String answer = plugin.getUtility().canTeleportSectionAnswer(player, canCheck, Mechanics.WARP,
-					cfgh.getServer(), player.getWorld().getName(), warp.getLocation().getServer(), warp.getLocation().getWorldName());
-			if(answer != null)
-			{
-				player.sendMessage(ChatApi.tl(answer));
-			}
-			return;
-		}
 		if(warp.getLocation().getServer().equals(cfgh.getServer()) && player != null)
 		{
 			if(cfgh.useSafeTeleport(Mechanics.WARP))

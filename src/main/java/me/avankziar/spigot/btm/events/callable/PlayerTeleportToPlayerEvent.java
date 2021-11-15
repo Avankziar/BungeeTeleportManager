@@ -10,7 +10,7 @@ public class PlayerTeleportToPlayerEvent extends Event
 {
 	private static final HandlerList HANDLERS = new HandlerList();
 	
-	private boolean isCancelled;
+	private boolean isCancelled = false;
 	private Player player;
 	private UUID toPlayerUUID;
 	private String toPlayer;

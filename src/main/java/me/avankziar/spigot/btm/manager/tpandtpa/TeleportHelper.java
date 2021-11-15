@@ -102,90 +102,97 @@ public class TeleportHelper
 	
 	public void tpaCmd(Player player, String[] args, Teleport.Type type)
 	{
-		if(args.length == 1)
+		new BukkitRunnable()
 		{
-			if(player.getName().equals(args[0]))
+			@Override
+			public void run()
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.TpaTooYourself")));
-				return;
-			}
-			if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.TPA_ONLY, null)
-					&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TPA_ONLY.getLower()))
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTPA.ForbiddenServerUse")));
-				return;
-			}
-			if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.TPA_ONLY, player, null)
-					&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TPA_ONLY.getLower()))
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTPA.ForbiddenWorldUse")));
-				return;
-			}
-			UUID uuid = Utility.convertNameToUUID(args[0]);
-			if(uuid == null)
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
-				return;
-			}
-			String name = Utility.convertUUIDToName(uuid.toString());
-			if(name == null)
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
-				return;
-			}
-			ReturnStatment rsOne = AccessPermissionHandler.isAccessPermissionDenied(player.getUniqueId(), Mechanics.TPA);
-			ReturnStatment rsTwo = AccessPermissionHandler.isAccessPermissionDenied(uuid, Mechanics.TPA);
-			if(rsOne.returnValue || rsTwo.returnValue)
-			{
-				if(rsOne.callBackMessage != null)
+				if(args.length == 1)
 				{
-					player.sendMessage(ChatApi.tl(rsOne.callBackMessage));
-				}
-				if(rsTwo.callBackMessage != null)
+					if(player.getName().equals(args[0]))
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.TpaTooYourself")));
+						return;
+					}
+					if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.TPA_ONLY, null)
+							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TPA_ONLY.getLower()))
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTPA.ForbiddenServerUse")));
+						return;
+					}
+					if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.TPA_ONLY, player, null)
+							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TPA_ONLY.getLower()))
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTPA.ForbiddenWorldUse")));
+						return;
+					}
+					UUID uuid = Utility.convertNameToUUID(args[0]);
+					if(uuid == null)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+						return;
+					}
+					String name = Utility.convertUUIDToName(uuid.toString());
+					if(name == null)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+						return;
+					}
+					ReturnStatment rsOne = AccessPermissionHandler.isAccessPermissionDenied(player.getUniqueId(), Mechanics.TPA);
+					ReturnStatment rsTwo = AccessPermissionHandler.isAccessPermissionDenied(uuid, Mechanics.TPA);
+					if(rsOne.returnValue || rsTwo.returnValue)
+					{
+						if(rsOne.callBackMessage != null)
+						{
+							player.sendMessage(ChatApi.tl(rsOne.callBackMessage));
+						}
+						if(rsTwo.callBackMessage != null)
+						{
+							player.sendMessage(ChatApi.tl(rsTwo.callBackMessage));
+						}
+						return;
+					}
+					TeleportIgnore tpi = new TeleportIgnore(Utility.convertNameToUUID(args[0]), player.getUniqueId());
+					boolean ignore = plugin.getMysqlHandler().exist(MysqlHandler.Type.TELEPORTIGNORE,
+							"`player_uuid` = ? AND `ignore_uuid` = ?",
+							tpi.getUUID().toString(), tpi.getIgnoredUUID().toString());
+					if(ignore && !player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_TPATOGGLE))
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.Ignored")));
+						return;
+					} else if(ignore && player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_TPATOGGLE))
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoredBypass")));
+					}
+					if(type == Teleport.Type.TPTO)
+					{
+						TpAPreRequestEvent tpa = new TpAPreRequestEvent(player, uuid, uuid);
+						Bukkit.getPluginManager().callEvent(tpa);
+						if(tpa.isCancelled())
+						{
+							return;
+						}
+					} else if(type == Teleport.Type.TPHERE)
+					{
+						TpAPreRequestEvent tpa = new TpAPreRequestEvent(player, player.getUniqueId(), uuid);
+						Bukkit.getPluginManager().callEvent(tpa);
+						if(tpa.isCancelled())
+						{
+							return;
+						}
+					}
+					Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
+							uuid, name, type);
+					plugin.getTeleportHandler().preTpSendInvite(player,tp);
+				} else
 				{
-					player.sendMessage(ChatApi.tl(rsTwo.callBackMessage));
-				}
-				return;
-			}
-			TeleportIgnore tpi = new TeleportIgnore(Utility.convertNameToUUID(args[0]), player.getUniqueId());
-			boolean ignore = plugin.getMysqlHandler().exist(MysqlHandler.Type.TELEPORTIGNORE,
-					"`player_uuid` = ? AND `ignore_uuid` = ?",
-					tpi.getUUID().toString(), tpi.getIgnoredUUID().toString());
-			if(ignore && !player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_TPATOGGLE))
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.Ignored")));
-				return;
-			} else if(ignore && player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_TPATOGGLE))
-			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoredBypass")));
-			}
-			if(type == Teleport.Type.TPTO)
-			{
-				TpAPreRequestEvent tpa = new TpAPreRequestEvent(player, uuid, uuid);
-				Bukkit.getPluginManager().callEvent(tpa);
-				if(tpa.isCancelled())
-				{
-					return;
-				}
-			} else if(type == Teleport.Type.TPHERE)
-			{
-				TpAPreRequestEvent tpa = new TpAPreRequestEvent(player, player.getUniqueId(), uuid);
-				Bukkit.getPluginManager().callEvent(tpa);
-				if(tpa.isCancelled())
-				{
-					return;
+					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+					player.spigot().sendMessage(ChatApi.clickEvent(
+							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 				}
 			}
-			Teleport tp = new Teleport(player.getUniqueId(), player.getName(),
-					uuid, name, type);
-			plugin.getTeleportHandler().preTpSendInvite(player,tp);
-		} else
-		{
-			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
-			player.spigot().sendMessage(ChatApi.clickEvent(
-					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
-		}
+		}.runTaskAsynchronously(plugin);
 	}
 	
 	public void tpCmd(Player player, String[] args, Teleport.Type type)

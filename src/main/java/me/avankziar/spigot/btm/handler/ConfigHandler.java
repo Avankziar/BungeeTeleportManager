@@ -82,6 +82,25 @@ public class ConfigHandler
 		return plugin.getYamlHandler().getConfig().getDouble("CostPer.Create."+mechanics.getKey(), 0.0);
 	}
 	
+	public enum CountType
+	{
+		HIGHEST, ADDUP;
+	}
+	
+	public CountType getCountPermType(Mechanics mechanics)
+	{
+		String s = plugin.getYamlHandler().getConfig().getString("Use.CountPerm."+mechanics.getKey(), "HIGHEST");
+		CountType ct;
+		try
+		{
+			ct = CountType.valueOf(s);
+		} catch (Exception e)
+		{
+			ct = CountType.HIGHEST;
+		}
+		return ct;
+	}
+	
 	public boolean useSafeTeleport(Mechanics mechanics)
 	{
 		return plugin.getYamlHandler().getConfig().getBoolean("Use.SafeTeleport."+mechanics.getKey(), false);

@@ -11,7 +11,7 @@ public class PlayerTeleportToPositionEvent extends Event
 {
 	private static final HandlerList HANDLERS = new HandlerList();
 	
-	private boolean isCancelled;
+	private boolean isCancelled = false;
 	private Player player;
 	private ServerLocation serverlocation;
 	private String premessage;

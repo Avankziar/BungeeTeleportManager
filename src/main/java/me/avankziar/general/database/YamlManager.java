@@ -312,6 +312,9 @@ public class YamlManager
 			configSpigotKeys.put("Enable.AccessPermission"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
+			configSpigotKeys.put("Enable.EntityCanAccessPortals"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
 		}
 		Settings:
 		{
@@ -495,6 +498,15 @@ public class YamlManager
 		}
 		Use:
 		{
+			configSpigotKeys.put("Use.CountPerm.Home"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"HIGHEST"}));
+			configSpigotKeys.put("Use.CountPerm.Portal"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"ADDUP"}));
+			configSpigotKeys.put("Use.CountPerm.Warp"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"HIGHEST"}));
 			configSpigotKeys.put("Use.EntityTransport.TicketMechanic"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
@@ -517,6 +529,15 @@ public class YamlManager
 			configSpigotKeys.put("EntityTransport.TicketList"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"COW;2", "SHEEP:3", "SKELETON:25"}));
+		}
+		Portal:
+		{
+			configSpigotKeys.put("Portal.CooldownAfterUse"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"Owner;0y-0d-0h-0m-5s-5ms",
+					"Member;0y-0d-0h-0m-5s-5ms",
+					"Perm;0y-0d-0h-0m-5s-5ms;btm.portalcooldown.staff",
+					"Perm;0y-0d-0h-10m-0s-0ms;btm.portalcooldown.user"}));
 		}
 		Generator:
 		{
@@ -570,6 +591,7 @@ public class YamlManager
 				"&c/deathback &f| Teleports you to your death point.");
 		comETr();
 		comHome();
+		comPortal();
 		comRT();
 		comTp();
 		comSavepoint();
@@ -733,11 +755,11 @@ public class YamlManager
 				"btm.cmd.admin.home.homesdeleteserverworld", "/homesdeleteserverworld <server> <worldname>", "/homesdeleteserverworld",
 				"&c/homesdeleteserverworld <Server> <Weltname> &f| Löscht alle Homes auf den angegebenen Server/Welt.",
 				"&c/homesdeleteserverworld <Server> <Weltname> &f| Deletes all homes on the specified server/world.");
-		commandsInput("homes", "homes", "btm.cmd.user.home.homes.self", 
+		commandsInput("homes", "homes", "btm.cmd.user.home.homes", 
 				"/homes [page] [playername]", "/homes ",
 				"&c/homes &f| Listet alle eigenen Homepunkte auf.",
 				"&c/homes &f| Lists all own home points.");
-		commandsInput("home", "home", "btm.cmd.user.home.home.self", 
+		commandsInput("home", "home", "btm.cmd.user.home.home", 
 				"/home <homename>", "/home ",
 				"&c/home <Homename> &f| Teleportiert dich zu deinem Homepunkt.",
 				"&c/home <Homename> &f| Teleports you to your home point.");
@@ -749,6 +771,25 @@ public class YamlManager
 				"/homesetpriority [homename]", "/homesetpriority ",
 				"&c/homesetpriority [Homename] &f| Setzt das angegebene Home als Priorität. /home führt nun direkt zu diesem Home.",
 				"&c/homesetpriority [homename] &f| Sets the specified home as priority. /home now leads directly to this home.");
+	}
+	private void comPortal()
+	{
+		commandsInput("portalcreate", "portalcreate", "btm.cmd.user.portal.create",
+				"/portalcreate <portalname>", "/portalcreate ",
+				"&c/portalcreate <Portalname> &f| Erstellt einen Portal.",
+				"&c/portalcreate <portalname> &f| Creates a portal.");
+		commandsInput("portalremove", "portalremove", "btm.cmd.user.portal.remove",
+				"/portalremove <portalname>", "/portalremove ",
+				"&c/portalremove <Portalname> &f| Löscht das Portal.",
+				"&c/portalremove <portalname> &f| Clear the portal.");
+		commandsInput("portals", "portals", "btm.cmd.user.portal.portals",
+				"/portals [page] [playername]", "/warps ",
+				"&c/portals [Seitenzahl] [Spielername] [Kategorie] &f| Zeigt seitenbasiert deine Portale an.",
+				"&c/portals [pagenumber] [playername] [category] &f| Displays your portals based on pages.");
+		commandsInput("portalitem", "portalitem", "btm.cmd.staff.portal.item",
+				"/portalitem ", "/portalitem ",
+				"&c/portalitem &f| Gibt ein Item, welches einen Netherportalblock rotieren lässt.",
+				"&c/portalitem &f| Gives an item that rotates a Nether Portal block.");
 	}
 	
 	private void comRT()
@@ -862,9 +903,9 @@ public class YamlManager
 				"&c/warping <Warpname> <Spielername> [Werte...] &f| Teleportiert den Spieler zu dem Warppunkt.",
 				"&c/warping <warpname> <playername> [values...] &f| Teleports the player to the warppoint.");
 		commandsInput("warps", "warps", "btm.cmd.user.warp.warps",
-				"/warps [page] [playername]", "/warps ",
-				"&c/warps [Seitenzahl] [Spielername] &f| Zeigt seitenbasiert deine Warppunkte an.",
-				"&c/warps [pagenumber] [playername]&f| Displays your warp points based on pages.");
+				"/warps [page] [playername] [category]", "/warps ",
+				"&c/warps [Seitenzahl] [Spielername] [Kategorie] &f| Zeigt seitenbasiert deine Warppunkte an.",
+				"&c/warps [pagenumber] [playername] [category] &f| Displays your warp points based on pages.");
 		commandsInput("warpinfo", "warpinfo", "btm.cmd.user.warp.info", "/warpinfo <warpname>",
 				"/warpinfo ",
 				"&c/warpinfo <Warpname> &f| Zeigt alle für dich einsehbaren Infos zum Warp an.",
@@ -1072,6 +1113,7 @@ public class YamlManager
 		langBtm();
 		langEntityTransport();
 		langHome();
+		langPortal();
 		langRandomTeleport();
 		langSavePoint();
 		langTp();
@@ -1129,6 +1171,26 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eErstellung vom Home &f%home%",
 						"&eCreation of the Home &f%home%"}));
+		languageKeys.put("Economy.PUUID",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Portals",
+						"Portals"}));
+		languageKeys.put("Economy.PName",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Portals",
+						"Portals"}));
+		languageKeys.put("Economy.PORDERER",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"Portals",
+						"Portals"}));
+		languageKeys.put("Economy.PComment",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eTeleport durch das Portal &f%portalname%",
+						"&eTeleport through the portal &f%portalname%"}));
+		languageKeys.put("Economy.PCommentCreate",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eErstellung des Portal &f%portalname%",
+						"&eCreation of the portal &f%portalname%"}));
 		languageKeys.put("Economy.RTUUID",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"RandomTeleport",
@@ -1467,6 +1529,214 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast das Home &f%name% priorisiert!",
 						"&eYou prioritized the home &f%name%&e!"}));
+	}
+	
+	private void langPortal() //INFO:Portal
+	{
+		String path = "CmdPortal.";
+		languageKeys.put(path+"InteractEvent.PosOne",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast die erste Position für ein Portal gesetzt!",
+						"&e"}));
+		languageKeys.put(path+"InteractEvent.PosTwo",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast die zweite Position für ein Portal gesetzt!",
+						"&e"}));
+		languageKeys.put(path+"InteractEvent.NowCreate", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast zwei Punkte gesetzt! Erstelle nun dein Portal! &2==>~click@SUGGEST_COMMAND@%cmd%+<Portalname>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&e"}));
+		languageKeys.put(path+"ForbiddenServer", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAuf diesem Server dürfen keine Portale erstellt werden!",
+						"&cPortals must not be created on this server!"}));
+		languageKeys.put(path+"ForbiddenWorld", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAuf dieser Welt dürfen keine Portale erstellt werden!",
+						"&cNo portals may be created on this world!"}));
+		languageKeys.put(path+"ForbiddenServerUse", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAuf diesem Server dürfen keine Portale benutzt werden!",
+						"&cPortals must not be used on this server!"}));
+		languageKeys.put(path+"ForbiddenWorldUse", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAuf dieser Welt dürfen keine Portale benutzt werden!",
+						"&cNo portals may be used on this world!"}));
+		languageKeys.put(path+"TooManyPortalWorld", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast schon das Maximum von &f%amount% &cPortale für diese Welt erstellt! Bitte lösche vorher einen deiner Portale um fortzufahren!",
+						"&cYou have already created the maximum of &f%amount% &cportals for this world! Please delete one of your portals before to continue!"}));
+		languageKeys.put(path+"TooManyPortalServer",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast schon das Maximum von &f%amount% &cPortale für diesen Server erstellt! Bitte lösche vorher einen deiner Portale um fortzufahren!",
+						"&cYou have already created the maximum of &f%amount% &cportals for this server! Please delete one of your portals before to continue!"}));
+		languageKeys.put(path+"TooManyPortalServerCluster",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast schon das Maximum von &f%amount% &cPortale für diese Servergruppe erstellt! Bitte lösche vorher einen deiner Portale um fortzufahren!",
+						"&cYou have already created the maximum of &f%amount% &cportals for this server group! Please delete one of your portals before to continue!"}));
+		languageKeys.put(path+"TooManyPortalGlobal", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast schon das Maximum von insgesamt &f%amount% &cPortale erstellt! Bitte lösche vorher einen deiner Portale um fortzufahren!",
+						"&cYou have already created the maximum of total &f%amount% &cportals! Please delete one of your portals before to continue!"}));
+		languageKeys.put(path+"TooManyPortalToUse",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast &f%amount% &cPortale zu viel! Bitte lösche &f%amount% &cPortale um wieder welche nutzen zu können! &f/portals &czur Einsicht deiner Portale.",
+						"&cYou have &f%amount% &cportals too much! Please delete &f%amount% &cportals to be able to use some again! &f/warps &cTo view your portals."}));
+		languageKeys.put(path+"YouAreOnTheBlacklist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu bist auf der Blackliste des Portals &f%portalname%&c.",
+						"&cYou are on the blacklist of the portal &f%portalname%&c."}));
+		languageKeys.put(path+"NotifyAfterWithDraw", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Portal-Teleport hat &f%amount% %currency% &egekostet.",
+						"&eThe portal teleport cost &f%amount% %currency%&e."}));
+		languageKeys.put(path+"HasNoDestination", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Portal &f%portalname% &chat kein Zielort!",
+						"&cThe portal &f%portalname% &chas no destination."}));
+		languageKeys.put(path+"OnCooldown", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu bis noch bis zum &f%time%&c, bei diesem Portal, auf Cooldown!",
+						"&cYou until the &f%time%&c, at this portal, on cooldown!"}));
+		languageKeys.put(path+"RequestInProgress", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Portalteleport wird bearbeitet!",
+						"&eThe portal teleport is being processed!"}));
+		languageKeys.put(path+"NotPositionOneSet", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast die Position 1 für das Erstellen von einem Portal noch nicht gesetzt!",
+						"&c"}));
+		languageKeys.put(path+"NotPositionTwoSet", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast die Position 2 für das Erstellen von einem Portal noch nicht gesetzt!",
+						"&c"}));
+		languageKeys.put(path+"YouOrThePositionAreInAOtherPortal", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu oder deine gesetzten PortalPunkte sind in einem anderen Portal!",
+						"&c"}));
+		languageKeys.put(path+"PortalNameAlreadyExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer angegebene Portalname existiert schon!",
+						"&c"}));
+		languageKeys.put(path+"PortalCreate", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&aDu hast den Portal mit dem Namen &f%name% &aerstellt! &cKlicke hier, zum öffnen der &6Portalinfo&c.",
+						"&aYou created the portal with the name &f%name%&a! &cClick here to open the &6portalinfo&c."}));
+		languageKeys.put(path+"PortalNotExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDas Portal existiert nicht!",
+						"&cPortal does not exist!"}));
+		languageKeys.put(path+"PortalDelete", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast das Portal mit dem Namen &f%name% &cgelöscht!",
+						"&cYou deleted the portal with the name &f%name%&c!"}));
+		languageKeys.put(path+"YouHaveNoPortals",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu besitzt keine Portale!",
+						"&cYou don not have portals!"}));
+		languageKeys.put(path+"PortalsHeadline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e=====&7[&6Warps &9| &7Anzahl: &f%amount%&7]&e=====",
+						"&e=====&7[&6Warps &9| &7Quantity: &f%amount%&7]&e====="}));
+		languageKeys.put(path+"ListHeadline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e=====&7[&6Warplist &9| &7Anzahl: &f%amount%&7]&e=====",
+						"&e=====&7[&6Warplist &9| &7Quantity: &f%amount%&7]&e====="}));
+		languageKeys.put(path+"ListHelpII", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e=====>&6Kategorie: &f%category%&e<=====",
+						"&e=====>&6Category: &f%category%&e<====="}));
+		languageKeys.put(path+"ListHelp", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bGleicher Server&f~&dGleiche Welt&f~&6Sonstiges&f~&cGleiche Kategorie&f~&4Gesperrt",
+						"&bSame server&f~&dSame world&f~&6Other&f~&cSame category&f~&4Locked"}));
+		languageKeys.put(path+"ListSameServer",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&b",
+						"&b"}));
+		languageKeys.put(path+"ListSameWorld",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&d",
+						"&d"}));
+		languageKeys.put(path+"ListElse",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&6",
+						"&6"}));
+		languageKeys.put(path+"ListBlacklist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&4",
+						"&4"}));
+		languageKeys.put(path+"ListHover",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eKlick hier, um alle Infos zum Portal aufzurufen!",
+						"&eClick here to get all information about portal!"}));
+		languageKeys.put(path+"Next",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e&nnächste Seite &e==>",
+						"&e&nnext page &e==>"}));
+		languageKeys.put(path+"Past", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e<== &nvorherige Seite",
+						"&e<== &nprevious page"}));
+		languageKeys.put(path+"InfoHeadlineI", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e=====&7[&6PortalInfo &f%portal% &c✖~click@SUGGEST_COMMAND@%cmdII%+%warp%~hover@SHOW_TEXT@Hover.Message.Delete &7]&e=====",
+						"&e=====&7[&6PortalInfo &f%portal% &c✖~click@SUGGEST_COMMAND@%cmdII%+%warp%~hover@SHOW_TEXT@Hover.Message.Delete &7]&e====="}));
+		languageKeys.put(path+"InfoHeadlineII", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e=====&7[&6WarpInfo &f%portal%&7]&e=====",
+						"&e=====&7[&6WarpInfo &f%portal%&7]&e====="}));
+		languageKeys.put(path+"InfoLocationI", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&ePosition1: &r%location%| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoLocationII", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&ePosition1: &r%location%| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoLocationIII", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eEigener Ausgangspunkt: &r%location%| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eOwn exitpoint: &r%location%| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoOwner", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eBesitzer: &r%owner% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Spielername>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eOwner: &r%owner% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Spielername>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoPermission", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&ePermission: &r%perm% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Permission>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePermission: &r%perm% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Permission>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoPrice", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&ePreis: &r%price% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Preis>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePrice: &r%price% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Preis>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoMember", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eMitglieder: &7[%member%&7]&r | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Spielername>~hover@SHOW_TEXT@Hover.Message.Add &4✐~click@SUGGEST_COMMAND@%cmdII%+%portal%+<Spielername>~hover@SHOW_TEXT@Hover.Message.Remove",
+						"&eMember: &7[%member%&7]&r | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Spielername>~hover@SHOW_TEXT@Hover.Message.Add &4✐~click@SUGGEST_COMMAND@%cmdII%+%portal%+<Spielername>~hover@SHOW_TEXT@Hover.Message.Remove"}));
+		languageKeys.put(path+"InfoBlacklist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eGesperrte Spieler: &7[%blacklist%&7]&r | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Spielername>~hover@SHOW_TEXT@Hover.Message.Add &4✐~click@SUGGEST_COMMAND@%cmdII%+%portal%+<Spielername>~hover@SHOW_TEXT@Hover.Message.Remove",
+						"&eBlacklist: &7[%blacklist%&7]&r | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Spielername>~hover@SHOW_TEXT@Hover.Message.Add &4✐~click@SUGGEST_COMMAND@%cmdII%+%portal%+<Spielername>~hover@SHOW_TEXT@Hover.Message.Remove"}));
+		languageKeys.put(path+"InfoIsMember",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eIst Mitglied: %ismember%",
+						"&eIs member: %ismember%"}));
+		languageKeys.put(path+"InfoIsBlacklist",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eFür dich gesperrt: %isblacklist%",
+						"&eLocked for you: %isblacklist%"}));
+		languageKeys.put(path+"InfoCategory", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eKategorie: &r%category% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Kategorie>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eCategory: &r%category% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<category>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoTarget", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eZielInfo: &r%target% %info% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<TargetType>+<Zusatzinfo>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eTargetinfo: &r%target% %info% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<targettype>+<additionalinfo>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		
+		languageKeys.put(path+"PortalItemRotater", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast ein Item bekommen, was einen Netherportalblock rotieren lässt.",
+						"&aYou created the portal with the name &f%name%&a! &cClick here to open the &6portalinfo&c."}));
 	}
 	
 	private void langRandomTeleport()
@@ -2132,6 +2402,17 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu kannst dich nicht vom Server Hub, Welt Spawn zum Server Nether Welt Spawn teleportieren!",
 						"&cYou cannot teleport from Server Hub, World Spawn to Server Nether World Spawn!"}));
+		customLanguageKeys.put("Portal.PortalRotater.Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"§5Portal §6Rotater"}));
+		customLanguageKeys.put("Portal.PortalRotater.Lore",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&6Rotiert ein Netherportal",
+						"&eLinksklicken zum rotieren.",
+						"&fVon X zu Y zu Z und zurück nach X.",
+						"&6Rotates a Nether Portal",
+						"&eLeft click to rotate.",
+						"&fFrom X to Y to Z and back to X."}));
 	}
 	
 	public void initRandomTeleport() //INFO:RandomTeleport

@@ -1,4 +1,4 @@
-package main.java.me.avankziar.spigot.btm.events;
+package main.java.me.avankziar.spigot.btm.events.listenable;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -9,13 +9,13 @@ import main.java.me.avankziar.general.object.ServerLocation;
 public class BasePlayerTeleportToPositionPreTeleportEvent extends Event
 {
 	private static final HandlerList HANDLERS = new HandlerList();
-	private Player whoRequested;
+	private final Player whoRequested;
 	private ServerLocation destination;
 	
 	public BasePlayerTeleportToPositionPreTeleportEvent(Player whoRequested, ServerLocation destination)
 	{
 		super(true);
-		setWhoRequested(whoRequested);
+		this.whoRequested = whoRequested;
 		setDestination(destination);
 	}
 	
@@ -32,11 +32,6 @@ public class BasePlayerTeleportToPositionPreTeleportEvent extends Event
 	public Player getWhoRequested()
 	{
 		return whoRequested;
-	}
-
-	public void setWhoRequested(Player whoRequested)
-	{
-		this.whoRequested = whoRequested;
 	}
 
 	public ServerLocation getDestination()

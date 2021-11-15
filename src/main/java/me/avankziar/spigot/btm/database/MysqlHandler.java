@@ -17,9 +17,10 @@ import main.java.me.avankziar.spigot.btm.database.tables.Table07;
 import main.java.me.avankziar.spigot.btm.database.tables.Table08;
 import main.java.me.avankziar.spigot.btm.database.tables.Table09;
 import main.java.me.avankziar.spigot.btm.database.tables.Table10;
+import main.java.me.avankziar.spigot.btm.database.tables.Table11;
 
 public class MysqlHandler 
-	implements Table01, Table02, Table03, Table04, Table05, Table06, Table07, Table08, Table09, Table10
+	implements Table01, Table02, Table03, Table04, Table05, Table06, Table07, Table08, Table09, Table10, Table11
 {
 	public enum Type
 	{
@@ -32,7 +33,8 @@ public class MysqlHandler
 		SAVEPOINT("btmSavePoints"),
 		ENTITYTRANSPORT_TARGETACCESS("btmEntityTransportTargetAccess"),
 		ENTITYTRANSPORT_TICKET("btmEntityTransportTicket"),
-		ACCESSPERMISSION("btmAccessPermission")
+		ACCESSPERMISSION("btmAccessPermission"),
+		PORTALCOOLDOWN("btmPortalCooldown")
 		;
 		
 		private Type(String value)
@@ -127,6 +129,8 @@ public class MysqlHandler
 			return Table09.super.createIX(plugin, object);
 		case ACCESSPERMISSION:
 			return Table10.super.createX(plugin, object);
+		case PORTALCOOLDOWN:
+			return Table11.super.createXI(plugin, object);
 		}
 		return false;
 	}
@@ -155,6 +159,8 @@ public class MysqlHandler
 			return Table09.super.updateDataIX(plugin, object, whereColumn, whereObject);
 		case ACCESSPERMISSION:
 			return Table10.super.updateDataX(plugin, object, whereColumn, whereObject);
+		case PORTALCOOLDOWN:
+			return Table11.super.updateDataXI(plugin, object, whereColumn, whereObject);
 		}
 		return false;
 	}
@@ -183,6 +189,8 @@ public class MysqlHandler
 			return Table09.super.getDataIX(plugin, whereColumn, whereObject);
 		case ACCESSPERMISSION:
 			return Table10.super.getDataX(plugin, whereColumn, whereObject);
+		case PORTALCOOLDOWN:
+			return Table11.super.getDataXI(plugin, whereColumn, whereObject);
 		}
 		return null;
 	}
@@ -384,6 +392,8 @@ public class MysqlHandler
 			return Table09.super.getListIX(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		case ACCESSPERMISSION:
 			return Table10.super.getListX(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+		case PORTALCOOLDOWN:
+			return Table11.super.getListXI(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		}
 		return null;
 	}
@@ -412,6 +422,8 @@ public class MysqlHandler
 			return Table09.super.getTopIX(plugin, orderByColumn, start, end);
 		case ACCESSPERMISSION:
 			return Table10.super.getTopX(plugin, orderByColumn, start, end);
+		case PORTALCOOLDOWN:
+			return Table11.super.getTopXI(plugin, orderByColumn, start, end);
 		}
 		return null;
 	}
@@ -440,6 +452,8 @@ public class MysqlHandler
 			return Table09.super.getAllListAtIX(plugin, orderByColumn, desc, whereColumn, whereObject);
 		case ACCESSPERMISSION:
 			return Table10.super.getAllListAtX(plugin, orderByColumn, desc, whereColumn, whereObject);
+		case PORTALCOOLDOWN:
+			return Table11.super.getAllListAtXI(plugin, orderByColumn, desc, whereColumn, whereObject);
 		}
 		return null;
 	}

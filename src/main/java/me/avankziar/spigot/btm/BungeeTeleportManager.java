@@ -24,13 +24,13 @@ import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.assistance.AccessPermissionHandler;
-import main.java.me.avankziar.spigot.btm.assistance.BungeeBridge;
 import main.java.me.avankziar.spigot.btm.assistance.Utility;
 import main.java.me.avankziar.spigot.btm.cmd.BTMCommandExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.BackCommandExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.CommandHelper;
 import main.java.me.avankziar.spigot.btm.cmd.EntityTransportCommandExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.HomeCommandExecutor;
+import main.java.me.avankziar.spigot.btm.cmd.PortalCommandExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.RTCommandExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.SavePointCommandExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.TABCompletionOne;
@@ -62,6 +62,8 @@ import main.java.me.avankziar.spigot.btm.manager.entitytransport.EntityTransport
 import main.java.me.avankziar.spigot.btm.manager.entitytransport.EntityTransportMessageListener;
 import main.java.me.avankziar.spigot.btm.manager.home.HomeHelper;
 import main.java.me.avankziar.spigot.btm.manager.home.HomeMessageListener;
+import main.java.me.avankziar.spigot.btm.manager.portal.PortalHandler;
+import main.java.me.avankziar.spigot.btm.manager.portal.PortalHelper;
 import main.java.me.avankziar.spigot.btm.manager.randomteleport.RandomTeleportHandler;
 import main.java.me.avankziar.spigot.btm.manager.randomteleport.RandomTeleportHelper;
 import main.java.me.avankziar.spigot.btm.manager.randomteleport.RandomTeleportMessageListener;
@@ -78,7 +80,6 @@ import main.java.me.avankziar.spigot.btm.metric.Metrics;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
 import net.milkbowl.vault.economy.Economy;
 
-@SuppressWarnings("deprecation")
 public class BungeeTeleportManager extends JavaPlugin
 {
 	private static BungeeTeleportManager plugin;
@@ -93,8 +94,6 @@ public class BungeeTeleportManager extends JavaPlugin
 	private Utility utility;
 	//private static BackgroundTask backgroundTask;
 	
-	private BungeeBridge bungeeBridge;
-	
 	private Economy eco;
 	private AdvancedEconomyHandler advancedEconomyHandler;
 	
@@ -104,8 +103,10 @@ public class BungeeTeleportManager extends JavaPlugin
 	private BackHandler backHandler;
 	private BackHelper backHelper;
 	private CustomHandler customHandler;
-	private HomeHelper homeHelper;
 	private EntityTransportHelper entityTransportHelper;
+	private HomeHelper homeHelper;
+	private PortalHelper portalHelper;
+	private PortalHandler portalHandler;
 	private RandomTeleportHandler randomTeleportHandler;
 	private RandomTeleportHelper randomTeleportHelper;
 	private SavePointHandler savePointHandler;
@@ -116,6 +117,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private WarpHelper warpHelper;
 	
 	public static LinkedHashMap<String, ArrayList<String>> homes = new LinkedHashMap<String, ArrayList<String>>();
+	public static LinkedHashMap<String, ArrayList<String>> portals = new LinkedHashMap<String, ArrayList<String>>();
 	public static LinkedHashMap<String, ArrayList<String>> rtp = new LinkedHashMap<String, ArrayList<String>>();
 	public static LinkedHashMap<String, ArrayList<String>> savepoints = new LinkedHashMap<String, ArrayList<String>>();
 	public static LinkedHashMap<String, ArrayList<String>> warps = new LinkedHashMap<String, ArrayList<String>>();
@@ -165,16 +167,16 @@ public class BungeeTeleportManager extends JavaPlugin
 		}
 		BTMSettings.initSettings(plugin);
 		
-		bungeeBridge = new BungeeBridge(plugin);
-		
 		commandHelper = new CommandHelper(plugin);
 		safeLocationHandler = new SafeLocationHandler(plugin);
 		
 		backHelper = new BackHelper(plugin);
 		backHandler = new BackHandler(plugin);
 		customHandler = new CustomHandler(plugin);
-		homeHelper = new HomeHelper(plugin);
 		entityTransportHelper = new EntityTransportHelper(plugin);
+		homeHelper = new HomeHelper(plugin);
+		portalHelper = new PortalHelper(plugin);
+		portalHandler = new PortalHandler(plugin);
 		randomTeleportHelper = new RandomTeleportHelper(plugin);
 		randomTeleportHandler = new RandomTeleportHandler(plugin);
 		savePointHelper = new SavePointHelper(plugin);
@@ -293,7 +295,8 @@ public class BungeeTeleportManager extends JavaPlugin
 			addingHelps(deathback);
 		}
 		
-		if(cfgh.enableCommands(Mechanics.ENTITYTRANSPORT))
+		boolean boo = false;
+		if(boo && cfgh.enableCommands(Mechanics.ENTITYTRANSPORT))
 		{
 			CommandConstructor entitytransport = new CommandConstructor("entitytransport", false);
 			
@@ -399,7 +402,30 @@ public class BungeeTeleportManager extends JavaPlugin
 		
 		if(cfgh.enableCommands(Mechanics.PORTAL))
 		{
+			CommandConstructor portalcreate = new CommandConstructor("portalcreate", false);
+			registerCommand(portalcreate.getName());
+			getCommand(portalcreate.getName()).setExecutor(new PortalCommandExecutor(plugin, portalcreate));
+			getCommand(portalcreate.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_CREATE, portalcreate.getCommandString());
 			
+			CommandConstructor portalremove = new CommandConstructor("portalremove", false);
+			registerCommand(portalremove.getName());
+			getCommand(portalremove.getName()).setExecutor(new PortalCommandExecutor(plugin, portalremove));
+			getCommand(portalremove.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_REMOVE, portalremove.getCommandString());
+			
+			CommandConstructor portals = new CommandConstructor("portals", false);
+			registerCommand(portals.getName());
+			getCommand(portals.getName()).setExecutor(new PortalCommandExecutor(plugin, portals));
+			getCommand(portals.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTALS, portals.getCommandString());
+			
+			CommandConstructor portalitem = new CommandConstructor("portalitem", false);
+			registerCommand(portalitem.getName());
+			getCommand(portalitem.getName()).setExecutor(new PortalCommandExecutor(plugin, portalitem));
+			getCommand(portalitem.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			
+			addingHelps(portalcreate, portalremove, portals, portalitem);
 		}
 		
 		if(cfgh.enableCommands(Mechanics.RANDOMTELEPORT))
@@ -971,11 +997,6 @@ public class BungeeTeleportManager extends JavaPlugin
 	{
 		return advancedEconomyHandler;
 	}
-
-	public BungeeBridge getBungeeBridge()
-	{
-		return bungeeBridge;
-	}
 	
 	public SafeLocationHandler getSafeLocationHandler()
 	{
@@ -996,15 +1017,25 @@ public class BungeeTeleportManager extends JavaPlugin
 	{
 		return customHandler;
 	}
+	
+	public EntityTransportHelper getEntityTransportHelper()
+	{
+		return entityTransportHelper;
+	}
 
 	public HomeHelper getHomeHelper()
 	{
 		return homeHelper;
 	}
 	
-	public EntityTransportHelper getEntityTransportHelper()
+	public PortalHelper getPortalHelper()
 	{
-		return entityTransportHelper;
+		return portalHelper;
+	}
+
+	public PortalHandler getPortalHandler()
+	{
+		return portalHandler;
 	}
 	
 	public RandomTeleportHelper getRandomTeleportHelper()

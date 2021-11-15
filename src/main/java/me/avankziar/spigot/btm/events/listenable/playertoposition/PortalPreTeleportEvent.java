@@ -2,18 +2,19 @@ package main.java.me.avankziar.spigot.btm.events.listenable.playertoposition;
 
 import org.bukkit.entity.Player;
 
-import main.java.me.avankziar.general.object.Home;
+import main.java.me.avankziar.general.object.Portal;
+import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.spigot.btm.events.listenable.BasePlayerTeleportToPositionPreTeleportEvent;
 
-public class HomePreTeleportEvent extends BasePlayerTeleportToPositionPreTeleportEvent
-{	
+public class PortalPreTeleportEvent extends BasePlayerTeleportToPositionPreTeleportEvent
+{
 	private boolean isCancelled = false;
-	private Home home;
+	private final Portal portal;
 
-	public HomePreTeleportEvent(Player player, Home home)
+	public PortalPreTeleportEvent(Player player, ServerLocation location, Portal portal)
 	{
-		super(player, home.getLocation());
-		setHome(home);
+		super(player, location);
+		this.portal = portal;
 	}
 
 	public boolean isCancelled()
@@ -26,13 +27,9 @@ public class HomePreTeleportEvent extends BasePlayerTeleportToPositionPreTelepor
 		this.isCancelled = isCancelled;
 	}
 
-	public Home getHome()
+	public Portal getPortal()
 	{
-		return home;
+		return portal;
 	}
 
-	public void setHome(Home home)
-	{
-		this.home = home;
-	}
 }

@@ -1,10 +1,11 @@
 package main.java.me.avankziar.general.object;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+
+import main.java.me.avankziar.general.objecthandler.ServerLocationHandler;
 
 public class Portal
 {
@@ -16,6 +17,8 @@ public class Portal
 		FIRSTSPAWN, RESPAWN, 
 		HOME, PORTAL, RANDOMTELEPORT, SAVEPOINT, WARP
 	}
+	
+	private int id;
 	private String portalName;
 	private String ownerUUID;
 	private String permission;
@@ -25,30 +28,31 @@ public class Portal
 	private Material triggerBlock;
 	
 	private double pricePerUse = 0.0;
-	private LinkedHashMap<String, Long> cooldownUse = new LinkedHashMap<>(); //RAM Only
 	private double throwback = 0.7;
 	private int portalProtectionRadius = 0;
 	private Sound portalSound = Sound.ENTITY_ENDERMAN_TELEPORT;
 	
 	private TargetType targetType;
 	private String targetInformation;
+	private String postTeleportMessage;
 	private String accessDenialMessage;
 	
 	private ServerLocation position1;
 	private ServerLocation position2;
 	private ServerLocation ownExitPosition;
 	
-	public Portal(String portalName, String permission, 
+	public Portal(int id, String portalName, String permission, 
 			String ownerUUID, ArrayList<String> members, ArrayList<String> blacklist,
 			String category, Material triggerBlock,
 			double pricePerUse, double throwback, int portalProtectionRadius, Sound portalSound,
-			TargetType targetType, String targetInformation, String accessDenialMessage,
+			TargetType targetType, String targetInformation, String postTeleportMessage, String accessDenialMessage,
 			ServerLocation position1, ServerLocation position2, ServerLocation ownExitPosition)
 	{
-		setPortalName(portalName);
+		setId(id);
+		setName(portalName);
 		setPermission(permission);
-		setOwnerUUID(ownerUUID);
-		setMembers(members);
+		setOwner(ownerUUID);
+		setMember(members);
 		setBlacklist(blacklist);
 		setCategory(category);
 		setTriggerBlock(triggerBlock);
@@ -58,27 +62,42 @@ public class Portal
 		setPortalProtectionRadius(portalProtectionRadius);
 		setPortalSound(portalSound);
 		
+		setTargetType(targetType);
+		setTargetInformation(targetInformation);
+		setPostTeleportMessage(postTeleportMessage);
+		setAccessDenialMessage(accessDenialMessage);
+		
 		setPosition1(position1);
 		setPosition2(position2);
 		setOwnExitPosition(ownExitPosition);
 	}
 
-	public String getPortalName()
+	public int getId()
+	{
+		return id;
+	}
+
+	public void setId(int id)
+	{
+		this.id = id;
+	}
+
+	public String getName()
 	{
 		return portalName;
 	}
 
-	public void setPortalName(String portalName)
+	public void setName(String portalName)
 	{
 		this.portalName = portalName;
 	}
 
-	public String getOwnerUUID()
+	public String getOwner()
 	{
 		return ownerUUID;
 	}
 
-	public void setOwnerUUID(String ownerUUID)
+	public void setOwner(String ownerUUID)
 	{
 		this.ownerUUID = ownerUUID;
 	}
@@ -93,12 +112,12 @@ public class Portal
 		this.permission = permission;
 	}
 
-	public ArrayList<String> getMembers()
+	public ArrayList<String> getMember()
 	{
 		return members;
 	}
 
-	public void setMembers(ArrayList<String> members)
+	public void setMember(ArrayList<String> members)
 	{
 		this.members = members;
 	}
@@ -173,28 +192,6 @@ public class Portal
 		this.ownExitPosition = ownExitPosition;
 	}
 
-	public long hasCooldown(String uuid)
-	{
-		if(this.cooldownUse.containsKey(uuid))
-		{
-			return this.cooldownUse.get(uuid);
-		} else
-		{
-			return -1;
-		}
-	}
-	
-	public void addCooldown(String uuid, long additionCooldown)
-	{
-		if(this.cooldownUse.containsKey(uuid))
-		{
-			this.cooldownUse.replace(uuid, System.currentTimeMillis()+additionCooldown);
-		} else
-		{
-			this.cooldownUse.put(uuid, System.currentTimeMillis()+additionCooldown);
-		}
-	}
-
 	public double getThrowback()
 	{
 		return throwback;
@@ -244,7 +241,12 @@ public class Portal
 	{
 		this.targetInformation = targetInformation;
 	}
-
+	/**
+	 * Known replacer possible:<br>
+	 * %portalname% - the portalname<br>
+	 * %player% - the executed player
+	 * @return
+	 */
 	public String getAccessDenialMessage()
 	{
 		return accessDenialMessage;
@@ -255,4 +257,49 @@ public class Portal
 		this.accessDenialMessage = accessDenialMessage;
 	}
 
+	public String getPostTeleportMessage()
+	{
+		return postTeleportMessage;
+	}
+
+	public void setPostTeleportMessage(String postTeleportMessage)
+	{
+		this.postTeleportMessage = postTeleportMessage;
+	}
+	
+	@Override
+	public String toString()
+	{
+		String s = 
+				this.portalName+", "+
+				(this.ownerUUID != null ? this.ownerUUID : "/")+", "+
+				this.category+", "+
+				this.triggerBlock.toString()+", "+
+				this.pricePerUse+", "+
+				this.throwback+", "+
+				this.portalProtectionRadius+", "+
+				this.portalSound+", "+
+				this.targetType+", "+
+				this.targetInformation+", "+
+				this.postTeleportMessage+", "+
+				this.accessDenialMessage+", "+
+				ServerLocationHandler.serialised(this.position1)+", "+
+				ServerLocationHandler.serialised(this.position2)+", "+
+				ServerLocationHandler.serialised(this.ownExitPosition);
+		if(!this.members.isEmpty())
+		{
+			for(String m : this.members)
+			{
+				s += ", "+m;
+			}
+		}
+		if(!this.blacklist.isEmpty())
+		{
+			for(String b : this.blacklist)
+			{
+				s += ", "+b;
+			}
+		}
+		return s;
+	}
 }

@@ -1,0 +1,767 @@
+package main.java.me.avankziar.spigot.btm.manager.portal;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
+
+import main.java.me.avankziar.aep.spigot.api.MatchApi;
+import main.java.me.avankziar.general.object.Back;
+import main.java.me.avankziar.general.object.Portal;
+import main.java.me.avankziar.general.object.PortalCooldown;
+import main.java.me.avankziar.general.object.ServerLocation;
+import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
+import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
+import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
+import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
+import main.java.me.avankziar.spigot.btm.manager.back.BackHandler;
+import net.md_5.bungee.api.chat.BaseComponent;
+
+public class PortalHandler
+{
+	private BungeeTeleportManager plugin;
+	private ArrayList<Portal> portals = new ArrayList<>();
+	private ArrayList<Portal> portalsTotal = new ArrayList<>();
+	private ArrayList<String> playerInPortal = new ArrayList<>();
+	private final String server;
+	private final boolean canEntityUsePortals;
+	public ArrayList<UUID> portalCreateMode = new ArrayList<>();
+	private LinkedHashMap<UUID, PortalPosition> portalposition = new LinkedHashMap<>();
+	
+	public PortalHandler(BungeeTeleportManager plugin)
+	{
+		this.plugin = plugin;
+		server = new ConfigHandler(plugin).getServer();
+		canEntityUsePortals = plugin.getYamlHandler().getConfig().getBoolean("Enable.EntityCanAccessPortals", false);
+		initPortals();
+	}
+	
+	public void initPortals()
+	{
+		ArrayList<Portal> intern = ConvertHandler.convertListII(
+				plugin.getMysqlHandler().getAllListAt(MysqlHandler.Type.PORTAL, "`id`", false, "`pos_one_server` = ?", server));
+		for(Portal p : intern)
+		{
+			portals.add(p);
+			portalsTotal.add(p);
+		}
+		ArrayList<Portal> extern = ConvertHandler.convertListII(
+				plugin.getMysqlHandler().getAllListAt(MysqlHandler.Type.PORTAL, "`id`", false, "`pos_one_server` != ?", server));
+		for(Portal p : extern)
+		{
+			portalsTotal.add(p);
+		}
+	}
+	
+	public boolean canEntityUsePortals()
+	{
+		return canEntityUsePortals;
+	}
+	
+	public Portal getPortalInArea(Location loc, int additionalArea)
+	{
+		for(Portal portal : portals)
+		{
+			if(inPortalArea(portal, loc, additionalArea))
+			{
+				return portal;
+			}
+		}
+		return null;
+	}
+	
+	public boolean inPortalArea(Location loc, int additionalArea)
+	{
+		for(Portal portal : portals)
+		{
+			if(inPortalArea(portal, loc, additionalArea))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Portal getPortalFromTotalList(String portalname)
+	{
+		for(Portal p : portalsTotal)
+		{
+			if(p.getName().equals(portalname))
+			{
+				return p;
+			}
+		}
+		return null;
+	}
+	
+	public boolean inPortalArea(Portal portal, Location loc, int additionalArea)
+	{
+		if(loc == null
+				|| loc.getWorld() == null 
+				|| !portal.getPosition1().getServer().equals(server)
+				|| !portal.getPosition1().getWorldName().equals(loc.getWorld().getName())
+				|| !portal.getPosition2().getServer().equals(server)
+				|| !portal.getPosition2().getWorldName().equals(loc.getWorld().getName()))
+		{
+			return false;
+		}
+		return (
+					portal.getPosition1().getX() + 1 + additionalArea >= loc.getX() &&
+					portal.getPosition1().getY() + 1 + additionalArea >= loc.getY() &&
+					portal.getPosition1().getZ() + 1 + additionalArea >= loc.getZ()
+				) && (
+					portal.getPosition2().getX() - additionalArea <= loc.getX() &&
+					portal.getPosition2().getY() - additionalArea <= loc.getY() &&
+					portal.getPosition2().getZ() - additionalArea <= loc.getZ()
+				);
+	}
+	
+	public boolean isLocationInPortalTrigger(Portal portal, Location loc, int additionalArea)
+	{
+		return portal.getTriggerBlock() == loc.getBlock().getType() && inPortalArea(portal, loc, additionalArea);
+	}
+	
+	public void throwback(Location loc, Entity entity)
+	{
+		Portal portal = plugin.getPortalHandler().getPortalInArea(loc, 0);
+		if(entity instanceof LivingEntity && portal != null)
+		{
+			throwback(portal, (LivingEntity) entity);
+		}
+	}
+	
+	public void throwback(Portal portal, LivingEntity entity)
+	{
+		Vector velocity = entity.getLocation().getDirection();
+		entity.setVelocity(velocity.setY(0).normalize().multiply(-1).setY(portal.getThrowback()));
+	}
+	
+	public long getCooldown(Portal portal, Player player)
+	{
+		PortalCooldown pc = (PortalCooldown) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTALCOOLDOWN,
+				"`portalid` = ? AND `player_uuid` = ?", portal.getId(), player.getUniqueId().toString());
+		return pc != null ? pc.getCooldownUntil() : -1;
+	}
+	
+	public void setPortalCooldown(Portal portal, Player player)
+	{
+		long cd = 0;
+		for(String s : plugin.getYamlHandler().getConfig().getStringList("Portal.CooldownAfterUse"))
+		{ 
+			if(!s.contains(";"))
+			{
+				continue;
+			}
+			String[] ss = s.split(";");
+			if(ss.length == 2)
+			{
+				long pcd = parseCooldown(ss[1]);
+				if(cd == 0 || cd > pcd)
+				{
+					if((ss[0].equalsIgnoreCase("Owner") && portal.getOwner().equals(player.getUniqueId().toString()))
+							|| (ss[0].equalsIgnoreCase("Member") && portal.getMember().contains(player.getUniqueId().toString())))
+					{
+						cd = pcd;
+					}
+				}
+			} else if(ss.length == 3)
+			{
+				if(!ss[0].equalsIgnoreCase("Perm"))
+				{
+					continue;
+				}
+				if(player.hasPermission(ss[2]))
+				{
+					long pcd = parseCooldown(ss[1]);
+					if(cd == 0 || cd > pcd)
+					{
+						cd = pcd;
+					}
+				}
+			} else 
+			{
+				continue;
+			}
+		}
+		PortalCooldown pc = (PortalCooldown) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTALCOOLDOWN,
+				"`portalid` = ? AND `player_uuid` = ?", portal.getId(), player.getUniqueId().toString());
+		if(pc == null)
+		{
+			pc = new PortalCooldown(portal.getId(), player.getUniqueId().toString(), cd);
+			plugin.getMysqlHandler().create(MysqlHandler.Type.PORTALCOOLDOWN, pc);
+		} else
+		{
+			pc.setCooldownUntil(cd);
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTALCOOLDOWN, pc, 
+					"`portalid` = ? AND `player_uuid` = ?", portal.getId(), player.getUniqueId().toString());
+		}
+	}
+	
+	private long parseCooldown(String s)
+	{
+		long l = System.currentTimeMillis();
+		if(!s.contains("-"))
+		{
+			return Long.MAX_VALUE;
+		}
+		String[] ss = s.split("-");
+		for(String a : ss)
+		{
+			if(a.endsWith("y"))
+			{
+				String b = a.substring(0, a.length()-1);
+				if(!MatchApi.isLong(b))
+				{
+					continue;
+				}
+				l += 365*24*60*60*1000*Long.parseLong(b);
+			} else if(a.endsWith("d"))
+			{
+				String b = a.substring(0, a.length()-1);
+				if(!MatchApi.isLong(b))
+				{
+					continue;
+				}
+				l += 24*60*60*1000*Long.parseLong(b);
+			} else if(a.endsWith("h"))
+			{
+				String b = a.substring(0, a.length()-1);
+				if(!MatchApi.isLong(b))
+				{
+					continue;
+				}
+				l += 60*60*1000*Long.parseLong(b);
+			} else if(a.endsWith("m"))
+			{
+				String b = a.substring(0, a.length()-1);
+				if(!MatchApi.isLong(b))
+				{
+					continue;
+				}
+				l += 60*1000*Long.parseLong(b);
+			} else if(a.endsWith("ms"))
+			{
+				String b = a.substring(0, a.length()-1);
+				if(!MatchApi.isLong(b))
+				{
+					continue;
+				}
+				l += Long.parseLong(b);
+			} else if(a.endsWith("s"))
+			{
+				String b = a.substring(0, a.length()-1);
+				if(!MatchApi.isLong(b))
+				{
+					continue;
+				}
+				l += 1000*Long.parseLong(b);
+			}
+		}
+		return l;
+	}
+	
+	public void checkIfCanBeTriggered(Player player, Location... locs)
+	{
+		if(playerInPortal.contains(player.getName()))
+		{
+			return;
+		}
+		for(Portal portal : portals)
+		{
+			for(Location loc : locs)
+			{
+				if(!isLocationInPortalTrigger(portal, loc, 0))
+				{
+					continue;
+				}
+				playerInPortal.add(player.getName());
+				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new RemovePlayerInPortal(player.getName()), 40);
+				plugin.getPortalHelper().portalTo(player, portal);
+				return;
+			}
+		}
+	}
+	
+	public void sendPortalExistPointAsBack(Player player, ServerLocation loc)
+	{
+		Back newback = plugin.getBackHandler().getNewBack(player, loc);
+		plugin.getMysqlHandler().updateData(
+				MysqlHandler.Type.BACK, newback, "`player_uuid` = ?", newback.getUuid().toString());
+		plugin.getBackHandler().sendBackObject(player, newback);
+	}
+	
+	public String getTime(long l)
+	{
+		return LocalDateTime.ofInstant(Instant.ofEpochMilli(l), ZoneId.systemDefault())
+				.format(DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm:ss"));
+	}
+
+	public void sendEntityToPortal(Location loc, Entity entity)
+	{
+		//TODO
+	}
+	
+	public void sendPlayerToDestination(Player player, ServerLocation destination, final Portal portal)
+	{
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.RequestInProgress")));
+		if(destination.getServer().equals(server) && player != null)
+		{
+			BackHandler bh = new BackHandler(plugin);
+			bh.sendBackObject(player, bh.getNewBack(player));
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					player.teleport(ConvertHandler.getLocation(destination));
+					if(portal.getPostTeleportMessage() != null)
+					{
+						player.sendMessage(ChatApi.tl(portal.getPostTeleportMessage()
+								.replace("%player%", player.getName())));
+					}
+					if(portal.getTriggerBlock() == Material.LAVA)
+					{
+						player.setFireTicks(0);
+					}
+				}
+			}.runTask(plugin);
+		} else
+		{
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	        DataOutputStream out = new DataOutputStream(stream);
+	        try {
+				out.writeUTF(StaticValues.PORTAL_PLAYERTOPOSITION);
+				out.writeUTF(player.getUniqueId().toString());
+				out.writeUTF(player.getName());
+				out.writeUTF(destination.getServer());
+				out.writeUTF(destination.getWorldName());
+				out.writeDouble(destination.getX());
+				out.writeDouble(destination.getY());
+				out.writeDouble(destination.getZ());
+				out.writeFloat(destination.getYaw());
+				out.writeFloat(destination.getPitch());
+				out.writeUTF(portal.getPostTeleportMessage() == null ? "" : portal.getPostTeleportMessage());
+				out.writeBoolean((portal.getTriggerBlock() == Material.LAVA ? true : false));
+				new BackHandler(plugin).addingBack(player, portal.getOwnExitPosition(), out);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        player.sendPluginMessage(plugin, StaticValues.PORTAL_TOBUNGEE, stream.toByteArray());
+		}
+		return;
+	}
+	
+	public void sendPortalChangeNote(int mysqlid)
+	{
+		//ADDME Hier den anderen Server bescheidgeben, dass sich was geändert hat.
+	}
+	
+	public boolean comparePortalAmount(Player player, boolean message)
+	{
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseGlobalLevel", false))
+		{
+			if(compareGlobalPortals(player, message) >= 0 )
+			{
+				return false;
+			}
+		}		
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseServerLevel", false))
+		{
+			if(compareServerPortal(player, message) >= 0)
+			{
+				return false;
+			}
+		}
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseWorldLevel", false))
+		{
+			if(compareWorldPortal(player, message) >= 0)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public int comparePortal(Player player, boolean message)
+	{
+		int i = 0;
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseGlobalLevel", false))
+		{
+			i = compareGlobalPortals(player, message);
+			if(i > 0)
+			{
+				return i;
+			}
+		}
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseServerLevel", false))
+		{
+			i = compareServerPortal(player, message);
+			if(i > 0)
+			{
+				return i;
+			}
+		}		
+		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseWorldLevel", false))
+		{
+			i = compareWorldPortal(player, message);
+			if(i > 0)
+			{
+				return i;
+			}
+		}
+		return i;
+	}
+	
+	public int compareGlobalPortals(Player player, boolean message)
+	{
+		int globalLimit = 0;
+		int globalHomeCount = plugin.getMysqlHandler().countWhereID(
+				MysqlHandler.Type.WARP, "`owner` = ?",
+				player.getUniqueId().toString());
+		if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_GLOBAL+"*"))
+		{
+			return -1;
+		}
+		for(int i = 500; i >= 0; i--)
+		{
+			if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_GLOBAL+i))
+			{
+				globalLimit = i;
+				break;
+			}
+		}
+		int i = globalHomeCount-globalLimit;
+		if(i >= 0 || globalLimit == 0)
+		{
+			if(message)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyPortalGlobal")
+						.replace("%amount%", String.valueOf(globalLimit))));
+			}
+		}
+		return i;
+	}
+	/*
+	 * return i
+	 * if i < 0, than the amount of warps of the player has not reach the limit or has a bypass permission
+	 * if i == 0 && exist, than the amount of warps of the player has reach the limit, but the home will be overriden
+	 * if i > 0, than the amount of warps of the player has reach the limit, cannot add new homes.
+	 */
+	public int compareServerPortal(Player player, boolean message)
+	{
+		String server = new ConfigHandler(plugin).getServer();
+		String serverCluster = plugin.getYamlHandler().getConfig().getString("PermissionLevel.Server.Cluster");
+		boolean clusterBeforeServer = plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.Server.ClusterActive", false);
+		int serverLimit = 0;
+		List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.Server.ClusterList");
+		if(clusterlist == null)
+		{
+			clusterlist = new ArrayList<>();
+		}
+		boolean serverIsInCluster = clusterlist.contains(server);
+		if(clusterBeforeServer && serverIsInCluster)
+		{
+			clusterlist.add(player.getUniqueId().toString());
+			Object[] o = clusterlist.toArray();
+			String where = "(";
+			for(int i = 1; i < clusterlist.size(); i++)
+			{
+				if(i == (clusterlist.size()-1))
+				{
+					where += "`pos_one_server` = ?)";
+				} else
+				{
+					where += "`pos_one_server` = ? OR ";
+				}
+				
+			}
+			where += " AND `owner_uuid` = ?";
+			int serverHomeCount = plugin.getMysqlHandler().countWhereID(
+					MysqlHandler.Type.WARP, where, o);
+			if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_SERVER+"*")
+					|| player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_SERVER+serverCluster+".*"))
+			{
+				return -1;
+			}
+			for(int i = 500; i >= 0; i--)
+			{
+				if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_SERVER+serverCluster+"."+i))
+				{
+					serverLimit = i;
+					break;
+				}
+			}
+			int i = serverHomeCount-serverLimit;
+			if(i >= 0 || serverLimit == 0)
+			{
+				if(message)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyPortalServerCluster")
+							.replace("%amount%", String.valueOf(serverLimit))));
+				}
+			}
+			return i;
+		} else {
+			int serverHomeCount = plugin.getMysqlHandler().countWhereID(
+					MysqlHandler.Type.WARP, "`owner_uuid` = ? AND `pos_one_server` = ?",
+					player.getUniqueId().toString(), server);
+			if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_SERVER+"*")
+					|| player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_SERVER+server+".*"))
+			{
+				return -1;
+			}
+			for(int i = 500; i >= 0; i--)
+			{
+				if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_SERVER+server+"."+i))
+				{
+					serverLimit = i;
+					break;
+				}
+			}
+			int i = serverHomeCount-serverLimit;
+			if(i >= 0 || serverLimit == 0)
+			{
+				if(message)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyPortalServer")
+							.replace("%amount%", String.valueOf(serverLimit))));
+				}
+			}
+			return i;
+		}
+	}
+	
+	public int compareWorldPortal(Player player, boolean message)
+	{
+		String world = player.getLocation().getWorld().getName();
+		boolean clusterActive = plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.World.ClusterActive", false);
+		int worldLimit = 0;
+		
+		boolean worldIsInCluster = false;
+		List<String> list = new ArrayList<>();
+		String cluster = "";
+		
+		if(clusterActive)
+		{
+			List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.World.ClusterList");
+			if(clusterlist == null)
+			{
+				clusterlist = new ArrayList<>();
+			}
+			for(String clusters : clusterlist)
+			{
+				List<String> worldclusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.World."+clusters);
+				for(String worlds: worldclusterlist)
+				{
+					if(worlds.equals(world))
+					{
+						worldIsInCluster = true;
+						cluster = clusters;
+						list = worldclusterlist;
+						break;
+					}
+				}
+			}
+		}
+		/*
+		 * If World is not in the clusterlist, so pick the normal Worldpermissioncheck.
+		 */
+		if(clusterActive && worldIsInCluster)
+		{
+			list.add(player.getUniqueId().toString());
+			Object[] o = list.toArray();
+			String where = "(";
+			for(int i = 1; i < list.size(); i++)
+			{
+				if(i == (list.size()-1))
+				{
+					where += "`pos_one_world` = ?)";
+				} else
+				{
+					where += "`pos_one_world` = ? OR ";
+				}
+				
+			}
+			where += " AND `owner_uuid` = ?";
+			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
+					MysqlHandler.Type.WARP, where, o);
+			if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_WORLD+"*")
+					|| player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_WORLD+cluster+".*"))
+			{
+				return -1;
+			}
+			for(int i = 500; i >= 0; i--)
+			{
+				if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_WORLD+cluster+"."+i))
+				{
+					worldLimit = i;
+					break;
+				}
+			}
+			int i = worldHomeCount-worldLimit;
+			if(i >= 0 || worldLimit == 0)
+			{
+				if(message)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyPortalWorld")
+							.replace("%amount%", String.valueOf(worldLimit))));
+				}
+			}
+			return i;
+		} else
+		{
+			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
+					MysqlHandler.Type.WARP, "`owner_uuid` = ? AND `pos_one_world` = ?",
+					player.getUniqueId().toString(), world);
+			if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_WORLD+"*")
+					|| player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_WORLD+world+".*"))
+			{
+				return -1;
+			}
+			for(int i = 500; i >= 0; i--)
+			{
+				if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_WORLD+world+"."+i))
+				{
+					worldLimit = i;
+					break;
+				}
+			}
+			int i = worldHomeCount-worldLimit;
+			if(i >= 0 || worldLimit == 0)
+			{
+				if(message)
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyPortalWorld")
+							.replace("%amount%", String.valueOf(worldLimit))));
+				}
+			}
+			return i;
+		}
+	}
+	
+	public LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> mapping(
+			Portal portal,
+			LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map,
+			BaseComponent bct)
+	{
+		if(map.containsKey(portal.getPosition1().getServer()))
+		{
+			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = map.get(portal.getPosition1().getServer());
+			if(mapmap.containsKey(portal.getPosition1().getWorldName()))
+			{
+				ArrayList<BaseComponent> bc = mapmap.get(portal.getPosition1().getWorldName());
+				bc.add(bct);
+				mapmap.replace(portal.getPosition1().getWorldName(), bc);
+				map.replace(portal.getPosition1().getServer(), mapmap);
+				return map;
+			} else
+			{
+				ArrayList<BaseComponent> bc = new ArrayList<>();
+				bc.add(ChatApi.tctl("  &e"+portal.getPosition1().getWorldName()+": "));
+				bc.add(bct);
+				mapmap.put(portal.getPosition1().getWorldName(), bc);
+				map.replace(portal.getPosition1().getServer(), mapmap);
+				return map;
+			}
+		} else
+		{
+			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = new LinkedHashMap<String, ArrayList<BaseComponent>>();
+			ArrayList<BaseComponent> bc = new ArrayList<>();
+			bc.add(ChatApi.tctl("  &e"+portal.getPosition1().getWorldName()+": "));
+			bc.add(bct);
+			mapmap.put(portal.getPosition1().getWorldName(), bc);
+			map.put(portal.getPosition1().getServer(), mapmap);
+			return map;
+		}
+	}
+	
+	class RemovePlayerInPortal implements Runnable
+	{
+		private final String playername;
+		
+		public RemovePlayerInPortal(String playername)
+		{
+			this.playername = playername;
+		}
+		
+		@Override
+        public void run() 
+		{
+            if (playername != null) 
+            {
+            	playerInPortal.remove(playername);
+            }
+        }
+	}
+	
+	public class PortalPosition
+	{
+		public ServerLocation pos1;
+		public ServerLocation pos2;
+		
+		public Location getLocation1()
+		{
+			return new Location(Bukkit.getWorld(pos1.getWorldName()), pos1.getX(), pos1.getY(), pos1.getX(), pos1.getYaw(), pos1.getPitch());
+		}
+		
+		public Location getLocation2()
+		{
+			return new Location(Bukkit.getWorld(pos2.getWorldName()), pos2.getX(), pos2.getY(), pos2.getX(), pos2.getYaw(), pos2.getPitch());
+		}
+	}
+	
+	public void addPortalPosition(UUID uuid, boolean pos1, ServerLocation loc)
+	{
+		if(portalposition.containsKey(uuid))
+		{
+			PortalPosition pp = portalposition.get(uuid);
+			if(pos1)
+			{
+				pp.pos1 = loc;
+			} else
+			{
+				pp.pos2 = loc;
+			}
+			portalposition.replace(uuid, pp);
+		} else
+		{
+			PortalPosition pp = new PortalPosition();
+			if(pos1)
+			{
+				pp.pos1 = loc;
+			} else
+			{
+				pp.pos2 = loc;
+			}
+			portalposition.put(uuid, pp);
+		}
+	}
+	
+	public PortalPosition getPortalPosition(UUID uuid)
+	{
+		return portalposition.get(uuid);
+	}
+	
+	public void removePortalPosition(UUID uuid)
+	{
+		portalposition.remove(uuid);
+	}
+}

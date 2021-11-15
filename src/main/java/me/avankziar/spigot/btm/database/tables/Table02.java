@@ -32,7 +32,7 @@ public interface Table02
 				String sql = "INSERT INTO `" + MysqlHandler.Type.PORTAL.getValue() 
 						+ "`(`portalname`, `owner_uuid`, `permission`, `member`, `blacklist`,"
 						+ " `category`, `triggerblock`, `price`, `throwback`, `portalprotectionradius`,"
-						+ " `sound`, `targettype`, `targetinformation`, `accessdenialmessage`,"
+						+ " `sound`, `targettype`, `targetinformation`, `postteleportmessage`, `accessdenialmessage`,"
 						+ " `pos_one_server`, `pos_one_world`, `pos_one_x`, `pos_one_y`, `pos_one_z`,"
 						+ " `pos_two_server`, `pos_two_world`, `pos_two_x`, `pos_two_y`, `pos_two_z`,"
 						+ " `pos_ownexit_server`, `pos_ownexit_world`, `pos_ownexit_x`, `pos_ownexit_y`, `pos_ownexit_z`,"
@@ -40,14 +40,14 @@ public interface Table02
 						+ "VALUES("
 						+ "?, ?, ?, ?, ?, "
 						+ "?, ?, ?, ?, ?, "
-						+ "?, ?, ?, ?,"
+						+ "?, ?, ?, ?, ?, "
 						+ "?, ?, ?, ?, ?,"
 						+ "?, ?, ?, ?, ?,"
 						+ "?, ?, ?, ?, ?, ?, ?)";
 				String m = null;
-				if(w.getMembers() != null)
+				if(w.getMember() != null)
 				{
-					m = String.join(";", w.getMembers());
+					m = String.join(";", w.getMember());
 				}
 				String b = null;
 				if(w.getBlacklist() != null)
@@ -55,8 +55,8 @@ public interface Table02
 					b = String.join(";", w.getBlacklist());
 				}
 				preparedStatement = conn.prepareStatement(sql);
-				preparedStatement.setString(1, w.getPortalName());
-		        preparedStatement.setString(2, w.getOwnerUUID());
+				preparedStatement.setString(1, w.getName());
+		        preparedStatement.setString(2, w.getOwner());
 		        preparedStatement.setString(3, w.getPermission());
 		        preparedStatement.setString(4, m);
 		        preparedStatement.setString(5, b);
@@ -69,25 +69,26 @@ public interface Table02
 		        
 		        preparedStatement.setString(12, w.getTargetType().toString());
 		        preparedStatement.setString(13, w.getTargetInformation());
-		        preparedStatement.setString(14, w.getAccessDenialMessage());
+		        preparedStatement.setString(14, w.getPostTeleportMessage());
+		        preparedStatement.setString(15, w.getAccessDenialMessage());
 		        
-		        preparedStatement.setString(15, w.getPosition1().getServer());
-		        preparedStatement.setString(16, w.getPosition1().getWorldName());
-		        preparedStatement.setDouble(17, w.getPosition1().getX());
-		        preparedStatement.setDouble(18, w.getPosition1().getY());
-		        preparedStatement.setDouble(19, w.getPosition1().getZ());
-		        preparedStatement.setString(20, w.getPosition2().getServer());
-		        preparedStatement.setString(21, w.getPosition2().getWorldName());
-		        preparedStatement.setDouble(22, w.getPosition2().getX());
-		        preparedStatement.setDouble(23, w.getPosition2().getY());
-		        preparedStatement.setDouble(24, w.getPosition2().getZ());
-		        preparedStatement.setString(25, w.getOwnExitPosition().getServer());
-		        preparedStatement.setString(26, w.getOwnExitPosition().getWorldName());
-		        preparedStatement.setDouble(27, w.getOwnExitPosition().getX());
-		        preparedStatement.setDouble(28, w.getOwnExitPosition().getY());
-		        preparedStatement.setDouble(29, w.getOwnExitPosition().getZ());
-		        preparedStatement.setFloat(30, w.getOwnExitPosition().getYaw());
-		        preparedStatement.setFloat(31, w.getOwnExitPosition().getPitch());
+		        preparedStatement.setString(16, w.getPosition1().getServer());
+		        preparedStatement.setString(17, w.getPosition1().getWorldName());
+		        preparedStatement.setDouble(18, w.getPosition1().getX());
+		        preparedStatement.setDouble(19, w.getPosition1().getY());
+		        preparedStatement.setDouble(20, w.getPosition1().getZ());
+		        preparedStatement.setString(21, w.getPosition2().getServer());
+		        preparedStatement.setString(22, w.getPosition2().getWorldName());
+		        preparedStatement.setDouble(23, w.getPosition2().getX());
+		        preparedStatement.setDouble(24, w.getPosition2().getY());
+		        preparedStatement.setDouble(25, w.getPosition2().getZ());
+		        preparedStatement.setString(26, w.getOwnExitPosition().getServer());
+		        preparedStatement.setString(27, w.getOwnExitPosition().getWorldName());
+		        preparedStatement.setDouble(28, w.getOwnExitPosition().getX());
+		        preparedStatement.setDouble(29, w.getOwnExitPosition().getY());
+		        preparedStatement.setDouble(30, w.getOwnExitPosition().getZ());
+		        preparedStatement.setFloat(31, w.getOwnExitPosition().getYaw());
+		        preparedStatement.setFloat(32, w.getOwnExitPosition().getPitch());
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
@@ -132,18 +133,18 @@ public interface Table02
 				String data = "UPDATE `" + MysqlHandler.Type.PORTAL.getValue()
 						+ "` SET `portalname` = ?, `owner_uuid` = ?, `permission` = ?, `member` = ?, `blacklist` = ?,"
 						+ " `category` = ?, `triggerblock` = ?, `price` = ?, `throwback` = ?, `portalprotectionradius` = ?,"
-						+ " `sound` = ?, `targettype` = ?, `targetinformation` = ?, `accessdenialmessage` = ?,"
+						+ " `sound` = ?, `targettype` = ?, `targetinformation` = ?, `postteleportmessage` = ?, `accessdenialmessage` = ?,"
 						+ " `pos_one_server` = ?, `pos_one_world` = ?, `pos_one_x` = ?, `pos_one_y` = ?, `pos_one_z` = ?,"
 						+ " `pos_two_server` = ?, `pos_two_world` = ?, `pos_two_x` = ?, `pos_two_y` = ?, `pos_two_z` = ?,"
 						+ " `pos_ownexit_server` = ?, `pos_ownexit_world` = ?, `pos_ownexit_x` = ?, `pos_ownexit_y` = ?, `pos_ownexit_z` = ?,"
 						+ " `pos_ownexit_yaw` = ?, `pos_ownexit_pitch` = ?" 
 						+ " WHERE "+whereColumn;
 				String m = null;
-				if(w.getMembers() != null)
+				if(w.getMember() != null)
 				{
-					if(!w.getMembers().isEmpty())
+					if(!w.getMember().isEmpty())
 					{
-						m = String.join(";", w.getMembers());
+						m = String.join(";", w.getMember());
 					}
 				}
 				String b = null;
@@ -155,8 +156,8 @@ public interface Table02
 					}					
 				}
 				preparedStatement = conn.prepareStatement(data);
-				preparedStatement.setString(1, w.getPortalName());
-		        preparedStatement.setString(2, w.getOwnerUUID());
+				preparedStatement.setString(1, w.getName());
+		        preparedStatement.setString(2, w.getOwner());
 		        preparedStatement.setString(3, w.getPermission());
 		        preparedStatement.setString(4, m);
 		        preparedStatement.setString(5, b);
@@ -169,27 +170,28 @@ public interface Table02
 		        
 		        preparedStatement.setString(12, w.getTargetType().toString());
 		        preparedStatement.setString(13, w.getTargetInformation());
-		        preparedStatement.setString(14, w.getAccessDenialMessage());
+		        preparedStatement.setString(14, w.getPostTeleportMessage());
+		        preparedStatement.setString(15, w.getAccessDenialMessage());
 		        
-		        preparedStatement.setString(15, w.getPosition1().getServer());
-		        preparedStatement.setString(16, w.getPosition1().getWorldName());
-		        preparedStatement.setDouble(17, w.getPosition1().getX());
-		        preparedStatement.setDouble(18, w.getPosition1().getY());
-		        preparedStatement.setDouble(19, w.getPosition1().getZ());
-		        preparedStatement.setString(20, w.getPosition2().getServer());
-		        preparedStatement.setString(21, w.getPosition2().getWorldName());
-		        preparedStatement.setDouble(22, w.getPosition2().getX());
-		        preparedStatement.setDouble(23, w.getPosition2().getY());
-		        preparedStatement.setDouble(24, w.getPosition2().getZ());
-		        preparedStatement.setString(25, w.getOwnExitPosition().getServer());
-		        preparedStatement.setString(26, w.getOwnExitPosition().getWorldName());
-		        preparedStatement.setDouble(27, w.getOwnExitPosition().getX());
-		        preparedStatement.setDouble(28, w.getOwnExitPosition().getY());
-		        preparedStatement.setDouble(29, w.getOwnExitPosition().getZ());
-		        preparedStatement.setFloat(30, w.getOwnExitPosition().getYaw());
-		        preparedStatement.setFloat(31, w.getOwnExitPosition().getPitch());
+		        preparedStatement.setString(16, w.getPosition1().getServer());
+		        preparedStatement.setString(17, w.getPosition1().getWorldName());
+		        preparedStatement.setDouble(18, w.getPosition1().getX());
+		        preparedStatement.setDouble(19, w.getPosition1().getY());
+		        preparedStatement.setDouble(20, w.getPosition1().getZ());
+		        preparedStatement.setString(21, w.getPosition2().getServer());
+		        preparedStatement.setString(22, w.getPosition2().getWorldName());
+		        preparedStatement.setDouble(23, w.getPosition2().getX());
+		        preparedStatement.setDouble(24, w.getPosition2().getY());
+		        preparedStatement.setDouble(25, w.getPosition2().getZ());
+		        preparedStatement.setString(26, w.getOwnExitPosition().getServer());
+		        preparedStatement.setString(27, w.getOwnExitPosition().getWorldName());
+		        preparedStatement.setDouble(28, w.getOwnExitPosition().getX());
+		        preparedStatement.setDouble(29, w.getOwnExitPosition().getY());
+		        preparedStatement.setDouble(30, w.getOwnExitPosition().getZ());
+		        preparedStatement.setFloat(31, w.getOwnExitPosition().getYaw());
+		        preparedStatement.setFloat(32, w.getOwnExitPosition().getPitch());
 		        
-		        int i = 32;
+		        int i = 33;
 		        for(Object o : whereObject)
 		        {
 		        	preparedStatement.setObject(i, o);
@@ -248,6 +250,7 @@ public interface Table02
 						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
 					}
 		        	return new Portal(
+		        			result.getInt("id"),
 		        			result.getString("portalname"),
 		        			result.getString("owner_uuid"),
 		        			result.getString("permission"),
@@ -261,6 +264,7 @@ public interface Table02
 		        			Sound.valueOf(result.getString("sound")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
+		        			result.getString("postteleportmessage"),
 		        			result.getString("accessdenialmessage"),
 		        			new ServerLocation(
 		        					result.getString("pos_one_server"),
@@ -345,6 +349,7 @@ public interface Table02
 						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
 					}
 		        	Portal w = new Portal(
+		        			result.getInt("id"),
 		        			result.getString("portalname"),
 		        			result.getString("owner_uuid"),
 		        			result.getString("permission"),
@@ -358,6 +363,7 @@ public interface Table02
 		        			Sound.valueOf(result.getString("sound")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
+		        			result.getString("postteleportmessage"),
 		        			result.getString("accessdenialmessage"),
 		        			new ServerLocation(
 		        					result.getString("pos_one_server"),
@@ -439,6 +445,7 @@ public interface Table02
 						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
 					}
 		        	Portal w = new Portal(
+		        			result.getInt("id"),
 		        			result.getString("portalname"),
 		        			result.getString("owner_uuid"),
 		        			result.getString("permission"),
@@ -452,6 +459,7 @@ public interface Table02
 		        			Sound.valueOf(result.getString("sound")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
+		        			result.getString("postteleportmessage"),
 		        			result.getString("accessdenialmessage"),
 		        			new ServerLocation(
 		        					result.getString("pos_one_server"),
@@ -546,6 +554,7 @@ public interface Table02
 						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
 					}
 		        	Portal w = new Portal(
+		        			result.getInt("id"),
 		        			result.getString("portalname"),
 		        			result.getString("owner_uuid"),
 		        			result.getString("permission"),
@@ -559,6 +568,7 @@ public interface Table02
 		        			Sound.valueOf(result.getString("sound")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
+		        			result.getString("postteleportmessage"),
 		        			result.getString("accessdenialmessage"),
 		        			new ServerLocation(
 		        					result.getString("pos_one_server"),

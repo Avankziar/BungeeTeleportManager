@@ -64,11 +64,11 @@ public class RandomTeleportHelper
 								.replace("%rtp%", rtpname)));
 						return;
 					}
-					if(!player.hasPermission(plugin.getYamlHandler().getRTP().getString(rtpname+".PermissionToAccess")))
-					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
-		 				return;
-					}
+				}
+				if(!player.hasPermission(plugin.getYamlHandler().getRTP().getString(rtpname+".PermissionToAccess")))
+				{
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
+	 				return;
 				}
 				if(plugin.getYamlHandler().getRTP().getBoolean(rtpname+".UseSimpleTarget", true))
 				{

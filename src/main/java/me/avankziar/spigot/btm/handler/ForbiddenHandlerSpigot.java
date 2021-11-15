@@ -73,12 +73,12 @@ public class ForbiddenHandlerSpigot
 			for(String s : plugin.getYamlHandler().getForbidden().getStringList("ForbiddenToUse.Custom.Server"))
 			{
 				if(s.contains(server)
-						&& !s.contains(":"))
+						&& !s.contains(":") && customAnnotation != null)
 				{
 					//FIXME Hier ist noch ein fehler
 					return true;
 				} else if(s.contains(server)
-						&& s.contains(":") && s.contains(customAnnotation))
+						&& s.contains(":") && customAnnotation != null && s.contains(customAnnotation))
 				{
 					return true;
 				}
@@ -115,11 +115,11 @@ public class ForbiddenHandlerSpigot
 			for(String s : plugin.getYamlHandler().getForbidden().getStringList("ForbiddenToUse.Custom.World"))
 			{
 				if(s.contains(player.getLocation().getWorld().getName())
-						&& !s.contains(":") && customAnnotation == null)
+						&& !s.contains(":") && customAnnotation != null)
 				{
 					return true;
 				} else if(s.contains(player.getLocation().getWorld().getName())
-						&& s.contains(":") && s.contains(customAnnotation))
+						&& s.contains(":") && customAnnotation != null && s.contains(customAnnotation))
 				{
 					return true;
 				}
