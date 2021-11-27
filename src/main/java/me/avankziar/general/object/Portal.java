@@ -18,10 +18,16 @@ public class Portal
 		HOME, PORTAL, RANDOMTELEPORT, SAVEPOINT, WARP
 	}
 	
+	public enum AccessType
+	{
+		CLOSED, OPEN
+	}
+	
 	private int id;
 	private String portalName;
 	private String ownerUUID;
 	private String permission;
+	private AccessType accessType;
 	private ArrayList<String> members;
 	private ArrayList<String> blacklist;
 	private String category;
@@ -31,6 +37,8 @@ public class Portal
 	private double throwback = 0.7;
 	private int portalProtectionRadius = 0;
 	private Sound portalSound = Sound.ENTITY_ENDERMAN_TELEPORT;
+	
+	private long cooldown;
 	
 	private TargetType targetType;
 	private String targetInformation;
@@ -42,9 +50,9 @@ public class Portal
 	private ServerLocation ownExitPosition;
 	
 	public Portal(int id, String portalName, String permission, 
-			String ownerUUID, ArrayList<String> members, ArrayList<String> blacklist,
+			String ownerUUID, AccessType accessType, ArrayList<String> members, ArrayList<String> blacklist,
 			String category, Material triggerBlock,
-			double pricePerUse, double throwback, int portalProtectionRadius, Sound portalSound,
+			double pricePerUse, double throwback, int portalProtectionRadius, long cooldown, Sound portalSound, 
 			TargetType targetType, String targetInformation, String postTeleportMessage, String accessDenialMessage,
 			ServerLocation position1, ServerLocation position2, ServerLocation ownExitPosition)
 	{
@@ -61,6 +69,8 @@ public class Portal
 		setThrowback(throwback);
 		setPortalProtectionRadius(portalProtectionRadius);
 		setPortalSound(portalSound);
+		
+		setCooldown(cooldown);
 		
 		setTargetType(targetType);
 		setTargetInformation(targetInformation);
@@ -110,6 +120,22 @@ public class Portal
 	public void setPermission(String permission)
 	{
 		this.permission = permission;
+	}
+
+	/**
+	 * @return the accessType
+	 */
+	public AccessType getAccessType()
+	{
+		return accessType;
+	}
+
+	/**
+	 * @param accessType the accessType to set
+	 */
+	public void setAccessType(AccessType accessType)
+	{
+		this.accessType = accessType;
 	}
 
 	public ArrayList<String> getMember()
@@ -220,6 +246,16 @@ public class Portal
 	public void setPortalSound(Sound portalSound)
 	{
 		this.portalSound = portalSound;
+	}
+
+	public long getCooldown()
+	{
+		return cooldown;
+	}
+
+	public void setCooldown(long cooldown)
+	{
+		this.cooldown = cooldown;
 	}
 
 	public TargetType getTargetType()

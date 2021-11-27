@@ -39,6 +39,7 @@ public class StaticValues
 		PORTAL_TOBUNGEE = "btm:portaltobungee",
 		PORTAL_TOSPIGOT = "btm:portaltospigot",
 		PORTAL_PLAYERTOPOSITION = "portal-playertoposition",
+		PORTAL_UPDATE = "portal-update",
 		
 		//RandomTeleport
 		RANDOMTELEPORT_TOBUNGEE = "btm:randomteleporttobungee",
@@ -108,7 +109,7 @@ public class StaticValues
 		PERM_BYPASS_HOME = "btm.bypass.home.admin",
 		PERM_BYPASS_HOME_TOOMANY = "btm.bypass.home.toomany",
 		
-		//ADDME in yaml
+		//Portal
 		PERM_BYPASS_PORTAL = "btm.bypass.portal.admin",
 		PERM_PORTALS_OTHER = "btm.bypass.portal.portals.other",
 		PERM_BYPASS_PORTAL_BLACKLIST = "btm.bypass.portal.blacklist",

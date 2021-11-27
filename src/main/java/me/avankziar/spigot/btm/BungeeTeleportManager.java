@@ -18,12 +18,14 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.Messenger;
 
 import main.java.me.avankziar.general.database.YamlManager;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.assistance.AccessPermissionHandler;
+import main.java.me.avankziar.spigot.btm.assistance.BackgroundTask;
 import main.java.me.avankziar.spigot.btm.assistance.Utility;
 import main.java.me.avankziar.spigot.btm.cmd.BTMCommandExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.BackCommandExecutor;
@@ -64,6 +66,7 @@ import main.java.me.avankziar.spigot.btm.manager.home.HomeHelper;
 import main.java.me.avankziar.spigot.btm.manager.home.HomeMessageListener;
 import main.java.me.avankziar.spigot.btm.manager.portal.PortalHandler;
 import main.java.me.avankziar.spigot.btm.manager.portal.PortalHelper;
+import main.java.me.avankziar.spigot.btm.manager.portal.PortalMessageListener;
 import main.java.me.avankziar.spigot.btm.manager.randomteleport.RandomTeleportHandler;
 import main.java.me.avankziar.spigot.btm.manager.randomteleport.RandomTeleportHelper;
 import main.java.me.avankziar.spigot.btm.manager.randomteleport.RandomTeleportMessageListener;
@@ -92,7 +95,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private MysqlHandler mysqlHandler;
 	
 	private Utility utility;
-	//private static BackgroundTask backgroundTask;
+	private static BackgroundTask backgroundTask;
 	
 	private Economy eco;
 	private AdvancedEconomyHandler advancedEconomyHandler;
@@ -166,6 +169,7 @@ public class BungeeTeleportManager extends JavaPlugin
 			return;
 		}
 		BTMSettings.initSettings(plugin);
+		backgroundTask = new BackgroundTask(plugin);
 		
 		commandHelper = new CommandHelper(plugin);
 		safeLocationHandler = new SafeLocationHandler(plugin);
@@ -248,10 +252,10 @@ public class BungeeTeleportManager extends JavaPlugin
 		return utility;
 	}
 	
-	/*public static BackgroundTask getBackgroundTask()
+	public BackgroundTask getBackgroundTask()
 	{
 		return backgroundTask;
-	}*/
+	}
 
 	public CommandHelper getCommandHelper()
 	{
@@ -420,12 +424,165 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(portals.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			BTMSettings.settings.addCommands(KeyHandler.PORTALS, portals.getCommandString());
 			
+			CommandConstructor portallist = new CommandConstructor("portallist", false);
+			registerCommand(portallist.getName());
+			getCommand(portallist.getName()).setExecutor(new PortalCommandExecutor(plugin, portallist));
+			getCommand(portallist.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_LIST, portallist.getCommandString());
+			
+			CommandConstructor portalinfo = new CommandConstructor("portalinfo", false);
+			registerCommand(portalinfo.getName());
+			getCommand(portalinfo.getName()).setExecutor(new PortalCommandExecutor(plugin, portalinfo));
+			getCommand(portalinfo.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_INFO, portalinfo.getCommandString());
+			
+			CommandConstructor portaldeleteserverworld = new CommandConstructor("portaldeleteserverworld", false);
+			registerCommand(portaldeleteserverworld.getName());
+			getCommand(portaldeleteserverworld.getName()).setExecutor(new PortalCommandExecutor(plugin, portaldeleteserverworld));
+			getCommand(portaldeleteserverworld.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			
+			CommandConstructor portalsearch = new CommandConstructor("portalsearch", false);
+			registerCommand(portalsearch.getName());
+			getCommand(portalsearch.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsearch));
+			getCommand(portalsearch.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SEARCH, portalsearch.getCommandString());
+			
+			CommandConstructor portalsetname = new CommandConstructor("portalsetname", false);
+			registerCommand(portalsetname.getName());
+			getCommand(portalsetname.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetname));
+			getCommand(portalsetname.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETNAME, portalsetname.getCommandString());
+			
+			CommandConstructor portalsetowner = new CommandConstructor("portalsetowner", false);
+			registerCommand(portalsetowner.getName());
+			getCommand(portalsetowner.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetowner));
+			getCommand(portalsetowner.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETOWNER, portalsetowner.getCommandString());
+			
+			CommandConstructor portalsetpermission = new CommandConstructor("portalsetpermission", false);
+			registerCommand(portalsetpermission.getName());
+			getCommand(portalsetpermission.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetpermission));
+			getCommand(portalsetpermission.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETPERMISSION, portalsetpermission.getCommandString());
+			
+			CommandConstructor portalsetprice = new CommandConstructor("portalsetprice", false);
+			registerCommand(portalsetprice.getName());
+			getCommand(portalsetprice.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetprice));
+			getCommand(portalsetprice.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETPRICE, portalsetprice.getCommandString());
+			
+			CommandConstructor portaladdmember = new CommandConstructor("portaladdmember", true);
+			registerCommand(portaladdmember.getName());
+			getCommand(portaladdmember.getName()).setExecutor(new PortalCommandExecutor(plugin, portaladdmember));
+			getCommand(portaladdmember.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_ADDMEMBER, portaladdmember.getCommandString());
+			
+			CommandConstructor portalremovemember = new CommandConstructor("portalremovemember", true);
+			registerCommand(portalremovemember.getName());
+			getCommand(portalremovemember.getName()).setExecutor(new PortalCommandExecutor(plugin, portalremovemember));
+			getCommand(portalremovemember.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_REMOVEMEMBER, portalremovemember.getCommandString());
+			
+			CommandConstructor portaladdblacklist = new CommandConstructor("portaladdblacklist", false);
+			registerCommand(portaladdblacklist.getName());
+			getCommand(portaladdblacklist.getName()).setExecutor(new PortalCommandExecutor(plugin, portaladdblacklist));
+			getCommand(portaladdblacklist.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_ADDBLACKLIST, portaladdblacklist.getCommandString());
+			
+			CommandConstructor portalremoveblacklist = new CommandConstructor("portalremoveblacklist", false);
+			registerCommand(portalremoveblacklist.getName());
+			getCommand(portalremoveblacklist.getName()).setExecutor(new PortalCommandExecutor(plugin, portalremoveblacklist));
+			getCommand(portalremoveblacklist.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_REMOVEBLACKLIST, portalremoveblacklist.getCommandString());
+			
+			CommandConstructor portalsetcategory = new CommandConstructor("portalsetcategory", false);
+			registerCommand(portalsetcategory.getName());
+			getCommand(portalsetcategory.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetcategory));
+			getCommand(portalsetcategory.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETCATEGORY, portalsetcategory.getCommandString());
+
+			CommandConstructor portalsetownexitpoint = new CommandConstructor("portalsetownexitpoint", false);
+			registerCommand(portalsetownexitpoint.getName());
+			getCommand(portalsetownexitpoint.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetownexitpoint));
+			getCommand(portalsetownexitpoint.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETOWNEXITPOINT, portalsetownexitpoint.getCommandString());
+			
+			CommandConstructor portalsetposition = new CommandConstructor("portalsetposition", false);
+			registerCommand(portalsetposition.getName());
+			getCommand(portalsetposition.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetposition));
+			getCommand(portalsetposition.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETPOSITIONS, portalsetposition.getCommandString());
+			
+			CommandConstructor portalsetdefaultcooldown = new CommandConstructor("portalsetdefaultcooldown", false);
+			registerCommand(portalsetdefaultcooldown.getName());
+			getCommand(portalsetdefaultcooldown.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetdefaultcooldown));
+			getCommand(portalsetdefaultcooldown.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETDEFAULTCOOLDOWN, portalsetdefaultcooldown.getCommandString());
+			
+			CommandConstructor portalsettarget = new CommandConstructor("portalsettarget", false);
+			registerCommand(portalsettarget.getName());
+			getCommand(portalsettarget.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsettarget));
+			getCommand(portalsettarget.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETTARGET, portalsettarget.getCommandString());
+			
+			CommandConstructor portalsetpostteleportmessage = new CommandConstructor("portalsetpostteleportmessage", false);
+			registerCommand(portalsetpostteleportmessage.getName());
+			getCommand(portalsetpostteleportmessage.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetpostteleportmessage));
+			getCommand(portalsetpostteleportmessage.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETPOSTTELEPORTMSG, portalsetpostteleportmessage.getCommandString());
+			
+			CommandConstructor portalsetaccessdenialmessage = new CommandConstructor("portalsetaccessdenialmessage", false);
+			registerCommand(portalsetaccessdenialmessage.getName());
+			getCommand(portalsetaccessdenialmessage.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetaccessdenialmessage));
+			getCommand(portalsetaccessdenialmessage.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETACCESSDENIALMSG, portalsetaccessdenialmessage.getCommandString());
+			
+			CommandConstructor portalsettriggerblock = new CommandConstructor("portalsettriggerblock", false);
+			registerCommand(portalsettriggerblock.getName());
+			getCommand(portalsettriggerblock.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsettriggerblock));
+			getCommand(portalsettriggerblock.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETACCESSDENIALMSG, portalsettriggerblock.getCommandString());
+			
+			CommandConstructor portalsetthrowback = new CommandConstructor("portalsetthrowback", false);
+			registerCommand(portalsetthrowback.getName());
+			getCommand(portalsetthrowback.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetthrowback));
+			getCommand(portalsetthrowback.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETTHROWBACK, portalsetthrowback.getCommandString());
+			
+			CommandConstructor portalsetprotectionradius = new CommandConstructor("portalsetprotectionradius", false);
+			registerCommand(portalsetprotectionradius.getName());
+			getCommand(portalsetprotectionradius.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetprotectionradius));
+			getCommand(portalsetprotectionradius.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETPORTALPROTECTION, portalsetprotectionradius.getCommandString());
+			
+			CommandConstructor portalsetsound = new CommandConstructor("portalsetsound", false);
+			registerCommand(portalsetsound.getName());
+			getCommand(portalsetsound.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetsound));
+			getCommand(portalsetsound.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETSOUND, portalsetsound.getCommandString());
+			
+			CommandConstructor portalsetaccesstype = new CommandConstructor("portalsetaccesstype", false);
+			registerCommand(portalsetaccesstype.getName());
+			getCommand(portalsetaccesstype.getName()).setExecutor(new PortalCommandExecutor(plugin, portalsetaccesstype));
+			getCommand(portalsetaccesstype.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETACCESSTYPE, portalsetaccesstype.getCommandString());
+			
+			CommandConstructor portalmode = new CommandConstructor("portalmode", false);
+			registerCommand(portalmode.getName());
+			getCommand(portalmode.getName()).setExecutor(new PortalCommandExecutor(plugin, portalmode));
+			getCommand(portalmode.getName()).setTabCompleter(new TABCompletionOne(plugin));
+			
 			CommandConstructor portalitem = new CommandConstructor("portalitem", false);
 			registerCommand(portalitem.getName());
 			getCommand(portalitem.getName()).setExecutor(new PortalCommandExecutor(plugin, portalitem));
 			getCommand(portalitem.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			
-			addingHelps(portalcreate, portalremove, portals, portalitem);
+			addingHelps(portalcreate, portalremove, portals, portallist, portalinfo, portaldeleteserverworld, 
+					portalsearch, portalsetname, portalsetowner, portalsetpermission, portalsetprice, portaladdmember,
+					portalremovemember, portaladdblacklist, portalremoveblacklist, portalsetcategory, portalsetownexitpoint,
+					portalsetposition, portalsetdefaultcooldown, portalsettarget, portalsetpostteleportmessage, 
+					portalsetaccessdenialmessage, portalsettriggerblock, portalsetthrowback, portalsetprotectionradius, 
+					portalsetsound, portalmode, portalitem);
 		}
 		
 		if(cfgh.enableCommands(Mechanics.RANDOMTELEPORT))
@@ -675,14 +832,14 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(warphidden.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			BTMSettings.settings.addCommands(KeyHandler.WARP_HIDDEN, warphidden.getCommandString());
 			
-			CommandConstructor warpaddmember = new CommandConstructor("warpaddmember", false);
+			CommandConstructor warpaddmember = new CommandConstructor("warpaddmember", true);
 			
 			registerCommand(warpaddmember.getName());
 			getCommand(warpaddmember.getName()).setExecutor(new WarpCommandExecutor(plugin, warpaddmember));
 			getCommand(warpaddmember.getName()).setTabCompleter(new TABCompletionOne(plugin));
 			BTMSettings.settings.addCommands(KeyHandler.WARP_ADDMEMBER, warpaddmember.getCommandString());
 			
-			CommandConstructor warpremovemember = new CommandConstructor("warpremovemember", false);
+			CommandConstructor warpremovemember = new CommandConstructor("warpremovemember", true);
 			
 			registerCommand(warpremovemember.getName());
 			getCommand(warpremovemember.getName()).setExecutor(new WarpCommandExecutor(plugin, warpremovemember));
@@ -764,6 +921,14 @@ public class BungeeTeleportManager extends JavaPlugin
 		StaticValues.PERM_HOME_COUNTHOMES_WORLD = yamlHandler.getCom().getString(path+"Home.Count.World");
 		StaticValues.PERM_HOME_COUNTHOMES_SERVER = yamlHandler.getCom().getString(path+"Home.Count.Server");
 		StaticValues.PERM_HOME_COUNTHOMES_GLOBAL = yamlHandler.getCom().getString(path+"Home.Count.Global");
+		
+		StaticValues.PERM_PORTALS_OTHER = yamlHandler.getCom().getString(path+"Portal.Other");
+		StaticValues.PERM_BYPASS_PORTAL = yamlHandler.getCom().getString(path+"Portal.Admin");
+		StaticValues.PERM_BYPASS_PORTAL_BLACKLIST = yamlHandler.getCom().getString(path+"Portal.Blacklist");
+		StaticValues.PERM_BYPASS_PORTAL_TOOMANY = yamlHandler.getCom().getString(path+"Portal.Toomany");
+		StaticValues.PERM_PORTAL_COUNTWARPS_WORLD = yamlHandler.getCom().getString(path+"Portal.Count.World");
+		StaticValues.PERM_PORTAL_COUNTWARPS_SERVER = yamlHandler.getCom().getString(path+"Portal.Count.Server");
+		StaticValues.PERM_PORTAL_COUNTWARPS_GLOBAL = yamlHandler.getCom().getString(path+"Portal.Count.Global");
 		
 		StaticValues.PERM_BYPASS_SAVEPOINT_OTHER = yamlHandler.getCom().getString(path+"SavePoint.Other");
 		StaticValues.PERM_BYPASS_SAVEPOINTS_OTHER = yamlHandler.getCom().getString(path+"SavePoint.SavePointsOther");
@@ -894,23 +1059,26 @@ public class BungeeTeleportManager extends JavaPlugin
 	public void ListenerSetup()
 	{
 		PluginManager pm = getServer().getPluginManager();
-		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.GENERAL_TOBUNGEE);
-		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.BACK_TOBUNGEE);
-		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.BACK_TOSPIGOT, new BackMessageListener(this));
-		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.CUSTOM_TOBUNGEE);
-		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.CUSTOM_TOSPIGOT, new CustomMessageListener(this));
-		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.ENTITYTRANSPORT_TOBUNGEE);
-		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.ENTITYTRANSPORT_TOSPIGOT, new EntityTransportMessageListener());
-		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.HOME_TOBUNGEE);
-		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.HOME_TOSPIGOT, new HomeMessageListener(this));
-		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.RANDOMTELEPORT_TOBUNGEE);
-		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.RANDOMTELEPORT_TOSPIGOT, new RandomTeleportMessageListener(this));
-		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.SAVEPOINT_TOBUNGEE);
-		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.SAVEPOINT_TOSPIGOT, new SavePointMessageListener(this));
-		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.TP_TOBUNGEE);
-		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.TP_TOSPIGOT, new TeleportMessageListener(this));
-		getServer().getMessenger().registerOutgoingPluginChannel(this, StaticValues.WARP_TOBUNGEE);
-		getServer().getMessenger().registerIncomingPluginChannel(this, StaticValues.WARP_TOSPIGOT, new WarpMessageListener(this));
+		Messenger me = getServer().getMessenger();
+		me.registerOutgoingPluginChannel(this, StaticValues.GENERAL_TOBUNGEE);
+		me.registerOutgoingPluginChannel(this, StaticValues.BACK_TOBUNGEE);
+		me.registerIncomingPluginChannel(this, StaticValues.BACK_TOSPIGOT, new BackMessageListener(this));
+		me.registerOutgoingPluginChannel(this, StaticValues.CUSTOM_TOBUNGEE);
+		me.registerIncomingPluginChannel(this, StaticValues.CUSTOM_TOSPIGOT, new CustomMessageListener(this));
+		me.registerOutgoingPluginChannel(this, StaticValues.ENTITYTRANSPORT_TOBUNGEE);
+		me.registerIncomingPluginChannel(this, StaticValues.ENTITYTRANSPORT_TOSPIGOT, new EntityTransportMessageListener());
+		me.registerOutgoingPluginChannel(this, StaticValues.HOME_TOBUNGEE);
+		me.registerIncomingPluginChannel(this, StaticValues.HOME_TOSPIGOT, new HomeMessageListener(this));
+		me.registerOutgoingPluginChannel(this, StaticValues.PORTAL_TOBUNGEE);
+		me.registerIncomingPluginChannel(this, StaticValues.PORTAL_TOSPIGOT, new PortalMessageListener(this));
+		me.registerOutgoingPluginChannel(this, StaticValues.RANDOMTELEPORT_TOBUNGEE);
+		me.registerIncomingPluginChannel(this, StaticValues.RANDOMTELEPORT_TOSPIGOT, new RandomTeleportMessageListener(this));
+		me.registerOutgoingPluginChannel(this, StaticValues.SAVEPOINT_TOBUNGEE);
+		me.registerIncomingPluginChannel(this, StaticValues.SAVEPOINT_TOSPIGOT, new SavePointMessageListener(this));
+		me.registerOutgoingPluginChannel(this, StaticValues.TP_TOBUNGEE);
+		me.registerIncomingPluginChannel(this, StaticValues.TP_TOSPIGOT, new TeleportMessageListener(this));
+		me.registerOutgoingPluginChannel(this, StaticValues.WARP_TOBUNGEE);
+		me.registerIncomingPluginChannel(this, StaticValues.WARP_TOSPIGOT, new WarpMessageListener(this));
 		pm.registerEvents(new BackListener(plugin), plugin);
 		pm.registerEvents(new ServerAndWordListener(plugin), plugin);
 		pm.registerEvents(new CustomTeleportListener(plugin), plugin);

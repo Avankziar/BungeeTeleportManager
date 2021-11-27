@@ -72,10 +72,11 @@ Build 6 ========================================================================
   - +TpPreTeleportEvent
   - +HomePreTeleportEvent
   - +WarpPreTeleportEvent
-- +AccessPermission Submechanic added.
-- +AccessPermission Mysql and HashMap added.
+- +AccessPermission Submechanic hinzugefügt.
+- +AccessPermission Mysql und HashMap hinzugefügt.
 - +AccessPermissionHandler added.
-- Home, Warps und Portal count perm kummulativ per Configboolean gestalten.
+- +config_permissionlevel hinzugefügt.
+- +Home, Warps und Portal count perm kummulativ per Configboolean gestalten.
 - EntityTransport (befehle alle nochmal testen)
   - +Jedes Entity, außer Spieler, benötigen Permission.
   - +Entitys, welche benannt wurden, können nur noch vom Eigentümer/Umbenenner teleportiert werden. Umbenennungen von anderen Spieler im nachhinein geblock.
@@ -131,35 +132,39 @@ Build 6 ========================================================================
 - BedSpawn (?)
   - Passiver Speicherpunkt ohne aktive Speicherung/Laden. Heißt, weder Spieler/Admins sollen den speichern können.
 - Portal
-  - Ein Portal soll folgende Eigenschaften haben:
-    - +Owner, Perm, Cooldown, Cost(Geld), Member, Blacklist, Target, PointOfExit, Point 1 & 2, TargetType(Destination),
-  - TargetType: Warp, Deathback, Location, SavePoint, Firstspawn, Respawn, Randomteleport, Command
-  - /portalsetpointsmode | Toggle um die 2 Punkte des Portals zu setzen
+  - +Ein Portal soll folgende Eigenschaften haben:
+    - +Owner, Perm, Cooldown, Cost(Geld), Member, Blacklist, Target, PointOfExit, Point 1 & 2, TargetType(Destination), ...
+  - +TargetType: COMMAND, LOCATION,	BACK, DEATHBACK, FIRSTSPAWN, RESPAWN, HOME, PORTAL, RANDOMTELEPORT, SAVEPOINT, WARP
+  - +/portalmode | Toggle um die 2 Punkte des Portals zu setzen
   - +/portalcreate <Portalname> | Erstellt das Portal
-  - /portalsetowner <Portalname> <Spielername> | Überträgt das Eigentumsrecht des Portals. (null ist eine option für keinen Owner)
-  - /portalsetpermission <Portalname> <Permission>
-  - /portaladdmember|removemember <Portalname> <Spielername> | Entfernt oder fügt einen Spieler der Mitgliederliste hinzu.
-  - /portalsetcost <Portalname> <Geldbetrag>
-  - /portalsetcooldown <Portalname> <x:Zahl...> | Z.B. <y:1> <M:2> <d:5> <H:12> wären 1 Jahr 2 Monate 5 Tage und 12 Stunden
-  - /portalsettarget <Portalname> <Erkennung> [Zusatzinfo] | Z.B. <w:Spawn> = Warp zum Spawnwarppunkt o. <sp> für den letzten Savepoint
-    - Möglichkeiten sind: <p:portalname>, <w:Name>, <db> (Deatback), <l:Server;Welt;x;y;z;yaw;pitch>, <sp> oder <sp:Name>,
-    <fsp> firstspawn, <resp> oder <resp:name> Respawn, <rtp> oder <rtp:Name> RandomTeleport>, <c:/warp+spawn>
-  - /portaladdblacklist|removeblacklist <Portalname> <Spielername> | Entfernt oder fügt den Spieler der Blacklist hinzu. Bypass
-  - /portalsetpostteleportmessage <Portalname> <Nachricht...>
-  - /portalsetaccessdenialmessage <Portalname> <Nachricht...>
-  - /portalsearch <Seitenzahl> <xxxx:Value>; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
+  - +/portalsetowner <Portalname> <Spielername> | Überträgt das Eigentumsrecht des Portals. (null ist eine option für keinen Owner)
+  - +/portalsetpermission <Portalname> <Permission>
+  - +/portaladdmember|removemember <Portalname> <Spielername> | Entfernt oder fügt einen Spieler der Mitgliederliste hinzu.
+  - +/portalsetprice <Portalname> <Geldbetrag>
+  - +/portalsetdefaultcooldown <Portalname> <x:Zahl...> | Z.B. <y:1> <M:2> <d:5> <H:12> wären 1 Jahr 2 Monate 5 Tage und 12 Stunden
+  - +/portalsettarget <Portalname> <Targettype> [Zusatzinfo] | Targettypen siehe oben, Zusatzinfo, falls benötigt.
+  - +/portaladdblacklist|removeblacklist <Portalname> <Spielername> | Entfernt oder fügt den Spieler der Blacklist hinzu. Bypass
+  - +/portalsetpostteleportmessage <Portalname> <Nachricht...>
+  - +/portalsetaccessdenialmessage <Portalname> <Nachricht...>
+  - +/portalsearch <Seitenzahl> <xxxx:Value>; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
     Sollte hinter dem ":" was stehen, wird genau danach gesucht. Falls der eintrag fehlt, wird nach allen gesucht,
     welche einen server haben. Weitere Argumente sind "owner", "world", "member", "category".
-  - /portalinfo <Portalname>
-  - /portallist [seitenzahl] [server] [welt]
+  - +/portalinfo <Portalname>
+  - +/portallist [seitenzahl] [server] [welt]
   - +/portals [seitenzahl] [spielername]
-  - /portalremove <Portalname>
-  - /portalsetpoints <Portalname> | Versetzt die zwei Punkte des Portals zu den neuen Punkten.
-  - /portalsetpointofExit <Portalname> | Erstellt den Point of Exit des angegebenen Portals
-  - /portalsettriggerblock <Portalname> [TriggerBlock, ohne Angabe AIR] [true:zum air in triggerblock umwandeln, sonst selber füllen.]
+  - +/portalremove <Portalname>
+  - +/portalsetpoints <Portalname> | Versetzt die zwei Punkte des Portals zu den neuen Punkten.
+  - +/portalsetownexitpoint <Portalname> | Erstellt den Point of Exit des angegebenen Portals
+  - +/portalsettriggerblock <Portalname> [TriggerBlock, ohne Angabe AIR] [true:zum air in triggerblock umwandeln, sonst selber füllen.]
+  - +/portalsetsound
+  - +/portalsetprotectionradius
+  - +/portalsetthrowback
+  - +/portalsetcategory
+  - +/portalsetaccesstype
+  - +/portalupdate
   - +/portalitem, gibt ein Item, welches Netherportalblöcke rotieren lässt.
   - +Beim Erstellen des Portals, soll der Infobefehl als ClickBefehl sofort danach gesendet.
-  - PermissionLevel für Portale hinzufügen.
+  - +PermissionLevel für Portale hinzufügen.
   - +portal erstellung kann geld kosten.
   - Das Innenleben der Portale muss ich mir anschauen.
   - Portale können auch von LivingEntity benutzt werden.

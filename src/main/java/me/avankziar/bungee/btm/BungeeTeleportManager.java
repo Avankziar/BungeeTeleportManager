@@ -11,6 +11,7 @@ import main.java.me.avankziar.bungee.btm.manager.BackMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.CustomMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.EntityTransportMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.HomeMessageListener;
+import main.java.me.avankziar.bungee.btm.manager.PortalMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.RandomTeleportMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.SavePointMessageListener;
 import main.java.me.avankziar.bungee.btm.manager.TeleportMessageListener;
@@ -114,6 +115,9 @@ public class BungeeTeleportManager extends Plugin
 		pm.registerListener(plugin, new HomeMessageListener(plugin));
 		getProxy().registerChannel(StaticValues.HOME_TOBUNGEE);
 		getProxy().registerChannel(StaticValues.HOME_TOSPIGOT);
+		pm.registerListener(plugin, new PortalMessageListener(plugin));
+		getProxy().registerChannel(StaticValues.PORTAL_TOBUNGEE);
+		getProxy().registerChannel(StaticValues.PORTAL_TOSPIGOT);
 		pm.registerListener(plugin, new RandomTeleportMessageListener(plugin));
 		getProxy().registerChannel(StaticValues.RANDOMTELEPORT_TOBUNGEE);
 		getProxy().registerChannel(StaticValues.RANDOMTELEPORT_TOSPIGOT);

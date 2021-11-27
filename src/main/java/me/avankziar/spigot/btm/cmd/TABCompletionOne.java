@@ -164,7 +164,8 @@ public class TABCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (cfgh.enableCommands(Mechanics.RANDOMTELEPORT) 
+		} //ADDME PortalTabs
+		else if (cfgh.enableCommands(Mechanics.RANDOMTELEPORT) 
 				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RANDOMTELEPORT).trim()))) 
 		{
 			if(args.length == 1)

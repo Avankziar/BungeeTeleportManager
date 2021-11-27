@@ -45,6 +45,9 @@ public class PortalHandler
 	private final boolean canEntityUsePortals;
 	public ArrayList<UUID> portalCreateMode = new ArrayList<>();
 	private LinkedHashMap<UUID, PortalPosition> portalposition = new LinkedHashMap<>();
+	private long ownerCooldownPortal = 0L;
+	private long memberCooldownPortal = 0L;
+	private LinkedHashMap<String, Long> cooldownPortalmap = new LinkedHashMap<String, Long>();
 	
 	public PortalHandler(BungeeTeleportManager plugin)
 	{
@@ -52,10 +55,112 @@ public class PortalHandler
 		server = new ConfigHandler(plugin).getServer();
 		canEntityUsePortals = plugin.getYamlHandler().getConfig().getBoolean("Enable.EntityCanAccessPortals", false);
 		initPortals();
+		for(String s : plugin.getYamlHandler().getConfig().getStringList("Portal.CooldownAfterUse"))
+		{
+			String[] split = s.split(";");
+			if(split.length == 2)
+			{
+				long cd = parseCooldown(split[1]);
+				if(split[0].equalsIgnoreCase("Owner"))
+				{
+					ownerCooldownPortal = cd;
+				} else if(split[0].equalsIgnoreCase("Member"))
+				{
+					memberCooldownPortal = cd;
+				} else
+				{
+					continue;
+				}
+			} else if(split.length == 3)
+			{
+				if(split[0].equalsIgnoreCase("Perm"))
+				{
+					long cd = parseCooldown(split[1]);
+					String perm = split[2];
+					if(cooldownPortalmap.containsKey(perm))
+					{
+						cooldownPortalmap.replace(perm, cd);
+					} else
+					{
+						cooldownPortalmap.put(perm, cd);
+					}
+				} else
+				{
+					continue;
+				}
+			} else
+			{
+				continue;
+			}
+		}
+	}
+	
+	//0y-0d-0h-0m-5s-5ms
+	private long parseCooldown(String s)
+	{
+		if(!s.contains("-"))
+		{
+			return Long.MAX_VALUE;
+		}
+		String[] split = s.split("-");
+		long cd = 0L;
+		for(String a : split)
+		{
+			String b = "";
+			long mult = 1;
+			if(a.endsWith("y"))
+			{
+				b = a.substring(0, a.length()-1);
+				mult = 365*24*60*60*1000;
+			} else if(a.endsWith("d"))
+			{
+				b = a.substring(0, a.length()-1);
+				mult = 24*60*60*1000;
+			} else if(a.endsWith("h"))
+			{
+				b = a.substring(0, a.length()-1);
+				mult = 60*60*1000;
+			} else if(a.endsWith("m"))
+			{
+				b = a.substring(0, a.length()-1);
+				mult = 60*1000;
+			} else if(a.endsWith("s"))
+			{
+				b = a.substring(0, a.length()-1);
+				mult = 1000;
+			} else if(a.endsWith("ms"))
+			{
+				b = a.substring(0, a.length()-2);
+			} else
+			{
+				continue;
+			}
+			if(b.length() > 0)
+			{
+				if(MatchApi.isLong(b))
+				{
+					cd += mult * Long.parseLong(b);
+				}
+			}
+		}
+		return cd;
 	}
 	
 	public void initPortals()
 	{
+		if(!plugin.getYamlHandler().getConfig().getBoolean("Portal.LoadPortalInRAM", false))
+		{
+			return;
+		}
+		updatePortalAll();
+		plugin.getBackgroundTask().portalUpdateRepeatingTask(
+				plugin.getYamlHandler().getConfig().getInt("Portal.BackgroundTask.RepeatAfterSeconds", 3600));
+	}
+	
+	public void updatePortalAll()
+	{
+		portals = new ArrayList<>();
+		portalsTotal = new ArrayList<>();
 		ArrayList<Portal> intern = ConvertHandler.convertListII(
 				plugin.getMysqlHandler().getAllListAt(MysqlHandler.Type.PORTAL, "`id`", false, "`pos_one_server` = ?", server));
 		for(Portal p : intern)
@@ -215,69 +320,6 @@ public class PortalHandler
 		}
 	}
 	
-	private long parseCooldown(String s)
-	{
-		long l = System.currentTimeMillis();
-		if(!s.contains("-"))
-		{
-			return Long.MAX_VALUE;
-		}
-		String[] ss = s.split("-");
-		for(String a : ss)
-		{
-			if(a.endsWith("y"))
-			{
-				String b = a.substring(0, a.length()-1);
-				if(!MatchApi.isLong(b))
-				{
-					continue;
-				}
-				l += 365*24*60*60*1000*Long.parseLong(b);
-			} else if(a.endsWith("d"))
-			{
-				String b = a.substring(0, a.length()-1);
-				if(!MatchApi.isLong(b))
-				{
-					continue;
-				}
-				l += 24*60*60*1000*Long.parseLong(b);
-			} else if(a.endsWith("h"))
-			{
-				String b = a.substring(0, a.length()-1);
-				if(!MatchApi.isLong(b))
-				{
-					continue;
-				}
-				l += 60*60*1000*Long.parseLong(b);
-			} else if(a.endsWith("m"))
-			{
-				String b = a.substring(0, a.length()-1);
-				if(!MatchApi.isLong(b))
-				{
-					continue;
-				}
-				l += 60*1000*Long.parseLong(b);
-			} else if(a.endsWith("ms"))
-			{
-				String b = a.substring(0, a.length()-1);
-				if(!MatchApi.isLong(b))
-				{
-					continue;
-				}
-				l += Long.parseLong(b);
-			} else if(a.endsWith("s"))
-			{
-				String b = a.substring(0, a.length()-1);
-				if(!MatchApi.isLong(b))
-				{
-					continue;
-				}
-				l += 1000*Long.parseLong(b);
-			}
-		}
-		return l;
-	}
-	
 	public void checkIfCanBeTriggered(Player player, Location... locs)
 	{
 		if(playerInPortal.contains(player.getName()))
@@ -316,7 +358,7 @@ public class PortalHandler
 
 	public void sendEntityToPortal(Location loc, Entity entity)
 	{
-		//TODO
+		//ADDME
 	}
 	
 	public void sendPlayerToDestination(Player player, ServerLocation destination, final Portal portal)
@@ -369,28 +411,178 @@ public class PortalHandler
 		return;
 	}
 	
-	public void sendPortalChangeNote(int mysqlid)
+	public void updatePortalOverBungee(int mysqlID, String additional)
 	{
-		//ADDME Hier den anderen Server bescheidgeben, dass sich was geändert hat.
+		ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(stream);
+        try 
+        {
+			out.writeUTF(StaticValues.PORTAL_UPDATE);
+			out.writeInt(mysqlID);
+			out.writeUTF(additional);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        for(Player player : Bukkit.getOnlinePlayers())
+        {
+        	if(player.isOnline())
+        	{
+        		player.sendPluginMessage(plugin, StaticValues.PORTAL_TOBUNGEE, stream.toByteArray());
+        		break;
+        	}
+        }
+	}
+	
+	public void updatePortalLocale(int mysqlID, String additional)
+	{
+		int intern = -1;
+		int extern = -1;
+		if(additional.equalsIgnoreCase("REMOVE"))
+		{
+			for(int i = 0; i < portals.size(); i++)
+			{
+				Portal p = portals.get(i);
+				if(p.getId() == mysqlID)
+				{
+					intern = i;
+					break;
+				}
+			}
+			for(int i = 0; i < portalsTotal.size(); i++)
+			{
+				Portal p = portalsTotal.get(i);
+				if(p.getId() == mysqlID)
+				{
+					extern = i;
+					break;
+				}
+			}
+			if(intern != -1)
+			{
+				portals.remove(intern);
+			}
+			if(extern != -1)
+			{
+				portalsTotal.remove(extern);
+			}
+		} else if(additional.equalsIgnoreCase("CREATE"))
+		{
+			Portal portal = (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`id` = ?", mysqlID);
+			String server = new ConfigHandler(plugin).getServer();
+			if(portal.getPosition1().getServer().equals(server))
+			{
+				boolean existsI = false;
+				for(Portal p : portals)
+				{
+					if(p.getId() == portal.getId())
+					{
+						existsI = true;
+						break;
+					}
+				}
+				if(!existsI)
+				{
+					portals.add(portal);
+				}
+			}
+			boolean existsT = false;
+			for(Portal p : portalsTotal)
+			{
+				if(p.getId() == portal.getId())
+				{
+					existsT = true;
+					break;
+				}
+			}
+			if(!existsT)
+			{
+				portalsTotal.add(portal);
+			}
+		} else if(additional.equalsIgnoreCase("UPDATE"))
+		{
+			Portal portal = (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`id` = ?", mysqlID);
+			for(int i = 0; i < portals.size(); i++)
+			{
+				Portal p = portals.get(i);
+				if(p.getId() == portal.getId())
+				{
+					intern = i;
+					break;
+				}
+			}
+			for(int i = 0; i < portalsTotal.size(); i++)
+			{
+				Portal p = portalsTotal.get(i);
+				if(p.getId() == portal.getId())
+				{
+					extern = i;
+					break;
+				}
+			}
+			if(intern != -1)
+			{
+				portals.remove(intern);
+				portals.add(portal);
+			}
+			if(extern != -1)
+			{
+				portalsTotal.remove(extern);
+				portalsTotal.add(portal);
+			}
+		}
+	}
+	
+	public void updatePortalLocale(final Portal portal)
+	{
+		int intern = -1;
+		int extern = -1;
+		for(int i = 0; i < portals.size(); i++)
+		{
+			Portal p = portals.get(i);
+			if(p.getId() == portal.getId())
+			{
+				intern = i;
+				break;
+			}
+		}
+		for(int i = 0; i < portalsTotal.size(); i++)
+		{
+			Portal p = portalsTotal.get(i);
+			if(p.getId() == portal.getId())
+			{
+				extern = i;
+				break;
+			}
+		}
+		if(intern != -1)
+		{
+			portals.remove(intern);
+			portals.add(portal);
+		}
+		if(extern != -1)
+		{
+			portalsTotal.remove(extern);
+			portalsTotal.add(portal);
+		}
 	}
 	
 	public boolean comparePortalAmount(Player player, boolean message)
 	{
-		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseGlobalLevel", false))
+		if(plugin.getYamlHandler().getPermLevel().getBoolean("PermissionLevel.Portal.UseGlobalLevel", false))
 		{
 			if(compareGlobalPortals(player, message) >= 0 )
 			{
 				return false;
 			}
 		}		
-		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseServerLevel", false))
+		if(plugin.getYamlHandler().getPermLevel().getBoolean("PermissionLevel.Portal.UseServerLevel", false))
 		{
 			if(compareServerPortal(player, message) >= 0)
 			{
 				return false;
 			}
 		}
-		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseWorldLevel", false))
+		if(plugin.getYamlHandler().getPermLevel().getBoolean("PermissionLevel.Portal.UseWorldLevel", false))
 		{
 			if(compareWorldPortal(player, message) >= 0)
 			{
@@ -403,7 +595,7 @@ public class PortalHandler
 	public int comparePortal(Player player, boolean message)
 	{
 		int i = 0;
-		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseGlobalLevel", false))
+		if(plugin.getYamlHandler().getPermLevel().getBoolean("PermissionLevel.Portal.UseGlobalLevel", false))
 		{
 			i = compareGlobalPortals(player, message);
 			if(i > 0)
@@ -411,7 +603,7 @@ public class PortalHandler
 				return i;
 			}
 		}
-		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseServerLevel", false))
+		if(plugin.getYamlHandler().getPermLevel().getBoolean("PermissionLevel.Portal.UseServerLevel", false))
 		{
 			i = compareServerPortal(player, message);
 			if(i > 0)
@@ -419,7 +611,7 @@ public class PortalHandler
 				return i;
 			}
 		}		
-		if(plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.UseWorldLevel", false))
+		if(plugin.getYamlHandler().getPermLevel().getBoolean("PermissionLevel.Portal.UseWorldLevel", false))
 		{
 			i = compareWorldPortal(player, message);
 			if(i > 0)
@@ -453,7 +645,7 @@ public class PortalHandler
 		{
 			if(message)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyPortalGlobal")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalGlobal")
 						.replace("%amount%", String.valueOf(globalLimit))));
 			}
 		}
@@ -468,10 +660,10 @@ public class PortalHandler
 	public int compareServerPortal(Player player, boolean message)
 	{
 		String server = new ConfigHandler(plugin).getServer();
-		String serverCluster = plugin.getYamlHandler().getConfig().getString("PermissionLevel.Server.Cluster");
-		boolean clusterBeforeServer = plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.Server.ClusterActive", false);
+		String serverCluster = plugin.getYamlHandler().getPermLevel().getString("PermissionLevel.Portal.Server.Cluster");
+		boolean clusterBeforeServer = plugin.getYamlHandler().getPermLevel().getBoolean("PermissionLevel.Portal.Server.ClusterActive", false);
 		int serverLimit = 0;
-		List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.Server.ClusterList");
+		List<String> clusterlist = plugin.getYamlHandler().getPermLevel().getStringList("PermissionLevel.Portal.Server.ClusterList");
 		if(clusterlist == null)
 		{
 			clusterlist = new ArrayList<>();
@@ -514,7 +706,7 @@ public class PortalHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyPortalServerCluster")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalServerCluster")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -541,7 +733,7 @@ public class PortalHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyPortalServer")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalServer")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -552,7 +744,7 @@ public class PortalHandler
 	public int compareWorldPortal(Player player, boolean message)
 	{
 		String world = player.getLocation().getWorld().getName();
-		boolean clusterActive = plugin.getYamlHandler().getConfig().getBoolean("PermissionLevel.World.ClusterActive", false);
+		boolean clusterActive = plugin.getYamlHandler().getPermLevel().getBoolean("PermissionLevel.Portal.World.ClusterActive", false);
 		int worldLimit = 0;
 		
 		boolean worldIsInCluster = false;
@@ -561,14 +753,14 @@ public class PortalHandler
 		
 		if(clusterActive)
 		{
-			List<String> clusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.World.ClusterList");
+			List<String> clusterlist = plugin.getYamlHandler().getPermLevel().getStringList("PermissionLevel.Portal.World.ClusterList");
 			if(clusterlist == null)
 			{
 				clusterlist = new ArrayList<>();
 			}
 			for(String clusters : clusterlist)
 			{
-				List<String> worldclusterlist = plugin.getYamlHandler().getConfig().getStringList("PermissionLevel.World."+clusters);
+				List<String> worldclusterlist = plugin.getYamlHandler().getPermLevel().getStringList("PermissionLevel.Portal.World."+clusters);
 				for(String worlds: worldclusterlist)
 				{
 					if(worlds.equals(world))
@@ -621,7 +813,7 @@ public class PortalHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyPortalWorld")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}
@@ -649,7 +841,7 @@ public class PortalHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyPortalWorld")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}
@@ -690,6 +882,46 @@ public class PortalHandler
 			mapmap.put(portal.getPosition1().getWorldName(), bc);
 			map.put(portal.getPosition1().getServer(), mapmap);
 			return map;
+		}
+	}
+	
+	public long getCooldown(Player player, Portal portal)
+	{
+		if(!portal.getBlacklist().isEmpty()
+				&& portal.getBlacklist().contains(player.getUniqueId().toString())
+				&& (portal.getOwner() == null || (portal.getOwner() != null && !portal.getOwner().equals(player.getUniqueId().toString())))
+				&& !player.hasPermission(StaticValues.PERM_BYPASS_PORTAL))
+		{
+			return Long.MAX_VALUE;
+		}
+		PortalCooldown pcd = (PortalCooldown) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTALCOOLDOWN, 
+				"`portalid` = ? AND `player_uuid` = ?", portal.getId(), player.getUniqueId().toString());
+		if(pcd != null && pcd.getCooldownUntil() > System.currentTimeMillis())
+		{
+			return pcd.getCooldownUntil();
+		}
+		if(portal.getOwner() != null && portal.getOwner().equals(player.getUniqueId().toString()))
+		{
+			return ownerCooldownPortal;
+		} else if(!portal.getMember().isEmpty() && portal.getMember().contains(player.getUniqueId().toString()))
+		{
+			return memberCooldownPortal;
+		} else
+		{
+			long cd = portal.getCooldown();
+			for(String s : cooldownPortalmap.keySet())
+			{
+				if(!player.hasPermission(s))
+				{
+					continue;
+				}
+				long cooldown = cooldownPortalmap.get(s);
+				if(cd > cooldown)
+				{
+					cd = cooldown;
+				}
+			}
+			return cd;
 		}
 	}
 	

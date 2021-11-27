@@ -25,6 +25,8 @@ public class YamlHandler
 	private File commands = null;
 	private YamlConfiguration com = new YamlConfiguration();
 	
+	private File permissionlevelconfig = null;
+	private YamlConfiguration plc = new YamlConfiguration();
 	private File forbiddenconfig = null;
 	private YamlConfiguration fbc = new YamlConfiguration();
 	private File randomteleportconfig = null;
@@ -50,6 +52,11 @@ public class YamlHandler
 	public YamlConfiguration getCom()
 	{
 		return com;
+	}
+	
+	public YamlConfiguration getPermLevel()
+	{
+		return plc;
 	}
 	
 	public YamlConfiguration getForbidden()
@@ -141,6 +148,26 @@ public class YamlHandler
 			return false;
 		}
 		writeFile(commands, com, plugin.getYamlManager().getCommandsKey());
+		
+		permissionlevelconfig = new File(plugin.getDataFolder(), "config_permissionlevel.yml");
+		if(!permissionlevelconfig.exists()) 
+		{
+			BungeeTeleportManager.log.info("Create config_permissionlevel.yml...");
+			try
+			{
+				//Erstellung einer "leere" config.yml
+				FileUtils.copyToFile(plugin.getResource("default.yml"), permissionlevelconfig);
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		if(!loadYamlTask(permissionlevelconfig, plc))
+		{
+			return false;
+		}
+		writeFile(permissionlevelconfig, plc, plugin.getYamlManager().getConfigPermissionLevelKey());
 		
 		forbiddenconfig = new File(plugin.getDataFolder(), "config_forbiddenlist.yml");
 		if(!forbiddenconfig.exists()) 

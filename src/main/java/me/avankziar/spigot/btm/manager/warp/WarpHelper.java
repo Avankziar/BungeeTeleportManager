@@ -1278,6 +1278,17 @@ public class WarpHelper
 		{
 			return;
 		}
+		boolean owner = false;
+		if(warp.getOwner() != null)
+		{
+			owner = warp.getOwner().equals(player.getUniqueId().toString());
+		}
+		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
+				&& !owner)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			return;
+		}
 		String perm = args[1];
 		if(perm.equals("null"))
 		{
@@ -1759,7 +1770,7 @@ public class WarpHelper
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP,
 				"`server` = ? AND `world` = ?", serverName, worldName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpsNotExist")
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.PortalsNotExist")
 					.replace("%world%", worldName)
 					.replace("%server%", serverName)));
 			return;
@@ -1767,8 +1778,8 @@ public class WarpHelper
 		int count = plugin.getMysqlHandler().countWhereID(MysqlHandler.Type.WARP,
 				"`server` = ? AND `world` = ?", serverName, worldName);
 		plugin.getMysqlHandler().deleteData(
-				MysqlHandler.Type.HOME, "`server` = ? AND `world` = ?", serverName, worldName);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpServerWorldDelete")
+				MysqlHandler.Type.PORTAL, "`server` = ? AND `world` = ?", serverName, worldName);
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.PortalServerWorldDelete")
 				.replace("%world%", worldName)
 				.replace("%server%", serverName)
 				.replace("%amount%", String.valueOf(count))));
