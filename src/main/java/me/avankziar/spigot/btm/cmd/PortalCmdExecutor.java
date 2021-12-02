@@ -12,12 +12,12 @@ import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.cmd.tree.CommandConstructor;
 
-public class PortalCommandExecutor implements CommandExecutor 
+public class PortalCmdExecutor implements CommandExecutor 
 {
 	private BungeeTeleportManager plugin;
 	private static LinkedHashMap<String, CommandConstructor> commandList = new LinkedHashMap<>();
 	
-	public PortalCommandExecutor(BungeeTeleportManager plugin, CommandConstructor cc)
+	public PortalCmdExecutor(BungeeTeleportManager plugin, CommandConstructor cc)
 	{
 		this.plugin = plugin;
 		if(commandList.containsKey(cc.getName()))

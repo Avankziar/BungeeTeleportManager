@@ -70,6 +70,10 @@ public class MysqlSetup
 		{
 			return false;
 		}
+		if(!setupDatabaseXII())
+		{
+			return false;
+		}
 		return true;
 	}
 	
@@ -293,6 +297,20 @@ public class MysqlSetup
 		+ " portalid int,"
 		+ " player_uuid char(36) NOT NULL,"
 		+ " cooldownuntil BIGINT);";
+		return baseSetup(data);
+	}
+	
+	public boolean setupDatabaseXII() 
+	{
+		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.FIRSTSPAWN.getValue()
+		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
+		+ " server text,"
+		+ " orld text,"
+		+ " x double,"
+		+ " y double,"
+		+ " z double,"
+		+ " yaw float,"
+		+ " pitch float);";
 		return baseSetup(data);
 	}
 	

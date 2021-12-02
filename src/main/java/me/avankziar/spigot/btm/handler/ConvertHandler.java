@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import main.java.me.avankziar.general.object.AccessPermission;
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.EntityTransport;
+import main.java.me.avankziar.general.object.FirstSpawn;
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.Portal;
 import main.java.me.avankziar.general.object.SavePoint;
@@ -119,6 +120,19 @@ public class ConvertHandler
 			if(o instanceof AccessPermission)
 			{
 				el.add((AccessPermission) o);
+			}
+		}
+		return el;
+	}
+	
+	public static ArrayList<FirstSpawn> convertListXII(ArrayList<?> list)
+	{
+		ArrayList<FirstSpawn> el = new ArrayList<>();
+		for(Object o : list)
+		{
+			if(o instanceof FirstSpawn)
+			{
+				el.add((FirstSpawn) o);
 			}
 		}
 		return el;

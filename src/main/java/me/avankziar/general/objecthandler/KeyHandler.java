@@ -9,6 +9,9 @@ public class KeyHandler
 	public static String ENTITYTRANSPORT = "ENTITYTRANSPORT";
 	public static String ENTITYTRANSPORT_SETACCESS = "ENTITYTRANSPORT_SETACCESS";
 	
+	public static String FIRSTSPAWN = "FIRSTSPAWN";
+	public static String FIRSTSPAWN_REMOVE = "FIRSTSPAWN_REMOVE";
+	
 	public static String HOME = "HOME";
 	public static String HOMES = "HOMES";
 	public static String HOME_LIST = "HOME_LIST";
@@ -17,8 +20,8 @@ public class KeyHandler
 	public static String HOME_DEL = "HOME_DEL";
 	public static String HOME_REMOVE = "HOME_REMOVE";
 	
-	public static String PORTAL_CREATE = "PORTAL_CREATE";
 	public static String PORTALS = "PORTALS";
+	public static String PORTAL_CREATE = "PORTAL_CREATE";
 	public static String PORTAL_LIST = "PORTAL_LIST";
 	public static String PORTAL_REMOVE = "PORTAL_REMOVE";
 	public static String PORTAL_INFO = "PORTAL_INFO";

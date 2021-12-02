@@ -72,7 +72,7 @@ public class PortalListener implements Listener
 				 || event.getCause() == EntityDamageEvent.DamageCause.FIRE
 				 || event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK))
 		{
-			//TODO muss ich schauen ob ich im nachhinein dem spieler helfen muss...
+			//POSSIBLY muss ich schauen ob ich im nachhinein dem spieler helfen muss...
 		}
 	}
 	
@@ -108,13 +108,6 @@ public class PortalListener implements Listener
 			plugin.getPortalHandler().throwback(event.getTo(), event.getEntity());
 			return;
 		}
-		if(plugin.getPortalHandler().canEntityUsePortals())
-		{
-			plugin.getPortalHandler().sendEntityToPortal(event.getTo(), event.getEntity());
-		} else
-		{
-			plugin.getPortalHandler().throwback(event.getTo(), event.getEntity());
-		}	
 	}
 	
 	@EventHandler(ignoreCancelled = true)

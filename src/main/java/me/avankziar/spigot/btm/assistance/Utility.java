@@ -586,8 +586,9 @@ public class Utility
 		}
 	}
 	
-	public void givesEffect(Player player, Mechanics mechanics, boolean begin, //INFO begin = true, dann path vorher, false für danach
-			boolean isAsynchron) //async == true, wenn man in einem Async thread ist
+	public void givesEffect(Player player, Mechanics mechanics, boolean begin, 
+			boolean isAsynchron)
+	//begin = true, dann path vorher, false für danach; async == true, wenn man in einem Async thread ist
 	{
 		if(isAsynchron)
 		{

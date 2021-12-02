@@ -22,6 +22,7 @@ public class YamlManager
 	private static LinkedHashMap<String, Language> forbiddenListBungeeKeys = new LinkedHashMap<>();
 	
 	private static LinkedHashMap<String, Language> configPermissionLevelKeys = new LinkedHashMap<>();
+	private static LinkedHashMap<String, Language> configSpawnCommandsKeys = new LinkedHashMap<>();
 	
 	public YamlManager(boolean spigot) //INFO
 	{
@@ -30,6 +31,7 @@ public class YamlManager
 			initConfigSpigot();
 			initCommands();
 			initLanguage();
+			initConfigSpawnCommands();
 			initConfigPermissionLevel();
 			initRandomTeleport();
 			initForbiddenListSpigot();
@@ -97,6 +99,11 @@ public class YamlManager
 	}
 	
 	public LinkedHashMap<String, Language> getConfigPermissionLevelKey()
+	{
+		return configPermissionLevelKeys;
+	}
+	
+	public LinkedHashMap<String, Language> getConfigSpawnCmdsKey()
 	{
 		return configPermissionLevelKeys;
 	}
@@ -249,9 +256,9 @@ public class YamlManager
 			configSpigotKeys.put("EnableCommands.DeathZone"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("EnableCommands.EntityTeleport"
+			/*configSpigotKeys.put("EnableCommands.EntityTeleport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					true}));
+					true}));*/
 			configSpigotKeys.put("EnableCommands.EntityTransport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
@@ -417,6 +424,9 @@ public class YamlManager
 			configSpigotKeys.put("MinimumTimeBefore.Custom"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					2000}));
+			configSpigotKeys.put("MinimumTimeBefore.FirstSpawn"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					2000}));
 			configSpigotKeys.put("MinimumTimeBefore.Home"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					2000}));
@@ -498,6 +508,30 @@ public class YamlManager
 			configSpigotKeys.put("Use.CountPerm.Warp"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"HIGHEST"}));
+			configSpigotKeys.put("Use.FirstSpawn.FirstTimePlayedPlayer.SendToFirstSpawn"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Use.FirstSpawn.FirstTimePlayedPlayer.WhichFirstSpawn"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"servername_which_player_tp_to"}));
+			configSpigotKeys.put("Use.FirstSpawn.Spigot.DoCommandsAtFirstTime"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Use.FirstSpawn.Spigot.CommandAtFirstTime.AsPlayer"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"dummy", "dummy"}));
+			configSpigotKeys.put("Use.FirstSpawn.Spigot.CommandAtFirstTime.AsConsole"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"dummy", "dummy"}));
+			configSpigotKeys.put("Use.FirstSpawn.BungeeCord.DoCommandsAtFirstTime"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Use.FirstSpawn.BungeeCord.CommandAtFirstTime.AsPlayer"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"dummy", "dummy"}));
+			configSpigotKeys.put("Use.FirstSpawn.BungeeCord.CommandAtFirstTime.AsConsole"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"dummy", "dummy"}));
 			configSpigotKeys.put("Use.EntityTransport.TicketMechanic"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
@@ -587,6 +621,7 @@ public class YamlManager
 				"&c/deathback &f| Teleportiert dich zu deinem Todespunkt.",
 				"&c/deathback &f| Teleports you to your death point.");
 		comETr();
+		comFirstSpawn();
 		comHome();
 		comPortal();
 		comRT();
@@ -730,7 +765,7 @@ public class YamlManager
 				""}));*/
 	}
 	
-	private void comETr() //FIXME durch alle perms mal durchgehen, um verdopplungen zu vermeiden.
+	private void comETr()
 	{
 		commandsInput("entitytransport", "entitytransport", "btm.cmd.user.entitytransport.entitytransport", 
 				"/entitytransport [shortcut:target]", "/entitytransport ",
@@ -754,6 +789,26 @@ public class YamlManager
 				"&c/entitytransportbuytickets <amount> [playername] &f| Purchases entity transport tickets for a price x.");
 	}
 	
+	private void comFirstSpawn()
+	{
+		commandsInput("firstspawn", "firstspawn", "btm.cmd.user.firstspawn.firstspawn",
+				"/firstspawn <servername>", "/firstspawn ",
+				"&c/firstspawn <Servername> &f| Teleportiert zum FirstSpawn des angegebenen Servers.",
+				"&c/firstspawn <servernname> &f| Teleport to the FirstSpawn of the specified server.");
+		commandsInput("firstspawnset", "firstspawnset", "btm.cmd.user.firstspawn.set",
+				"/firstspawnset", "/firstspawnset ",
+				"&c/firstspawnset &f| Erstellt einen FirstSpawn auf dem Server, wo man sich befindet.",
+				"&c/firstspawnset &f| Creates a FirstSpawn on the server where you are located.");
+		commandsInput("firstspawnremove", "firstspawnremove", "btm.cmd.user.firstspawn.remove",
+				"/firstspawnremove <servername>", "/firstspawnremove ",
+				"&c/firstspawnremove <Servername> &f| Löscht den FirstSpawn des Servers.",
+				"&c/firstspawnremove <servernname> &f| Deletes the FirstSpawn of the server.");
+		commandsInput("firstspawninfo", "firstspawninfo", "btm.cmd.user.firstspawn.info",
+				"/firstspawninfo", "/firstspawninfo ",
+				"&c/firstspawninfo &f| Zeigt alle FirstSpawn aller Server an.",
+				"&c/firstspawninfo &f| Displays all FirstSpawn of all servers.");
+	}
+	
 	private void comHome()
 	{
 		commandsInput("sethome", "sethome", "btm.cmd.user.home.create",
@@ -773,7 +828,7 @@ public class YamlManager
 				"&c/homeremove <Homename> &f| Löscht den Homepunkt.",
 				"&c/homeremove <Homename> &f| Deletes the home point.");
 		commandsInput("homesdeleteserverworld", "homesdeleteserverworld",
-				"btm.cmd.admin.home.homesdeleteserverworld", "/homesdeleteserverworld <server> <worldname>", "/homesdeleteserverworld",
+				"btm.cmd.admin.home.deleteserverworld", "/homesdeleteserverworld <server> <worldname>", "/homesdeleteserverworld",
 				"&c/homesdeleteserverworld <Server> <Weltname> &f| Löscht alle Homes auf den angegebenen Server/Welt.",
 				"&c/homesdeleteserverworld <Server> <Weltname> &f| Deletes all homes on the specified server/world.");
 		commandsInput("homes", "homes", "btm.cmd.user.home.homes", 
@@ -784,7 +839,7 @@ public class YamlManager
 				"/home <homename>", "/home ",
 				"&c/home <Homename> &f| Teleportiert dich zu deinem Homepunkt.",
 				"&c/home <Homename> &f| Teleports you to your home point.");
-		commandsInput("homelist", "homelist", "btm.cmd.staff.home.home.list", 
+		commandsInput("homelist", "homelist", "btm.cmd.staff.home.list", 
 				"/homelist [page]", "/homelist ",
 				"&c/homelist [Seitenzahl] &f| Listet alle Homepunkte aller Spieler auf.",
 				"&c/homelist [Seitenzahl] &f| Lists all home points of all players.");
@@ -793,6 +848,7 @@ public class YamlManager
 				"&c/homesetpriority [Homename] &f| Setzt das angegebene Home als Priorität. /home führt nun direkt zu diesem Home.",
 				"&c/homesetpriority [homename] &f| Sets the specified home as priority. /home now leads directly to this home.");
 	}
+	
 	private void comPortal()
 	{
 		commandsInput("portalcreate", "portalcreate", "btm.cmd.user.portal.create",
@@ -882,31 +938,31 @@ public class YamlManager
 		commandsInput("portalsetaccessdenialmessage", "portalsetaccessdenialmessage", "btm.cmd.user.portal.setaccessdenialmessage",
 				"/portalsetaccessdenialmessage <portal> <message>", "/portalsetaccessdenialmessage ",
 				"&c/portalsetaccessdenialmessage <portal> <Nachricht> &f| Setzt die Nachricht, welche gesendet wird, falls man das Portal nicht benutzten darf.",
-				"&c/portalsetaccessdenialmessage <portal> <message> &f| .");
+				"&c/portalsetaccessdenialmessage <portal> <message> &f| Sets the message that will be sent if you are not allowed to use the portal.");
 		commandsInput("portalsettriggerblock", "portalsettriggerblock", "btm.cmd.user.portal.settriggerblock",
 				"/portalsettriggerblock <portal> <material>", "/portaltriggerblock ",
-				"&c/portalsettriggerblock <portal> <Material> &f| .",
-				"&c/portalsettriggerblock <portal> <material> &f| .");
+				"&c/portalsettriggerblock <portal> <Material> &f| Setzt das Material welches als Portaltrigger dient. Dieser muss ein transparenter Block sein.",
+				"&c/portalsettriggerblock <portal> <material> &f| Sets the material that serves as the portal trigger. This must be a transparent block.");
 		commandsInput("portalsetthrowback", "portalsetthrowback", "btm.cmd.user.portal.setthrowback",
 				"/portalsetthrowback <portal> <x.x number>", "/portalsetthrowback ",
-				"&c/portalsetthrowback <portal> <x.x Nummer> &f| .",
-				"&c/portalsetthrowback <portal> <x.x number> &f| .");
+				"&c/portalsetthrowback <portal> <x.x Nummer> &f| Setzt den Throwback Wert als Dezimalzahl.",
+				"&c/portalsetthrowback <portal> <x.x number> &f| Sets the throwback value as a decimal number.");
 		commandsInput("portalsetprotectionradius", "portalsetprotectionradius", "btm.cmd.staff.portal.setprotectionradius",
 				"/portalsetprotectionradius <portal>", "/portalsetprotectionradius ",
-				"&c/portalsetprotectionradius <portal> &f| .",
-				"&c/portalsetprotectionradius <portal> &f| .");
+				"&c/portalsetprotectionradius <portal> &f| Setzt den Radius an Blöcken, wo sich kein Block durch Wasser, Lava oder eine Creeperexplosion verändern kann.",
+				"&c/portalsetprotectionradius <portal> &f| Sets the radius at blocks where no block can be changed by water, lava or a creeper explosion.");
 		commandsInput("portalsetsound", "portalsetsound", "btm.cmd.user.portal.setsound",
 				"/portalsetsound <portal> <sound>", "/portalsetsound ",
-				"&c/portalsetsound <portal> <Sound> &f| .",
-				"&c/portalsetsound <portal> <sound> &f| .");
+				"&c/portalsetsound <portal> <Sound> &f| Setzt den Sound der abgespielt wird, wenn man erfolgreich durch ein Portal teleportiert wird.",
+				"&c/portalsetsound <portal> <sound> &f| Sets the sound that is played when you are successfully teleported through a portal.");
 		commandsInput("portalsetaccesstype", "portalsetaccesstype", "btm.cmd.user.portal.setaccesstype",
 				"/portalsetaccesstype <portal>", "/portalsetaccesstype ",
-				"&c/portalsetaccesstype <portal> &f| .",
-				"&c/portalsetaccesstype <portal> &f| .");
+				"&c/portalsetaccesstype <portal> &f| Toggelt ob ein Portal öffentlich oder privat ist. (Privat dürfen nur der Eigentümer und Mitglieder das Portal benutzten)",
+				"&c/portalsetaccesstype <portal> &f| Toggles whether a portal is public or private. (Private only the owner and members may use the portal).");
 		commandsInput("portalmode", "portalmode", "btm.cmd.user.portal.mode",
 				"/portalmode <portal>", "/portalmode ",
-				"&c/portalmode <portal> &f| .",
-				"&c/portalmode <portal> &f| .");
+				"&c/portalmode <portal> &f| Versetzt den Spieler in den Modus um die Eckpunkte eines Portal zu bestimmen.",
+				"&c/portalmode <portal> &f| Puts the player in mode to determine the corner points of a portal.");
 		commandsInput("portalitem", "portalitem", "btm.cmd.staff.portal.item",
 				"/portalitem ", "/portalitem ",
 				"&c/portalitem &f| Gibt ein Item, welches einen Netherportalblock rotieren lässt.",
@@ -923,11 +979,11 @@ public class YamlManager
 	
 	private void comSavepoint()
 	{
-		commandsInput("savepoint", "savepoint", "btm.cmd.user.savepoint.savepoint.self", 
+		commandsInput("savepoint", "savepoint", "btm.cmd.user.savepoint.savepoint", 
 				"/savepoint [savepoint] [playername]", "/savepoint ",
 				"&c/savepoint [savepoint] [SpielerName] &f| Teleportiert dich zu deinen Speicherpunkt.",
 				"&c/savepoint [savepoint] [playername] &f| Teleports you to your save point.");
-		commandsInput("savepoints", "savepoints", "btm.cmd.user.savepoint.savepoints.self", 
+		commandsInput("savepoints", "savepoints", "btm.cmd.user.savepoint.savepoints", 
 				"/savepoints [page] [playername]", "/savepoints ",
 				"&c/savepoints [Seite] [SpielerName] &f| Shows your Savepoints.",
 				"&c/savepoints [page] [playername] &f| Shows your Savepoints.");
@@ -935,15 +991,15 @@ public class YamlManager
 				"/savepointlist [page]", "/savepointlist ",
 				"&c/savepointlist [page] &f| Shows all Savepoints",
 				"&c/savepointlist [page] &f| Shows all Savepoints");
-		commandsInput("savepointcreate", "savepointcreate", "btm.cmd.user.savepoint.savepointcreate", 
+		commandsInput("savepointcreate", "savepointcreate", "btm.cmd.user.savepoint.create", 
 				"/savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>]", "/savepoint ",
 				"&c/savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Erstellt einen Speicherpunkt für den Spieler.",
 				"&c/savepointcreate <player> <savepointname> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Create a save point for the player.");
-		commandsInput("savepointdelete", "savepointdelete", "btm.cmd.user.savepoint.savepointdelete", 
+		commandsInput("savepointdelete", "savepointdelete", "btm.cmd.user.savepoint.delete", 
 				"/savepointdelete <Spieler> [SavePointName]", "/savepointdelete ",
 				"&c/savepointdelete <Spieler> [SavePointName] &f| Löscht alle oder einen spezifischen Speicherpunkt von einem Spieler.",
 				"&c/savepointdelete <player> [savepointname] &f| Deletes all or a specific save point from a player.");
-		commandsInput("savepointdeleteall", "savepointdeleteall", "btm.cmd.user.savepoint.savepointdeleteall", 
+		commandsInput("savepointdeleteall", "savepointdeleteall", "btm.cmd.user.savepoint.deleteall", 
 				"/savepointdeleteall <Server> <Welt>", "/savepointdeleteall ",
 				"&c/savepointdeleteall <Server> <Welt> &f| Löscht alle Speicherpunkte in der Welt vom Server.",
 				"&c/savepointdeleteall <server> <world> &f| Deletes all save points in the world from the server.");
@@ -1079,7 +1135,7 @@ public class YamlManager
 				"/warpsetcategory <warpname> <category>", "/warpsetcategory ",
 				"&c/warpsetkategorie <warpname> <kategorie> &f| Setzt die Kategorie des Warps.",
 				"&c/warpsetcategory <warpname> <category> &f| Set the category of the warp.");
-		commandsInput("warpsdeleteserverworld", "warpsdeleteserverworld", "btm.cmd.user.warp.warpsdeleteserverworld",
+		commandsInput("warpsdeleteserverworld", "warpsdeleteserverworld", "btm.cmd.user.warp.deleteserverworld",
 				"/warpsdeleteserverworld <server> <world>", "/warpsdeleteserverworld ",
 				"&c/warpsdeleteserverworld <server> <welt> &f| Löscht alle Warps auf den angegebenen Server/Welt.",
 				"&c/warpsdeleteserverworld <server> <world> &f| Deletes all warps on the specified server/world");
@@ -1087,7 +1143,7 @@ public class YamlManager
 				"/warpsearch <page> <xxxx:value>", "/warpsearch ",
 				"&c/warpsearch <Seitenzahl> <xxxx:Wert> &f| Sucht mit den angegeben Argumenten eine Liste aus Warps.",
 				"&c/warpsearch <page> <xxxx:value> &f| Searches a list of warps with the given arguments.");
-		commandsInput("warpsetportalaccess", "warpsetportalaccess", "btm.cmd.user.warp.warpsetportalaccess",
+		commandsInput("warpsetportalaccess", "warpsetportalaccess", "btm.cmd.user.warp.setportalaccess",
 				"/warpsetportalaccess <portalname> <value>", "/warpsetportalaccess ",
 				"&c/warpsetportalaccess <Portalname> <Wert> &f| Gibt den Zugang eines Portals zu diesem Warp an. Möglich sind: ONLY, IRRELEVANT, FORBIDDEN",
 				"&c/warpsetportalaccess <portalname> <value> &f| Specifies the access of a portal to this warp. Possible are: ONLY, IRRELEVANT, FORBIDDEN");
@@ -1233,6 +1289,7 @@ public class YamlManager
 		langEconomy();
 		langBtm();
 		langEntityTransport();
+		langFirstSpawn();
 		langHome();
 		langPortal();
 		langRandomTeleport();
@@ -1248,119 +1305,120 @@ public class YamlManager
 	
 	private void langEconomy()
 	{
-		languageKeys.put("Economy.EcoIsNull",
+		String path = "Economy."; 
+		languageKeys.put(path+"EcoIsNull",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eEconomy Plugin existiert nicht!",
 						"&eEconomy Plugin does not exist!"}));
-		languageKeys.put("Economy.NoEnoughBalance",
+		languageKeys.put(path+"NoEnoughBalance",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast nicht genug Geld dafür!",
 						"&cYou don not have enough money for it!"}));
-		languageKeys.put("Economy.ETrUUID",
+		languageKeys.put(path+"ETrUUID",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"EntityTransportTicket",
 						"EntityTransportTicket"}));
-		languageKeys.put("Economy.ETrName",
+		languageKeys.put(path+"ETrName",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"EntityTransportTicket",
 						"EntityTransportTicket"}));
-		languageKeys.put("Economy.ETrORDERER",
+		languageKeys.put(path+"ETrORDERER",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"EntityTransportTicket",
 						"EntityTransportTicket"}));
-		languageKeys.put("Economy.ETrComment",
+		languageKeys.put(path+"ETrComment",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eKauft von &f%tickets% &eEntityTransportTickets",
 						"&ePurchases from &f%tickets% &eEntityTransportTickets"}));
-		languageKeys.put("Economy.HUUID",
+		languageKeys.put(path+"HUUID",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Homes",
 						"Homes"}));
-		languageKeys.put("Economy.HName",
+		languageKeys.put(path+"HName",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Homes",
 						"Homes"}));
-		languageKeys.put("Economy.HORDERER",
+		languageKeys.put(path+"HORDERER",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Homes",
 						"Homes"}));
-		languageKeys.put("Economy.HComment",
+		languageKeys.put(path+"HComment",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eTeleport zum Home &f%home%",
 						"&eTeleport to home &f%home%"}));
-		languageKeys.put("Economy.HCommentCreate",
+		languageKeys.put(path+"HCommentCreate",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eErstellung vom Home &f%home%",
 						"&eCreation of the Home &f%home%"}));
-		languageKeys.put("Economy.PUUID",
+		languageKeys.put(path+"PUUID",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Portals",
 						"Portals"}));
-		languageKeys.put("Economy.PName",
+		languageKeys.put(path+"PName",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Portals",
 						"Portals"}));
-		languageKeys.put("Economy.PORDERER",
+		languageKeys.put(path+"PORDERER",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Portals",
 						"Portals"}));
-		languageKeys.put("Economy.PComment",
+		languageKeys.put(path+"PComment",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eTeleport durch das Portal &f%portalname%",
 						"&eTeleport through the portal &f%portalname%"}));
-		languageKeys.put("Economy.PCommentCreate",
+		languageKeys.put(path+"PCommentCreate",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eErstellung des Portal &f%portalname%",
 						"&eCreation of the portal &f%portalname%"}));
-		languageKeys.put("Economy.RTUUID",
+		languageKeys.put(path+"RTUUID",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"RandomTeleport",
 						"RandomTeleport"}));
-		languageKeys.put("Economy.RTName",
+		languageKeys.put(path+"RTName",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"RandomTeleport",
 						"RandomTeleport"}));
-		languageKeys.put("Economy.RTORDERER",
+		languageKeys.put(path+"RTORDERER",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"RandomTeleport",
 						"RandomTeleport"}));
-		languageKeys.put("Economy.RTComment",
+		languageKeys.put(path+"RTComment",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eTeleport zu einem zufälligen Ort.",
 						"&eTeleport too a random location."}));
-		languageKeys.put("Economy.TUUID",
+		languageKeys.put(path+"TUUID",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"TPA",
 						"TPA"}));
-		languageKeys.put("Economy.TName",
+		languageKeys.put(path+"TName",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"TPA",
 						"TPA"}));
-		languageKeys.put("Economy.TORDERER",
+		languageKeys.put(path+"TORDERER",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"TeleportSystem",
 						"TeleportSystem"}));
-		languageKeys.put("Economy.TComment",
+		languageKeys.put(path+"TComment",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eTeleport &f%from% &ezu &f%to%",
 						"&eTeleport &f%from% &eto &f%to%"}));
-		languageKeys.put("Economy.WUUID",
+		languageKeys.put(path+"WUUID",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Warp",
 						"Warp"}));
-		languageKeys.put("Economy.WName", 
+		languageKeys.put(path+"WName", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Warp",
 						"Warp"}));
-		languageKeys.put("Economy.WORDERER",
+		languageKeys.put(path+"WORDERER",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Warp",
 						"Warp"}));
-		languageKeys.put("Economy.WComment", 
+		languageKeys.put(path+"WComment", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eTeleport zum Warp &f%warp%",
 						"&eTeleport to warp &f%warp%"}));
-		languageKeys.put("Economy.WCommentCreate",
+		languageKeys.put(path+"WCommentCreate",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eErstellung vom Warp &f%warp%",
 						"&eCreation of Warp &f%warp%"}));
@@ -1368,52 +1426,55 @@ public class YamlManager
 	
 	private void langBtm()
 	{
-		languageKeys.put("CmdBtm.Headline", 
+		String path = "CmdBtm."; 
+		languageKeys.put(path+"Headline", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&e=====&7[&6BungeeTeleportManager&7]&e=====",
 						"&e=====&7[&6BungeeTeleportManager&7]&e====="}));
-		languageKeys.put("CmdBtm.BaseInfo.Next", 
+		languageKeys.put(path+"BaseInfo.Next", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&e&nnächste Seite &e==>",
 						"&e&nnext page &e==>"}));
-		languageKeys.put("CmdBtm.BaseInfo.Past", 
+		languageKeys.put(path+"BaseInfo.Past", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&e<== &nvorherige Seite",
 						"&e<== &nprevious page"}));
-		languageKeys.put("CmdBtm.Reload.Success", 
+		languageKeys.put(path+"Reload.Success", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aYaml-Dateien wurden neu geladen.",
 						"&aYaml files were reloaded."}));
-		languageKeys.put("CmdBtm.Reload.Error",
+		languageKeys.put(path+"Reload.Error",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cEs wurde ein Fehler gefunden! Siehe Konsole!",
 						"&cAn error was found! See console!"}));
 		
-		languageKeys.put("CmdBack.RequestInProgress",
+		path = "CmdBack."; 
+		languageKeys.put(path+"RequestInProgress",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Backteleport wird bearbeitet!",
 						"&eThe back teleport is being processed!"}));
-		languageKeys.put("CmdBack.OldbackNull",
+		languageKeys.put(path+"OldbackNull",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Backteleport ist abgebrochen, da der letzte Backpunkt nicht existiert!",
 						"&cThe backteleport is aborted because the last backpoint does not exist!"}));
-		languageKeys.put("CmdBack.ForbiddenServerUse", 
+		languageKeys.put(path+"ForbiddenServerUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server dürfen kein Back benutzt werden!",
 						"&cNo back may be used on this server!"}));
-		languageKeys.put("CmdBack.ForbiddenWorldUse", 
+		languageKeys.put(path+"ForbiddenWorldUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Back benutzt werden!",
 						"&cNo back may be used in this world!"}));
-		languageKeys.put("CmdBack.NotifyAfterWithDraw", 
+		languageKeys.put(path+"NotifyAfterWithDraw", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Back-Teleport hat &f%amount% %currency% &egekostet.",
 						"&eThe back teleport cost &f%amount% %currency%&e."}));
-		languageKeys.put("CmdDeathback.ForbiddenServerUse", 
+		path = "CmdDeathback."; 
+		languageKeys.put(path+"ForbiddenServerUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server dürfen kein Deathback benutzt werden!",
 						"&cNo deathback may be used on this server!"}));
-		languageKeys.put("CmdDeathback.ForbiddenWorldUse", 
+		languageKeys.put(path+"ForbiddenWorldUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Deathback benutzt werden!",
 						"&cNo deathback may be used in this world!"}));
@@ -1536,117 +1597,171 @@ public class YamlManager
 						"&eThe player &f%player% &ehas received &f%amount% &etickets!"}));
 	}
 	
+	private void langFirstSpawn()
+	{
+		String path = "CmdFirstSpawn."; 
+		languageKeys.put(path+"SpawnTo",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&aDu wurdest zu deinem Home &f%spawn% &ateleportiert.",
+						"&aYou have been &eleported to your home &f%spawn% &ateleported."}));
+		languageKeys.put(path+"RequestInProgress", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer FirstSpawnteleport wird bearbeitet!",
+						"&eThe firstspawn teleport is being processed!"}));
+		languageKeys.put(path+"FirstSpawnNotExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer FirstSpawn existiert nicht!",
+						"&cFirstSpawn does not exist!"}));
+		languageKeys.put(path+"FirstSpawnNameAlreadyExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Name als FirstSpawn existiert schon!",
+						"&cThe name as firstspawn already exists!"}));
+		languageKeys.put(path+"Set", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer FirstSpawn &f%value% &ewurde an deiner Position, für den Server %server% gesetzt!",
+						"&eThe FirstSpawn &f%value% &ewas set at your position, for the server %server%!"}));
+		languageKeys.put(path+"ReSet", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer FirstSpawn &f%value% &ewurde an deiner Position, für den Server %server% neu gesetzt!",
+						"&eThe FirstSpawn &f%value% &has been reset at your position, for the server %server%!"}));
+		languageKeys.put(path+"RemoveSpawn", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer FirstSpawn &f%value% &ewurde gelöscht!",
+						"&eThe FirstSpawn &f%value% &ehas been deleted!"}));
+		languageKeys.put(path+"NoOneExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cEs existiert kein FirstSpawn!",
+						"&cThere is no FirstSpawn!"}));
+		languageKeys.put(path+"InfoHeadline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e=====&7[&6FirstSpawninfo &9| &7Anzahl: &f%amount%&7]&e=====",
+						"&e=====&7[&6FirstSpawninfo &9| &7Quantity: &f%amount%&7]&e====="}));
+		languageKeys.put(path+"InfoFirstSpawn",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e%value%: &r%location%| &aⓉ~click@SUGGEST_COMMAND@%cmd%+%value% &c✖~click@SUGGEST_COMMAND@%cmdII%+%value%~hover",
+						"&e%value%: &r%location%| &aⓉ~click@SUGGEST_COMMAND@%cmd%+%value% &c✖~click@SUGGEST_COMMAND@%cmdII%+%value%~hover"}));
+		languageKeys.put(path+"ForbiddenServerUse", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAuf diesem Server dürfen keine FirstSpawn benutzt werden!",
+						"&cFirstSpawn must not be used on this server!"}));
+		languageKeys.put(path+"ForbiddenWorldUse", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cAuf dieser Welt dürfen keine FirstSpawn benutzt werden!",
+						"&cNo FirstSpawn may be used on this world!"}));
+	}
+	
 	private void langHome()
 	{
-		languageKeys.put("CmdHome.HomeTo",
+		String path = "CmdHome.";
+		languageKeys.put(path+"HomeTo",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDu wurdest zu deinem Home &f%home% &ateleportiert.",
 						"&aYou have been &eleported to your home &f%home% &ateleported."}));
-		languageKeys.put("CmdHome.RequestInProgress", 
+		languageKeys.put(path+"RequestInProgress", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Hometeleport wird bearbeitet!",
 						"&eThe home teleport is being processed!"}));
-		languageKeys.put("CmdHome.HomeNameAlreadyExist", 
+		languageKeys.put(path+"HomeNameAlreadyExist", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu besitzt schon ein Home mit dem Namen &f%home%&c!",
 						"&cYou already own a home with the name &f%home%&c!"}));
-		languageKeys.put("CmdHome.ForbiddenServer", 
+		languageKeys.put(path+"ForbiddenServer", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server dürfen keine Homes erstellt werden!",
 						"&cNo homes may be created on this server!"}));
-		languageKeys.put("CmdHome.ForbiddenWorld", 
+		languageKeys.put(path+"ForbiddenWorld", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Homes erstellt werden!",
 						"&cNo homes may be created in this world!"}));
-		languageKeys.put("CmdHome.ForbiddenServerUse", 
+		languageKeys.put(path+"ForbiddenServerUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server dürfen keine Homes benutzt werden!",
 						"&cNo homes may be used on this server!"}));
-		languageKeys.put("CmdHome.ForbiddenWorldUse", 
+		languageKeys.put(path+"ForbiddenWorldUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Homes benutzt werden!",
 						"&cNo homes may be used in this world!"}));
-		languageKeys.put("CmdHome.NotifyAfterWithDraw", 
+		languageKeys.put(path+"NotifyAfterWithDraw", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Home-Teleport hat &f%amount% %currency% &egekostet.",
 						"&eThe home teleport cost &f%amount% %currency%&e."}));
-		languageKeys.put("CmdHome.TooManyHomesWorld",
+		languageKeys.put(path+"TooManyHomesWorld",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast schon das Maximum von &f%amount% &cHomes für diese Welt erstellt! Bitte lösche vorher einen deiner Homes um fortzufahren!",
 						"&cNo homes are allowed in this world beforeYou have already created the maximum of &f%amount% &cHomes for this world! Please delete one of your homes before to continue!"}));
-		languageKeys.put("CmdHome.TooManyHomesServer",
+		languageKeys.put(path+"TooManyHomesServer",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast schon das Maximum von &f%amount% &cHomes für diesen Server erstellt! Bitte lösche vorher einen deiner Homes um fortzufahren!",
 						"&cYou have already created the maximum of &f%amount% &cHomes for this server! Please delete one of your homes before to continue!"}));
-		languageKeys.put("CmdHome.TooManyHomesServerCluster",
+		languageKeys.put(path+"TooManyHomesServerCluster",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast schon das Maximum von &f%amount% &cHomes für diese Servergruppe erstellt! Bitte lösche vorher einen deiner Homes um fortzufahren!",
 						"&cYou have already created the maximum of &f%amount% &cHomes for this server group! Please delete one of your homes before to continue!"}));
-		languageKeys.put("CmdHome.TooManyHomesGlobal", 
+		languageKeys.put(path+"TooManyHomesGlobal", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast schon das Maximum von insgesamt &f%amount% &cHomes erstellt! Bitte lösche vorher einen deiner Homes um fortzufahren!",
 						"&cYou have already created the maximum of total &f%amount% &cHomes! Please delete one of your homes before to continue!"}));
-		languageKeys.put("CmdHome.TooManyHomesToUse", 
+		languageKeys.put(path+"TooManyHomesToUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast &f%amount% &cHomes zu viel! Bitte lösche &f%amount% &cHomes um dich zu deinen Homes teleportieren zu können! &f%cmd% &czur Einsicht deiner Homes.",
 						"&cYou have &f%amount% &cHomes too much! Please delete &f%amount% &cHomes to teleport to your homes! &f%cmd% &cTo view your homes."}));
-		languageKeys.put("CmdHome.YouHaveNoHomes", 
+		languageKeys.put(path+"YouHaveNoHomes", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu besitzt keine Homes!",
 						"&cYou do not own any homes!"}));
-		languageKeys.put("CmdHome.HomeCreate", 
+		languageKeys.put(path+"HomeCreate", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDu hast den Home mit dem Namen &f%name% &aerstellt!",
 						"&aYou created the home with the name &f%name%&a!"}));
-		languageKeys.put("CmdHome.HomeNewSet", 
+		languageKeys.put(path+"HomeNewSet", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDu hast den Home mit dem Namen &f%name% &aneu gesetzt!",
 						"&aYou reseted the home with the name &f%name%&a!"}));
-		languageKeys.put("CmdHome.HomeNotExist",
+		languageKeys.put(path+"HomeNotExist",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Home existiert nicht!",
 						"&cThe Home does not exist!"}));
-		languageKeys.put("CmdHome.HomeDelete", 
+		languageKeys.put(path+"HomeDelete", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast den Home mit dem Namen &f%name% &cgelöscht!",
 						"&eYou have deleted the home with the name &f%name%&c!"}));
-		languageKeys.put("CmdHome.HomeServerWorldDelete",
+		languageKeys.put(path+"HomeServerWorldDelete",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast alle Homes auf der Welt &f%world% &edes Servers &f%server% &egelöscht! &cGelöschte Datenanzahl = &f%amount%",
 						"&eYou have deleted all homes in the world &f%world% &ethe server &f%server% &edeleted! &cDeleted data count = &f%amount%!"}));
-		languageKeys.put("CmdHome.HomesNotExist", 
+		languageKeys.put(path+"HomesNotExist", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cEs existieren keine Homes auf dem Server: &f%server% &cWelt: &f%world%&c!",
 						"&cThere are no homes on the server: &f%server% &cWorld: &f%world%&c!"}));
-		languageKeys.put("CmdHome.HomesHeadline",
+		languageKeys.put(path+"HomesHeadline",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&e=====&7[&6Homes &9| &7Anzahl: &f%amount%&7]&e=====",
 						"&e=====&7[&6Homes &9| &7Quantity: &f%amount%&7]&e====="}));
-		languageKeys.put("CmdHome.ListHeadline", 
+		languageKeys.put(path+"ListHeadline", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&e=====&7[&6Homeliste &9| &7Anzahl: &f%amount%&7]&e=====",
 						"&e=====&7[&6Homeliste &9| &7Quantity: &f%amount%&7]&e====="}));
-		languageKeys.put("CmdHome.ListHelp", 
+		languageKeys.put(path+"ListHelp", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&bGleicher Server &f| &dGleiche Welt &f| &6Sonstiges",
 						"&bSame server &f| &dSame world &f| &6Other"}));
-		languageKeys.put("CmdHome.ListSameServer", 
+		languageKeys.put(path+"ListSameServer", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&b",
 						"&b"}));
-		languageKeys.put("CmdHome.ListSameWorld", 
+		languageKeys.put(path+"ListSameWorld", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&d",
 						"&d"}));
-		languageKeys.put("CmdHome.ListElse",
+		languageKeys.put(path+"ListElse",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&6",
 						"&6"}));
-		languageKeys.put("CmdHome.NoHomePriority",
+		languageKeys.put(path+"NoHomePriority",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast kein Home priorisiert!",
 						"&cYou have not prioritized a home!"}));
-		languageKeys.put("CmdHome.SetPriority",
+		languageKeys.put(path+"SetPriority",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast das Home &f%name% priorisiert!",
 						"&eYou prioritized the home &f%name%&e!"}));
@@ -2534,7 +2649,7 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&e=====&7[&6WarpInfo &f%warp% &aⓉ~click@SUGGEST_COMMAND@%cmd%+%warp%~hover@SHOW_TEXT@Hover.Message.Teleport &c✖~click@SUGGEST_COMMAND@%cmdII%+%warp%~hover@SHOW_TEXT@Hover.Message.Delete &7]&e=====",
 						"&e=====&7[&6WarpInfo &f%warp% &aⓉ~click@SUGGEST_COMMAND@%cmd%+%warp%~hover@SHOW_TEXT@Hover.Message.Teleport &c✖~click@SUGGEST_COMMAND@%cmdII%+%warp%~hover@SHOW_TEXT@Hover.Message.Delete &7]&e====="}));
-		languageKeys.put(path+"InfoHeadlineII", 
+		languageKeys.put(path+"InfoHeadlineII",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&e=====&7[&6WarpInfo &f%warp% &aⓉ~click@SUGGEST_COMMAND@%cmd%+%warp%~hover@SHOW_TEXT@Hover.Message.Teleport &7]&e=====",
 						"&e=====&7[&6WarpInfo &f%warp% &aⓉ~click@SUGGEST_COMMAND@%cmd%+%warp%~hover@SHOW_TEXT@Hover.Message.Teleport &7]&e====="}));
@@ -2775,7 +2890,21 @@ public class YamlManager
 						"&fFrom X to Y to Z and back to X."}));
 	}
 	
-
+	public void initConfigSpawnCommands() //INFO:ConfigSpawnCommands
+	{
+		configSpawnCommandsKeys.put("AtFirstSpawn.Use.SpigotCommands"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				false}));
+		configSpawnCommandsKeys.put("AtFirstSpawn.Use.BungeeCordCommands"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				false}));
+		configSpawnCommandsKeys.put("AtFirstSpawn.List.SpigotCommands"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"warp spawn", "dummy"}));
+		configSpawnCommandsKeys.put("AtFirstSpawn.List.BungeeCordCommands"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"warp spawn", "dummy"}));
+	}
 	
 	public void initConfigPermissionLevel() //INFO:ConfigPermissionLevel
 	{
@@ -2975,6 +3104,12 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTeleport.World",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"spawnworld","city1"}));
+		forbiddenListSpigotKeys.put("ForbiddenToUse.FirstSpawn.Server",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"hub","nether"}));
+		forbiddenListSpigotKeys.put("ForbiddenToUse.FirstSpawn.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTransport.Server",

@@ -21,15 +21,15 @@ import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
-public class BTMCommandExecutor implements CommandExecutor
+public class BTMCmdExecutor implements CommandExecutor
 {
 	private BungeeTeleportManager plugin;
 	private static CommandConstructor cc;
 	
-	public BTMCommandExecutor(BungeeTeleportManager plugin, CommandConstructor cc)
+	public BTMCmdExecutor(BungeeTeleportManager plugin, CommandConstructor cc)
 	{
 		this.plugin = plugin;
-		BTMCommandExecutor.cc = cc;
+		BTMCmdExecutor.cc = cc;
 	}
 	
 	@Override

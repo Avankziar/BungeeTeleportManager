@@ -15,11 +15,11 @@ import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.cmd.tree.ArgumentConstructor;
 import main.java.me.avankziar.spigot.btm.cmd.tree.CommandConstructor;
 
-public class TABCompletionTwo implements TabCompleter
+public class TabCompletionTwo implements TabCompleter
 {	
 	private BungeeTeleportManager plugin;
 	
-	public TABCompletionTwo(BungeeTeleportManager plugin)
+	public TabCompletionTwo(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
 	}

@@ -233,6 +233,7 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
+					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 					plugin.getBackHelper().directBackMethode(player, portal.getOwnExitPosition());
 					return;
 				case DEATHBACK:
@@ -241,6 +242,7 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
+					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 					plugin.getBackHelper().directDeathBackMethode(player, portal.getOwnExitPosition());
 					return;
 				case COMMAND:
@@ -251,6 +253,7 @@ public class PortalHelper
 					}
 					plugin.getPortalHandler().sendPortalExistPointAsBack(player, portal.getOwnExitPosition());
 					Bukkit.dispatchCommand(player, portal.getTargetInformation());
+					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 					plugin.getPortalHandler().throwback(portal, player);
 					return;
 				case FIRSTSPAWN:
@@ -323,6 +326,7 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
+					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 					plugin.getPortalHandler().sendPlayerToDestination(player, home.getLocation(), portal);
 					return;
 				case LOCATION:
@@ -334,6 +338,7 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							return;
 						}
+						player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 						plugin.getPortalHandler().sendPlayerToDestination(player, loc, portal);
 						return;
 					}
@@ -403,6 +408,7 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							return;
 						}
+						player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 						plugin.getPortalHandler().sendPlayerToDestination(player, dest.getOwnExitPosition(), portal);
 						return;
 					} else
@@ -446,8 +452,9 @@ public class PortalHelper
 							return;
 						}
 					}
-					//ADDME Here PortalEvent? Maybe...
+					//POSSIBLY Here PortalEvent? Maybe...
 					plugin.getUtility().givesEffect(player, Mechanics.RANDOMTELEPORT, true, true);
+					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 					plugin.getRandomTeleportHandler().sendPlayerToRT(player, rtpname, rt, playername, playeruuid);
 					return;
 				case SAVEPOINT:
@@ -481,6 +488,7 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
+					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 					plugin.getSavePointHandler().sendPlayerToSavePoint(player, sp, player.getName(), player.getUniqueId().toString(), last);
 					return;
 				case WARP:
@@ -531,6 +539,7 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
+					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 					plugin.getPortalHandler().sendPlayerToDestination(player, loc, portal);
 					return;
 				}

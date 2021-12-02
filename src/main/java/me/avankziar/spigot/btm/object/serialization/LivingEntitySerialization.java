@@ -455,7 +455,6 @@ public class LivingEntitySerialization
 			Object tagVO = tag.getValue();
 			BungeeTeleportManager.log.info("Tag:"+tag.getKey().toString());
 		    BungeeTeleportManager.log.info("Value:"+(tagVO.toString() != null ? tagVO.toString() : "null"));
-		    //TODO
 			switch(tag.getKey())
 			{
 			case ABSORPTION:

@@ -55,6 +55,7 @@ public class ForbiddenHandlerSpigot
 		case DEATHBACK:
 		case ENTITYTELEPORT:
 		case ENTITYTRANSPORT:
+		case FIRSTSPAWN:
 		case HOME:
 		case PORTAL:
 		case RANDOMTELEPORT:
@@ -98,6 +99,7 @@ public class ForbiddenHandlerSpigot
 		case DEATHBACK:
 		case ENTITYTELEPORT:
 		case ENTITYTRANSPORT:
+		case FIRSTSPAWN:
 		case HOME:
 		case PORTAL:
 		case RANDOMTELEPORT:

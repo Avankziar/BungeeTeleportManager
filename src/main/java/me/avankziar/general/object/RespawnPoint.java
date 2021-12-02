@@ -5,7 +5,7 @@ public class RespawnPoint
 
 	public RespawnPoint()
 	{
-		// TODO Auto-generated constructor stub
+		
 	}
 
 }

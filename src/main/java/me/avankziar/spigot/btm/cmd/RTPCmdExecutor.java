@@ -11,12 +11,12 @@ import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.cmd.tree.CommandConstructor;
 
-public class RTCommandExecutor implements CommandExecutor 
+public class RTPCmdExecutor implements CommandExecutor 
 {
 	private BungeeTeleportManager plugin;
 	private static LinkedHashMap<String, CommandConstructor> commandList = new LinkedHashMap<>();
 	
-	public RTCommandExecutor(BungeeTeleportManager plugin, CommandConstructor cc)
+	public RTPCmdExecutor(BungeeTeleportManager plugin, CommandConstructor cc)
 	{
 		this.plugin = plugin;
 		if(commandList.containsKey(cc.getName()))

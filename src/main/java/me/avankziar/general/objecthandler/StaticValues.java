@@ -30,6 +30,12 @@ public class StaticValues
 		ENTITYTRANSPORT_ENTITYTOPOSITION = "entitytransport-entitytoposition",
 		ENTITYTRANSPORT_ENTITYTOPLAYER = "entitytransport-entitytoplayer",
 		
+		//FirstSpawn Sending
+		FIRSTSPAWN_TOBUNGEE = "btm:firstspawntobungee",
+		FIRSTSPAWN_TOSPIGOT = "btm:firstspawntospigot",
+		FIRSTSPAWN_PLAYERTOPOSITION = "firstspawn-playertoposition",
+		FIRSTSPAWN_DOCOMMANDS = "firstspawn-docommands",
+		
 		//Home Sending
 		HOME_TOBUNGEE = "btm:hometobungee",
 		HOME_TOSPIGOT = "btm:hometospigot",

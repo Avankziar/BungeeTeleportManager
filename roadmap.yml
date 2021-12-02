@@ -2,6 +2,26 @@ Future =========================================================================
 - xWenn der Spieler auf einem Entity sitzt. Sollen die Entitys mitteleportiert werden. Sicherheitsrisiko
 - Zählen, welche Warps/home angesteuert werden, um sowas wie Beliebtheit darstellen zu können. Verbessernkann Ideentechnisch.
 - Eine einstellbare Einstellung für Warps, dass man von anderen server diese nicht sehen kann. Whitelist boolean, Server Whitelist Liste
+- EntityTeleport (irgendwie nicht mehr gut?)
+  - Entitys, welche nicht benannt sind, aka nicht als EntityTransport registriert sind, können per Befehl als EntityTeleporter
+    registriert werden. WENN das passiert, wird die AI gelöscht(?) und nun per Rechtsklick kann man direkt ODER per Chatnachricht seine Ziele
+    wählen.
+  - /entityteleportset <x:Name> [Direkt(true)] | Ein angeschauter Entity, wird mit dem angegebenen Teleportpunkt verbunden, sodass nun beim Rechtsklick des Npc
+    dieser den Spieler dorthinteleportiert. Z.B. <w:Spawn> o. <p:Portal> o. <rtp> o. <rtp:Name> o. <sp> (Letzten Savepunkt) 
+    o. <sp:Spezifischer SavePoint> o. <l:Server;Welt;x;y;z;yaw;pitch>.
+    WENN Direkt=true, dann wird nach dem Rechtsklick sofort der Spieler teleportiert. Falls nicht, wird eine Chatausgabe dem Spieler
+    vorgetragen, damit dieser per Klick wählen kann, wohin er möchte.
+    Wenn der Spieler eine Auswahl bekommt, muss im RAM vorgelegt werden, dass der Spieler diese Ziele auswählen kann. Sollte der Spieler
+    den befehl nutzen ohne mit einem Entity "gesprochen" zu haben, wird er abgelehnt. Sollte er ANDERE ziele anwählen, welcher der Entity
+    nicht besitzt, so wird er abgelehnt. Dass alles kann per Config geld kosten, sodass sich spieler, das selbst setzten können.
+    Die Anzahl der Teleporter(Entitys) sind per Permission geregelt. Die Anzahl der maximalen Wahlmöglichkeiten sind auch per Permission geregelt.
+    Umso mehr Waglmöglichkeiten ein Entity haben soll, umso teuer wird die hinzufügung eines weiteren Teleportsziel. (Formel?)
+  - /entityteleportadd <x:Name>
+  - /entityteleport <Spielername> <Ziel>
+  - /entityteleportremove <x:Name>
+  - /entityteleportdelete | Der angeschaute Npc verliert alle verbundenen Teleportpunkte
+- BedSpawn (?)
+  - Passiver Speicherpunkt ohne aktive Speicherung/Laden. Heißt, weder Spieler/Admins sollen den speichern können.
 
 Build 6 =======================================================================================================================
 - Bungee wie Spigot MysqlSetup connection und Reconnection treiber updaten, siehe Scc
@@ -95,33 +115,16 @@ Build 6 ========================================================================
   - +Custom Event schreiben, was den externen Teleport von Entity gewährt. Dabei kann Eigentumsrechte, ForbiddenList und Anzahl benutzbarer EntityTransporte berücksicht werden.
   - +Config Wert einbauen, welcher es erlaubt, per Mysql Tracking, die Anzahl an EntityTransport zu begrenzen.
   - +Entitys haben verschiedene gegenwerte an tickets.
-- EntityTeleport
-  - Entitys, welche nicht benannt sind, aka nicht als EntityTransport registriert sind, können per Befehl als EntityTeleporter
-    registriert werden. WENN das passiert, wird die AI gelöscht(?) und nun per Rechtsklick kann man direkt ODER per Chatnachricht seine Ziele
-    wählen.
-  - /entityteleportset <x:Name> [Direkt(true)] | Ein angeschauter Entity, wird mit dem angegebenen Teleportpunkt verbunden, sodass nun beim Rechtsklick des Npc
-    dieser den Spieler dorthinteleportiert. Z.B. <w:Spawn> o. <p:Portal> o. <rtp> o. <rtp:Name> o. <sp> (Letzten Savepunkt) 
-    o. <sp:Spezifischer SavePoint> o. <l:Server;Welt;x;y;z;yaw;pitch>.
-    WENN Direkt=true, dann wird nach dem Rechtsklick sofort der Spieler teleportiert. Falls nicht, wird eine Chatausgabe dem Spieler
-    vorgetragen, damit dieser per Klick wählen kann, wohin er möchte.
-    Wenn der Spieler eine Auswahl bekommt, muss im RAM vorgelegt werden, dass der Spieler diese Ziele auswählen kann. Sollte der Spieler
-    den befehl nutzen ohne mit einem Entity "gesprochen" zu haben, wird er abgelehnt. Sollte er ANDERE ziele anwählen, welcher der Entity
-    nicht besitzt, so wird er abgelehnt. Dass alles kann per Config geld kosten, sodass sich spieler, das selbst setzten können.
-    Die Anzahl der Teleporter(Entitys) sind per Permission geregelt. Die Anzahl der maximalen Wahlmöglichkeiten sind auch per Permission geregelt.
-    Umso mehr Waglmöglichkeiten ein Entity haben soll, umso teuer wird die hinzufügung eines weiteren Teleportsziel. (Formel?)
-  - /entityteleportadd <x:Name>
-  - /entityteleport <Spielername> <Ziel>
-  - /entityteleportremove <x:Name>
-  - /entityteleportdelete | Der angeschaute Npc verliert alle verbundenen Teleportpunkte
-- FirstSpawn
-  - Sind für alle Neuen Spieler.
-  - Man kann nur einen Firstspawn pro Server gemacht werden. Mysql
-  - /firstspawnset | Setzt den FirstSpawn für den Server.
-  - /firstspawn [server] | Tp zu Server FirstSpawn.
-  - /fristspawninfo | Info zum allen Firstspawns im Netzwerk mit tp.
-  - Wenn der Spieler zum erstem mal Joint (Netzwerk, nicht pro Server),
+- +FirstSpawn
+  - +Sind für alle Neuen Spieler.
+  - +Man kann nur einen Firstspawn pro Server gemacht werden. Mysql
+  - +/firstspawnset <name> | Setzt den FirstSpawn für den Server.
+  - +/firstspawn [name] | Tp zu Server FirstSpawn.
+  - +/fristspawninfo | Info zum allen Firstspawns im Netzwerk mit tp.
+  - +/firstspawnremove [name] | Löscht Server FirstSpawn.
+  - +Wenn der Spieler zum erstem mal Joint (Netzwerk, nicht pro Server),
     soll eine Liste von Befehlen für diesen (Console) und mit diesem (als er selbst theoretisch)
-    ausgeführt werden einmalig. Beide Listen in der Config (Spigot) einstellbar machen. Replacer für Spieler in Befehlen einbauen.
+    ausgeführt werden einmalig. Beide Listen in der Config (Spigot & BungeeCord) einstellbar machen. Replacer für Spieler in Befehlen einbauen.
 - Respawn
   Ist ein SpielerUNspezifischer Speicherpunkt für nach dem Tode.
   - Einen Config Wert für respawn am nächsten, entferntesten oder Default Respawn einstellen.
@@ -129,9 +132,7 @@ Build 6 ========================================================================
   - /respawn <RespawnName> | Tp zum Respawn 
   - /respawnlist [seitenzahl] [server] [welt] | Liste aller Respawns, mit Tp click
   - /respawndelete <RespawnName> | Löscht Respawn
-- BedSpawn (?)
-  - Passiver Speicherpunkt ohne aktive Speicherung/Laden. Heißt, weder Spieler/Admins sollen den speichern können.
-- Portal
+- +Portal
   - +Ein Portal soll folgende Eigenschaften haben:
     - +Owner, Perm, Cooldown, Cost(Geld), Member, Blacklist, Target, PointOfExit, Point 1 & 2, TargetType(Destination), ...
   - +TargetType: COMMAND, LOCATION,	BACK, DEATHBACK, FIRSTSPAWN, RESPAWN, HOME, PORTAL, RANDOMTELEPORT, SAVEPOINT, WARP
@@ -166,8 +167,7 @@ Build 6 ========================================================================
   - +Beim Erstellen des Portals, soll der Infobefehl als ClickBefehl sofort danach gesendet.
   - +PermissionLevel für Portale hinzufügen.
   - +portal erstellung kann geld kosten.
-  - Das Innenleben der Portale muss ich mir anschauen.
-  - Portale können auch von LivingEntity benutzt werden.
+  - ? Das Innenleben der Portale muss ich mir anschauen.
 - Todeszone:
     Eine Todeszone ist ein Bereich, eine Welt oder ein Server, welche als Bedingung für eine Tod zählt.
     Sollte ein Spieler innerhalb dieses Bereichs sterben, so wird der Respawn genommen, welcher Verlinkt ist.

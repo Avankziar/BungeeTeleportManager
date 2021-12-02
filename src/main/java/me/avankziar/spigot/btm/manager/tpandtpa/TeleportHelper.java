@@ -53,21 +53,20 @@ public class TeleportHelper
 	
 	public void tpAccept(Player player, String[] args)
 	{
-		if(args.length == 0)
+		if(args.length != 0 && args.length !=1)
 		{
-			//FIXME
-		} else if(args.length == 1)
-		{
-			Teleport tp = new Teleport(Utility.convertNameToUUID(args[0]), args[0],
-					player.getUniqueId(), player.getName(), Teleport.Type.ACCEPT);
-			plugin.getTeleportHandler().tpAccept(player, tp);
-		} else
-		{
-			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 		}
+		Teleport tp = new Teleport(null, null,
+				player.getUniqueId(), player.getName(), Teleport.Type.ACCEPT);
+		if(args.length == 1)
+		{
+			tp.setFromUUID(Utility.convertNameToUUID(args[0]));
+			tp.setFromName(args[0]);
+		}
+		plugin.getTeleportHandler().tpAccept(player, tp);
 	}
 	
 	public void tpDeny(Player player, String[] args)

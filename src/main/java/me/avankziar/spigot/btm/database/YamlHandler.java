@@ -25,6 +25,8 @@ public class YamlHandler
 	private File commands = null;
 	private YamlConfiguration com = new YamlConfiguration();
 	
+	private File spawncmdconfig = null;
+	private YamlConfiguration scmdc = new YamlConfiguration();
 	private File permissionlevelconfig = null;
 	private YamlConfiguration plc = new YamlConfiguration();
 	private File forbiddenconfig = null;
@@ -52,6 +54,11 @@ public class YamlHandler
 	public YamlConfiguration getCom()
 	{
 		return com;
+	}
+	
+	public YamlConfiguration getSpawnCmd()
+	{
+		return scmdc;
 	}
 	
 	public YamlConfiguration getPermLevel()
@@ -148,6 +155,26 @@ public class YamlHandler
 			return false;
 		}
 		writeFile(commands, com, plugin.getYamlManager().getCommandsKey());
+		
+		spawncmdconfig = new File(plugin.getDataFolder(), "config_spawncommands.yml");
+		if(!spawncmdconfig.exists()) 
+		{
+			BungeeTeleportManager.log.info("Create config_spawncommands.yml...");
+			try
+			{
+				//Erstellung einer "leere" config.yml
+				FileUtils.copyToFile(plugin.getResource("default.yml"), spawncmdconfig);
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		if(!loadYamlTask(spawncmdconfig, scmdc))
+		{
+			return false;
+		}
+		writeFile(spawncmdconfig, scmdc, plugin.getYamlManager().getConfigSpawnCmdsKey());
 		
 		permissionlevelconfig = new File(plugin.getDataFolder(), "config_permissionlevel.yml");
 		if(!permissionlevelconfig.exists()) 

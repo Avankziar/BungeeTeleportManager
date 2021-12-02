@@ -15,6 +15,7 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -354,11 +355,6 @@ public class PortalHandler
 	{
 		return LocalDateTime.ofInstant(Instant.ofEpochMilli(l), ZoneId.systemDefault())
 				.format(DateTimeFormatter.ofPattern("dd.MM.yyyy-HH:mm:ss"));
-	}
-
-	public void sendEntityToPortal(Location loc, Entity entity)
-	{
-		//ADDME
 	}
 	
 	public void sendPlayerToDestination(Player player, ServerLocation destination, final Portal portal)
