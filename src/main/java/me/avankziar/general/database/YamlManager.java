@@ -23,6 +23,7 @@ public class YamlManager
 	
 	private static LinkedHashMap<String, Language> configPermissionLevelKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> configSpawnCommandsKeys = new LinkedHashMap<>();
+	private static LinkedHashMap<String, Language> configRespawnKeys = new LinkedHashMap<>();
 	
 	public YamlManager(boolean spigot) //INFO
 	{
@@ -106,6 +107,11 @@ public class YamlManager
 	public LinkedHashMap<String, Language> getConfigSpawnCmdsKey()
 	{
 		return configPermissionLevelKeys;
+	}
+	
+	public LinkedHashMap<String, Language> getConfigRespawnKey()
+	{
+		return configRespawnKeys;
 	}
 	
 	/*
@@ -253,7 +259,7 @@ public class YamlManager
 			configSpigotKeys.put("EnableCommands.Deathback"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("EnableCommands.DeathZone"
+			configSpigotKeys.put("EnableCommands.Deathzone"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
 			/*configSpigotKeys.put("EnableCommands.EntityTeleport"
@@ -274,7 +280,7 @@ public class YamlManager
 			configSpigotKeys.put("EnableCommands.RandomTeleport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("EnableCommands.RespawnPoint"
+			configSpigotKeys.put("EnableCommands.Respawn"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
 			configSpigotKeys.put("EnableCommands.SavePoint"
@@ -292,9 +298,9 @@ public class YamlManager
 			configSpigotKeys.put("Enable.AccessPermission"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
-			configSpigotKeys.put("Enable.EntityCanAccessPortals"
+			/*configSpigotKeys.put("Enable.EntityCanAccessPortals"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					false}));
+					false}));*/
 		}
 		Settings:
 		{
@@ -371,6 +377,18 @@ public class YamlManager
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
 			configSpigotKeys.put("Effects.RANDOMTELEPORT.After"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.RESPAWN.Give.After"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Effects.RESPAWN.Give.Before"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Effects.RESPAWN.Before"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
+			configSpigotKeys.put("Effects.RESPAWN.After"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
 			configSpigotKeys.put("Effects.SAVEPOINT.Give.Before"
@@ -532,6 +550,24 @@ public class YamlManager
 			configSpigotKeys.put("Use.FirstSpawn.BungeeCord.CommandAtFirstTime.AsConsole"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"dummy", "dummy"}));
+			configSpigotKeys.put("Use.Respawn.Spigot.DoCommandsAtRespawn"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Use.Respawn.Spigot.CommandAtRespawn.AsPlayer"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"dummy", "dummy"}));
+			configSpigotKeys.put("Use.Respawn.Spigot.CommandAtRespawn.AsConsole"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"dummy", "dummy"}));
+			configSpigotKeys.put("Use.Respawn.BungeeCord.DoCommandsAtRespawn"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Use.Respawn.BungeeCord.CommandAtRespawn.AsPlayer"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"dummy", "dummy"}));
+			configSpigotKeys.put("Use.Respawn.BungeeCord.CommandAtRespawn.AsConsole"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"dummy", "dummy"}));
 			configSpigotKeys.put("Use.EntityTransport.TicketMechanic"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
@@ -620,11 +656,13 @@ public class YamlManager
 				"/deathback", "/deathback ",
 				"&c/deathback &f| Teleportiert dich zu deinem Todespunkt.",
 				"&c/deathback &f| Teleports you to your death point.");
+		comDeathzone();
 		comETr();
 		comFirstSpawn();
 		comHome();
 		comPortal();
 		comRT();
+		comRespawn();
 		comTp();
 		comSavepoint();
 		comWarp();
@@ -763,6 +801,50 @@ public class YamlManager
 		/*commandsKeys.put(path+""
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				""}));*/
+	}
+	
+	private void comDeathzone()
+	{
+		commandsInput("deathzonecreate", "deathzonecreate", "btm.cmd.staff.deathzone.create", 
+				"/deathzonecreate <deathzonename> ", "/deathzonecreate",
+				"&c/deathzonecreate <Deathzonename> &f| Erstellt eine Deathzone.",
+				"&c/deathzonecreate <deathzonename> &f| Create a deathzone.");
+		commandsInput("deathzoneremove", "deathzoneremove", "btm.cmd.staff.deathzone.remove", 
+				"/deathzoneremove <deathzonename>", "/deathzoneremove",
+				"&c/deathzoneremove <Deathzonename> &f| Löscht die Deathzone.",
+				"&c/deathzoneremove <deathzonename> &f| Delete the deathzone.");
+		commandsInput("deathzonesetcategory", "deathzonesetcategory", "btm.cmd.staff.deathzone.setcategory", 
+				"/deathzonesetcategory <deathzonename> <category> <subcategory>", "/deathzonesetcategory",
+				"&c/deathzonesetcategory <Deathzonename> <Kategorie> <Subkategorie> &f| Setzt die Kategorie und Subkategorie.",
+				"&c/deathzonesetcategory <deathzonename> <category> <subcategory> &f| Sets the category and subcategory.");
+		commandsInput("deathzonesetname", "deathzonesetname", "btm.cmd.staff.deathzone.setname", 
+				"/deathzonesetname <deathzonename> <newname>", "/deathzonesetname",
+				"&c/deathzonesetname <Deathzonename> <Neuer Name> &f| Setzt einen neuen Namen für die Deathzone.",
+				"&c/deathzonesetname <deathzonename> <newname> &f| Sets a new name for the deathzone.");
+		commandsInput("deathzonesetpriority", "deathzonesetpriority", "btm.cmd.staff.deathzone.setpriority", 
+				"/deathzonesetpriority ", "/deathzonesetpriority",
+				"&c/deathzonesetpriority <Deathzonename> <Priorität> &f| Setzt eine Priorität für die Deathzone.",
+				"&c/deathzonesetpriority <deathzonename> <priority> &f| Sets a priority for the deathzone.");
+		commandsInput("deathzonesetdeathzonepath", "deathzonesetdeathzonepath", "btm.cmd.staff.deathzone.setdeathzonepath", 
+				"/deathzonesetdeathzonepath <deathzonename> <configpath>", "/deathzonesetdeathzonepath",
+				"&c/deathzonesetdeathzonepath <Deathzonename> <Configpfad> &f| Setzt den Config-Pfad für das Deathzoneflowchart.",
+				"&c/deathzonesetdeathzonepath <deathzonename> <configpath> &f| Sets the configpath for the deathzoneflowchart.");
+		commandsInput("deathzoneinfo", "deathzoneinfo", "btm.cmd.staff.deathzone.info", 
+				"/deathzoneinfo <deathzonename>", "/deathzoneinfo",
+				"&c/deathzoneinfo <Deathzonename> &f| Zeigt alle Infos zu der Deathzone an.",
+				"&c/deathzoneinfo <deathzonename> &f| Shows all infos from the deathzone.");
+		commandsInput("deathzonelist", "deathzonelist", "btm.cmd.staff.deathzone.list", 
+				"/deathzonelist [page] [shortcut:value]...", "/deathzonelist",
+				"&c/deathzonelist [Seite] [Kürzel:Wert]... &f| Listet alle Deathzone auf. Mögliche Kürzel sind: server|world|category|subcategory",
+				"&c/deathzonelist [page] [shortcut:value]... &f| Lists all deathzones. Possible abbreviations are: server|world|category|subcategory");
+		commandsInput("deathzonesimulatedeath", "deathzonesimulatedeath", "btm.cmd.staff.deathzone.simulatedeath", 
+				"/deathzonesimulatedeath ", "/deathzonesimulatedeath",
+				"&c/deathzonesimulatedeath &f| Simuliert den Tod des Spielers mit Logeinträge, was genau gemacht wird.",
+				"&c/deathzonesimulatedeath &f| Simulates the death of the player with log entries, what exactly is done.");
+		commandsInput("deathzonemode", "deathzonemode", "btm.cmd.staff.deathzone.mode", 
+				"/deathzonemode ", "/deathzonemode",
+				"&c/deathzonemode &f| Toggelt den Modus um die Eckpunkte der Deathzone zu setzten.",
+				"&c/deathzonemode &f| Toggles the mode to set the corner points of the deathzone.");
 	}
 	
 	private void comETr()
@@ -972,9 +1054,29 @@ public class YamlManager
 	private void comRT()
 	{
 		commandsInput("randomteleport", "randomteleport", "btm.cmd.user.randomteleport.randomteleport",
-				"/randomteleport", "/randomteleport",
-				"&c/randomteleport &f| Teleportiert euch zu einem zufälligen Ort.",
-				"&c/randomteleport &f| Teleport to a random location.");
+				"/randomteleport [rtp]", "/randomteleport",
+				"&c/randomteleport [rtp] &f| Teleportiert euch zu einem zufälligen Ort.",
+				"&c/randomteleport [rtp] &f| Teleport to a random location.");
+	}
+	
+	private void comRespawn()
+	{
+		commandsInput("respawn", "respawn", "btm.cmd.staff.respawn.respawn",
+				"/respawn <respawnname>", "/respawn",
+				"&c/respawn <Respawnname> &f| Teleportiert dich zu dem Respawn.",
+				"&c/respawn <respawnname> &f| Cannot teleport you to the respawn.");
+		commandsInput("respawncreate", "respawncreate", "btm.cmd.staff.respawn.create",
+				"/respawncreate <respawnname>", "/respawncreate",
+				"&c/respawncreate <Respawnname> &f| Erstellt oder setzt einen Respawn neu.",
+				"&c/respawncreate <respawnname> &f| Creates or resets a respawn.");
+		commandsInput("respawnremove", "respawnremove", "btm.cmd.staff.respawn.remove",
+				"/respawnremove <respawnname>", "/respawnremove",
+				"&c/respawnremove <Respawnname> &f| Löscht den Respawn.",
+				"&c/respawnremove <respawnname> &f| Deletes the respawn.");
+		commandsInput("respawnlist", "respawnlist", "btm.cmd.staff.respawn.list",
+				"/respawnlist [page]", "/respawnlist",
+				"&c/respawnlist [Seitenzahl] &f| Zeigt alle Respawn seitenbasiert an.",
+				"&c/respawnlist [page] &f| Displays all respawns based on page.");
 	}
 	
 	private void comSavepoint()
@@ -1288,11 +1390,13 @@ public class YamlManager
 		//INFO:OtherLanguageParts
 		langEconomy();
 		langBtm();
+		langDeathzone();
 		langEntityTransport();
 		langFirstSpawn();
 		langHome();
 		langPortal();
 		langRandomTeleport();
+		langRespawn();
 		langSavePoint();
 		langTp();
 		langWarp();
@@ -1478,6 +1582,205 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Deathback benutzt werden!",
 						"&cNo deathback may be used in this world!"}));
+	}
+	
+	private void langDeathzone()
+	{
+		String path = "CmdDeathzone."; 
+		languageKeys.put(path+"Simulate.End",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &9Simulation &4Ende&9...",
+						"&7[&cSimulated Death&7] &9Simulation &4End&9..."}));
+		languageKeys.put(path+"Simulate.CheckIfVanillaRespawn",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eChecke ob man mit Vanilla respawnt...",
+						"&7[&cSimulated Death&7] &eCheck if you respawn with Vanilla..."}));
+		languageKeys.put(path+"Simulate.IsVanillaRespawn",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &cEs wird per Vanilla respawnt!",
+						"&7[&cSimulated Death&7] &cIt respawns via vanilla!"}));
+		languageKeys.put(path+"Simulate.Simple.IsUseSimpleRespawn",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eChecke ob der vereinfachte Respawn von &6BTM &egenutzt wird...",
+						"&7[&cSimulated Death&7] &eCheck whether the simplified respawn of &6BTM &eis used..."}));
+		languageKeys.put(path+"Simulate.Simple.RespawnSearch",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eSuche nach dem vereinfachten Respawn...",
+						"&7[&cSimulated Death&7] &eSearch for the simplified respawn..."}));
+		languageKeys.put(path+"Simulate.Simple.RespawnIs",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eVereinfachten Respawn ist: &f%value%",
+						"&7[&cSimulated Death&7] &eSimplified respawn is: &f%value%"}));
+		languageKeys.put(path+"Simulate.DeathFlowChart.IsInUse",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eEs ist der komplexe Todesablaufplan in Benutzung.",
+						"&7[&cSimulated Death&7] &eIt is the complex death flowchart in use."}));
+		languageKeys.put(path+"Simulate.DeathFlowChart.CheckForDeathLocation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eSuche Todespunkt... Simulationsbedingt, Todespunkt auf aktuelle Spielerposition gesetzt.",
+						"&7[&cSimulated Death&7] &eSearch death point... Due to simulation, death point set to current player position."}));
+		languageKeys.put(path+"Simulate.DeathFlowChart.CheckForDeathzone",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eSuche in der Datenbank nach der Todeszone...",
+						"&7[&cSimulated Death&7] &eSearch the database for the death zone...."}));
+		languageKeys.put(path+"Simulate.DeathFlowChart.DeathzoneOrDeathzonePathNotExist",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eTodeszone oder der Todeszonen-Config Pfad ist nicht existent! Verfolge nun als Ausweglösung den Vereinfachten Respawn...",
+						"&7[&cSimulated Death&7] &eDeath zone or the death zone config path does not exist! Now follow the simplified respawn as a workaround..."}));
+		languageKeys.put(path+"Simulate.DeathFlowChart.DeathzonepathFound",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eTodeszonenpfad gefungen! Trenne Abfolge nach &f> Zeichen&e! Pfadangabe: &f%value%",
+						"&7[&cSimulated Death&7] &eDeath zone path found! Separate sequence after &f> character&e! Path specification: &f%value%"}));
+		languageKeys.put(path+"Simulate.Revive.ChecksType",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eZieltyp ist &f%value%",
+						"&7[&cSimulated Death&7] &eTargettype is &f%value%"}));
+		languageKeys.put(path+"Simulate.Revive.CouldNotBeResolved",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eZieltyp &f%value% konnte nicht den Zielwert auflösen, da dieser kein richtiges &f: Trennzeichen &eoder das zugehörige Objekt nicht finden konnte. (Ist null)",
+						"&7[&cSimulated Death&7] &eTargettype &f%value% could not resolve the target value because it could not find a correct &f: separator &eor the associated object. (Is null)"}));
+		languageKeys.put(path+"Simulate.Revive.FoundedAndSendTo",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&7[&cSimulierter Tod&7] &eZieltyp &f%value% mit dem Namen &f%name% &egefunden, teleport zu dessen Koordinaten.",
+						"&7[&cSimulated Death&7] &eTargettype &f%value% with the name &f%name% &efound, teleport to its coordinates."}));
+		languageKeys.put(path+"SimulationIsAlreadyRunning",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer simulierte Tod ist gerade am laufen!",
+						"&eThe simulated death is going on right now!"}));
+		languageKeys.put(path+"InteractEvent.PosOne",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast die erste Position für eine Deathzone gesetzt!",
+						"&eYou have set the first position for a deathzone!"}));
+		languageKeys.put(path+"InteractEvent.PosTwo",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast die zweite Position für eine Deathzone gesetzt!",
+						"&eYou have set the second position for a deathzone!"}));
+		languageKeys.put(path+"InteractEvent.NowCreate", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu hast zwei Punkte gesetzt! Erstelle nun deine Deathzone! &2==>~click@SUGGEST_COMMAND@%cmd%+<Deathzonename>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eYou have set two points! Now create your deathzone! &2==>~click@SUGGEST_COMMAND@%cmd%+<deathzonename>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"NotPositionOneSet", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast die Position 1 für das Erstellen von einer Deathzone noch nicht gesetzt!",
+						"&cYou have not yet set the position 1 for creating a portal!"}));
+		languageKeys.put(path+"NotPositionTwoSet", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast die Position 2 für das Erstellen von einer Deathzone noch nicht gesetzt!",
+						"&cYou have not yet set the position 2 for creating a portal!"}));
+		languageKeys.put(path+"DeathzoneNameAlreadyExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer angegebene Deathzonename existiert schon!",
+						"&cThe specified deathzone name already exists!"}));
+		languageKeys.put(path+"DeathzoneCreate", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&aDu hast der Deathzone mit dem Namen &f%name% &aerstellt! &fPrio: %prio% &e| &fCategory: %cat% &e| &fSubcategory: %subcat%",
+						"&aYou created the deathzone with the name &f%name%&a! &fPrio: %prio% &e| &fCategory: %cat% &e| &fSubcategory: %subcat%"}));
+		languageKeys.put(path+"DeathzoneExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Deathzone existiert nicht!",
+						"&cThe deathzone dont exist."}));
+		languageKeys.put(path+"DeathzoneDelete", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast die Deathzone mit dem Namen &f%name% &cgelöscht!",
+						"&cYou deleted the deathzone with the name &f%name%&c!"}));
+		languageKeys.put(path+"ThereIsNoDeathzone", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cEs gibt keine Deathzones!",
+						"&cThere are no deathzones!"}));
+		languageKeys.put(path+"ListHeadline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e=====&7[&6Deathzonelist &9| &7Anzahl: &f%amount%&7]&e=====",
+						"&e=====&7[&6Deathzonelist &9| &7Quantity: &f%amount%&7]&e====="}));
+		languageKeys.put(path+"ListHelp", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bGleiche(r)... Server(S)&f~&dWelt(W)&f~&cKategory(C)&f~&eSubkategory(SubC)&f~&6Sonstiges(E)",
+						"&bSame... server(S)&f~&dworld(W)&f~&ccategory(C)&f~&esubcategory(SubC)&f~&6Other(E)"}));
+		languageKeys.put(path+"ListHelpII", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eServer: &f%server% &1| &eWelt: &f%world% &1| &eKategorie: &f%cat% &1| &eSubkategorie: &f%subcat%",
+						"&eServer: &f%server% &1| &eWorld: &f%world% &1| &eCategory: &f%cat% &1| &eSubcategory: &f%subcat%"}));
+		languageKeys.put(path+"ListSameServer",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&b(S)",
+						"&b(S)"}));
+		languageKeys.put(path+"ListSameWorld",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&d(W)",
+						"&d(W)"}));
+		languageKeys.put(path+"ListSameCategory",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&c(C)",
+						"&c(C)"}));
+		languageKeys.put(path+"ListSameSubCategory",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e(SubC)",
+						"&e(SubC)"}));
+		languageKeys.put(path+"ListElse",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&6(E)",
+						"&6(E)"}));
+		languageKeys.put(path+"ListHover",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&ePriorität: &f%value%~!~&eDeathzonepfad: &f%valueII%~!~&eKategorie: &f%valueIII%~!~&eSubkategorie: &f%valueIV%",
+						"&ePriority: &f%value%~!~&eDeathzonepath: &f%valueII%~!~&eCategory: &f%valueIII%~!~&eSubcategory: &f%valueIV%"}));
+		languageKeys.put(path+"Next",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e&nnächste Seite &e==>",
+						"&e&nnext page &e==>"}));
+		languageKeys.put(path+"Past", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e<== &nvorherige Seite",
+						"&e<== &nprevious page"}));
+		languageKeys.put(path+"SetName",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDie Deathzone &f%dzold% &awurde in &f%dznew% &aumbenannt!",
+						"&eThe deathzone &f%dzold% &awas renamed to &f%dznew%!"}));
+		languageKeys.put(path+"SetCategory",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDie Deathzone &f%dz% &awurde der Kategorie &f%cat% &aund die Subkategorie &f%subcat% &azugewiesen!",
+						"&eThe deathzone &f%dz% &awas assigned to the category &f%cat% and the subcategory &f%subcat%&a!"}));
+		languageKeys.put(path+"SetPriority",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDas Portal &f%portal% &ahat nun die Priorität &f%prio%&e!",
+						"&eThe portal &f%portal% &anow has the priority &f%prio%&e!"}));
+		languageKeys.put(path+"SetDeathzonepath",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDie Deathzone &f%dz% &ahat nun als Deathzone Pfad &f%dzpath%&e!",
+						"&eThe deathzone &f%dz% &anow has as deathzone path &f%dzpath%&e!"}));
+		languageKeys.put(path+"DeathzoneCreationMode.Removed",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Deathzone-Erstellungsmodus ist beendet worden.",
+						"&eThe deathzone creation mode has been ended."}));
+		languageKeys.put(path+"DeathzoneCreationMode.Added",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Deathzone-Erstellungsmodus ist aktiviert.",
+						"&eThe deathzone creation mode is enabled."}));
+		languageKeys.put(path+"InfoHeadlineI", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e=====&7[&6DeathzoneInfo &f%dz% &2✐~click@SUGGEST_COMMAND@%cmdI%+%dz%~hover@SHOW_TEXT@Hover.Message.Change &c✖~click@SUGGEST_COMMAND@%cmdII%+%dz%~hover@SHOW_TEXT@Hover.Message.Delete &7]&e=====",
+						"&e=====&7[&6DeathzoneInfo &f%dz% &2✐~click@SUGGEST_COMMAND@%cmdI%+%dz%~hover@SHOW_TEXT@Hover.Message.Change &c✖~click@SUGGEST_COMMAND@%cmdII%+%dz%~hover@SHOW_TEXT@Hover.Message.Delete &7]&e====="}));
+		languageKeys.put(path+"InfoLocationI", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&ePosition1: &r%value%"}));
+		languageKeys.put(path+"InfoLocationII", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&ePosition2: &r%value%"}));
+		languageKeys.put(path+"InfoCategory", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eKategorie: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%dz%+<Kategorie>+<Subkategorie>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eCategory: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%dz%+<category>+<subcategory>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoSubCategory", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eSubkategorie: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%dz%+<Kategorie>+<Subkategorie>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eSubcategory: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%dz%+<category>+<subcategory>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoPriority", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&ePriorität: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%dz%+<Priorität>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePriority: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%dz%+<priority>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoDeathzonepath", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDeathzone Pfad: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%dz%+<Deathzonepfad>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eDeathzonepath: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%dz%+<deathzonepath>~hover@SHOW_TEXT@Hover.Message.Change"}));
 	}
 	
 	private void langEntityTransport()
@@ -1773,15 +2076,15 @@ public class YamlManager
 		languageKeys.put(path+"InteractEvent.PosOne",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast die erste Position für ein Portal gesetzt!",
-						"&e"}));
+						"&eYou have set the first position for a portal!"}));
 		languageKeys.put(path+"InteractEvent.PosTwo",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast die zweite Position für ein Portal gesetzt!",
-						"&e"}));
+						"&eYou have set the second position for a portal!"}));
 		languageKeys.put(path+"InteractEvent.NowCreate", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast zwei Punkte gesetzt! Erstelle nun dein Portal! &2==>~click@SUGGEST_COMMAND@%cmd%+<Portalname>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&e"}));
+						"&eYou have set two points! Now create your portal! &2==>~click@SUGGEST_COMMAND@%cmd%+<Portalname>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"ForbiddenServer", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server dürfen keine Portale erstellt werden!",
@@ -1845,19 +2148,19 @@ public class YamlManager
 		languageKeys.put(path+"NotPositionOneSet", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast die Position 1 für das Erstellen von einem Portal noch nicht gesetzt!",
-						"&c"}));
+						"&cYou have not yet set the position 1 for creating a portal!"}));
 		languageKeys.put(path+"NotPositionTwoSet", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast die Position 2 für das Erstellen von einem Portal noch nicht gesetzt!",
-						"&c"}));
+						"&cYou have not yet set the position 2 for creating a portal!"}));
 		languageKeys.put(path+"YouOrThePositionAreInAOtherPortal", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu oder deine gesetzten PortalPunkte sind in einem anderen Portal!",
-						"&c"}));
+						"&cYou or your set PortalPoints are in another portal!"}));
 		languageKeys.put(path+"PortalNameAlreadyExist", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer angegebene Portalname existiert schon!",
-						"&c"}));
+						"&cThe specified portal name already exists!"}));
 		languageKeys.put(path+"PortalCreate", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDu hast den Portal mit dem Namen &f%name% &aerstellt! &cKlicke hier, zum öffnen der &6Portalinfo&c.",
@@ -1931,7 +2234,7 @@ public class YamlManager
 						"&ePosition1: &r%location%| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoLocationII", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"&ePosition1: &r%location%| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&ePosition2: &r%location%| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoLocationIII", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eEigener Ausgangspunkt: &r%location%| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change",
@@ -2247,6 +2550,71 @@ public class YamlManager
 						"&eThe randomteleport cost &f%amount% %currency%&e."}));
 	}
 	
+	private void langRespawn() //INFO:Respawn
+	{
+		String path = "CmdRespawn.";
+		languageKeys.put(path+"WarpTo", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDu wurdest zum Respawn &f%respawn% &eteleportiert!",
+						"&eYou have been respawned &f%respawn% &eteleported!"}));
+		languageKeys.put(path+"RespawnNotExist", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Respawn existiert nicht!",
+						"&cThe respawn dont exist."}));
+		languageKeys.put(path+"RequestInProgress", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Respawnteleport wird bearbeitet!",
+						"&eThe respawn teleport is being processed!"}));
+		languageKeys.put(path+"CreateRespawn", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Respawn &f%name% &ewurde erstellt.",
+						"&eThe respawn &f%name% &ewas created."}));
+		languageKeys.put(path+"RecreateRespawn", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Respawn &f%name% &ewurde erneuert.",
+						"&eThe respawn &f%name% &ewas renewed."}));
+		languageKeys.put(path+"RespawnDelete", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDu hast den Respawn mit dem Namen &f%name% &cgelöscht!",
+						"&cYou deleted the respawn with the name &f%name%&c!"}));
+		languageKeys.put(path+"ThereIsNoRespawn", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cEs gibt keine Respawns!",
+						"&cThere are no respawns!"}));
+		languageKeys.put(path+"ListHeadline", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e=====&7[&6Respawnlist &9| &7Anzahl: &f%amount%&7]&e=====",
+						"&e=====&7[&6Respawnlist &9| &7Quantity: &f%amount%&7]&e====="}));
+		languageKeys.put(path+"ListHelp", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&bGleicher Server&f~&dGleiche Welt&f~&6Sonstiges",
+						"&bSame server&f~&dSame world&f~&6Other"}));
+		languageKeys.put(path+"ListSameServer",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&b",
+						"&b"}));
+		languageKeys.put(path+"ListSameWorld",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&d",
+						"&d"}));
+		languageKeys.put(path+"ListElse",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&6",
+						"&6"}));
+		languageKeys.put(path+"ListHover",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eKlick hier, um dich zum Respawn zu teleportieren!~!~&ePriorität: &f%value%",
+						"&eClick here to get all information about portal!~!~&ePriority: &f%value%"}));
+		languageKeys.put(path+"Next",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e&nnächste Seite &e==>",
+						"&e&nnext page &e==>"}));
+		languageKeys.put(path+"Past", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&e<== &nvorherige Seite",
+						"&e<== &nprevious page"}));
+	}
+	
 	private void langSavePoint()
 	{
 		String path = "CmdSavePoint.";
@@ -2281,7 +2649,7 @@ public class YamlManager
 		languageKeys.put(path+"CreateSavePoint", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Speicherpunkt &f%savepoint% &ewurde für dich erstellt.",
-						"&eThe savepoint &f%savepoint% &has been created for you."}));
+						"&eThe savepoint &f%savepoint% &ehas been created for you."}));
 		languageKeys.put(path+"UpdateSavePointConsole", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Speicherpunkt &f%savepoint% &ewurde für den Spieler &f%player% &eüberschrieben.",
@@ -3003,6 +3371,30 @@ public class YamlManager
 		configPermissionLevelKeys.put("PermissionLevel.Warp.World.farmweltCluster"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"farmworldOne", "farmworldTwo"}));
+	}
+	
+	public void initConfigRespawn() //INFO:ConfigRespawn
+	{
+		configRespawnKeys.put("Use.BTMRespawn"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				true}));//false für vanilla
+		configRespawnKeys.put("Use.PreferSimpleRespawnMechanic"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				true}));//false für Deathflowchart
+		configRespawnKeys.put("Use.SimpleRespawnMechanic.RespawnAt"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"FIRSTSPAWN"}));
+		//SAVEPOINT:Name, SAVEPOINT_NEWEST, FIRSTSPAWN, FIRSTSPAWN:Servername, RESPAWN_CLOSEST, RESPAWN_FARTHEST, RESPAWN:Respawnname
+		configRespawnKeys.put("DeathFlowChartTabProposals"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"Default", "DefaultTwo"}));
+		configRespawnKeys.put("DeathFlowChart.Default"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"SAVEPOINT:Name>SAVEPOINT_NEWEST>FIRSTSPAWN>FIRSTSPAWN:Servername>RESPAWN_CLOSEST>RESPAWN_FARTHEST>RESPAWN_HIGHSTPRIO>RESPAWN_LOWESTPRIO>RESPAWN:Respawnname"}));
+		//SAVEPOINT:Name, SAVEPOINT_NEWEST, FIRSTSPAWN, RESPAWN_CLOSEST, RESPAWN_FARTHEST, RESPAWN_HIGHSTPRIO, RESPAWN_LOWESTPRIO, RESPAWN:Respawnname
+		configRespawnKeys.put("DeathFlowChart.DefaultTwo"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"If you wish, you can add additional death flowchart. For example DeathFlowChart.DefaultThree or DeathFlowChart.<NameHere>. The name >DefaultThree< is the deathzoneplan argument, if you created a deathzone."}));
 	}
 	
 	public void initRandomTeleport() //INFO:RandomTeleport

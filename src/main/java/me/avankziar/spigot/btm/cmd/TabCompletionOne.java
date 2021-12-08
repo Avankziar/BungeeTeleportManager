@@ -11,9 +11,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import main.java.me.avankziar.general.object.Deathzone;
 import main.java.me.avankziar.general.object.FirstSpawn;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.Portal;
+import main.java.me.avankziar.general.object.Respawn;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
@@ -25,8 +27,13 @@ import main.java.me.avankziar.spigot.btm.object.BTMSettings;
 public class TabCompletionOne implements TabCompleter
 {	
 	private BungeeTeleportManager plugin;
+	private static ArrayList<String> deathflowchart = new ArrayList<String>();
+	private static ArrayList<String> deathzone = new ArrayList<String>();
+	private static ArrayList<String> deathzonecat = new ArrayList<String>();
+	private static ArrayList<String> deathzonesubcat = new ArrayList<String>();
 	private static ArrayList<String> entitytransport = new ArrayList<>();
 	private static ArrayList<String> firstspawnserver = new ArrayList<String>();
+	private static ArrayList<String> respawn = new ArrayList<String>();
 	private static ArrayList<String> targettype = new ArrayList<String>();
 	private static ArrayList<String> sound = new ArrayList<String>();
 	
@@ -35,6 +42,18 @@ public class TabCompletionOne implements TabCompleter
 	{
 		this.plugin = plugin;
 		ConfigHandler cfgh = new ConfigHandler(plugin);
+		if(cfgh.enableCommands(Mechanics.DEATHZONE))
+		{
+			if(plugin.getYamlHandler().getRespawn().get("DeathFlowChartTabProposals") != null)
+			{
+				for(String s : plugin.getYamlHandler().getRespawn().getStringList("DeathFlowChartTabProposals"))
+				{
+					deathflowchart.add(s);
+				}
+				Collections.sort(deathflowchart);
+			}
+			renewDeathzone();
+		}
 		if(cfgh.enableCommands(Mechanics.ENTITYTRANSPORT))
 		{
 			entitytransport.add("h");
@@ -55,6 +74,7 @@ public class TabCompletionOne implements TabCompleter
 			}
 			Collections.sort(sound);
 		}
+		renewRespawn();
 	}
 	
 	public static void renewFirstSpawn()
@@ -68,6 +88,65 @@ public class TabCompletionOne implements TabCompleter
 			{
 				firstspawnserver.add(fs.getServer());
 			}
+			Collections.sort(firstspawnserver);
+		}
+	}
+	
+	public static void renewRespawn()
+	{
+		respawn.clear();
+		if(new ConfigHandler(BungeeTeleportManager.getPlugin()).enableCommands(Mechanics.RESPAWN))
+		{
+			ArrayList<Respawn> list = ConvertHandler.convertListIV(BungeeTeleportManager.getPlugin().getMysqlHandler().getAllListAt(
+					MysqlHandler.Type.RESPAWN,"`id`", false, "1"));
+			for(Respawn fs : list)
+			{
+				respawn.add(fs.getDisplayname());
+			}
+			Collections.sort(respawn);
+		}
+	}
+	
+	public static void renewDeathzone()
+	{
+		deathzone.clear();
+		deathzonecat.clear();
+		deathzonesubcat.clear();
+		if(new ConfigHandler(BungeeTeleportManager.getPlugin()).enableCommands(Mechanics.DEATHZONE))
+		{
+			ArrayList<Deathzone> list = ConvertHandler.convertListXIII(BungeeTeleportManager.getPlugin().getMysqlHandler().getAllListAt(
+					MysqlHandler.Type.DEATHZONE,"`id`", false, "1"));
+			for(Deathzone dz : list)
+			{
+				deathzone.add(dz.getDisplayname());
+				boolean catexist = false;
+				for(String c : deathzonecat)
+				{
+					if(c.equals(dz.getCategory()))
+					{
+						catexist = true;
+						break;
+					}
+				}
+				if(!catexist)
+				{
+					deathzonecat.add(dz.getCategory());
+				}
+				boolean subcatexist = false;
+				for(String c : deathzonesubcat)
+				{
+					if(c.equals(dz.getCategory()))
+					{
+						subcatexist = true;
+						break;
+					}
+				}
+				if(!subcatexist)
+				{
+					deathzonesubcat.add(dz.getSubCategory());
+				}
+			}
+			Collections.sort(deathzone);
 		}
 	}
 	
@@ -78,7 +157,133 @@ public class TabCompletionOne implements TabCompleter
 		List<String> list = new ArrayList<String>();
 		String command = "/"+lable;
 		ConfigHandler cfgh = new ConfigHandler(plugin);
-		if(cfgh.enableCommands(Mechanics.ENTITYTRANSPORT) && 
+		if(cfgh.enableCommands(Mechanics.DEATHZONE))
+		{
+			if(args.length == 1 && (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_REMOVE).trim())
+					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETCATEGORY).trim())
+					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETNAME).trim())
+					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETPRIORITY).trim())
+					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETDEATHZONEPATH).trim())))
+			{
+				if (!args[0].equals("")) 
+				{
+					for(String s : deathzone)
+					{
+						if(s.startsWith(args[0]))
+						{
+							list.add(s);
+						}
+					}
+					return list;
+				} else
+				{
+					return deathzone;
+				}
+			} else if(args.length == 2 && command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETDEATHZONEPATH).trim()))
+			{
+				if (!args[1].equals("")) 
+				{
+					for(String s : deathflowchart)
+					{
+						if(s.startsWith(args[1]))
+						{
+							list.add(s);
+						}
+					}
+					return list;
+				} else
+				{
+					return deathflowchart;
+				}
+			} else if(command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_CREATE).trim()))
+			{
+				if(args.length == 2)
+				{
+					if (!args[1].equals("")) 
+					{
+						for(String s : deathflowchart)
+						{
+							if(s.startsWith(args[1]))
+							{
+								list.add(s);
+							}
+						}
+						return list;
+					} else
+					{
+						return deathflowchart;
+					}
+				} else if(args.length == 3)
+				{
+					if (!args[2].equals("")) 
+					{
+						for(String s : deathzonecat)
+						{
+							if(s.startsWith(args[2]))
+							{
+								list.add(s);
+							}
+						}
+						return list;
+					} else
+					{
+						return deathzonecat;
+					}
+				} else if(args.length == 4)
+				{
+					if (!args[3].equals("")) 
+					{
+						for(String s : deathzonesubcat)
+						{
+							if(s.startsWith(args[3]))
+							{
+								list.add(s);
+							}
+						}
+						return list;
+					} else
+					{
+						return deathzonesubcat;
+					}
+				}
+			} else if(command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETCATEGORY).trim()))
+			{
+				if(args.length == 2)
+				{
+					if (!args[1].equals("")) 
+					{
+						for(String s : deathzonecat)
+						{
+							if(s.startsWith(args[1]))
+							{
+								list.add(s);
+							}
+						}
+						return list;
+					} else
+					{
+						return deathzonecat;
+					}
+				} else if(args.length == 3)
+				{
+					if (!args[2].equals("")) 
+					{
+						for(String s : deathzonesubcat)
+						{
+							if(s.startsWith(args[2]))
+							{
+								list.add(s);
+							}
+						}
+						return list;
+					} else
+					{
+						return deathzonesubcat;
+					}
+				}
+				
+			}
+		} else if(cfgh.enableCommands(Mechanics.ENTITYTRANSPORT) && 
 				command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.ENTITYTRANSPORT)))
 		{
 			if(args.length == 1)
@@ -389,6 +594,37 @@ public class TabCompletionOne implements TabCompleter
 					}
 					return list;
 				}
+			}
+		} else if (cfgh.enableCommands(Mechanics.RESPAWN) && args.length == 1 
+				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RESPAWN).trim())
+						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RESPAWN_CREATE).trim())
+						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RESPAWN_REMOVE).trim())
+						)) 
+		{
+			if (!args[0].equals("")) 
+			{
+				if(respawn.contains(player.getName()))
+				{
+					for (String r : respawn) 
+					{
+						if (r.startsWith(args[0])
+								|| r.toLowerCase().startsWith(args[0])
+								|| r.toUpperCase().startsWith(args[0])) 
+						{
+							list.add(r);
+						}
+					}
+					Collections.sort(list);
+					return list;
+				}
+			} else
+			{
+				if(!respawn.isEmpty())
+				{
+					list.addAll(respawn);
+					Collections.sort(list);
+				}
+				return list;
 			}
 		} else if (cfgh.enableCommands(Mechanics.SAVEPOINT) 
 				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT).trim())))

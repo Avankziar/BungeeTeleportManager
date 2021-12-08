@@ -30,11 +30,13 @@ import main.java.me.avankziar.spigot.btm.assistance.Utility;
 import main.java.me.avankziar.spigot.btm.cmd.BTMCmdExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.BackCmdExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.CommandHelper;
+import main.java.me.avankziar.spigot.btm.cmd.DeathzoneCmdExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.EntityTransportCmdExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.FirstSpawnCmdExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.HomeCmdExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.PortalCmdExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.RTPCmdExecutor;
+import main.java.me.avankziar.spigot.btm.cmd.RespawnCmdExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.SavePointCmdExecutor;
 import main.java.me.avankziar.spigot.btm.cmd.TabCompletionOne;
 import main.java.me.avankziar.spigot.btm.cmd.TabCompletionTwo;
@@ -49,17 +51,20 @@ import main.java.me.avankziar.spigot.btm.database.YamlHandler;
 import main.java.me.avankziar.spigot.btm.handler.AdvancedEconomyHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.SafeLocationHandler;
+import main.java.me.avankziar.spigot.btm.handler.SafeLocationMessageListener;
 import main.java.me.avankziar.spigot.btm.listener.PlayerOnCooldownListener;
 import main.java.me.avankziar.spigot.btm.listener.ServerAndWordListener;
 import main.java.me.avankziar.spigot.btm.listener.back.BackListener;
 import main.java.me.avankziar.spigot.btm.listener.custom.CustomTeleportListener;
 import main.java.me.avankziar.spigot.btm.listener.entitytransport.EntityNameChangeListener;
 import main.java.me.avankziar.spigot.btm.listener.entitytransport.EntityTransportListener;
+import main.java.me.avankziar.spigot.btm.listener.respawn.RespawnListener;
 import main.java.me.avankziar.spigot.btm.manager.back.BackHandler;
 import main.java.me.avankziar.spigot.btm.manager.back.BackHelper;
 import main.java.me.avankziar.spigot.btm.manager.back.BackMessageListener;
 import main.java.me.avankziar.spigot.btm.manager.custom.CustomHandler;
 import main.java.me.avankziar.spigot.btm.manager.custom.CustomMessageListener;
+import main.java.me.avankziar.spigot.btm.manager.deathzone.DeathzoneHelper;
 import main.java.me.avankziar.spigot.btm.manager.entitytransport.EntityTransportHandler;
 import main.java.me.avankziar.spigot.btm.manager.entitytransport.EntityTransportHelper;
 import main.java.me.avankziar.spigot.btm.manager.entitytransport.EntityTransportMessageListener;
@@ -73,6 +78,9 @@ import main.java.me.avankziar.spigot.btm.manager.portal.PortalMessageListener;
 import main.java.me.avankziar.spigot.btm.manager.randomteleport.RandomTeleportHandler;
 import main.java.me.avankziar.spigot.btm.manager.randomteleport.RandomTeleportHelper;
 import main.java.me.avankziar.spigot.btm.manager.randomteleport.RandomTeleportMessageListener;
+import main.java.me.avankziar.spigot.btm.manager.respawn.RespawnHandler;
+import main.java.me.avankziar.spigot.btm.manager.respawn.RespawnHelper;
+import main.java.me.avankziar.spigot.btm.manager.respawn.RespawnMessageListener;
 import main.java.me.avankziar.spigot.btm.manager.savepoint.SavePointHandler;
 import main.java.me.avankziar.spigot.btm.manager.savepoint.SavePointHelper;
 import main.java.me.avankziar.spigot.btm.manager.savepoint.SavePointMessageListener;
@@ -109,6 +117,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private BackHandler backHandler;
 	private BackHelper backHelper;
 	private CustomHandler customHandler;
+	private DeathzoneHelper deathzoneHelper;
 	private EntityTransportHelper entityTransportHelper;
 	private FirstSpawnHelper firstSpawnHelper;
 	private HomeHelper homeHelper;
@@ -116,6 +125,8 @@ public class BungeeTeleportManager extends JavaPlugin
 	private PortalHandler portalHandler;
 	private RandomTeleportHandler randomTeleportHandler;
 	private RandomTeleportHelper randomTeleportHelper;
+	private RespawnHelper respawnHelper;
+	private RespawnHandler respawnHandler;
 	private SavePointHandler savePointHandler;
 	private SavePointHelper savePointHelper;
 	private TeleportHandler teleportHandler;
@@ -181,12 +192,15 @@ public class BungeeTeleportManager extends JavaPlugin
 		backHelper = new BackHelper(plugin);
 		backHandler = new BackHandler(plugin);
 		customHandler = new CustomHandler(plugin);
+		deathzoneHelper = new DeathzoneHelper(plugin);
 		entityTransportHelper = new EntityTransportHelper(plugin);
 		homeHelper = new HomeHelper(plugin);
 		portalHelper = new PortalHelper(plugin);
 		portalHandler = new PortalHandler(plugin);
 		randomTeleportHelper = new RandomTeleportHelper(plugin);
 		randomTeleportHandler = new RandomTeleportHandler(plugin);
+		respawnHelper = new RespawnHelper(plugin);
+		respawnHandler = new RespawnHandler(plugin);
 		savePointHelper = new SavePointHelper(plugin);
 		savePointHandler = new SavePointHandler(plugin);
 		teleportHelper = new TeleportHelper(plugin);
@@ -303,8 +317,70 @@ public class BungeeTeleportManager extends JavaPlugin
 			addingHelps(deathback);
 		}
 		
-		boolean boo = false;
-		if(boo && cfgh.enableCommands(Mechanics.ENTITYTRANSPORT))
+		if(cfgh.enableCommands(Mechanics.DEATHZONE))
+		{
+			CommandConstructor deathzonecreate = new CommandConstructor("deathzonecreate", false);
+			registerCommand(deathzonecreate.getName());
+			getCommand(deathzonecreate.getName()).setExecutor(new DeathzoneCmdExecutor(plugin, deathzonecreate));
+			getCommand(deathzonecreate.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.DEATHZONE_CREATE, deathzonecreate.getCommandString());
+			
+			CommandConstructor deathzoneremove = new CommandConstructor("deathzoneremove", false);
+			registerCommand(deathzoneremove.getName());
+			getCommand(deathzoneremove.getName()).setExecutor(new DeathzoneCmdExecutor(plugin, deathzoneremove));
+			getCommand(deathzoneremove.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.DEATHZONE_REMOVE, deathzoneremove.getCommandString());
+			
+			CommandConstructor deathzonemode = new CommandConstructor("deathzonemode", false);
+			registerCommand(deathzonemode.getName());
+			getCommand(deathzonemode.getName()).setExecutor(new DeathzoneCmdExecutor(plugin, deathzonemode));
+			getCommand(deathzonemode.getName()).setTabCompleter(tabOne);
+			
+			CommandConstructor deathzonelist = new CommandConstructor("deathzonelist", false);
+			registerCommand(deathzonelist.getName());
+			getCommand(deathzonelist.getName()).setExecutor(new DeathzoneCmdExecutor(plugin, deathzonelist));
+			getCommand(deathzonelist.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.DEATHZONE_LIST, deathzonelist.getCommandString());
+			
+			CommandConstructor deathzonesimulatedeath = new CommandConstructor("deathzonesimulatedeath", false);
+			registerCommand(deathzonesimulatedeath.getName());
+			getCommand(deathzonesimulatedeath.getName()).setExecutor(new DeathzoneCmdExecutor(plugin, deathzonesimulatedeath));
+			getCommand(deathzonesimulatedeath.getName()).setTabCompleter(tabOne);
+			
+			CommandConstructor deathzonesetcategory = new CommandConstructor("deathzonesetcategory", false);
+			registerCommand(deathzonesetcategory.getName());
+			getCommand(deathzonesetcategory.getName()).setExecutor(new DeathzoneCmdExecutor(plugin, deathzonesetcategory));
+			getCommand(deathzonesetcategory.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.DEATHZONE_SETCATEGORY, deathzonesetcategory.getCommandString());
+			
+			CommandConstructor deathzonesetname = new CommandConstructor("deathzonesetname", false);
+			registerCommand(deathzonesetname.getName());
+			getCommand(deathzonesetname.getName()).setExecutor(new DeathzoneCmdExecutor(plugin, deathzonesetname));
+			getCommand(deathzonesetname.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.DEATHZONE_SETNAME, deathzonesetname.getCommandString());
+			
+			CommandConstructor deathzonesetpriority = new CommandConstructor("deathzonesetpriority", false);
+			registerCommand(deathzonesetpriority.getName());
+			getCommand(deathzonesetpriority.getName()).setExecutor(new DeathzoneCmdExecutor(plugin, deathzonesetpriority));
+			getCommand(deathzonesetpriority.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.DEATHZONE_SETPRIORITY, deathzonesetpriority.getCommandString());
+			
+			CommandConstructor deathzonesetdeathzonepath = new CommandConstructor("deathzonesetdeathzonepath", false);
+			registerCommand(deathzonesetdeathzonepath.getName());
+			getCommand(deathzonesetdeathzonepath.getName()).setExecutor(new DeathzoneCmdExecutor(plugin, deathzonesetdeathzonepath));
+			getCommand(deathzonesetdeathzonepath.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.DEATHZONE_SETDEATHZONEPATH, deathzonesetdeathzonepath.getCommandString());
+			
+			CommandConstructor deathzoneinfo = new CommandConstructor("deathzoneinfo", false);
+			registerCommand(deathzoneinfo.getName());
+			getCommand(deathzoneinfo.getName()).setExecutor(new DeathzoneCmdExecutor(plugin, deathzoneinfo));
+			getCommand(deathzoneinfo.getName()).setTabCompleter(tabOne);
+			
+			addingHelps(deathzonecreate, deathzoneremove, deathzonemode, deathzonelist, deathzonesimulatedeath,
+					deathzonesetcategory, deathzonesetname, deathzonesetpriority, deathzonesetdeathzonepath, deathzoneinfo);
+		}
+		
+		if(cfgh.enableCommands(Mechanics.ENTITYTRANSPORT))
 		{
 			CommandConstructor entitytransport = new CommandConstructor("entitytransport", false);
 			registerCommand(entitytransport.getName());
@@ -612,9 +688,33 @@ public class BungeeTeleportManager extends JavaPlugin
 			addingHelps(randomteleport);
 		}
 		
-		if(cfgh.enableCommands(Mechanics.RESPAWNPOINT))
+		if(cfgh.enableCommands(Mechanics.RESPAWN))
 		{
+			CommandConstructor respawn = new CommandConstructor("respawn", false);
+			registerCommand(respawn.getName());
+			getCommand(respawn.getName()).setExecutor(new RespawnCmdExecutor(plugin, respawn));
+			getCommand(respawn.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.RESPAWN, respawn.getCommandString());
 			
+			CommandConstructor respawn_create = new CommandConstructor("respawn_create", false);
+			registerCommand(respawn_create.getName());
+			getCommand(respawn_create.getName()).setExecutor(new RespawnCmdExecutor(plugin, respawn_create));
+			getCommand(respawn_create.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.RESPAWN_CREATE, respawn_create.getCommandString());
+			
+			CommandConstructor respawn_remove = new CommandConstructor("respawn_remove", false);
+			registerCommand(respawn_remove.getName());
+			getCommand(respawn_remove.getName()).setExecutor(new RespawnCmdExecutor(plugin, respawn_remove));
+			getCommand(respawn_remove.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.RESPAWN_REMOVE, respawn_remove.getCommandString());
+			
+			CommandConstructor respawn_list = new CommandConstructor("respawn_list", false);
+			registerCommand(respawn_list.getName());
+			getCommand(respawn_list.getName()).setExecutor(new RespawnCmdExecutor(plugin, respawn_list));
+			getCommand(respawn_list.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.RESPAWN_LIST, respawn_list.getCommandString());
+			
+			addingHelps(respawn, respawn_create, respawn_remove, respawn_list);
 		}
 		
 		if(cfgh.enableCommands(Mechanics.SAVEPOINT))
@@ -1034,7 +1134,6 @@ public class BungeeTeleportManager extends JavaPlugin
 	
 	public void ListenerSetup()
 	{
-		PluginManager pm = getServer().getPluginManager();
 		Messenger me = getServer().getMessenger();
 		me.registerOutgoingPluginChannel(this, StaticValues.GENERAL_TOBUNGEE);
 		me.registerOutgoingPluginChannel(this, StaticValues.BACK_TOBUNGEE);
@@ -1051,18 +1150,24 @@ public class BungeeTeleportManager extends JavaPlugin
 		me.registerIncomingPluginChannel(this, StaticValues.PORTAL_TOSPIGOT, new PortalMessageListener(this));
 		me.registerOutgoingPluginChannel(this, StaticValues.RANDOMTELEPORT_TOBUNGEE);
 		me.registerIncomingPluginChannel(this, StaticValues.RANDOMTELEPORT_TOSPIGOT, new RandomTeleportMessageListener(this));
+		me.registerOutgoingPluginChannel(this, StaticValues.RESPAWN_TOBUNGEE);
+		me.registerIncomingPluginChannel(this, StaticValues.RESPAWN_TOSPIGOT, new RespawnMessageListener(this));
+		me.registerOutgoingPluginChannel(this, StaticValues.SAFE_TOBUNGEE);
+		me.registerIncomingPluginChannel(this, StaticValues.SAFE_TOSPIGOT, new SafeLocationMessageListener(this));
 		me.registerOutgoingPluginChannel(this, StaticValues.SAVEPOINT_TOBUNGEE);
 		me.registerIncomingPluginChannel(this, StaticValues.SAVEPOINT_TOSPIGOT, new SavePointMessageListener(this));
 		me.registerOutgoingPluginChannel(this, StaticValues.TP_TOBUNGEE);
 		me.registerIncomingPluginChannel(this, StaticValues.TP_TOSPIGOT, new TeleportMessageListener(this));
 		me.registerOutgoingPluginChannel(this, StaticValues.WARP_TOBUNGEE);
 		me.registerIncomingPluginChannel(this, StaticValues.WARP_TOSPIGOT, new WarpMessageListener(this));
+		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(new BackListener(plugin), plugin);
 		pm.registerEvents(new ServerAndWordListener(plugin), plugin);
 		pm.registerEvents(new CustomTeleportListener(plugin), plugin);
 		pm.registerEvents(new PlayerOnCooldownListener(plugin), plugin);
 		pm.registerEvents(new EntityNameChangeListener(plugin), plugin);
 		pm.registerEvents(new EntityTransportListener(plugin), plugin);
+		pm.registerEvents(new RespawnListener(plugin), plugin);
 	}
 	
 	public boolean reload() throws IOException
@@ -1164,6 +1269,11 @@ public class BungeeTeleportManager extends JavaPlugin
 		return customHandler;
 	}
 	
+	public DeathzoneHelper getDeathzoneHelper()
+	{
+		return deathzoneHelper;
+	}
+	
 	public EntityTransportHelper getEntityTransportHelper()
 	{
 		return entityTransportHelper;
@@ -1199,6 +1309,16 @@ public class BungeeTeleportManager extends JavaPlugin
 		return randomTeleportHandler;
 	}
 	
+	public RespawnHelper getRespawnHelper()
+	{
+		return respawnHelper;
+	}
+	
+	public RespawnHandler getRespawnHandler()
+	{
+		return respawnHandler;
+	}
+
 	public SavePointHandler getSavePointHandler()
 	{
 		return savePointHandler;

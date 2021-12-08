@@ -7,10 +7,12 @@ import org.bukkit.Location;
 
 import main.java.me.avankziar.general.object.AccessPermission;
 import main.java.me.avankziar.general.object.Back;
+import main.java.me.avankziar.general.object.Deathzone;
 import main.java.me.avankziar.general.object.EntityTransport;
 import main.java.me.avankziar.general.object.FirstSpawn;
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.Portal;
+import main.java.me.avankziar.general.object.Respawn;
 import main.java.me.avankziar.general.object.SavePoint;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.TeleportIgnore;
@@ -52,6 +54,19 @@ public class ConvertHandler
 			if(o instanceof Back)
 			{
 				el.add((Back) o);
+			}
+		}
+		return el;
+	}
+	
+	public static ArrayList<Respawn> convertListIV(ArrayList<?> list)
+	{
+		ArrayList<Respawn> el = new ArrayList<>();
+		for(Object o : list)
+		{
+			if(o instanceof Respawn)
+			{
+				el.add((Respawn) o);
 			}
 		}
 		return el;
@@ -133,6 +148,19 @@ public class ConvertHandler
 			if(o instanceof FirstSpawn)
 			{
 				el.add((FirstSpawn) o);
+			}
+		}
+		return el;
+	}
+	
+	public static ArrayList<Deathzone> convertListXIII(ArrayList<?> list)
+	{
+		ArrayList<Deathzone> el = new ArrayList<>();
+		for(Object o : list)
+		{
+			if(o instanceof Deathzone)
+			{
+				el.add((Deathzone) o);
 			}
 		}
 		return el;

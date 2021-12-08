@@ -4,7 +4,7 @@ public enum Mechanics
 {
 	BACK("Back"), 
 	DEATHBACK("Deathback"),
-	DEATHZONE("DeathZone"),
+	DEATHZONE("Deathzone"),
 	CUSTOM("Custom"),
 	ENTITYTELEPORT("EntityTeleport"),
 	ENTITYTRANSPORT("EntityTransport"),
@@ -12,7 +12,7 @@ public enum Mechanics
 	HOME("Home"),
 	PORTAL("Portal"),
 	RANDOMTELEPORT("RandomTeleport"),
-	RESPAWNPOINT("RespawnPoint"),
+	RESPAWN("Respawn"),
 	SAVEPOINT("SavePoint"),
 	TPA_ONLY("TPA"),
 	TPA("Teleport"),

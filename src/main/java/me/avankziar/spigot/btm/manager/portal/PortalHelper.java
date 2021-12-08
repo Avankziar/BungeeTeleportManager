@@ -16,12 +16,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.aep.spigot.handler.TimeHandler;
 import main.java.me.avankziar.general.object.Back;
+import main.java.me.avankziar.general.object.FirstSpawn;
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.Portal;
 import main.java.me.avankziar.general.object.Portal.AccessType;
 import main.java.me.avankziar.general.object.Portal.TargetType;
 import main.java.me.avankziar.general.object.RandomTeleport;
+import main.java.me.avankziar.general.object.Respawn;
 import main.java.me.avankziar.general.object.SavePoint;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.Warp;
@@ -38,7 +40,9 @@ import main.java.me.avankziar.spigot.btm.events.listenable.playertoposition.Port
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.btm.handler.ForbiddenHandlerSpigot;
+import main.java.me.avankziar.spigot.btm.manager.firstspawn.FirstSpawnHandler;
 import main.java.me.avankziar.spigot.btm.manager.portal.PortalHandler.PortalPosition;
+import main.java.me.avankziar.spigot.btm.manager.respawn.RespawnHandler;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -257,10 +261,30 @@ public class PortalHelper
 					plugin.getPortalHandler().throwback(portal, player);
 					return;
 				case FIRSTSPAWN:
-					//ADDME
+					if(portal.getTargetInformation() != null)
+					{
+						if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", portal.getTargetInformation()))
+						{
+							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnNotExist")));
+							return;
+						}
+						FirstSpawn fs = (FirstSpawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", portal.getTargetInformation());
+						player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
+						new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, fs);
+					}
 					break;
 				case RESPAWN:
-					//ADDME
+					if(portal.getTargetInformation() != null)
+					{
+						if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.RESPAWN, "`displayname` = ?", portal.getTargetInformation()))
+						{
+							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RespawnNotExist")));
+							return;
+						}
+						Respawn r = (Respawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.RESPAWN, "`displayname` = ?", portal.getTargetInformation());
+						player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
+						new RespawnHandler(plugin).sendPlayerToRespawn(player, r);
+					}
 					break;
 				case HOME:
 					Home home = null;
@@ -660,6 +684,7 @@ public class PortalHelper
 				plugin.getYamlHandler().getLang().getString("CmdPortal.PortalCreate")
 				.replace("%name%", portalName),
 				ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.PORTAL_INFO)+" "+portalName));
+		plugin.getPortalHandler().removePortalPosition(player.getUniqueId());
 		plugin.getUtility().setPortalsTabCompleter(player);
 		return;
 	}
@@ -2023,9 +2048,25 @@ public class PortalHelper
 			portal.setTargetInformation(tinfos);
 			break;
 		case FIRSTSPAWN:
-			//ADDME
+			if(args.length != 2)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.NoArgs")
+						.replace("%type%", target.toString())));
+				return;
+			}
+			portal.setTargetType(target);
+			tinfos = args[2];
+			portal.setTargetInformation(tinfos);
 		case RESPAWN:
-			//ADDME
+			if(args.length != 2)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.NoArgs")
+						.replace("%type%", target.toString())));
+				return;
+			}
+			portal.setTargetType(target);
+			tinfos = args[2];
+			portal.setTargetInformation(tinfos);
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		if(tinfos == null)

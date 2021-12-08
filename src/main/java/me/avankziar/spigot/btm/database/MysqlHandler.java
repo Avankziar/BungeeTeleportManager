@@ -19,16 +19,17 @@ import main.java.me.avankziar.spigot.btm.database.tables.Table09;
 import main.java.me.avankziar.spigot.btm.database.tables.Table10;
 import main.java.me.avankziar.spigot.btm.database.tables.Table11;
 import main.java.me.avankziar.spigot.btm.database.tables.Table12;
+import main.java.me.avankziar.spigot.btm.database.tables.Table13;
 
 public class MysqlHandler 
-	implements Table01, Table02, Table03, Table04, Table05, Table06, Table07, Table08, Table09, Table10, Table11, Table12
+	implements Table01, Table02, Table03, Table04, Table05, Table06, Table07, Table08, Table09, Table10, Table11, Table12, Table13
 {
 	public enum Type
 	{
 		HOME("btmHomes"),
 		PORTAL("btmPortals"),
 		BACK("btmBack"),
-		RESPAWNPOINT("btmRespawnPoints"),
+		RESPAWN("btmRespawn"),
 		WARP("btmWarps"),
 		TELEPORTIGNORE("btmTeleportIgnored"),
 		SAVEPOINT("btmSavePoints"),
@@ -36,7 +37,8 @@ public class MysqlHandler
 		ENTITYTRANSPORT_TICKET("btmEntityTransportTicket"),
 		ACCESSPERMISSION("btmAccessPermission"),
 		PORTALCOOLDOWN("btmPortalCooldown"),
-		FIRSTSPAWN("btmFirstSpawn")
+		FIRSTSPAWN("btmFirstSpawn"),
+		DEATHZONE("btmDeathzone")
 		;
 		
 		private Type(String value)
@@ -117,7 +119,7 @@ public class MysqlHandler
 			return Table02.super.createII(plugin, object);
 		case BACK:
 			return Table03.super.createIII(plugin, object);
-		case RESPAWNPOINT:
+		case RESPAWN:
 			return Table04.super.createIV(plugin, object);
 		case WARP:
 			return Table05.super.createV(plugin, object);
@@ -135,6 +137,8 @@ public class MysqlHandler
 			return Table11.super.createXI(plugin, object);
 		case FIRSTSPAWN:
 			return Table12.super.createXII(plugin, object);
+		case DEATHZONE:
+			return Table13.super.createXIII(plugin, object);
 		}
 		return false;
 	}
@@ -149,7 +153,7 @@ public class MysqlHandler
 			return Table02.super.updateDataII(plugin, object, whereColumn, whereObject);
 		case BACK:
 			return Table03.super.updateDataIII(plugin, object, whereColumn, whereObject);
-		case RESPAWNPOINT:
+		case RESPAWN:
 			return Table04.super.updateDataIV(plugin, object, whereColumn, whereObject);
 		case WARP:
 			return Table05.super.updateDataV(plugin, object, whereColumn, whereObject);
@@ -167,6 +171,8 @@ public class MysqlHandler
 			return Table11.super.updateDataXI(plugin, object, whereColumn, whereObject);
 		case FIRSTSPAWN:
 			return Table12.super.updateDataXII(plugin, object, whereColumn, whereObject);
+		case DEATHZONE:
+			return Table13.super.updateDataXIII(plugin, object, whereColumn, whereObject);
 		}
 		return false;
 	}
@@ -181,7 +187,7 @@ public class MysqlHandler
 			return Table02.super.getDataII(plugin, whereColumn, whereObject);
 		case BACK:
 			return Table03.super.getDataIII(plugin, whereColumn, whereObject);
-		case RESPAWNPOINT:
+		case RESPAWN:
 			return Table04.super.getDataIV(plugin, whereColumn, whereObject);
 		case WARP:
 			return Table05.super.getDataV(plugin, whereColumn, whereObject);
@@ -199,6 +205,8 @@ public class MysqlHandler
 			return Table11.super.getDataXI(plugin, whereColumn, whereObject);
 		case FIRSTSPAWN:
 			return Table12.super.getDataXII(plugin, whereColumn, whereObject);
+		case DEATHZONE:
+			return Table13.super.getDataXIII(plugin, whereColumn, whereObject);
 		}
 		return null;
 	}
@@ -386,7 +394,7 @@ public class MysqlHandler
 			return Table02.super.getListII(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		case BACK:
 			return Table03.super.getListIII(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
-		case RESPAWNPOINT:
+		case RESPAWN:
 			return Table04.super.getListIV(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		case WARP:
 			return Table05.super.getListV(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
@@ -404,6 +412,8 @@ public class MysqlHandler
 			return Table11.super.getListXI(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		case FIRSTSPAWN:
 			return Table12.super.getListXII(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
+		case DEATHZONE:
+			return Table13.super.getListXIII(plugin, orderByColumn, start, quantity, whereColumn, whereObject);
 		}
 		return null;
 	}
@@ -418,7 +428,7 @@ public class MysqlHandler
 			return Table02.super.getTopII(plugin, orderByColumn, start, end);
 		case BACK:
 			return Table03.super.getTopIII(plugin, orderByColumn, start, end);
-		case RESPAWNPOINT:
+		case RESPAWN:
 			return Table04.super.getTopIV(plugin, orderByColumn, start, end);
 		case WARP:
 			return Table05.super.getTopV(plugin, orderByColumn, start, end);
@@ -436,6 +446,8 @@ public class MysqlHandler
 			return Table11.super.getTopXI(plugin, orderByColumn, start, end);
 		case FIRSTSPAWN:
 			return Table12.super.getTopXII(plugin, orderByColumn, start, end);
+		case DEATHZONE:
+			return Table13.super.getTopXIII(plugin, orderByColumn, start, end);
 		}
 		return null;
 	}
@@ -450,7 +462,7 @@ public class MysqlHandler
 			return Table02.super.getAllListAtII(plugin, orderByColumn, desc, whereColumn, whereObject);
 		case BACK:
 			return Table03.super.getAllListAtIII(plugin, orderByColumn, desc, whereColumn, whereObject);
-		case RESPAWNPOINT:
+		case RESPAWN:
 			return Table04.super.getAllListAtIV(plugin, orderByColumn, desc, whereColumn, whereObject);
 		case WARP:
 			return Table05.super.getAllListAtV(plugin, orderByColumn, desc, whereColumn, whereObject);
@@ -468,6 +480,8 @@ public class MysqlHandler
 			return Table11.super.getAllListAtXI(plugin, orderByColumn, desc, whereColumn, whereObject);
 		case FIRSTSPAWN:
 			return Table12.super.getAllListAtXII(plugin, orderByColumn, desc, whereColumn, whereObject);
+		case DEATHZONE:
+			return Table13.super.getAllListAtXIII(plugin, orderByColumn, desc, whereColumn, whereObject);
 		}
 		return null;
 	}

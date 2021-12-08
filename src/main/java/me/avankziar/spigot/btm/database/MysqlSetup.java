@@ -38,10 +38,10 @@ public class MysqlSetup
 		{
 			return false;
 		}
-		/*if(!setupDatabaseIV())
+		if(!setupDatabaseIV())
 		{
 			return false;
-		}*/
+		}
 		if(!setupDatabaseV())
 		{
 			return false;
@@ -71,6 +71,10 @@ public class MysqlSetup
 			return false;
 		}
 		if(!setupDatabaseXII())
+		{
+			return false;
+		}
+		if(!setupDatabaseXIII())
 		{
 			return false;
 		}
@@ -198,14 +202,17 @@ public class MysqlSetup
 	
 	public boolean setupDatabaseIV() 
 	{
-		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.RESPAWNPOINT.getValue()
+		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.RESPAWN.getValue()
 		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
-		+ " dates text,"
-		+ " trend_type text,"
-		+ " uuidornumber text,"
-		+ " relative_amount_change double,"
-		+ " firstvalue double,"
-		+ " lastvalue double);";
+		+ " displayname text,"
+		+ " priority int,"
+		+ " server text,"
+		+ " world text,"
+		+ " x double,"
+		+ " y double,"
+		+ " z double,"
+		+ " yaw float,"
+		+ " pitch float);";
 		return baseSetup(data);
 	}
 	
@@ -305,12 +312,34 @@ public class MysqlSetup
 		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.FIRSTSPAWN.getValue()
 		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
 		+ " server text,"
-		+ " orld text,"
+		+ " world text,"
 		+ " x double,"
 		+ " y double,"
 		+ " z double,"
 		+ " yaw float,"
 		+ " pitch float);";
+		return baseSetup(data);
+	}
+	
+	public boolean setupDatabaseXIII() 
+	{
+		String data = "CREATE TABLE IF NOT EXISTS `" + MysqlHandler.Type.DEATHZONE.getValue()
+		+ "` (id int AUTO_INCREMENT PRIMARY KEY,"
+		+ " displayname text,"
+		+ " priority int,"
+		+ " deathzonepath text,"
+		+ " pos_one_server text,"
+		+ " pos_one_world text,"
+		+ " pos_one_x double,"
+		+ " pos_one_y double,"
+		+ " pos_one_z double,"
+		+ " pos_two_server text,"
+		+ " pos_two_world text,"
+		+ " pos_two_x double,"
+		+ " pos_two_y double,"
+		+ " pos_two_z double,"
+		+ " category text,"
+		+ " subcategory text);";
 		return baseSetup(data);
 	}
 	

@@ -90,10 +90,10 @@ public class FirstSpawnHandler
 		}
 		FirstSpawn fs = (FirstSpawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", server);
 		plugin.getUtility().givesEffect(player, Mechanics.FIRSTSPAWN, true, true);
-		new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, fs, player.getName(), player.getUniqueId().toString());
+		new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, fs);
 	}
 	
-	public void sendPlayerToFirstSpawn(Player player, FirstSpawn fs, String playername, String uuid)
+	public void sendPlayerToFirstSpawn(Player player, FirstSpawn fs)
 	{
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		if(fs.getLocation().getServer().equals(cfgh.getServer()) && player != null)
@@ -122,8 +122,8 @@ public class FirstSpawnHandler
 	        DataOutputStream out = new DataOutputStream(stream);
 	        try {
 				out.writeUTF(StaticValues.FIRSTSPAWN_PLAYERTOPOSITION);
-				out.writeUTF(uuid);
-				out.writeUTF(playername);
+				out.writeUTF(player.getUniqueId().toString());
+				out.writeUTF(player.getName());
 				out.writeUTF(fs.getLocation().getServer());
 				out.writeUTF(fs.getLocation().getWorldName());
 				out.writeDouble(fs.getLocation().getX());

@@ -125,13 +125,13 @@ Build 6 ========================================================================
   - +Wenn der Spieler zum erstem mal Joint (Netzwerk, nicht pro Server),
     soll eine Liste von Befehlen für diesen (Console) und mit diesem (als er selbst theoretisch)
     ausgeführt werden einmalig. Beide Listen in der Config (Spigot & BungeeCord) einstellbar machen. Replacer für Spieler in Befehlen einbauen.
-- Respawn
-  Ist ein SpielerUNspezifischer Speicherpunkt für nach dem Tode.
-  - Einen Config Wert für respawn am nächsten, entferntesten oder Default Respawn einstellen.
-  - /respawncreate <RespawnName> | Erstellt Respawn
-  - /respawn <RespawnName> | Tp zum Respawn 
-  - /respawnlist [seitenzahl] [server] [welt] | Liste aller Respawns, mit Tp click
-  - /respawndelete <RespawnName> | Löscht Respawn
+- +Respawn
+  +Ist ein SpielerUNspezifischer Speicherpunkt für nach dem Tode.
+  - +Einen Config Wert für respawn am nächsten, entferntesten oder Default Respawn einstellen.
+  - +/respawncreate <RespawnName> [priority] | Erstellt Respawn
+  - +/respawn <RespawnName> | Tp zum Respawn 
+  - +/respawnlist [seitenzahl] [server] [welt] | Liste aller Respawns, mit Tp click
+  - +/respawnremove <RespawnName> | Löscht Respawn
 - +Portal
   - +Ein Portal soll folgende Eigenschaften haben:
     - +Owner, Perm, Cooldown, Cost(Geld), Member, Blacklist, Target, PointOfExit, Point 1 & 2, TargetType(Destination), ...
@@ -168,16 +168,20 @@ Build 6 ========================================================================
   - +PermissionLevel für Portale hinzufügen.
   - +portal erstellung kann geld kosten.
   - ? Das Innenleben der Portale muss ich mir anschauen.
-- Todeszone:
+- Deathzone:
     Eine Todeszone ist ein Bereich, eine Welt oder ein Server, welche als Bedingung für eine Tod zählt.
     Sollte ein Spieler innerhalb dieses Bereichs sterben, so wird der Respawn genommen, welcher Verlinkt ist.
     Sollten sich Todeszonen überschneiden, wird die die höhere Priorität genommen. Bei gleicher Prio, ist es Zufall.
-    - /deathzonecreate <DeathzoneName> <Server> [Welt] [Radius] [Priorität] | Sollte kein optionals Argument eingegeben werden, so ist Prio = 0.
-      Radius ist in Minecraft eine Region. Da von der Location +x +y +z und -x -y -z mit dem Radius erstellt wird.
+    - /deathzonecreate <DeathzoneName> <Priorität> <deathzonepfad>  | Erstellt eine Deathzone.
     - /deathzonelist | Listet alle Deathzones auf.
+    - /deathzonesimulatedeath | Simuliert einen Tod, und listet die Schritte auf, welches das Plugin macht.
     - /deathzonedelete <DeathzoneName> | Löscht die Deathzone.
-    - Man kann für deathzone spezifisische Potioneffekts einfügen. Sollte man außerhalb der Deathzone sterben, so bekommt man den 
-      generellen effekt von der config.yml
+    - /deathzonemode | Toggelbefehl um die zwei punkte der deathzone zu setzten.
+    - /deathzoneinfo
+    - /deathzonesetname
+    - /deathzonesetcategory
+    - /deathzonesetpriority
+    - /deathzonesetdeathzonepath
 - TodesAblaufschema in der Config pro Server oder pro Welt.
   - Hierbei wird pro Welt ein Schema mit Enums der Mechaniken gemacht. Diese geben an, in welcher Reihenfolge 
     die Mechaniken greifen sollen. Bspw. Zuerst SavePoints(Welcher SavePointName), Respawn, BedSpawn, FristSpawn.

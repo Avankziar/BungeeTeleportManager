@@ -72,7 +72,7 @@ public class FirstSpawnHelper
 				else cooldown.put(player, System.currentTimeMillis()+1000L*3);
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.RequestInProgress")));
 				plugin.getUtility().givesEffect(player, Mechanics.FIRSTSPAWN, true, true);
-				new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, fs, player.getName(), player.getUniqueId().toString());
+				new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, fs);
 			}
 		}.runTaskAsynchronously(plugin);
 	}

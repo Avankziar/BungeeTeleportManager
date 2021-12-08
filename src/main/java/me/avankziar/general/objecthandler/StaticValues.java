@@ -52,6 +52,11 @@ public class StaticValues
 		RANDOMTELEPORT_TOSPIGOT = "btm:randomteleporttospigot",
 		RANDOMTELEPORT_PLAYERTOPOSITION = "randomteleport-playertoposition",
 		
+		//WARP Sending
+		RESPAWN_TOBUNGEE = "btm:respawntobungee",
+		RESPAWN_TOSPIGOT = "btm:respawntospigot",
+		RESPAWN_PLAYERTOPOSITION = "respawn-playertoposition",
+		
 		//SavePoint Sending
 		SAVEPOINT_TOBUNGEE = "btm:savepointtobungee",
 		SAVEPOINT_TOSPIGOT = "btm:savepointtospigot",

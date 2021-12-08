@@ -2,6 +2,8 @@ package main.java.me.avankziar.spigot.btm.database;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.LinkedHashMap;
@@ -9,11 +11,10 @@ import java.util.List;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 
 import main.java.me.avankziar.general.database.Language;
-import main.java.me.avankziar.general.database.YamlManager;
 import main.java.me.avankziar.general.database.Language.ISO639_2B;
+import main.java.me.avankziar.general.database.YamlManager;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 
 public class YamlHandler
@@ -29,6 +30,8 @@ public class YamlHandler
 	private YamlConfiguration scmdc = new YamlConfiguration();
 	private File permissionlevelconfig = null;
 	private YamlConfiguration plc = new YamlConfiguration();
+	private File respawnconfig = null;
+	private YamlConfiguration rsc = new YamlConfiguration();
 	private File forbiddenconfig = null;
 	private YamlConfiguration fbc = new YamlConfiguration();
 	private File randomteleportconfig = null;
@@ -64,6 +67,11 @@ public class YamlHandler
 	public YamlConfiguration getPermLevel()
 	{
 		return plc;
+	}
+	
+	public YamlConfiguration getRespawn()
+	{
+		return rsc;
 	}
 	
 	public YamlConfiguration getForbidden()
@@ -116,21 +124,22 @@ public class YamlHandler
 		if(!config.exists()) 
 		{
 			BungeeTeleportManager.log.info("Create config.yml...");
-			try
+			try(InputStream in = plugin.getResource("default.yml"))
 			{
 				//Erstellung einer "leere" config.yml
-				FileUtils.copyToFile(plugin.getResource("default.yml"), config);
+				//FileUtils.copyToFile(plugin.getResource("default.yml"), config);
+				Files.copy(in, config.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
 		//Laden der config.yml
-		if(!loadYamlTask(config, cfg))
-		{
-			return false;
-		}
-		
+		cfg = loadYamlTask(config, cfg);
+        if(cfg == null)
+        {
+        	return false;
+        }
 		//Niederschreiben aller Werte für die Datei
 		writeFile(config, cfg, plugin.getYamlManager().getConfigSpigotKey());
 		
@@ -140,100 +149,126 @@ public class YamlHandler
 		if(!commands.exists()) 
 		{
 			BungeeTeleportManager.log.info("Create commands.yml...");
-			try
+			try(InputStream in = plugin.getResource("default.yml"))
 			{
 				//Erstellung einer "leere" config.yml
-				FileUtils.copyToFile(plugin.getResource("default.yml"), commands);
+				Files.copy(in, commands.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
 		
-		if(!loadYamlTask(commands, com))
-		{
-			return false;
-		}
+		com = loadYamlTask(commands, com);
+        if(com == null)
+        {
+        	return false;
+        }
 		writeFile(commands, com, plugin.getYamlManager().getCommandsKey());
 		
 		spawncmdconfig = new File(plugin.getDataFolder(), "config_spawncommands.yml");
 		if(!spawncmdconfig.exists()) 
 		{
 			BungeeTeleportManager.log.info("Create config_spawncommands.yml...");
-			try
+			try(InputStream in = plugin.getResource("default.yml"))
 			{
 				//Erstellung einer "leere" config.yml
-				FileUtils.copyToFile(plugin.getResource("default.yml"), spawncmdconfig);
+				Files.copy(in, spawncmdconfig.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
 		
-		if(!loadYamlTask(spawncmdconfig, scmdc))
-		{
-			return false;
-		}
+		scmdc = loadYamlTask(spawncmdconfig, scmdc);
+        if(scmdc == null)
+        {
+        	return false;
+        }
 		writeFile(spawncmdconfig, scmdc, plugin.getYamlManager().getConfigSpawnCmdsKey());
 		
 		permissionlevelconfig = new File(plugin.getDataFolder(), "config_permissionlevel.yml");
 		if(!permissionlevelconfig.exists()) 
 		{
 			BungeeTeleportManager.log.info("Create config_permissionlevel.yml...");
-			try
+			try(InputStream in = plugin.getResource("default.yml"))
 			{
 				//Erstellung einer "leere" config.yml
-				FileUtils.copyToFile(plugin.getResource("default.yml"), permissionlevelconfig);
+				Files.copy(in, permissionlevelconfig.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
 		
-		if(!loadYamlTask(permissionlevelconfig, plc))
-		{
-			return false;
-		}
+		plc = loadYamlTask(permissionlevelconfig, plc);
+        if(plc == null)
+        {
+        	return false;
+        }
 		writeFile(permissionlevelconfig, plc, plugin.getYamlManager().getConfigPermissionLevelKey());
+		
+		respawnconfig = new File(plugin.getDataFolder(), "config_respawn.yml");
+		if(!respawnconfig.exists()) 
+		{
+			BungeeTeleportManager.log.info("Create config_respawn.yml...");
+			try(InputStream in = plugin.getResource("default.yml"))
+			{
+				//Erstellung einer "leere" config.yml
+				Files.copy(in, respawnconfig.toPath());
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		
+		rsc = loadYamlTask(respawnconfig, rsc);
+        if(rsc == null)
+        {
+        	return false;
+        }
+		writeFile(respawnconfig, rsc, plugin.getYamlManager().getConfigRespawnKey());
 		
 		forbiddenconfig = new File(plugin.getDataFolder(), "config_forbiddenlist.yml");
 		if(!forbiddenconfig.exists()) 
 		{
 			BungeeTeleportManager.log.info("Create config_forbiddenlist.yml...");
-			try
+			try(InputStream in = plugin.getResource("default.yml"))
 			{
 				//Erstellung einer "leere" config.yml
-				FileUtils.copyToFile(plugin.getResource("default.yml"), forbiddenconfig);
+				Files.copy(in, forbiddenconfig.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
 		
-		if(!loadYamlTask(forbiddenconfig, fbc))
-		{
-			return false;
-		}
+		fbc = loadYamlTask(forbiddenconfig, fbc);
+        if(fbc == null)
+        {
+        	return false;
+        }
 		writeFile(forbiddenconfig, fbc, plugin.getYamlManager().getForbiddenListSpigotKey());
 		
 		randomteleportconfig = new File(plugin.getDataFolder(), "randomteleports.yml");
 		if(!randomteleportconfig.exists()) 
 		{
 			BungeeTeleportManager.log.info("Create randomteleports.yml...");
-			try
+			try(InputStream in = plugin.getResource("default.yml"))
 			{
 				//Erstellung einer "leere" config.yml
-				FileUtils.copyToFile(plugin.getResource("default.yml"), randomteleportconfig);
+				Files.copy(in, randomteleportconfig.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
 		
-		if(!loadYamlTask(randomteleportconfig, rtpc))
-		{
-			return false;
-		}
+		rtpc = loadYamlTask(randomteleportconfig, rtpc);
+        if(rtpc == null)
+        {
+        	return false;
+        }
 		writeFile(randomteleportconfig, rtpc, plugin.getYamlManager().getRTPKey());
 		return true;
 	}
@@ -273,19 +308,20 @@ public class YamlHandler
 		if(!language.exists()) 
 		{
 			BungeeTeleportManager.log.info("Create %lang%.yml...".replace("%lang%", languageString));
-			try
+			try(InputStream in = plugin.getResource("default.yml"))
 			{
-				FileUtils.copyToFile(plugin.getResource("default.yml"), language);
+				Files.copy(in, language.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
 		//Laden der Datei
-		if(!loadYamlTask(language, lang))
-		{
-			return false;
-		}
+		lang = loadYamlTask(language, lang);
+        if(lang == null)
+        {
+        	return false;
+        }
 		//Niederschreiben aller Werte in die Datei
 		writeFile(language, lang, plugin.getYamlManager().getLanguageKey());
 		
@@ -293,25 +329,26 @@ public class YamlHandler
 		if(!clanguage.exists()) 
 		{
 			BungeeTeleportManager.log.info("Create %lang%.yml...".replace("%lang%", "custom_"+languageString));
-			try
+			try(InputStream in = plugin.getResource("default.yml"))
 			{
-				FileUtils.copyToFile(plugin.getResource("default.yml"), clanguage);
+				Files.copy(in, clanguage.toPath());
 			} catch (IOException e)
 			{
 				e.printStackTrace();
 			}
 		}
 		//Laden der Datei
-		if(!loadYamlTask(clanguage, clang))
-		{
-			return false;
-		}
+		clang = loadYamlTask(clanguage, clang);
+        if(clang == null)
+        {
+        	return false;
+        }
 		//Niederschreiben aller Werte in die Datei
 		writeFile(clanguage, clang, plugin.getYamlManager().getCustomLanguageKey());
 		return true;
 	}
 	
-	private boolean loadYamlTask(File file, YamlConfiguration yaml)
+	private YamlConfiguration loadYamlTask(File file, YamlConfiguration yaml)
 	{
 		try 
 		{
@@ -322,9 +359,8 @@ public class YamlHandler
 					"Could not load the %file% file! You need to regenerate the %file%! Error: ".replace("%file%", file.getName())
 					+ e.getMessage());
 			e.printStackTrace();
-			return false;
 		}
-		return true;
+		return yaml;
 	}
 	
 	private boolean writeFile(File file, YamlConfiguration yml, LinkedHashMap<String, Language> keyMap) throws IOException

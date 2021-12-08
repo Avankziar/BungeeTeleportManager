@@ -9,6 +9,14 @@ public class KeyHandler
 	public static String ENTITYTRANSPORT = "ENTITYTRANSPORT";
 	public static String ENTITYTRANSPORT_SETACCESS = "ENTITYTRANSPORT_SETACCESS";
 	
+	public static String DEATHZONE_CREATE = "DEATHZONE_CREATE";
+	public static String DEATHZONE_REMOVE = "DEATHZONE_REMOVE";
+	public static String DEATHZONE_LIST = "DEATHZONE_LIST";
+	public static String DEATHZONE_SETNAME = "DEATHZONE_SETNAME";
+	public static String DEATHZONE_SETCATEGORY = "DEATHZONE_SETCATEGORY";
+	public static String DEATHZONE_SETPRIORITY = "DEATHZONE_SETPRIORITY";
+	public static String DEATHZONE_SETDEATHZONEPATH = "DEATHZONE_SETDEATHZONEPATH";
+	
 	public static String FIRSTSPAWN = "FIRSTSPAWN";
 	public static String FIRSTSPAWN_REMOVE = "FIRSTSPAWN_REMOVE";
 	
@@ -48,6 +56,11 @@ public class KeyHandler
 	public static String PORTAL_SETACCESSTYPE = "PORTAL_SETACCESSTYPE";
 	
 	public static String RANDOMTELEPORT = "RANDOMTELEPORT";
+	
+	public static String RESPAWN = "RESPAWN";
+	public static String RESPAWN_CREATE = "RESPAWN_CREATE";
+	public static String RESPAWN_REMOVE = "RESPAWN_REMOVE";
+	public static String RESPAWN_LIST = "RESPAWN_LIST";
 	
 	public static String SAVEPOINT = "SAVEPOINT";
 	public static String SAVEPOINTS = "SAVEPOINTS";
