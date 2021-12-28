@@ -1,0 +1,154 @@
+Build 6-0-16+
+- MysqlConnection Treiber aktualisiert.
+- Wenn die Welt nicht vorhanden ist, wird abgefangen.
+- /warps wird die Kategorie am ende nun bei der nächsten Seite mitübernommen.
+- Mysql Tabellen Namen wurden alle aus der config genommen. Nur noch default namen sind akzeptiert.
+- Config werte wurden um- und zusammengeordnet, sowie mehere Config-Dateien erstellt.
+- TPA und TP befehle nun für das Enablen getrennt.
+- ForbiddenList
+  - Interner umbau vom YamlHandler & YamlManager
+  - Forbiddenlist in eine seperate Datei bauen.
+  - Bestimmte Teleportarten in bestimmten Welten auch nicht auszuführen machen. Aka von Welt A sich nicht Wegwarpen können.
+  - CustomTeleport Back erlauben, eventuell aktuelle Events depreacten und neue Events schreib, wo man das einstellen kann,
+      ob back übernommen werden soll, oder nicht.
+- "home_priority" als neue Wert in Back-MysqlTabelle hinzugefügt. 
+    Dieses setzt das Home ein, welches priorisiert wird, falls "/home" ohne Argument eingesetzt wird.
+  - /sethome <Homename> [Priorisiert(boolean)]
+  - /homeprio <Homename> | Einen vorher priorisierten Home, wird entpriorisiert. Andere Spieler Homes können NICHT prio werden. Auch keine bypass.
+- Warps sind mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Portal ansteuern zu können. Gegenteil auch möglich.
+   Aka OnlyPortal(ONLY), NotPortal(FORBIDDEN), Keine(IRRELEVANT)
+  - /warpsetportalaccess <Portalname> <Wert> hinzugefügt
+- Falls schon vorhanden, sollten folgende Mysql Tabellen verändert werden:
+  - Back Tabelle 3: home_priority >ALTER TABLE `btmBack` ADD `home_priority` TEXT NULL DEFAULT NULL AFTER `tp_toggle`;<
+  - Warp Tabelle 5: portalaccess  >ALTER TABLE `btmWarps` ADD `portalaccess` TEXT NULL DEFAULT NULL AFTER `category`;<
+                                  >UPDATE `btmWarps` SET `portalaccess`='IRRELEVANT' WHERE 1;<
+- NullPointExeption bei /warpsetowner <Spielername welcher nicht existiert>, behoben.
+- "Home existiert nicht-Fehler" bei /homes <Zahl> <Spielername>, behoben.
+- NullPointExeption bei /warplist behoben.
+- PlayerTeleportToPlayerEvent ist nun deprecated. Bitte nutzt nun das gleichnamige Event, im anderen Package.
+- Warp, Home, SavePoint sowie RTP eine SafeTeleport-Mechanic. Einstellbar in der Config.
+  - RTP hat eine Biomblacklisteinstellung.
+  - RTP Option für atHighestBlock.
+- /tpaccept <Spielername> ist nun /tpaccept [Spielername]
+- Explanation Pfad in der commands.yml wurde entfernt.
+- "Can." in "EnableCommands." umbenannt.
+- /warpsearch <Seitenzahl> <xxxx:Value>; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
+    Sollte hinter dem ":" was stehen, wird genau danach gesucht. Falls der eintrag fehlt, wird nach allen gesucht,
+    welche einen server haben. Weitere Argumente sind "owner", "world", "member", "category".
+- /warping <Warpname> <Spielername> [Optionen...] hinzugefügt. Admin/Console Befehl, um Spieler zu teleportieren. Die Optionen ermöglichen,
+    die Funktionen (portalaccess, blacklist, hastoomany, cost, permission und hidden) zu berücksichtigen. Bedeutet, ein /warping ohne
+    irgendwelche Optionsangaben ignoriert alle zuvorgenannten Abfragen.
+- Warps, welche nur durch portale angesteuert werden können, werden nicht mehr im Tab vorgeschlagen.
+- Warps, welche nur durch portale angesteuert werden können, wird der teleport dahin untersagt.
+- Maximalbeträge für Warps an Warpkosten einstellbar machen.
+- Bei entstandenen Kosten wo man teleports Used (Warp, home, Tpa, RTP, back...) sollte eine nachricht ausgegeben werden, was man gezahlt hat.
+- RandomTeleport
+  - Per Config auch "Spezifische" Rtps erstellt und angesteuert werden können per Namen.
+- /warpsetpassword => das Passwort darf nun kein existierender Spielername sein.
+- /warpremove => hat nun Abfragen, dass nur der Eigentümer und der Admin den Warp entfernen darf.
+- PermissionSystem eingebaut, die steuern ob man die Mechanik intern nur auf dem Server warpen kann, crosscluster oder proxy.
+  - System funktioniert nur Warp. Daher momentan "btm.permlevel.global.*" allen Spieler geben für Warp.
+  - Siehe PermissionLevel.Global|PermissionLevel.ServerExtern|PermissionLevel.ServerCluster etc. in der commands.yml
+- /warpsearch %arg% replacerfehler
+- CustomEvents hinzugefügt auch innerhalb der respektiven Befehle:
+  - BasePlayerTeleportToPlayerPreTeleportEvent
+  - BasePlayerToPositionPreTeleportEvent
+  - TpAPreRequestEvent
+  - TpPreTeleportEvent
+  - HomePreTeleportEvent
+  - WarpPreTeleportEvent
+- AccessPermission Submechanic hinzugefügt. Die Submechanik ist für externen Zugriff gedacht um bestimmte Mechaniken von Außen zu sperren.
+- AccessPermission Mysql und HashMap hinzugefügt.
+- AccessPermissionHandler added.
+- config_permissionlevel hinzugefügt.
+- Home, Warps und Portal count perm kummulativ per Configboolean gestalten.
+- EntityTransport
+  - Jedes Entity, außer Spieler, benötigen Permission(Basispermission + Entitytype), damit diese transportiert werden können.
+  - Entitys, welche benannt wurden, können nur noch vom Eigentümer/Umbenenner teleportiert werden. Umbenennungen von anderen Spieler im nachhinein geblock.
+  - Entitys die einen CustomNamen haben DÜRFEN NICHT tp werden.
+  - Zum Transport, entweder Entity an eine Leine nehmen(prio) oder anschauen.
+  - /entitytransport <x:Name> | Z.B. <w:Spawn> (Owner/Mitglieg sein) o. <h:Lager> o. <pl:Avankziar>
+  - Sollte man Entitys zu Spieler teleportieren wollen, muss vorher im MYSQL vom Zielspieler dieser den anderen Spieler freigeben.
+  - /entitytransportsetaccess <Spielername> | Erlaubt, das der angegebene Spieler Entityts zu einem selber transportieren kann.
+  - /entitytransportaccesslist [Seitenzahl] [Spielernamen] | Zeigt alle Spieler an, welche einen Teleportzugriff für Entity haben, sowie
+      werden alle Spieler angezeigt, wo der Spieler Zugriff hat.
+  - /entitytransportsetowner <Spielername> | Das angeschaute entity wird dem neuen Eigentümer überschrieben.
+  - TicketSystem eingebaut, wo man sich Ticket kaufen kann um das Entity zu transportieren.
+  - /entitytransportbuytickets <Zahl> [Spielername] [mustpay Boolean] | Kauft die x Anzahl an benutzbaren EntityTransport. Muss Console fähig sein.
+      mustpay gibt an ob, wenn Admin oder Console es für andere Spieler ausführt, der Spieler das zahlen muss. Sonst ist es gratis.
+  - Forbiddenlist Entitytransport hinzufügen, mit EntityTypes einstellbar.
+  - Custom Event schreiben, was den externen Teleport von Entity gewährt. Dabei kann Eigentumsrechte, ForbiddenList und Anzahl benutzbarer EntityTransporte berücksicht werden.
+  - Config Wert einbauen, welcher es erlaubt, per Mysql Tracking, die Anzahl an EntityTransport zu begrenzen.
+  - Entitys haben verschiedene gegenwerte an tickets. In der Config einstellbar.
+- FirstSpawn
+  - Sind für alle Neuen Spieler.
+  - Man kann nur einen Firstspawn pro Server gemacht werden in Mysql
+  - /firstspawn [name] | Tp zu Server FirstSpawn.
+  - /firstspawnset <name> | Setzt den FirstSpawn für den Server.
+  - /fristspawninfo | Info zum allen Firstspawns im Netzwerk mit tp.
+  - /firstspawnremove [name] | Löscht Server FirstSpawn.
+  - Wenn der Spieler zum erstem mal Joint (Netzwerk, nicht pro Server),
+      soll eine Liste von Befehlen für diesen (Console) und mit diesem (als er selbst theoretisch)
+      ausgeführt werden einmalig. Beide Listen in der Config (Spigot & BungeeCord) einstellbar machen. Replacer (%player%) für Spieler in Befehlen einbauen.
+- Respawn
+    Ist ein SpielerUNspezifischer Speicherpunkt für nach dem Tode.
+  - Einen Config Wert für respawn am nächsten, entferntesten oder Default Respawn einstellen.
+  - /respawn <RespawnName> | Tp zum Respawn 
+  - /respawncreate <RespawnName> [priority] | Erstellt Respawn
+  - /respawnlist [seitenzahl] | Liste aller Respawns, mit Tp click
+  - /respawnremove <RespawnName> | Löscht Respawn
+- Portal
+  - TargetType: COMMAND, LOCATION, BACK, DEATHBACK, FIRSTSPAWN, RESPAWN, HOME, PORTAL, RANDOMTELEPORT, SAVEPOINT, WARP
+    - BACK, DEATHBACK brauchen keine Zusatzinfo.
+    - HOME, RANDOMTELEPORT, SAVEPOINT können ein Zusatzinfo haben, brauchen aber keine.
+    - COMMAND, LOCATION, FIRSTSPAWN, RESPAWN, PORTAL, WARP brauchen eine Zusatzinfo.
+  - /portalmode | Toggle um die 2 Punkte des Portals zu setzen
+  - /portalcreate <Portalname> | Erstellt das Portal
+  - /portalsetowner <Portalname> <Spielername> | Überträgt das Eigentumsrecht des Portals. (null ist eine option für keinen Owner)
+  - /portalsetpermission <Portalname> <Permission> | Setzt eine Permission auf das Portal.
+  - /portaladdmember|removemember <Portalname> <Spielername> | Entfernt oder fügt einen Spieler der Mitgliederliste hinzu.
+  - /portalsetprice <Portalname> <Geldbetrag> | Setzt einen Nutzungspreis auf das Portal.
+  - /portalsetdefaultcooldown <Portalname> <x:Zahl...> | Z.B. <y:1> <M:2> <d:5> <H:12> wären 1 Jahr 2 Monate 5 Tage und 12 Stunden
+  - /portalsettarget <Portalname> <Targettype> [Zusatzinfo] | Targettypen siehe oben, Zusatzinfo, falls benötigt.
+  - /portaladdblacklist|removeblacklist <Portalname> <Spielername> | Entfernt oder fügt den Spieler der Blacklist hinzu. Bypass
+  - /portalsetpostteleportmessage <Portalname> <Nachricht...> | Setzt eine Nachricht, welche nach dem Teleport durch das Portal angezeigt wird.
+  - /portalsetaccessdenialmessage <Portalname> <Nachricht...> | Setzt eine Nachricht, welche angezeigt wird, wenn man das Portal nicht benutzten darf.
+  - /portalsearch <Seitenzahl> <xxxx:Value>; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
+      Sollte hinter dem ":" was stehen, wird genau danach gesucht. Falls der eintrag fehlt, wird nach allen gesucht,
+      welche einen server haben. Weitere Argumente sind "owner", "world", "member", "category".
+  - /portalinfo <Portalname> | Alle infos zum Portal
+  - /portallist [seitenzahl] [kategorie] | Zeigt alle Portale an.
+  - /portals [seitenzahl] [spielername] [kategorie] | Zeigt alle deiner Portal an.
+  - /portalremove <Portalname> | Löscht das Portal.
+  - /portalsetpoints <Portalname> | Versetzt die zwei Punkte des Portals zu den neuen Punkten.
+  - /portalsetownexitpoint <Portalname> | Erstellt den Point of Exit des angegebenen Portals
+  - /portalsettriggerblock <Portalname> [TriggerBlock, ohne Angabe AIR] [true:zum air in triggerblock umwandeln, sonst selber füllen.]
+  - /portalsetsound <Portalname> <Sound> | Setzt einen PortalSound, welcher abgespielt wird, wenn man das Portal nutzt.
+  - /portalsetprotectionradius <Portalname> <protectionradius> | Setzt einen Schutzradius, wo kein Wasser/Lava etc sich nicht ändern. 
+  - /portalsetthrowback <Portalname> <Throwback> | Setzt, wie stark ein Spieler zurückgeworfen werden soll, wenn er das Portal nicht nutzten darf.
+  - /portalsetcategory <Portalname> <Kategorie> | Setzt eine Kategorie für das Portal.
+  - /portalsetaccesstype <portal> &f| Toggelt ob ein Portal öffentlich oder privat ist. (Privat dürfen nur der Eigentümer und Mitglieder das Portal benutzten)
+  - /portalsetdefaultcooldown <portal> <Zeitkürzel:value> &f| Setzt den Default Cooldown des Portal. (Config Cooldown ist priorisiert)
+  - /portalitem | Gibt ein Item, welches einen Netherportalblock rotieren lässt.
+  - PermissionLevel für Portale hinzufügen.
+  - Portal erstellung kann geld kosten.
+- Deathzone:
+    Eine Todeszone ist ein Bereich, eine Welt oder ein Server, welche als Bedingung für eine Tod zählt.
+    Sollte ein Spieler innerhalb dieses Bereichs sterben, so wird der Respawn genommen, welcher Verlinkt ist.
+    Sollten sich Todeszonen überschneiden, wird die die höhere Priorität genommen. Bei gleicher Prio, ist es Zufall.
+    - /deathzonecreate <DeathzoneName> <Priorität> <deathzonepfad> | Erstellt eine Deathzone.
+    - /deathzonelist [Seite] [[Katgeorie] [Subkategorie] [Server] [Welt]] | Listet alle Deathzones auf.
+    - /deathzonesimulatedeath | Simuliert einen Tod, und listet die Schritte auf, welches das Plugin macht.
+    - /deathzonedelete <DeathzoneName> | Löscht die Deathzone.
+    - /deathzonemode | Toggelbefehl um die zwei punkte der deathzone zu setzten.
+    - /deathzoneinfo <DeathzoneName> | zeigt alle Infos zur Deathzone an.
+    - /deathzonesetname <DeathzoneName> <Neuer Name> | Setzt einen neuen Namen für die Deathzone.
+    - /deathzonesetcategory <DeathzoneName> <Kategorie> <Subkategorie> | Setzt die Kategorie und Subkategorie für die Deathzone.
+    - /deathzonesetpriority <DeathzoneName> <Priorität> | Setzt die Priorität der Deathzone.
+    - /deathzonesetdeathzonepath <DeathzoneName> <deathzonepfad> | Setzt den Config-Deathzonepfad neu.
+- TodesAblaufschema in der Config pro Server oder pro Welt.
+  - Hierbei wird pro Welt ein Schema mit Enums der Mechaniken gemacht. Diese geben an, in welcher Reihenfolge 
+    die Mechaniken greifen sollen. Bspw. Zuerst SavePoints(Welcher SavePointName), Respawn, BedSpawn, FristSpawn.
+    Hierbei gilt natürlich, dass alle Mechaniken einen Datensatz für den Spieler in diesem Server und oder Welt haben.
+- InterfaceHub
+  - Teleport-Interface implementier als Provider.

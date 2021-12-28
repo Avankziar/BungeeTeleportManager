@@ -41,10 +41,16 @@ public class StaticValues
 		HOME_TOSPIGOT = "btm:hometospigot",
 		HOME_PLAYERTOPOSITION = "home-playertoposition",
 		
-		//WARP Sending
+		//IFH
+		IFH_TOBUNGEE = "btm:ifhtobungee",
+		IFH_TOSPIGOT = "btm:ifhtospigot",
+		IFH_PLAYERTOPOSITION = "ifh-playertoposition",
+		
+		//PORTAL Sending
 		PORTAL_TOBUNGEE = "btm:portaltobungee",
 		PORTAL_TOSPIGOT = "btm:portaltospigot",
 		PORTAL_PLAYERTOPOSITION = "portal-playertoposition",
+		PORTAL_SOUND = "portal-sound",
 		PORTAL_UPDATE = "portal-update",
 		
 		//RandomTeleport
@@ -74,6 +80,7 @@ public class StaticValues
 		TP_DENY = "tp-deny",
 		TP_CANCEL = "tp-cancel",
 		TP_FORCE = "tp-force",
+		TP_SILENT = "tp-silent",
 		TP_ALL = "tp-all",
 		TP_POS = "tp-pos",
 		TP_SENDWORLD = "tp-sendworld",
@@ -81,6 +88,7 @@ public class StaticValues
 		TP_OCCUPIED = "tp-occupied",
 		TP_SERVERQUITMESSAGE = "tp-serverquitmessage",
 		TP_PLAYERTOPLAYER = "tp-playertoplayer",
+		TP_SILENTPLAYERTOPLAYER = "tp-silentplayertoplayer",
 		TP_PLAYERTOPOSITION = "tp-playertoposition",
 		TP_FORBIDDENSERVER = "tp-forbiddenserver",
 		TP_FORBIDDENWORLD = "tp-forbiddenworld",
@@ -106,6 +114,7 @@ public class StaticValues
 		BYPASS_FORBIDDEN_USE = "btm.bypass.forbidden.use.",
 		
 		//EntityTransport
+		BYPASS_ENTITYTRANSPORT = "btm.bypass.entitytransport.admin",
 		BYPASS_ENTITYTRANSPORT_ACCESSLIST = "btm.bypass.entitytransport.accesslist",
 		BYPASS_ENTITYTRANSPORT_SERIALIZATION = "btm.bypass.entitytransport.serialization.",
 		
@@ -122,6 +131,7 @@ public class StaticValues
 		
 		//Portal
 		PERM_BYPASS_PORTAL = "btm.bypass.portal.admin",
+		PERM_BYPASS_PORTALPLACER = "btm.bypass.portal.placer",
 		PERM_PORTALS_OTHER = "btm.bypass.portal.portals.other",
 		PERM_BYPASS_PORTAL_BLACKLIST = "btm.bypass.portal.blacklist",
 		PERM_BYPASS_PORTAL_TOOMANY = "btm.bypass.portal.toomany",
@@ -137,8 +147,6 @@ public class StaticValues
 		//Teleport
 		PERM_BYPASS_TELEPORT_TPATOGGLE = "btm.bypass.tp.tpatoggle",
 		PERM_BYPASS_TELEPORT_SILENT = "btm.bypass.tp.silent",
-		
-		
 		
 		//Warp
 		PERM_WARP_OTHER = "btm.bypass.warp.warp.other",

@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import main.java.me.avankziar.general.object.AccessPermission;
 import main.java.me.avankziar.general.object.PortalCooldown;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
@@ -15,7 +14,7 @@ public interface Table11
 {
 	default boolean createXI(BungeeTeleportManager plugin, Object object) 
 	{
-		if(!(object instanceof AccessPermission))
+		if(!(object instanceof PortalCooldown))
 		{
 			return false;
 		}
@@ -27,7 +26,7 @@ public interface Table11
 			{
 				String sql = "INSERT INTO `" + MysqlHandler.Type.PORTALCOOLDOWN.getValue() 
 						+ "`(`portalid`, `player_uuid`, `cooldownuntil`) " 
-						+ "VALUES(?, ?, ?, ?)";
+						+ "VALUES(?, ?, ?)";
 				preparedStatement = conn.prepareStatement(sql);
 				preparedStatement.setInt(1, h.getPortalID());
 			    preparedStatement.setString(2, h.getPlayerUUID());
@@ -58,7 +57,7 @@ public interface Table11
 	
 	default boolean updateDataXI(BungeeTeleportManager plugin, Object object, String whereColumn, Object... whereObject) 
 	{
-		if(!(object instanceof AccessPermission))
+		if(!(object instanceof PortalCooldown))
 		{
 			return false;
 		}

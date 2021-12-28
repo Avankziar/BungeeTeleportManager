@@ -75,18 +75,22 @@ public class EntityTransportHandler
 	
 	public static boolean canSerialize(Player player, Entity entity)
 	{
-		if(player.hasPermission(StaticValues.BYPASS_ENTITYTRANSPORT_SERIALIZATION+entity.getType().toString()))
+		if(player.hasPermission(StaticValues.BYPASS_ENTITYTRANSPORT_SERIALIZATION+entity.getType().toString().toLowerCase()))
 		{
 			return true;
 		}
 		return false;
 	}
 	
-	public static boolean hasOwner(Player player, Entity entity)
+	public static boolean hasOwner(Player player, LivingEntity entity)
 	{
 		PersistentDataContainer pdc = entity.getPersistentDataContainer();
 		NamespacedKey nowner = new NamespacedKey(BungeeTeleportManager.getPlugin(), EntityTransportHelper.OWNER);
 		if(pdc.has(nowner, PersistentDataType.STRING))
+		{
+			return true;
+		}
+		if(entity.getCustomName() != null)
 		{
 			return true;
 		}
@@ -196,15 +200,17 @@ public class EntityTransportHandler
 	public static void addingTickets(CommandSender sender, String targetuuid, String targetname, int amount, boolean mustpay)
 	{
 		BungeeTeleportManager plugin = BungeeTeleportManager.getPlugin();
+		EntityTransport.Ticket ticket = null;
 		if(!plugin.getMysqlHandler()
 				.exist(MysqlHandler.Type.ENTITYTRANSPORT_TICKET, "`player_uuid` = ?", targetuuid))
 		{
-			plugin.getMysqlHandler()
-				.create(MysqlHandler.Type.ENTITYTRANSPORT_TICKET, 
-					new EntityTransport(). new Ticket(targetuuid, 0, 0, 0.0));
+			ticket = new EntityTransport(). new Ticket(targetuuid, 0, 0, 0.0);
+			plugin.getMysqlHandler().create(MysqlHandler.Type.ENTITYTRANSPORT_TICKET, ticket);
+		} else
+		{
+			ticket = (EntityTransport.Ticket) plugin.getMysqlHandler()
+					.getData(MysqlHandler.Type.ENTITYTRANSPORT_TICKET, "`player_uuid` = ?", targetuuid);
 		}
-		EntityTransport.Ticket ticket = (EntityTransport.Ticket) plugin.getMysqlHandler()
-				.getData(MysqlHandler.Type.ENTITYTRANSPORT_TICKET, "`player_uuid` = ?", targetuuid);
 		double sum = new ConfigHandler(plugin).getCostUse(Mechanics.ENTITYTRANSPORT)*(double) amount;
 		boolean hasPerm = true;
 		Player player = Bukkit.getPlayer(UUID.fromString(targetuuid));

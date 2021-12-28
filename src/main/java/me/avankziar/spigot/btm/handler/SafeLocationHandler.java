@@ -115,8 +115,8 @@ public class SafeLocationHandler
 		if(o instanceof Home)
 		{
 			final Home home = (Home) pending.get(key);
-			new HomeHandler(plugin).sendPlayerToHomePost(other, home, playername, uuid);
-		} else if(o instanceof Home)
+			new HomeHandler(plugin).sendPlayerToHomePost(other, home);
+		} else if(o instanceof SavePoint)
 		{
 			final SavePoint sp = (SavePoint) pending.get(key);
 			plugin.getSavePointHandler().sendPlayerToSavePointPost(other, sp, playername, uuid, false);

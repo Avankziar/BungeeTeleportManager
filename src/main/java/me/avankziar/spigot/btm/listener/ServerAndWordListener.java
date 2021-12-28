@@ -23,7 +23,7 @@ public class ServerAndWordListener implements Listener
 	{
 		Player player = event.getPlayer();
 		plugin.getTeleportHandler().sendWorldName(player);
-		if(player.hasPlayedBefore())
+		/*if(player.hasPlayedBefore())
 		{
 			if(player.getPlayerTime() < 1000L*2)
 			{
@@ -32,8 +32,9 @@ public class ServerAndWordListener implements Listener
 		} else
 		{
 			plugin.getUtility().setTpaPlayersTabCompleter();
-		}
+		}*/ //FIXME
 		plugin.getUtility().setHomesTabCompleter(player);
+		plugin.getUtility().setPortalsTabCompleter(player);
 		plugin.getUtility().setRTPTabCompleter(player);
 		plugin.getUtility().setSavePointsTabCompleter(player);
 		plugin.getUtility().setWarpsTabCompleter(player);

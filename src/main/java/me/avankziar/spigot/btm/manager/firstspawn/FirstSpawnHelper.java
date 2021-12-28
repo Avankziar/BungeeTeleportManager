@@ -64,7 +64,7 @@ public class FirstSpawnHelper
 				String fsName = args[0];
 				if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", fsName))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnNotExist")));
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.FirstSpawnNotExist")));
 					return;
 				}
 				FirstSpawn fs = (FirstSpawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", fsName);
@@ -72,7 +72,7 @@ public class FirstSpawnHelper
 				else cooldown.put(player, System.currentTimeMillis()+1000L*3);
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.RequestInProgress")));
 				plugin.getUtility().givesEffect(player, Mechanics.FIRSTSPAWN, true, true);
-				new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, fs);
+				new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, fs, false);
 			}
 		}.runTaskAsynchronously(plugin);
 	}
@@ -147,13 +147,11 @@ public class FirstSpawnHelper
 				.replace("%amount%", String.valueOf(list.size()))));
 		for(FirstSpawn fs : list)
 		{
-			HashMap<String, String> map = new HashMap<>();
-			map.put("%koords%", Utility.getLocationV2(fs.getLocation()));
 			player.spigot().sendMessage(ChatApi.generateTextComponent(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.InfoFirstSpawn")
 					.replace("%value%", fs.getServer())
 					.replace("%location%", Utility.getLocationV2(fs.getLocation()))
-					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.FIRSTSPAWN))
-					.replace("%cmdII%", BTMSettings.settings.getCommands(KeyHandler.FIRSTSPAWN_REMOVE))));
+					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.FIRSTSPAWN).trim())
+					.replace("%cmdII%", BTMSettings.settings.getCommands(KeyHandler.FIRSTSPAWN_REMOVE).trim())));
 		}
 		TabCompletionOne.renewFirstSpawn();
 	}

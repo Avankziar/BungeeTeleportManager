@@ -3,19 +3,22 @@ package main.java.me.avankziar.general.objecthandler;
 public class KeyHandler
 {
 	public static String BTM = "BTM";
+	public static String BTMIMPORT = "BTMIMPORT";
 	
 	public static String BACK = "BACK";
-	
-	public static String ENTITYTRANSPORT = "ENTITYTRANSPORT";
-	public static String ENTITYTRANSPORT_SETACCESS = "ENTITYTRANSPORT_SETACCESS";
 	
 	public static String DEATHZONE_CREATE = "DEATHZONE_CREATE";
 	public static String DEATHZONE_REMOVE = "DEATHZONE_REMOVE";
 	public static String DEATHZONE_LIST = "DEATHZONE_LIST";
+	public static String DEATHZONE_INFO = "DEATHZONE_INFO";
 	public static String DEATHZONE_SETNAME = "DEATHZONE_SETNAME";
 	public static String DEATHZONE_SETCATEGORY = "DEATHZONE_SETCATEGORY";
 	public static String DEATHZONE_SETPRIORITY = "DEATHZONE_SETPRIORITY";
 	public static String DEATHZONE_SETDEATHZONEPATH = "DEATHZONE_SETDEATHZONEPATH";
+	
+	public static String ENTITYTRANSPORT = "ENTITYTRANSPORT";
+	public static String ENTITYTRANSPORT_SETACCESS = "ENTITYTRANSPORT_SETACCESS";
+	public static String ENTITYTRANSPORT_SETOWNER = "ENTITYTRANSPORT_SETOWNER";
 	
 	public static String FIRSTSPAWN = "FIRSTSPAWN";
 	public static String FIRSTSPAWN_REMOVE = "FIRSTSPAWN_REMOVE";
@@ -27,6 +30,7 @@ public class KeyHandler
 	public static String HOME_CREATE = "HOME_CREATE";
 	public static String HOME_DEL = "HOME_DEL";
 	public static String HOME_REMOVE = "HOME_REMOVE";
+	public static String HOME_SETPRIORITY = "HOME_SETPRIORITY";
 	
 	public static String PORTALS = "PORTALS";
 	public static String PORTAL_CREATE = "PORTAL_CREATE";
@@ -48,12 +52,13 @@ public class KeyHandler
 	public static String PORTAL_SETDEFAULTCOOLDOWN = "PORTAL_SETDEFAULTCOOLDOWN";
 	public static String PORTAL_SETTARGET = "PORTAL_SETTARGET";
 	public static String PORTAL_SETTHROWBACK = "PORTAL_SETTHROWBACK";
-	public static String PORTAL_SETPORTALPROTECTION = "PORTAL_SETPORTALPROTECTION";
-	public static String PORTAL_SETPORTALSOUND = "PORTAL_SETPORTALSOUND";
+	public static String PORTAL_SETPROTECTION = "PORTAL_SETPORTALPROTECTION";
 	public static String PORTAL_SETPOSTTELEPORTMSG = "PORTAL_SETPOSTTELEPORTMSG";
 	public static String PORTAL_SETACCESSDENIALMSG = "PORTAL_SETACCESSDENIALMSG";
 	public static String PORTAL_SETSOUND = "PORTAL_SETSOUND";
 	public static String PORTAL_SETACCESSTYPE = "PORTAL_SETACCESSTYPE";
+	public static String PORTAL_SETTRIGGERBLOCK = "PORTAL_SETTRIGGERBLOCK";
+	public static String PORTAL_ITEM = "PORTAL_ITEM";
 	
 	public static String RANDOMTELEPORT = "RANDOMTELEPORT";
 	
@@ -69,6 +74,7 @@ public class KeyHandler
 	public static String TPACCEPT = "TPACCEPT";
 	public static String TPDENY = "TPDENY";
 	public static String TP = "TP";
+	public static String TPSILENT = "TPSILENT";
 	public static String TPHERE = "TPHERE";
 	public static String TPA = "TPA";
 	public static String TPAHERE = "TPAHERE";

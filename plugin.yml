@@ -4,5 +4,5 @@ version: 6
 author: Avankziar
 api-version: 1.18
 description: A Teleport plugin with Back, Deathback, EntityTransport, Homes, SavePoints, RTP, TPA, TP and Warps
-softdepend: [Vault,AdvancedEconomyPlus]
+softdepend: [Vault,AdvancedEconomyPlus,InterfaceHub]
 website: https://www.spigotmc.org/resources/bungeeteleportmanager.80677/

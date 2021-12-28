@@ -75,7 +75,7 @@ public class HomeHelper
 		{
 			exist = true;
 		}
-		if(new HomeHandler(plugin).compareHomeAmount(player, true, exist))
+		if(plugin.getHomeHandler().compareHomeAmount(player, true, exist))
 		{
 			return;
 		}
@@ -269,7 +269,7 @@ public class HomeHelper
 				ConfigHandler cfgh = new ConfigHandler(plugin);
 				Home home = (Home) plugin.getMysqlHandler().getData(MysqlHandler.Type.HOME,
 						"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName);
-				int i = new HomeHandler(plugin).compareHome(player, false);
+				int i = plugin.getHomeHandler().compareHome(player, false);
 				if(i > 0 && !player.hasPermission(StaticValues.PERM_BYPASS_HOME_TOOMANY))
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesToUse")
@@ -335,7 +335,7 @@ public class HomeHelper
 				{
 					return;
 				}
-				new HomeHandler(plugin).sendPlayerToHome(player, home, playername, playeruuid);
+				plugin.getHomeHandler().sendPlayerToHome(player, home, playername, playeruuid);
 				return;
 			}
 		}.runTaskAsynchronously(plugin);
@@ -400,7 +400,7 @@ public class HomeHelper
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameWorld");
 		String infoElse = plugin.getYamlHandler().getLang().getString("CmdHome.ListElse");
-		HomeHandler hh = new HomeHandler(plugin);
+		HomeHandler hh = plugin.getHomeHandler();
 		for(Home home : list)
 		{
 			if(home.getLocation().getWorldName().equals(world))
@@ -513,7 +513,7 @@ public class HomeHelper
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdHome.ListSameWorld");
 		String infoElse = plugin.getYamlHandler().getLang().getString("CmdHome.ListElse");
-		HomeHandler hh = new HomeHandler(plugin);
+		HomeHandler hh = plugin.getHomeHandler();
 		for(Home home : list)
 		{
 			if(home.getLocation().getWorldName().equals(world))

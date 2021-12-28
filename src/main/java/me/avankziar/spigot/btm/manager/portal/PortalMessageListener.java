@@ -11,9 +11,11 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.Mechanics;
+import main.java.me.avankziar.general.object.Portal;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
+import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 
 public class PortalMessageListener implements PluginMessageListener
 {
@@ -44,8 +46,15 @@ public class PortalMessageListener implements PluginMessageListener
                 	double z = in.readDouble();
                 	float yaw = in.readFloat();
                 	float pitch = in.readFloat();
-                	String postTeleportMsg = in.readUTF();
+                	String portalname = in.readUTF();
                 	boolean lava = in.readBoolean();
+                	if(Bukkit.getWorld(worldName) == null)
+					{
+						player.sendMessage(
+								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+										.replace("%world%", worldName)));
+						return;
+					}
                 	new BukkitRunnable()
 					{
             			int i = 0;
@@ -87,12 +96,10 @@ public class PortalMessageListener implements PluginMessageListener
 												}
 											}
 										}.runTask(plugin);
-										
-										if(!postTeleportMsg.isBlank() && !postTeleportMsg.isEmpty())
-										{
-											player.sendMessage(ChatApi.tl(postTeleportMsg));
-										}
-										
+										Portal portal = (Portal) plugin.getMysqlHandler().getData(
+												MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);
+										player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
+										plugin.getPortalHandler().sendPostMessage(portal, player);
 										cancel();
 										return;
 									}

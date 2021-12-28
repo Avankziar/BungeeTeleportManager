@@ -298,6 +298,17 @@ public class TeleportMessageListener implements Listener
         			new Teleport(UUID.fromString(fromUUID), fromName, UUID.fromString(toUUID), toName, Teleport.Type.valueOf(type)),
         			errormessage, delayed);
         	return;
+        } else if(task.equals(StaticValues.TP_SILENT))
+        {
+        	String uuid = in.readUTF();
+        	String playername = in.readUTF();
+        	String otherUUID = in.readUTF();
+        	String otherName = in.readUTF();
+        	String errormsg = in.readUTF();
+        	BackHandler.getBack(in, uuid, playername, Mechanics.TELEPORT);
+        	TeleportHandler th = new TeleportHandler(plugin);
+        	th.preTeleportPlayerToPlayerSilentUse(uuid, playername, otherUUID, otherName, errormsg);
+        	return;
         } else if(task.equals(StaticValues.TP_ALL))
         {
         	String fromName = in.readUTF();

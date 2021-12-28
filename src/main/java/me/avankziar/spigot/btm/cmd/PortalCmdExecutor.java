@@ -57,6 +57,7 @@ public class PortalCmdExecutor implements CommandExecutor
 				commandList.get(cmd.getName()).getPath().equals("portalsettriggerblock") ||
 				commandList.get(cmd.getName()).getPath().equals("portalsetthrowback") ||
 				commandList.get(cmd.getName()).getPath().equals("portalsetprotectionradius") ||
+				commandList.get(cmd.getName()).getPath().equals("portalsetaccesstype") ||
 				commandList.get(cmd.getName()).getPath().equals("portalsetsound") ||
 				commandList.get(cmd.getName()).getPath().equals("portalmode") ||
 				commandList.get(cmd.getName()).getPath().equals("portalitem")
@@ -145,6 +146,9 @@ public class PortalCmdExecutor implements CommandExecutor
 				return true;
 			case "portalsetprotectionradius":
 				plugin.getPortalHelper().portalSetProtectionRadius(player, args);
+				return true;
+			case "portalsetaccesstype":
+				plugin.getPortalHelper().portalSetAccessType(player, args);
 				return true;
 			case "portalsetsound":
 				plugin.getPortalHelper().portalSetSound(player, args);

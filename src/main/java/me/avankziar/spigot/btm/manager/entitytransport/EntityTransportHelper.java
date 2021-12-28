@@ -257,13 +257,33 @@ public class EntityTransportHelper
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
+		int page = 0;
+		if(args.length >= 1)
+		{
+			if(!MatchApi.isInteger(args[0]))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+						.replace("%arg%", args[0])));
+				return;
+			}
+			page = Integer.parseInt(args[0]);
+			if(!MatchApi.isPositivNumber(page))
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+						.replace("%arg%", args[0])));
+				return;
+			}
+			
+		}
+		int start = page*25;
+		int quantity = 25;
 		String playername = player.getName();
 		String playeruuid = player.getUniqueId().toString();
-		if(args.length >= 1
-				&& (player.hasPermission(StaticValues.BYPASS_ENTITYTRANSPORT_ACCESSLIST) || args[1].equals(player.getName())))
+		if(args.length >= 2
+				&& (player.hasPermission(StaticValues.BYPASS_ENTITYTRANSPORT_ACCESSLIST) || args[0].equals(player.getName())))
 		{
 			playername = args[1];
-			UUID uuid = Utility.convertNameToUUID(args[0]);
+			UUID uuid = Utility.convertNameToUUID(args[1]);
 			if(uuid == null)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
@@ -273,7 +293,7 @@ public class EntityTransportHelper
 		}
 		ArrayList<EntityTransport.TargetAccess> list = new ArrayList<>();
 		list = ConvertHandler.convertListVIII(plugin.getMysqlHandler().getList(MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS,
-						"`id` ASC", 0, 55, "`target_uuid` = ?", playeruuid));
+						"`id` ASC", start, quantity, "`target_uuid` = ?", playeruuid));
 		if(list.isEmpty())
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NoAccessInList")));
@@ -339,7 +359,7 @@ public class EntityTransportHelper
 			return;
 		}
 		if(!EntityTransportHandler.isOwner(player, target) //&& !EntityTransportHandler.isMember(player, target)
-				)
+				&& !player.hasPermission(StaticValues.BYPASS_ENTITYTRANSPORT))
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotOwner")));
 			return;
@@ -349,7 +369,7 @@ public class EntityTransportHelper
 		pdc.remove(nowner);
 		pdc.set(nowner,	PersistentDataType.STRING, uuid.toString());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.SetOwner")
-				.replace("%player%", uuid.toString())));
+				.replace("%player%", playername)));
 	}
 	
 	public void entityTransportBuyTickets(CommandSender sender, String[] args)
@@ -370,6 +390,12 @@ public class EntityTransportHelper
 			return;
 		}
 		amount = Integer.parseInt(args[0]);
+		if(!MatchApi.isPositivNumber(amount))
+		{
+			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+					.replace("%arg%", args[0])));
+			return;
+		}
 		String playername = null;
 		UUID uuid = null;
 		if(sender instanceof Player)

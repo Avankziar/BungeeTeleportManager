@@ -69,10 +69,6 @@ public class Warp
 
 	public String getOwner()
 	{
-		if(owner == null)
-		{
-			return "/";
-		}
 		return owner;
 	}
 

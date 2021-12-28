@@ -51,11 +51,11 @@ public class PortalMessageListener implements Listener
         	double z = in.readDouble();
         	float yaw = in.readFloat();
         	float pitch = in.readFloat();
-        	String postTeleportMsg = in.readUTF();
+        	String portalname = in.readUTF();
         	boolean lava = in.readBoolean();
         	BackHandler.getBack(in, uuid, playerName, Mechanics.PORTAL);
         	ServerLocation location = new ServerLocation(server, worldName, x, y, z, yaw, pitch);
-        	new PortalHandler(plugin).teleportPlayerToDestination(playerName, location, postTeleportMsg, lava);
+        	new PortalHandler(plugin).teleportPlayerToDestination(playerName, location, portalname, lava);
         	return;
         } else if(task.equals(StaticValues.PORTAL_UPDATE))
         {

@@ -45,6 +45,13 @@ public class WarpMessageListener implements PluginMessageListener
                 	double z = in.readDouble();
                 	float yaw = in.readFloat();
                 	float pitch = in.readFloat();
+                	if(Bukkit.getWorld(worldName) == null)
+					{
+						player.sendMessage(
+								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+										.replace("%world%", worldName)));
+						return;
+					}
                 	//POSSIBLY Eventuell dass in einem Object auslagern mit dem Bukkitrunnable extended
                 	new BukkitRunnable()
 					{

@@ -60,6 +60,7 @@ public class Portal
 		setName(portalName);
 		setPermission(permission);
 		setOwner(ownerUUID);
+		setAccessType(accessType);
 		setMember(members);
 		setBlacklist(blacklist);
 		setCategory(category);

@@ -31,7 +31,7 @@ public interface Table02
 			try 
 			{
 				String sql = "INSERT INTO `" + MysqlHandler.Type.PORTAL.getValue() 
-						+ "`(`portalname`, `owner_uuid`, `permission`, `accesstype `, `member`, `blacklist`,"
+						+ "`(`portalname`, `owner_uuid`, `permission`, `accesstype`, `member`, `blacklist`,"
 						+ " `category`, `triggerblock`, `price`, `throwback`, `portalprotectionradius`,"
 						+ " `cooldown`,"
 						+ " `sound`, `targettype`, `targetinformation`, `postteleportmessage`, `accessdenialmessage`,"
@@ -260,8 +260,8 @@ public interface Table02
 		        	return new Portal(
 		        			result.getInt("id"),
 		        			result.getString("portalname"),
-		        			result.getString("owner_uuid"),
 		        			result.getString("permission"),
+		        			result.getString("owner_uuid"),
 		        			AccessType.valueOf(result.getString("accesstype")),
 		        			m,
 		        			b,
@@ -361,8 +361,8 @@ public interface Table02
 		        	Portal w = new Portal(
 		        			result.getInt("id"),
 		        			result.getString("portalname"),
-		        			result.getString("owner_uuid"),
 		        			result.getString("permission"),
+		        			result.getString("owner_uuid"),
 		        			AccessType.valueOf(result.getString("accesstype")),
 		        			m,
 		        			b,
@@ -459,8 +459,8 @@ public interface Table02
 		        	Portal w = new Portal(
 		        			result.getInt("id"),
 		        			result.getString("portalname"),
-		        			result.getString("owner_uuid"),
 		        			result.getString("permission"),
+		        			result.getString("owner_uuid"),
 		        			AccessType.valueOf(result.getString("accesstype")),
 		        			m,
 		        			b,
@@ -570,8 +570,8 @@ public interface Table02
 		        	Portal w = new Portal(
 		        			result.getInt("id"),
 		        			result.getString("portalname"),
-		        			result.getString("owner_uuid"),
 		        			result.getString("permission"),
+		        			result.getString("owner_uuid"),
 		        			AccessType.valueOf(result.getString("accesstype")),
 		        			m,
 		        			b,

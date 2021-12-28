@@ -29,6 +29,10 @@ public class EntityNameChangeListener implements Listener
 	@EventHandler
 	public void onNameChange(PlayerInteractEntityEvent event)
 	{
+		if(event.isCancelled())
+		{ 
+			return;
+		}
 		Player player = event.getPlayer();
 		if(player.getInventory().getItemInMainHand() == null)
 		{
@@ -43,7 +47,7 @@ public class EntityNameChangeListener implements Listener
 		{
 			return;
 		}
-		if(EntityTransportHandler.hasOwner(player, ent))
+		if(EntityTransportHandler.hasOwner(player, (LivingEntity) ent))
 		{
 			if(!EntityTransportHandler.isOwner(player, ent))
 			{

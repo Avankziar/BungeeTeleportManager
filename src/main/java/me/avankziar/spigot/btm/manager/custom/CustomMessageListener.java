@@ -102,6 +102,13 @@ public class CustomMessageListener implements PluginMessageListener
                 		message = in.readUTF();
                 	}
                 	final String messages = message;
+                	if(Bukkit.getWorld(worldName) == null)
+					{
+						player.sendMessage(
+								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+										.replace("%world%", worldName)));
+						return;
+					}
                 	new BukkitRunnable()
 					{
             			int i = 0;

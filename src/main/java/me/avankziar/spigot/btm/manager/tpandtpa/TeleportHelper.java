@@ -277,6 +277,39 @@ public class TeleportHelper
 		}.runTaskAsynchronously(plugin);
 	}
 	
+	public void tpsilent(Player player, String[] args)
+	{
+		new BukkitRunnable()
+		{
+			@Override
+			public void run()
+			{
+				if(args.length == 1)
+				{
+					String name = args[0];
+					if(player.getName().equals(name))
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.TpaTooYourself")));
+						return;
+					}
+					UUID uuid = Utility.convertNameToUUID(name);
+					if(uuid == null)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+						return;
+					}
+					plugin.getTeleportHandler().tpsilent(player, uuid.toString(), name);
+				} else
+				{
+					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+					player.spigot().sendMessage(ChatApi.clickEvent(
+							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+				}
+			}
+		}.runTaskAsynchronously(plugin);
+	}
+	
 	public void tpAll(Player player, String[] args, Teleport.Type type)
 	{
 		new BukkitRunnable()

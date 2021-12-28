@@ -22,7 +22,6 @@ public class YamlManager
 	private static LinkedHashMap<String, Language> forbiddenListBungeeKeys = new LinkedHashMap<>();
 	
 	private static LinkedHashMap<String, Language> configPermissionLevelKeys = new LinkedHashMap<>();
-	private static LinkedHashMap<String, Language> configSpawnCommandsKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> configRespawnKeys = new LinkedHashMap<>();
 	
 	public YamlManager(boolean spigot) //INFO
@@ -32,10 +31,10 @@ public class YamlManager
 			initConfigSpigot();
 			initCommands();
 			initLanguage();
-			initConfigSpawnCommands();
 			initConfigPermissionLevel();
 			initRandomTeleport();
 			initForbiddenListSpigot();
+			initConfigRespawn();
 			initCustomLanguage();
 		} else
 		{
@@ -276,7 +275,7 @@ public class YamlManager
 					true}));
 			configSpigotKeys.put("EnableCommands.Portal"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					false}));
+					true}));
 			configSpigotKeys.put("EnableCommands.RandomTeleport"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
@@ -298,6 +297,18 @@ public class YamlManager
 			configSpigotKeys.put("Enable.AccessPermission"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
+			configSpigotKeys.put("Enable.InterfaceHub.Providing.Teleport"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Enable.InterfaceHub.Consuming.Vanish"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("SilentTp.DoVanish"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("SilentTp.VanishCommand"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"vanish"}));
 			/*configSpigotKeys.put("Enable.EntityCanAccessPortals"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));*/
@@ -522,16 +533,13 @@ public class YamlManager
 					"HIGHEST"}));
 			configSpigotKeys.put("Use.CountPerm.Portal"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"ADDUP"}));
+					"f"}));
 			configSpigotKeys.put("Use.CountPerm.Warp"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"HIGHEST"}));
 			configSpigotKeys.put("Use.FirstSpawn.FirstTimePlayedPlayer.SendToFirstSpawn"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
-			configSpigotKeys.put("Use.FirstSpawn.FirstTimePlayedPlayer.WhichFirstSpawn"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"servername_which_player_tp_to"}));
 			configSpigotKeys.put("Use.FirstSpawn.Spigot.DoCommandsAtFirstTime"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
@@ -550,7 +558,7 @@ public class YamlManager
 			configSpigotKeys.put("Use.FirstSpawn.BungeeCord.CommandAtFirstTime.AsConsole"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"dummy", "dummy"}));
-			configSpigotKeys.put("Use.Respawn.Spigot.DoCommandsAtRespawn"
+			/*configSpigotKeys.put("Use.Respawn.Spigot.DoCommandsAtRespawn"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
 			configSpigotKeys.put("Use.Respawn.Spigot.CommandAtRespawn.AsPlayer"
@@ -567,7 +575,7 @@ public class YamlManager
 					"dummy", "dummy"}));
 			configSpigotKeys.put("Use.Respawn.BungeeCord.CommandAtRespawn.AsConsole"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"dummy", "dummy"}));
+					"dummy", "dummy"}));*/
 			configSpigotKeys.put("Use.EntityTransport.TicketMechanic"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
@@ -649,6 +657,10 @@ public class YamlManager
 				"/btm reload", "/btm reload",
 				"&c/btm reload &f| Neuladen aller Yaml-Dateien.",
 				"&c/btm reload &f| Reload all yaml files.");
+		commandsInput("btmimport", "btmimport", "btm.cmd.import", 
+				"/btmimport <mechanic> <plugin>", "/btmimport ",
+				"&c/btmimport <Mechanic> <Plugin> &f| Importiert die Homes/Portale/Warp des angegebenen Plugin.",
+				"&c/btmimport <mechanic> <plugin> &f| Imports the Homes/Portals/Warp of the specified plugin.");
 		commandsInput("back", "back", "btm.cmd.back.back", "/back", "/back ",
 				"&c/back &f| Teleportiert dich zu deinem letzten Rückkehrpunkt.",
 				"&c/back &f| Teleports you to your last return point.");
@@ -670,7 +682,7 @@ public class YamlManager
 	
 	private void comBypass()
 	{
-		commandsKeys.put("PermissionLevel.Global"
+		/*commandsKeys.put("PermissionLevel.Global"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.permlevel.global."}));
 		commandsKeys.put("PermissionLevel.ServerExtern"
@@ -687,7 +699,7 @@ public class YamlManager
 				"btm.permlevel.world."}));
 		commandsKeys.put("PermissionLevel.WorldClusterSameServer"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"btm.permlevel.worldclustersameserver."}));
+				"btm.permlevel.worldclustersameserver."}));*/
 		String path = "Bypass.";
 		commandsKeys.put(path+"Cost"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -702,6 +714,9 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.forbidden.use."}));
 		
+		commandsKeys.put(path+"EntityTransport.Admin"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.bypass.entitytransport.admin"}));
 		commandsKeys.put(path+"EntityTransport.AccessList"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.entitytransport.accesslist"}));
@@ -750,6 +765,9 @@ public class YamlManager
 		commandsKeys.put(path+"Portal.Admin"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.portal.admin"}));
+		commandsKeys.put(path+"Portal.Placer"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				"btm.bypass.portal.placer"}));
 		commandsKeys.put(path+"Portal.Blacklist"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"btm.bypass.portal.blacklist"}));
@@ -865,7 +883,7 @@ public class YamlManager
 				"/entitytransportsetowner <playername>", "/entitytransportsetowner ",
 				"&c/entitytransportsetowner <Spielername> &f| Überträgt die Eigentümerrechte des Entity auf den angegebenen Spieler.",
 				"&c/entitytransportsetowner <playername> &f| Transfers the ownership rights of the entity to the specified player.");
-		commandsInput("entitytransportbuytickets", "entitytransportsetowner", "btm.cmd.user.entitytransport.setowner", 
+		commandsInput("entitytransportbuytickets", "entitytransportbuytickets", "btm.cmd.user.entitytransport.setowner", 
 				"/entitytransportbuytickets <amount> [playername]", "/entitytransportbuytickets ",
 				"&c/entitytransportbuytickets <Anzahl> [Spielername] &f| Kauft Entitytransporttickets für einen Preis x an.",
 				"&c/entitytransportbuytickets <amount> [playername] &f| Purchases entity transport tickets for a price x.");
@@ -894,17 +912,17 @@ public class YamlManager
 	private void comHome()
 	{
 		commandsInput("sethome", "sethome", "btm.cmd.user.home.create",
-				"/sethome <homename>", "/sethome ",
-				"&c/sethome <Homename> &f| Erstellt einen Homepunkt.",
-				"&c/sethome <Homename> &f| Creates a home point.");
+				"/sethome <homename> [isPrio/True]", "/sethome ",
+				"&c/sethome <Homename> [istPrio/True] &f| Erstellt einen Homepunkt.",
+				"&c/sethome <Homename> [isPrio/True] &f| Creates a home point.");
 		commandsInput("delhome", "delhome", "btm.cmd.user.home.remove", 
 				"/delhome <homename>", "/delhome ",
 				"&c/delhome <Homename> &f| Löscht den Homepunkt.",
 				"&c/delhome <Homename> &f| Deletes the home point.");
 		commandsInput("homecreate", "homecreate", "btm.cmd.user.home.create",
-				"/homecreate <homename>", "/homecreate ",
-				"&c/homecreate <Homename> &f| Erstellt einen Homepunkt.",
-				"&c/homecreate <Homename> &f| Creates a home point.");
+				"/homecreate <homename> [isPrio/True]", "/homecreate ",
+				"&c/homecreate <Homename> [istPrio/True] &f| Erstellt einen Homepunkt.",
+				"&c/homecreate <Homename> [isPrio/True] &f| Creates a home point.");
 		commandsInput("homeremove", "homeremove", "btm.cmd.user.home.remove",
 				"/homeremove <homename>", "/homeremove ",
 				"&c/homeremove <Homename> &f| Löscht den Homepunkt.",
@@ -926,9 +944,9 @@ public class YamlManager
 				"&c/homelist [Seitenzahl] &f| Listet alle Homepunkte aller Spieler auf.",
 				"&c/homelist [Seitenzahl] &f| Lists all home points of all players.");
 		commandsInput("homesetpriority", "homesetpriority", "btm.cmd.user.home.setpriority", 
-				"/homesetpriority [homename]", "/homesetpriority ",
-				"&c/homesetpriority [Homename] &f| Setzt das angegebene Home als Priorität. /home führt nun direkt zu diesem Home.",
-				"&c/homesetpriority [homename] &f| Sets the specified home as priority. /home now leads directly to this home.");
+				"/homesetpriority <homename>", "/homesetpriority ",
+				"&c/homesetpriority <Homename> &f| Setzt das angegebene Home als Priorität. /home führt nun direkt zu diesem Home.",
+				"&c/homesetpriority <homename> &f| Sets the specified home as priority. /home now leads directly to this home.");
 	}
 	
 	private void comPortal()
@@ -950,105 +968,105 @@ public class YamlManager
 				"&c/portallist [Seitenzahl] [Kategorie] &f| Zeigt seitenbasiert alle Portale an.",
 				"&c/portallist [pagenumber] [category] &f| Displays all portals based on pages.");
 		commandsInput("portalinfo", "portalinfo", "btm.cmd.user.portal.info",
-				"/portalinfo <portal>", "/portalinfo ",
-				"&c/portalinfo <portal> &f| Zeigt alle Portal Informationen an.",
-				"&c/portalinfo <portal> &f| Displays all portal information.");
+				"/portalinfo <portalname>", "/portalinfo ",
+				"&c/portalinfo <Portalname> &f| Zeigt alle Portal Informationen an.",
+				"&c/portalinfo <portalname> &f| Displays all portal information.");
 		commandsInput("portaldeleteserverworld", "portaldeleteserverworld", "btm.cmd.user.portal.deleteserverworld",
 				"/portaldeleteserverworld <server> <world>", "/portaldeleteserverworld ",
-				"&c/portaldeleteserverworld <server> <world> &f| Löscht alle Portal auf einem bestimmten Server und Welt.",
+				"&c/portaldeleteserverworld <Server> <Welt> &f| Löscht alle Portal auf einem bestimmten Server und Welt.",
 				"&c/portaldeleteserverworld <server> <world> &f| Deletes all portal on a given server and world.");
 		commandsInput("portalsearch", "portalsearch", "btm.cmd.user.portal.search",
 				"/portalsearch <page> <xxxx:value>", "/portalsearch ",
 				"&c/portalsearch <Seitenzahl> <xxxx:Wert> &f| Sucht mit den angegeben Argumenten eine Liste aus Portalen.",
 				"&c/portalsearch <page> <xxxx:value> &f| Searches a list of portals with the given arguments.");
 		commandsInput("portalsetname", "portalsetname", "btm.cmd.user.portal.setname",
-				"/portalsetname <portal> <new name>", "/portal ",
-				"&c/portalsetname <portal> <neuer Name> &f| Setzt den Namen des Portals.",
-				"&c/portalsetname <portal> <new name> &f| Sets the name of the portal.");
+				"/portalsetname <portalname> <new name>", "/portal ",
+				"&c/portalsetname <Portalname> <neuer Name> &f| Setzt den Namen des Portals.",
+				"&c/portalsetname <portalname> <new name> &f| Sets the name of the portal.");
 		commandsInput("portalsetowner", "portalsetowner", "btm.cmd.user.portal.setowner",
-				"/portalsetowner <portal> <playername|null>", "/portalsetowner ",
-				"&c/portalsetowner <portal> <playername|null> &f| Setzt den Eigentümer des Portals.",
-				"&c/portalsetowner <portal> <playername|null> &f| Sets the owner of the portal.");
+				"/portalsetowner <portalname> <playername|null>", "/portalsetowner ",
+				"&c/portalsetowner <Portalname> <Spielername|null> &f| Setzt den Eigentümer des Portals.",
+				"&c/portalsetowner <portalname> <playername|null> &f| Sets the owner of the portal.");
 		commandsInput("portalsetpermission", "portalsetpermission", "btm.cmd.admin.portal.setpermission",
-				"/portalsetpermission <portal> <permission>", "/portalsetpermission ",
-				"&c/portalsetpermission <portal> <Permission> &f| Setzt die Permission des Portals.",
-				"&c/portalsetpermission <portal> <permission> &f| Sets the permission of the portal.");
+				"/portalsetpermission <portalname> <permission>", "/portalsetpermission ",
+				"&c/portalsetpermission <Portalname> <Permission> &f| Setzt die Permission des Portals.",
+				"&c/portalsetpermission <portalname> <permission> &f| Sets the permission of the portal.");
 		commandsInput("portalsetprice", "portalsetprice", "btm.cmd.user.portal.setprice",
-				"/portalsetprice <portal> <price>", "/portalsetprice ",
-				"&c/portalsetprice <portal> <Preis> &f| Setzt den Benutzungspreis des Portals.",
-				"&c/portalsetprice <portal> <price> &f| Sets the usage price of the portal.");
+				"/portalsetprice <portalname> <price>", "/portalsetprice ",
+				"&c/portalsetprice <Portalname> <Preis> &f| Setzt den Benutzungspreis des Portals.",
+				"&c/portalsetprice <portalname> <price> &f| Sets the usage price of the portal.");
 		commandsInput("portaladdmember", "portaladdmember", "btm.cmd.user.portal.addmember",
-				"/portaladdmember <portal> <playername>", "/portaladdmember ",
-				"&c/portaladdmember <portal> <Spielername> &f| Fügt einen Spieler dem Portal als Mitglied hinzu.",
-				"&c/portaladdmember <portal> <playername> &f| Adds a player to the portal as a member.");
-		commandsInput("portalremovemember", "portalremovemember", "btm.cmd.user.portal.removemember",
-				"/portalremovemember <portal> <playername>", "/portalremovemember ",
-				"&c/portalremovemember <portal> <Spielername> &f| Entfernt einen Spieler als Mitglied vom Portal.",
-				"&c/portalremovemember <portal> <playername> &f| Removes a player as a member from the portal.");
-		commandsInput("portaladdblacklist", "portalblacklist", "btm.cmd.user.portal.addblacklist",
-				"/portaladdblacklist <portal> <playername>", "/portaladdblacklist ",
-				"&c/portaladdblacklist <portal> <Spielername> &f| Setzt einen Spieler auf die Blacklist des Portals.",
-				"&c/portaladdblacklist <portal> <playername> &f| Places a player on the portal's blacklist.");
+				"/portaladdmember <portalname> <playername>", "/portaladdmember ",
+				"&c/portaladdmember <Portalname> <Spielername> &f| Fügt einen Spieler dem Portal als Mitglied hinzu.",
+				"&c/portaladdmember <portalname> <playername> &f| Adds a player to the portal as a member.");
+		commandsInput("portalremovemember", "portalremovemember", "user.portal.removemember",
+				"/portalremovemember <portalname> <playername>", "/portalremovemember ",
+				"&c/portalremovemember <Portalname> <Spielername> &f| Entfernt einen Spieler als Mitglied vom Portal.",
+				"&c/portalremovemember <portalname> <playername> &f| Removes a player as a member from the portal.");
+		commandsInput("portaladdblacklist", "portaladdblacklist", "btm.cmd.user.portal.addblacklist",
+				"/portaladdblacklist <portalname> <playername>", "/portaladdblacklist ",
+				"&c/portaladdblacklist <Portalname> <Spielername> &f| Setzt einen Spieler auf die Blacklist des Portals.",
+				"&c/portaladdblacklist <portalname> <playername> &f| Places a player on the portal's blacklist.");
 		commandsInput("portalremoveblacklist", "portalremoveblacklist", "btm.cmd.user.portal.removeblacklist",
-				"/portalremoveblacklist <portal> <playername>", "/portalremoveblacklist ",
-				"&c/portalremoveblacklist <portal> <Spielername> &f| Entfernt einen Spieler von der Blacklist des Portals.",
-				"&c/portalremoveblacklist <portal> <playername> &f| Removes a player from the portal blacklist.");
+				"/portalremoveblacklist <portalname> <playername>", "/portalremoveblacklist ",
+				"&c/portalremoveblacklist <Portalname> <Spielername> &f| Entfernt einen Spieler von der Blacklist des Portals.",
+				"&c/portalremoveblacklist <portalname> <playername> &f| Removes a player from the portal blacklist.");
 		commandsInput("portalsetcategory", "portalsetcategory", "btm.cmd.user.portal.setcategory",
-				"/portalsetcategory <portal> <category>", "/portalsetcategory ",
-				"&c/portalsetcategory <portal> <Kategorie> &f| Setzt eine Kategory für das Portal.",
-				"&c/portalsetcategory <portal> <category> &f| Sets a category for the portal.");
+				"/portalsetcategory <portalname> <category>", "/portalsetcategory ",
+				"&c/portalsetcategory <Portalname> <Kategorie> &f| Setzt eine Kategory für das Portal.",
+				"&c/portalsetcategory <portalname> <category> &f| Sets a category for the portal.");
 		commandsInput("portalsetownexitpoint", "portalsetownexitpoint", "btm.cmd.user.portal.setownexitpoint",
-				"/portalsetownexitpoint <portal>", "/portalsetownexitpoint ",
-				"&c/portalsetownexitpoint <portal> &f| Setzt den Teleportausgangspunkt des Portals.",
-				"&c/portalsetownexitpoint <portal> &f| Sets the teleport exit point of the portal.");
+				"/portalsetownexitpoint <portalname>", "/portalsetownexitpoint ",
+				"&c/portalsetownexitpoint <Portalname> &f| Setzt den Teleportausgangspunkt des Portals.",
+				"&c/portalsetownexitpoint <portalname> &f| Sets the teleport exit point of the portal.");
 		commandsInput("portalsetposition", "portalsetposition", "btm.cmd.user.portal.setposition",
-				"/portalsetposition <portal>", "/portalsetposition ",
-				"&c/portalsetposition <portal> &f| Setzt die Eckpunkt des Portal neu.",
-				"&c/portalsetposition <portal> &f| Resets the corner points of the portal.");
+				"/portalsetposition <portalname>", "/portalsetposition ",
+				"&c/portalsetposition <Portalname> &f| Setzt die Eckpunkt des Portal neu.",
+				"&c/portalsetposition <portalname> &f| Resets the corner points of the portal.");
 		commandsInput("portalsetdefaultcooldown", "portalsetdefaultcooldown", "btm.cmd.user.portal.setdefaultcooldown",
-				"/portalsetdefaultcooldown <portal> <timeshortcut:value>", "/portalsetdefaultcooldown ",
-				"&c/portalsetdefaultcooldown <portal> <Zeitkürzel:value> &f| Setzt den Default Cooldown des Portal. (Config Cooldown ist priorisiert)",
-				"&c/portalsetdefaultcooldown <portal> <timeshortcut:value> &f| Sets the default cooldown of the portal. (Config Cooldown is prioritized)");
+				"/portalsetdefaultcooldown <portalname> <timeshortcut:value>", "/portalsetdefaultcooldown ",
+				"&c/portalsetdefaultcooldown <Portalname> <Zeitkürzel:value> &f| Setzt den Default Cooldown des Portal. (Config Cooldown ist priorisiert)",
+				"&c/portalsetdefaultcooldown <portalname> <timeshortcut:value> &f| Sets the default cooldown of the portal. (Config Cooldown is prioritized)");
 		commandsInput("portalsettarget", "portalsettarget", "btm.cmd.user.portal.settarget",
-				"/portalsettarget <portal> <TargetType> [Additionalinfo]", "/portalsettarget ",
-				"&c/portalsettarget <portal> <TargetType> [Zusatzinfo] &f| Setzt das Ziel des Portal mit Zusatztinfo. Beispiel: <BACK>; <HOME>; <HOME> [Lager] etc.",
-				"&c/portalsettarget <portal> <TargetType> [Additionalinfo] &f| Sets the destination of the portal with additional info. Example: <BACK>; <HOME>; <HOME> [warehouse] etc.");
+				"/portalsettarget <portalname> <TargetType> [Additionalinfo]", "/portalsettarget ",
+				"&c/portalsettarget <Portalname> <TargetType> [Zusatzinfo] &f| Setzt das Ziel des Portal mit Zusatztinfo. Beispiel: <BACK>; <HOME>; <HOME> [Lager] etc.",
+				"&c/portalsettarget <portalname> <TargetType> [Additionalinfo] &f| Sets the destination of the portal with additional info. Example: <BACK>; <HOME>; <HOME> [warehouse] etc.");
 		commandsInput("portalsetpostteleportmessage", "portalsetpostteleportmessage", "btm.cmd.user.portal.setpostteleportmessage",
-				"/portalsetpostteleportmessage <portal> <message>", "/portalsetpostteleportmessage ",
-				"&c/portalsetpostteleportmessage <portal> <Nachricht> &f| Setzt die Nachricht, welche nach dem Teleport gesendet wird.",
-				"&c/portalsetpostteleportmessage <portal> <message> &f| Sets the message that will be sent after the teleport.");
+				"/portalsetpostteleportmessage <portalname> <message>", "/portalsetpostteleportmessage ",
+				"&c/portalsetpostteleportmessage <Portalname> <Nachricht> &f| Setzt die Nachricht, welche nach dem Teleport gesendet wird.",
+				"&c/portalsetpostteleportmessage <portalname> <message> &f| Sets the message that will be sent after the teleport.");
 		commandsInput("portalsetaccessdenialmessage", "portalsetaccessdenialmessage", "btm.cmd.user.portal.setaccessdenialmessage",
-				"/portalsetaccessdenialmessage <portal> <message>", "/portalsetaccessdenialmessage ",
-				"&c/portalsetaccessdenialmessage <portal> <Nachricht> &f| Setzt die Nachricht, welche gesendet wird, falls man das Portal nicht benutzten darf.",
-				"&c/portalsetaccessdenialmessage <portal> <message> &f| Sets the message that will be sent if you are not allowed to use the portal.");
+				"/portalsetaccessdenialmessage <portalname> <message>", "/portalsetaccessdenialmessage ",
+				"&c/portalsetaccessdenialmessage <Portalname> <Nachricht> &f| Setzt die Nachricht, welche gesendet wird, falls man das Portal nicht benutzten darf.",
+				"&c/portalsetaccessdenialmessage <portalname> <message> &f| Sets the message that will be sent if you are not allowed to use the portal.");
 		commandsInput("portalsettriggerblock", "portalsettriggerblock", "btm.cmd.user.portal.settriggerblock",
-				"/portalsettriggerblock <portal> <material>", "/portaltriggerblock ",
-				"&c/portalsettriggerblock <portal> <Material> &f| Setzt das Material welches als Portaltrigger dient. Dieser muss ein transparenter Block sein.",
-				"&c/portalsettriggerblock <portal> <material> &f| Sets the material that serves as the portal trigger. This must be a transparent block.");
+				"/portalsettriggerblock <portalname> <material>", "/portaltriggerblock ",
+				"&c/portalsettriggerblock <Portalname> <Material> &f| Setzt das Material welches als Portaltrigger dient. Dieser muss ein transparenter Block sein.",
+				"&c/portalsettriggerblock <portalname> <material> &f| Sets the material that serves as the portal trigger. This must be a transparent block.");
 		commandsInput("portalsetthrowback", "portalsetthrowback", "btm.cmd.user.portal.setthrowback",
-				"/portalsetthrowback <portal> <x.x number>", "/portalsetthrowback ",
-				"&c/portalsetthrowback <portal> <x.x Nummer> &f| Setzt den Throwback Wert als Dezimalzahl.",
-				"&c/portalsetthrowback <portal> <x.x number> &f| Sets the throwback value as a decimal number.");
+				"/portalsetthrowback <portalname> <x.x number>", "/portalsetthrowback ",
+				"&c/portalsetthrowback <Portalname> <x.x Nummer> &f| Setzt den Throwback Wert als Dezimalzahl. Default ist gleich 0.7",
+				"&c/portalsetthrowback <portalname> <x.x number> &f| Sets the throwback value as a decimal number. Default is equal 0.7");
 		commandsInput("portalsetprotectionradius", "portalsetprotectionradius", "btm.cmd.staff.portal.setprotectionradius",
-				"/portalsetprotectionradius <portal>", "/portalsetprotectionradius ",
-				"&c/portalsetprotectionradius <portal> &f| Setzt den Radius an Blöcken, wo sich kein Block durch Wasser, Lava oder eine Creeperexplosion verändern kann.",
-				"&c/portalsetprotectionradius <portal> &f| Sets the radius at blocks where no block can be changed by water, lava or a creeper explosion.");
+				"/portalsetprotectionradius <portalname>", "/portalsetprotectionradius ",
+				"&c/portalsetprotectionradius <Portalname> &f| Setzt den Radius an Blöcken, wo sich kein Block durch Wasser, Lava oder eine Creeperexplosion verändern kann.",
+				"&c/portalsetprotectionradius <portalname> &f| Sets the radius at blocks where no block can be changed by water, lava or a creeper explosion.");
 		commandsInput("portalsetsound", "portalsetsound", "btm.cmd.user.portal.setsound",
-				"/portalsetsound <portal> <sound>", "/portalsetsound ",
-				"&c/portalsetsound <portal> <Sound> &f| Setzt den Sound der abgespielt wird, wenn man erfolgreich durch ein Portal teleportiert wird.",
-				"&c/portalsetsound <portal> <sound> &f| Sets the sound that is played when you are successfully teleported through a portal.");
+				"/portalsetsound <portalname> <sound>", "/portalsetsound ",
+				"&c/portalsetsound <Portalname> <Sound> &f| Setzt den Sound der abgespielt wird, wenn man erfolgreich durch ein Portal teleportiert wird.",
+				"&c/portalsetsound <portalname> <sound> &f| Sets the sound that is played when you are successfully teleported through a portal.");
 		commandsInput("portalsetaccesstype", "portalsetaccesstype", "btm.cmd.user.portal.setaccesstype",
-				"/portalsetaccesstype <portal>", "/portalsetaccesstype ",
-				"&c/portalsetaccesstype <portal> &f| Toggelt ob ein Portal öffentlich oder privat ist. (Privat dürfen nur der Eigentümer und Mitglieder das Portal benutzten)",
-				"&c/portalsetaccesstype <portal> &f| Toggles whether a portal is public or private. (Private only the owner and members may use the portal).");
+				"/portalsetaccesstype <portalname>", "/portalsetaccesstype ",
+				"&c/portalsetaccesstype <Portalname> &f| Toggelt ob ein Portal öffentlich oder privat ist. (Privat dürfen nur der Eigentümer und Mitglieder das Portal benutzten)",
+				"&c/portalsetaccesstype <portalname> &f| Toggles whether a portal is public or private. (Private only the owner and members may use the portal).");
 		commandsInput("portalmode", "portalmode", "btm.cmd.user.portal.mode",
-				"/portalmode <portal>", "/portalmode ",
-				"&c/portalmode <portal> &f| Versetzt den Spieler in den Modus um die Eckpunkte eines Portal zu bestimmen.",
-				"&c/portalmode <portal> &f| Puts the player in mode to determine the corner points of a portal.");
+				"/portalmode <portalname>", "/portalmode ",
+				"&c/portalmode <Portalname> &f| Versetzt den Spieler in den Modus um die Eckpunkte eines Portal zu bestimmen.",
+				"&c/portalmode <portalname> &f| Puts the player in mode to determine the corner points of a portal.");
 		commandsInput("portalitem", "portalitem", "btm.cmd.staff.portal.item",
 				"/portalitem ", "/portalitem ",
-				"&c/portalitem &f| Gibt ein Item, welches einen Netherportalblock rotieren lässt.",
-				"&c/portalitem &f| Gives an item that rotates a Nether Portal block.");
+				"&c/portalitem &f| Gibt ein Item, welches einen Netherportalblock rotieren lässt. Sowie Nether-, End- und Gateway Blockreplacer.",
+				"&c/portalitem &f| Gives an item that rotates a Nether Portal block. As well as Nether, End and Gateway block repeaters.");
 	}
 	
 	private void comRT()
@@ -1149,6 +1167,10 @@ public class YamlManager
 				"/tphere <playername>", "/tphere ",
 				"&c/tphere <Spielername> &f| Teleportiert den Spieler ohne Anfrage zu dir.",
 				"&c/tphere <Spielername> &f| Teleports the player to you without request.");
+		commandsInput("tpsilent", "tpsilent", "btm.cmd.staff.tp.tpsilent", 
+				"/tpsilent <playername>", "/tpsilent ",
+				"&c/tpsilent <Spielername> &f| Teleportiert dich leise ohne Anfrage zu dem Spieler. Du wirst dabei in den GameMode Beobachter und ins Vanish gesetzt.",
+				"&c/tpsilent <Spielername> &f| Teleportiert dich leise ohne Anfrage zu dem Spieler. Du wirst dabei in den GameMode Beobachter und ins Vanish gesetzt.");
 		commandsInput("tpall", "tpall", "btm.cmd.admin.tp.tpall",
 				"/tpall", "/tpall",
 				"&c/tpall &f| Teleportiert alle Spieler auf allen Servern ohne Anfrage zu dir.",
@@ -1246,9 +1268,9 @@ public class YamlManager
 				"&c/warpsearch <Seitenzahl> <xxxx:Wert> &f| Sucht mit den angegeben Argumenten eine Liste aus Warps.",
 				"&c/warpsearch <page> <xxxx:value> &f| Searches a list of warps with the given arguments.");
 		commandsInput("warpsetportalaccess", "warpsetportalaccess", "btm.cmd.user.warp.setportalaccess",
-				"/warpsetportalaccess <portalname> <value>", "/warpsetportalaccess ",
-				"&c/warpsetportalaccess <Portalname> <Wert> &f| Gibt den Zugang eines Portals zu diesem Warp an. Möglich sind: ONLY, IRRELEVANT, FORBIDDEN",
-				"&c/warpsetportalaccess <portalname> <value> &f| Specifies the access of a portal to this warp. Possible are: ONLY, IRRELEVANT, FORBIDDEN");
+				"/warpsetportalaccess <warpname> <value>", "/warpsetportalaccess ",
+				"&c/warpsetportalaccess <Warpname> <Wert> &f| Gibt den Zugang eines Portals zu diesem Warp an. Möglich sind: ONLY, IRRELEVANT, FORBIDDEN",
+				"&c/warpsetportalaccess <warpname> <value> &f| Specifies the access of a portal to this warp. Possible are: ONLY, IRRELEVANT, FORBIDDEN");
 	}
 	
 	private void commandsInput(String path, String name, String basePermission, 
@@ -1376,8 +1398,12 @@ public class YamlManager
 						"&cClick here to delete the warp!"}));
 		languageKeys.put("Hover.Message.Teleport",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&aKlicke hier um dich zum Warp zu teleportieren!",
-						"&aClick here to teleport to warp!"}));
+						"&aKlicke hier um dich zum dorthin zu teleportieren!",
+						"&aClick here to teleport!"}));
+		languageKeys.put("Hover.Message.Create",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&aKlicke hier, um es erstellen zu können!",
+						"&aClick here to be able to create it!"}));
 		
 		languageKeys.put("CustomTeleportEvent.IsForbidden.Server",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -1582,6 +1608,31 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Deathback benutzt werden!",
 						"&cNo deathback may be used in this world!"}));
+		path = "CmdImport.";
+		languageKeys.put(path+"InProcess", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Import läuft bereits!",
+						"&cThe import is already running!"}));
+		languageKeys.put(path+"NoCorrectInput", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cBitte wähle eine valide Input Mechanik aus!",
+						"&cPlease select a valid input mechanism!"}));
+		languageKeys.put(path+"NoSupportedPlugin", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cBitte wähle eine unterstütztes Plugin für den Import aus!",
+						"&cPlease select a supported plugin for the import!"}));
+		languageKeys.put(path+"CouldNotLoadFile", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDie Datei &f%file% &ckonnte nicht geladen werden! Sie existiert im erwarteten Ordner des Plugins nicht.",
+						"&cThe file &f%file% &ccould not be loaded! It does not exist in the expected folder of the plugin."}));
+		languageKeys.put(path+"NoAdvancedPortalsToImport", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cEs gibt keine Portale des Plugins AdvancedPortals zum importieren, da die Datei keine enthielt.",
+						"&cThere are no portals of the plugin AdvancedPortals to import, because the file did not contain any."}));
+		languageKeys.put(path+"AdvancedPortalImportFinish", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Import der Portale des Plugins AdvancedPortals ist abgeschlossen! Importierte Portale: &f%valueI% &e| Schon vorhanden: &f%valueII%",
+						"&eThe import of the portals of the AdvancedPortals plugin is completed! Imported portals: &f%valueI% &e| Already present: &f%valueII%"}));
 	}
 	
 	private void langDeathzone()
@@ -1657,8 +1708,8 @@ public class YamlManager
 						"&eYou have set the second position for a deathzone!"}));
 		languageKeys.put(path+"InteractEvent.NowCreate", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDu hast zwei Punkte gesetzt! Erstelle nun deine Deathzone! &2==>~click@SUGGEST_COMMAND@%cmd%+<Deathzonename>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&eYou have set two points! Now create your deathzone! &2==>~click@SUGGEST_COMMAND@%cmd%+<deathzonename>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&eDu hast zwei Punkte gesetzt! Erstelle nun deine Deathzone! &2==>%cmd%~click@SUGGEST_COMMAND@%cmd%+<Deathzonename>+<Priorität>+<Deathzonepfad>~hover@SHOW_TEXT@Hover.Message.Create",
+						"&eYou have set two points! Now create your deathzone! &2==>%cmd%~click@SUGGEST_COMMAND@%cmd%+<deathzonename>+<priority>+<deathzonepath>~hover@SHOW_TEXT@Hover.Message.Create"}));
 		languageKeys.put(path+"NotPositionOneSet", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast die Position 1 für das Erstellen von einer Deathzone noch nicht gesetzt!",
@@ -1675,7 +1726,7 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDu hast der Deathzone mit dem Namen &f%name% &aerstellt! &fPrio: %prio% &e| &fCategory: %cat% &e| &fSubcategory: %subcat%",
 						"&aYou created the deathzone with the name &f%name%&a! &fPrio: %prio% &e| &fCategory: %cat% &e| &fSubcategory: %subcat%"}));
-		languageKeys.put(path+"DeathzoneExist", 
+		languageKeys.put(path+"DeathzoneNotExist", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Deathzone existiert nicht!",
 						"&cThe deathzone dont exist."}));
@@ -1693,8 +1744,8 @@ public class YamlManager
 						"&e=====&7[&6Deathzonelist &9| &7Quantity: &f%amount%&7]&e====="}));
 		languageKeys.put(path+"ListHelp", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&bGleiche(r)... Server(S)&f~&dWelt(W)&f~&cKategory(C)&f~&eSubkategory(SubC)&f~&6Sonstiges(E)",
-						"&bSame... server(S)&f~&dworld(W)&f~&ccategory(C)&f~&esubcategory(SubC)&f~&6Other(E)"}));
+						"&bGleiche(r)... Server(S) &f~ &dWelt(W) &f~ &cKategory(C) &f~ &eSubkategory(SubC) &f~ &6Sonstiges(E)",
+						"&bSame... server(S) &f~ &dworld(W) &f~ &ccategory(C) &f~ &esubcategory(SubC) &f~ &6Other(E)"}));
 		languageKeys.put(path+"ListHelpII", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eServer: &f%server% &1| &eWelt: &f%world% &1| &eKategorie: &f%cat% &1| &eSubkategorie: &f%subcat%",
@@ -1741,8 +1792,8 @@ public class YamlManager
 						"&eThe deathzone &f%dz% &awas assigned to the category &f%cat% and the subcategory &f%subcat%&a!"}));
 		languageKeys.put(path+"SetPriority",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDas Portal &f%portal% &ahat nun die Priorität &f%prio%&e!",
-						"&eThe portal &f%portal% &anow has the priority &f%prio%&e!"}));
+						"&eDie Deathzone &f%dz% &ahat nun die Priorität &f%prio%&e!",
+						"&eThe deathzone &f%dz% &anow has the priority &f%prio%&e!"}));
 		languageKeys.put(path+"SetDeathzonepath",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDie Deathzone &f%dz% &ahat nun als Deathzone Pfad &f%dzpath%&e!",
@@ -1905,8 +1956,8 @@ public class YamlManager
 		String path = "CmdFirstSpawn."; 
 		languageKeys.put(path+"SpawnTo",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&aDu wurdest zu deinem Home &f%spawn% &ateleportiert.",
-						"&aYou have been &eleported to your home &f%spawn% &ateleported."}));
+						"&aDu wurdest zu dem FirstSpawn &f%value% &ateleportiert.",
+						"&aYou have been &eteleported to FirstSpawn &f%value%&a."}));
 		languageKeys.put(path+"RequestInProgress", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer FirstSpawnteleport wird bearbeitet!",
@@ -1921,8 +1972,8 @@ public class YamlManager
 						"&cThe name as firstspawn already exists!"}));
 		languageKeys.put(path+"Set", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDer FirstSpawn &f%value% &ewurde an deiner Position, für den Server %server% gesetzt!",
-						"&eThe FirstSpawn &f%value% &ewas set at your position, for the server %server%!"}));
+						"&eDer FirstSpawn wurde an deiner Position, für den Server &f%server% &egesetzt!",
+						"&eThe FirstSpawn was set at your position, for the server &f%server%&e!"}));
 		languageKeys.put(path+"ReSet", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer FirstSpawn &f%value% &ewurde an deiner Position, für den Server %server% neu gesetzt!",
@@ -1941,8 +1992,8 @@ public class YamlManager
 						"&e=====&7[&6FirstSpawninfo &9| &7Quantity: &f%amount%&7]&e====="}));
 		languageKeys.put(path+"InfoFirstSpawn",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&e%value%: &r%location%| &aⓉ~click@SUGGEST_COMMAND@%cmd%+%value% &c✖~click@SUGGEST_COMMAND@%cmdII%+%value%~hover",
-						"&e%value%: &r%location%| &aⓉ~click@SUGGEST_COMMAND@%cmd%+%value% &c✖~click@SUGGEST_COMMAND@%cmdII%+%value%~hover"}));
+						"&e%value%: &r%location%| &aⓉ~click@SUGGEST_COMMAND@%cmd%+%value% &c✖~click@SUGGEST_COMMAND@%cmdII%+%value%~hover@SHOW_TEXT@Hover.Message.Delete",
+						"&e%value%: &r%location%| &aⓉ~click@SUGGEST_COMMAND@%cmd%+%value% &c✖~click@SUGGEST_COMMAND@%cmdII%+%value%~hover@SHOW_TEXT@Hover.Message.Delete"}));
 		languageKeys.put(path+"ForbiddenServerUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server dürfen keine FirstSpawn benutzt werden!",
@@ -2083,8 +2134,8 @@ public class YamlManager
 						"&eYou have set the second position for a portal!"}));
 		languageKeys.put(path+"InteractEvent.NowCreate", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDu hast zwei Punkte gesetzt! Erstelle nun dein Portal! &2==>~click@SUGGEST_COMMAND@%cmd%+<Portalname>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&eYou have set two points! Now create your portal! &2==>~click@SUGGEST_COMMAND@%cmd%+<Portalname>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&eDu hast zwei Punkte gesetzt! Erstelle nun dein Portal! &2==>%cmd%~click@SUGGEST_COMMAND@%cmd%+<Portalname>~hover@SHOW_TEXT@Hover.Message.Create",
+						"&eYou have set two points! Now create your portal! &2==>%cmd%~click@SUGGEST_COMMAND@%cmd%+<Portalname>~hover@SHOW_TEXT@Hover.Message.Create"}));
 		languageKeys.put(path+"ForbiddenServer", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server dürfen keine Portale erstellt werden!",
@@ -2137,10 +2188,14 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Portal &f%portalname% &cist geschlossen!",
 						"&cThe portal &f%portalname% &cis closed!"}));
+		languageKeys.put(path+"PortalOwnExitIsNull", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDer Austrittpunkt vom Portal &f%portalname% &cist nicht gesetzt!",
+						"&cThe exit point of the portal &f%portalname% &cis not set!"}));
 		languageKeys.put(path+"OnCooldown", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cDu bis noch bis zum &f%time%&c, bei diesem Portal, auf Cooldown!",
-						"&cYou until the &f%time%&c, at this portal, on cooldown!"}));
+						"&cDu bist bei diesem Portal auf Cooldown! Bis zum &f%time%",
+						"&cYou are on Cooldown with this portal! Until the &f%time%"}));
 		languageKeys.put(path+"RequestInProgress", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Portalteleport wird bearbeitet!",
@@ -2176,15 +2231,19 @@ public class YamlManager
 		languageKeys.put(path+"YouHaveNoPortals",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu besitzt keine Portale!",
-						"&cYou don not have portals!"}));
+						"&cYou do not have portals!"}));
+		languageKeys.put(path+"PlayerHaveNoPortals",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&f%value% &cbesitzt keine Portale!",
+						"&f%value% &cdo not have portals!"}));
 		languageKeys.put(path+"PortalsHeadline", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&e=====&7[&6Warps &9| &7Anzahl: &f%amount%&7]&e=====",
-						"&e=====&7[&6Warps &9| &7Quantity: &f%amount%&7]&e====="}));
+						"&e=====&7[&6Portals &9| &7Anzahl: &f%amount%&7]&e=====",
+						"&e=====&7[&6Portals &9| &7Quantity: &f%amount%&7]&e====="}));
 		languageKeys.put(path+"ListHeadline", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&e=====&7[&6Warplist &9| &7Anzahl: &f%amount%&7]&e=====",
-						"&e=====&7[&6Warplist &9| &7Quantity: &f%amount%&7]&e====="}));
+						"&e=====&7[&6Portallist &9| &7Anzahl: &f%amount%&7]&e=====",
+						"&e=====&7[&6Portallist &9| &7Quantity: &f%amount%&7]&e====="}));
 		languageKeys.put(path+"ListHelpII", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&e=====>&6Kategorie: &f%category%&e<=====",
@@ -2277,12 +2336,16 @@ public class YamlManager
 						"&ePublic: &a✔ &r| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoAccessTypeClosed",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eÖffentlich: &a✖ &r| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change",
-						"&ePublic: &a✖ &r| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&eÖffentlich: &c✖ &r| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePublic: &c✖ &r| &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoTarget", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eZielInfo: &r%target% %info% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<TargetType>+<Zusatzinfo>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&eTargetinfo: &r%target% %info% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<targettype>+<additionalinfo>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&eZielInfo: &r%target% &5<> &r%info% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<TargetType>+<Zusatzinfo>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eTargetinfo: &r%target% &5<> &r%info% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<targettype>+<additionalinfo>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoTriggerblock", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eTriggerblock: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Material>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eTriggerblock: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Material>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoThrowback", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eThrowback: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Throwback>~hover@SHOW_TEXT@Hover.Message.Change",
@@ -2297,12 +2360,12 @@ public class YamlManager
 						"&eSound: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Sound>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoPostTeleportMsg", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&ePost-Teleport-Nachricht: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportMsg>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&ePostTeleportMessage: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportMsg>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&ePost-Teleport-Nachricht:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportMsg>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePostTeleportMessage:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportMsg>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoAccessDenialMsg", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eZugangsverweigerungs-Nachricht: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&eAccessDenialMessage: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&eZugangsverweigerungs-Nachricht:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eAccessDenialMessage:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"NotOwner",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu bist nicht der Eigentümer des Potral!",
@@ -2358,10 +2421,10 @@ public class YamlManager
 		languageKeys.put(path+"AddMember", new 
 				Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDer Spieler &f%member% &awurde als neues Mitglied dem Portal &f%portal% &ahinzugefügt.",
-						"&aThe player &f%member% &was added as a new member to the portal &f%portal%."}));
+						"&aThe player &f%member% &awas added as a new member to the portal &f%portal%&a."}));
 		languageKeys.put(path+"AddingMember", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDu wurdest als Mitglied dem Portal &f%portal% &ahinzugefügt&e.",
+						"&eDu wurdest als Mitglied dem Portal &f%portal% &ehinzugefügt&e.",
 						"&eYou have been added as a member of the portal &f%portal%&e."}));
 		languageKeys.put(path+"RemovingMember", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -2369,8 +2432,8 @@ public class YamlManager
 						"&eYou have been removed as a member from portal &f%portal%&e."}));
 		languageKeys.put(path+"RemoveBlacklist",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&aDer Spieler &f%blacklist% wurden von der Blackliste des Portals &f%portal% &aentfernt!",
-						"&aThe player &f%blacklist% has been removed from the blacklist of portal &f%portal%!"}));
+						"&aDer Spieler &f%blacklist% &awurden von der Blackliste des Portals &f%portal% &aentfernt!",
+						"&aThe player &f%blacklist% &ahas been removed from the blacklist of portal &f%portal%&a!"}));
 		languageKeys.put(path+"AddBlacklist", new 
 				Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDem Portal &f%portal% &aist der Spieler &f%blacklist% &ader Blacklist zugewiesen worden.",
@@ -2381,7 +2444,7 @@ public class YamlManager
 						"&eYou have been added to the blacklist of portal &f%portal%."}));
 		languageKeys.put(path+"RemovingBlacklist", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDu bist von der Blackliste vom Portal &f%portal% &aentfernt &eworden.",
+						"&eDu bist von der Blackliste vom Portal &f%portal% &eentfernt &eworden.",
 						"&eYou have been removed from the blacklist of portal &f%portal%&e."}));
 		languageKeys.put(path+"SetCategory",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -2409,8 +2472,8 @@ public class YamlManager
 						"&cWorld: %category%"}));
 		languageKeys.put(path+"SearchValueInfo.Owner",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cWelt: %category%, ",
-						"&cWorld: %category%"}));
+						"&cEigentümer: %category%, ",
+						"&cOwner: %category%"}));
 		languageKeys.put(path+"SearchValueInfo.Category",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cKategorie: %category%, ",
@@ -2451,6 +2514,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer TargetType &f%type% &ewurde für das Portal &f%portal% &egesetzt!",
 						"&eThe TargetType &f%type% &ewas set for the &f%portal% &eportal!"}));
+		languageKeys.put(path+"SetTargetTypeWith",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer TargetType &f%type% &ewurde für das Portal &f%portal% &egesetzt! TargetInfo: &f%info%",
+						"&eThe TargetType &f%type% &ewas set for the &f%portal% &eportal! Targetinfo: &f%info%"}));
 		languageKeys.put(path+"SetPostTeleportMessage",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDie PostTeleport Nachricht >&f%msg% &e< wurde für das Portal &f%portal% &egesetzt!",
@@ -2775,6 +2842,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Spieler &f%player% &ehat den Server verlassen. Die Ausstehende Teleportanfrage ist abgebrochen worden.",
 						"&cThe player &f%player% &has left the server. The pending teleport request has been cancelled."}));
+		languageKeys.put(path+"SilentPlayerTeleport", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&aDu wurde leise zum &f%playerto% &ateleportiert! Dazu wurdest du in den Gamemode Beobachter sowie ins Vanish gesetzt!",
+						"&aYou were quietly teleported to &f%playerto%&a! For this you were put into the Gamemode Spectator as well as into the Vanish!"}));
 		languageKeys.put(path+"PlayerTeleport", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&f%playerfrom% &awurde zu &f%playerto% &ateleportiert!",
@@ -3246,32 +3317,25 @@ public class YamlManager
 						"&cDu kannst dich nicht vom Server Hub, Welt Spawn zum Server Nether Welt Spawn teleportieren!",
 						"&cYou cannot teleport from Server Hub, World Spawn to Server Nether World Spawn!"}));
 		customLanguageKeys.put("Portal.PortalRotater.Displayname",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"§5Portal §6Rotater"}));
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&5Portal &6Rotater"}));
 		customLanguageKeys.put("Portal.PortalRotater.Lore",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&6Rotiert ein Netherportal",
-						"&eLinksklicken zum rotieren.",
+						"&eRechtsklicken zum rotieren.",
 						"&fVon X zu Y zu Z und zurück nach X.",
 						"&6Rotates a Nether Portal",
-						"&eLeft click to rotate.",
+						"&eRight click to rotate.",
 						"&fFrom X to Y to Z and back to X."}));
-	}
-	
-	public void initConfigSpawnCommands() //INFO:ConfigSpawnCommands
-	{
-		configSpawnCommandsKeys.put("AtFirstSpawn.Use.SpigotCommands"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
-		configSpawnCommandsKeys.put("AtFirstSpawn.Use.BungeeCordCommands"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
-		configSpawnCommandsKeys.put("AtFirstSpawn.List.SpigotCommands"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"warp spawn", "dummy"}));
-		configSpawnCommandsKeys.put("AtFirstSpawn.List.BungeeCordCommands"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"warp spawn", "dummy"}));
+		customLanguageKeys.put("Portal.Netherportal.Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&5Netherportal Replacer"}));
+		customLanguageKeys.put("Portal.Endportal.Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&5Endportal Replacer"}));
+		customLanguageKeys.put("Portal.EndGateway.Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+						"&5End-Gateway Replacer"}));
 	}
 	
 	public void initConfigPermissionLevel() //INFO:ConfigPermissionLevel
@@ -3390,11 +3454,21 @@ public class YamlManager
 				"Default", "DefaultTwo"}));
 		configRespawnKeys.put("DeathFlowChart.Default"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"SAVEPOINT:Name>SAVEPOINT_NEWEST>FIRSTSPAWN>FIRSTSPAWN:Servername>RESPAWN_CLOSEST>RESPAWN_FARTHEST>RESPAWN_HIGHSTPRIO>RESPAWN_LOWESTPRIO>RESPAWN:Respawnname"}));
+				"SAVEPOINT:Name",
+				"SAVEPOINT_NEWEST",
+				"FIRSTSPAWN",
+				"FIRSTSPAWN:Servername",
+				"RESPAWN_CLOSEST",
+				"RESPAWN_FARTHEST",
+				"RESPAWN_HIGHSTPRIO",
+				"RESPAWN_LOWESTPRIO",
+				"RESPAWN:Respawnname"}));
 		//SAVEPOINT:Name, SAVEPOINT_NEWEST, FIRSTSPAWN, RESPAWN_CLOSEST, RESPAWN_FARTHEST, RESPAWN_HIGHSTPRIO, RESPAWN_LOWESTPRIO, RESPAWN:Respawnname
 		configRespawnKeys.put("DeathFlowChart.DefaultTwo"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"If you wish, you can add additional death flowchart. For example DeathFlowChart.DefaultThree or DeathFlowChart.<NameHere>. The name >DefaultThree< is the deathzoneplan argument, if you created a deathzone."}));
+				"If you wish, you can add additional death flowchart.",
+				"For example DeathFlowChart.DefaultThree or DeathFlowChart.<NameHere>.",
+				"The name >DefaultThree< is the deathzoneplan argument, if you created a deathzone."}));
 	}
 	
 	public void initRandomTeleport() //INFO:RandomTeleport

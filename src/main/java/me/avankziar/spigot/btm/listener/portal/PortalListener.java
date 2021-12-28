@@ -1,15 +1,21 @@
 package main.java.me.avankziar.spigot.btm.listener.portal;
 
+import java.util.LinkedHashMap;
+
 import org.bukkit.Axis;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Orientable;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockFromToEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityCombustEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -17,22 +23,28 @@ import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
+import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
+import main.java.me.avankziar.spigot.btm.manager.portal.PortalHandler;
 import main.java.me.avankziar.spigot.btm.manager.portal.PortalHandler.PortalPosition;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
+import net.md_5.bungee.api.ChatColor;
 
 public class PortalListener implements Listener
 {
 	private BungeeTeleportManager plugin;
+	private String rotater;
 	
 	public PortalListener(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
+		rotater = ChatColor.stripColor(ChatApi.tl(plugin.getYamlHandler().getCustomLang().getString("Portal.PortalRotater.Displayname")));
 	}
 	
 	@EventHandler
@@ -44,7 +56,7 @@ public class PortalListener implements Listener
 			event.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler(ignoreCancelled = true)
 	public void onSpawnMob(CreatureSpawnEvent event)
 	{
@@ -79,13 +91,27 @@ public class PortalListener implements Listener
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerPortal(PlayerPortalEvent event)
 	{
-		if(event.isCancelled())
+		event.setCancelled(true);
+		if(event.getCause() == TeleportCause.END_PORTAL)
 		{
-			return;
-		}
-		if(plugin.getPortalHandler().inPortalArea(event.getPlayer().getLocation(), 0))
+			if(event.isCancelled())
+			{
+				return;
+			}
+			if(!plugin.getPortalHandler().inPortalArea(event.getPlayer().getLocation(), 1))
+			{
+				event.setCancelled(false);
+			}
+		} else if(event.getCause() == TeleportCause.NETHER_PORTAL)
 		{
-			event.setCancelled(true);
+			if(event.isCancelled())
+			{
+				return;
+			}
+			if(!plugin.getPortalHandler().inPortalArea(event.getPlayer().getLocation(), 1))
+			{
+				event.setCancelled(false);
+			}
 		}
 	}
 	
@@ -110,42 +136,28 @@ public class PortalListener implements Listener
 		}
 	}
 	
-	@EventHandler(ignoreCancelled = true)
+	private static LinkedHashMap<String, Long> cooldownPortalmap = new LinkedHashMap<String, Long>();
+	
+	private void addCool(Player player)
+	{
+		if(cooldownPortalmap.containsKey(player.getName()))
+		{
+			cooldownPortalmap.replace(player.getName(), System.currentTimeMillis()+1000);
+		} else
+		{
+			cooldownPortalmap.put(player.getName(), System.currentTimeMillis()+1000);
+		}
+	}
+	
+	@EventHandler
 	public void onPortalSelect(PlayerInteractEvent event)
 	{
 		final Player player = event.getPlayer();
-		if(plugin.getPortalHandler().portalCreateMode.contains(player.getUniqueId()))
-		{
-			final Location l = event.getClickedBlock().getLocation();
-			final ServerLocation loc = new ServerLocation(
-					new ConfigHandler(plugin).getServer(), l.getWorld().getName(),
-					l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
-			if(event.getAction() == Action.LEFT_CLICK_BLOCK)
-			{
-				event.setCancelled(true);
-				plugin.getPortalHandler().addPortalPosition(player.getUniqueId(), true, loc);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.InteractEvent.PosOne")));
-			} else if(event.getAction() == Action.RIGHT_CLICK_BLOCK)
-			{
-				event.setCancelled(true);
-				plugin.getPortalHandler().addPortalPosition(player.getUniqueId(), false, loc);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.InteractEvent.PosTwo")));
-			} else
-			{
-				return;
-			}
-			PortalPosition pp = plugin.getPortalHandler().getPortalPosition(player.getUniqueId());
-			if(pp.pos1 != null && pp.pos2 != null)
-			{
-				player.spigot().sendMessage(ChatApi.generateTextComponent(plugin.getYamlHandler().getLang().getString("CmdPortal.InteractEvent.NowCreate")
-						.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_CREATE).trim())));
-			}
-		} else if(event.getItem() != null 
+		if(        event.getItem() != null 
 				&& event.getItem().hasItemMeta() 
 				&& event.getItem().getItemMeta().hasDisplayName()
-				&& event.getItem().getItemMeta().getDisplayName()
-				.equals(plugin.getYamlHandler().getCustomLang().getString("Portal.PortalRotater.Displayname"))
-				&& event.getAction() == Action.LEFT_CLICK_BLOCK
+				&& ChatColor.stripColor(event.getItem().getItemMeta().getDisplayName()).equals(rotater)
+				&& event.getAction() == Action.RIGHT_CLICK_BLOCK
                 && event.getClickedBlock().getType() == Material.NETHER_PORTAL)
 		{
 			BlockData block = event.getClickedBlock().getBlockData();
@@ -154,16 +166,80 @@ public class PortalListener implements Listener
                 Orientable rotatable = (Orientable) block;
                 if (rotatable.getAxis() == Axis.X) 
                 {
-                    rotatable.setAxis(Axis.Y);
-                } else if (rotatable.getAxis() == Axis.Y) 
-                {
                     rotatable.setAxis(Axis.Z);
                 } else {
                     rotatable.setAxis(Axis.X);
                 }
                 event.getClickedBlock().setBlockData(rotatable);
             }
-            event.setCancelled(true);
+            event.setCancelled(false);
+            return;
+		}
+		if(PortalHandler.portalCreateMode.contains(player.getUniqueId()))
+		{
+			if(cooldownPortalmap.containsKey(player.getName()))
+			{
+				if(cooldownPortalmap.get(player.getName()) > System.currentTimeMillis())
+				{
+					return;
+				}
+			}
+			addCool(player);
+			final Location l = event.getClickedBlock().getLocation();
+			final ServerLocation loc = new ServerLocation(
+					new ConfigHandler(plugin).getServer(), l.getWorld().getName(),
+					l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch());
+			if(event.getAction() == Action.LEFT_CLICK_BLOCK)
+			{
+				event.setCancelled(true);
+				event.setUseInteractedBlock(Result.DENY);
+				event.setUseItemInHand(Result.DENY);
+				plugin.getPortalHandler().addPortalPosition(player.getUniqueId(), true, loc);
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.InteractEvent.PosOne")));
+			} else if(event.getAction() == Action.RIGHT_CLICK_BLOCK)
+			{
+				event.setCancelled(true);
+				event.setUseInteractedBlock(Result.DENY);
+				event.setUseItemInHand(Result.DENY);
+				plugin.getPortalHandler().addPortalPosition(player.getUniqueId(), false, loc);
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.InteractEvent.PosTwo")));
+			} else
+			{
+				return;
+			}
+			PortalPosition pp = plugin.getPortalHandler().getPortalPosition(player.getUniqueId());
+			if(pp != null && pp.pos1 != null && pp.pos2 != null)
+			{
+				player.spigot().sendMessage(ChatApi.generateTextComponent(plugin.getYamlHandler().getLang().getString("CmdPortal.InteractEvent.NowCreate")
+						.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_CREATE).trim())));
+			}
+		}
+	}
+	
+	@EventHandler(priority = EventPriority.HIGH)
+	public void onBlockPlace(BlockPlaceEvent event)
+	{
+		if(!event.getPlayer().hasPermission(StaticValues.PERM_BYPASS_PORTALPLACER))
+		{
+			return;
+		}
+		if(event.getItemInHand() != null && event.getItemInHand().hasItemMeta())
+		{
+			final String name = ChatColor.stripColor(event.getItemInHand().getItemMeta().getDisplayName());
+			if(name.equals(
+					ChatColor.stripColor(ChatApi.tl(plugin.getYamlHandler().getCustomLang().getString("Portal.Netherportal.Displayname")))))
+			{
+				event.getBlock().setType(Material.NETHER_PORTAL);
+			} else if(name.equals(
+					ChatColor.stripColor(ChatApi.tl(plugin.getYamlHandler().getCustomLang().getString("Portal.Endportal.Displayname")))))
+			{
+				 event.getBlockPlaced().setType(Material.END_PORTAL);
+			} else if(name.equals(
+					ChatColor.stripColor(ChatApi.tl(plugin.getYamlHandler().getCustomLang().getString("Portal.EndGateway.Displayname")))))
+			{
+				 Block block = event.getBlockPlaced();
+				 block.setType(Material.END_GATEWAY);
+			}
 		}
 	}
 }

@@ -33,7 +33,7 @@ public class RespawnHandler
 {
 	private BungeeTeleportManager plugin;
 	private static LinkedHashMap<UUID, ServerLocation> deathpoint = new LinkedHashMap<>();
-	public ArrayList<UUID> deathzoneCreateMode = new ArrayList<>();
+	public static ArrayList<UUID> deathzoneCreateMode = new ArrayList<>();
 	private LinkedHashMap<UUID, DeathzonePosition> deathzoneposition = new LinkedHashMap<>();
 	
 	public RespawnHandler(BungeeTeleportManager plugin)
@@ -127,9 +127,9 @@ public class RespawnHandler
 				{
 					break;
 				}
-				s.replace(replacer[i], replacer[i+1]);
+				s = s.replace(replacer[i], replacer[i+1]);
 			}
-			player.spigot().sendMessage(ChatApi.generateTextComponent(s));
+			player.sendMessage(ChatApi.tl(s));
 		}
 	}
 	
@@ -153,6 +153,8 @@ public class RespawnHandler
 				simulate(player, simulate, "CmdDeathzone.Simulate.DeathFlowChart.CheckForDeathLocation");
 			} else
 			{
+				simulate(player, simulate, "CmdDeathzone.Simulate.DeathFlowChart.DeathzoneOrDeathzonePathNotExist");
+				simpleRevive(player, simulate);
 				return;
 			}
 		}
@@ -167,7 +169,7 @@ public class RespawnHandler
 				+ "`pos_one_x` <= ? AND `pos_two_x` >= ? AND "
 				+ "`pos_one_y` <= ? AND `pos_two_y` >= ? AND "
 				+ "`pos_one_z` <= ? AND `pos_two_z` >= ? "
-				+ "ORDER BY `priority` DESC",
+				+ "ORDER BY `priority` DESC, `id` ASC",
 				server, world, server, world,
 				x, x, y, y, z, z);
 		if(dz == null
@@ -177,10 +179,8 @@ public class RespawnHandler
 			simpleRevive(player, simulate);
 			return;
 		}
-		String p = plugin.getYamlHandler().getRespawn().getString("DeathFlowChart."+dz.getDeathzonepath());
-		simulate(player, simulate, "CmdDeathzone.Simulate.DeathFlowChart.DeathzonepathFound", "%value%", p);
-		String[] path = p.split(">");
-		for(String s : path)
+		simulate(player, simulate, "CmdDeathzone.Simulate.DeathFlowChart.DeathzonepathFound", "%value%", dz.getDeathzonepath());
+		for(String s : plugin.getYamlHandler().getRespawn().getStringList("DeathFlowChart."+dz.getDeathzonepath()))
 		{
 			if(sendToRevive(player, s, simulate))
 			{
@@ -216,7 +216,7 @@ public class RespawnHandler
 				return false;
 			}
 			simulate(player, simulate, "CmdDeathzone.Simulate.Revive.FoundedAndSendTo", "%value%", simple, "%name%", v.getServer());
-			new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, v);
+			new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, v, false);
 		} else if(simple.startsWith("RESPAWN"))
 		{
 			Respawn r = null;

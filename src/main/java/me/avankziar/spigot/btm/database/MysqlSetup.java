@@ -161,7 +161,7 @@ public class MysqlSetup
 		+ " triggerblock text,"
 		+ " price double DEFAULT '0.00',"
 		+ " throwback double DEFAULT '0.7',"
-		+ " portalportectionradius int DEFAULT '1',"
+		+ " portalprotectionradius int DEFAULT '1',"
 		+ " sound text,"
 		+ " cooldown BIGINT,"
 		+ " targettype text,"

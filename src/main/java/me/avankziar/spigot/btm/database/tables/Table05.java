@@ -146,7 +146,7 @@ public interface Table05
 		        	preparedStatement.setObject(i, o);
 		        	i++;
 		        }
-				
+				plugin.getLogger().info(preparedStatement.toString());
 				preparedStatement.executeUpdate();
 				return true;
 			} catch (SQLException e) {
@@ -316,7 +316,7 @@ public interface Table05
 		    	  }
 		      }
 		}
-		return null;
+		return new ArrayList<>();
 	}
 	
 	default ArrayList<Warp> getTopV(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
@@ -389,7 +389,7 @@ public interface Table05
 		    	  }
 		      }
 		}
-		return null;
+		return new ArrayList<>();
 	}
 	
 	default ArrayList<Warp> getAllListAtV(BungeeTeleportManager plugin, String orderByColumn,
@@ -474,6 +474,6 @@ public interface Table05
 		    	  }
 		      }
 		}
-		return null;
+		return new ArrayList<>();
 	}
 }

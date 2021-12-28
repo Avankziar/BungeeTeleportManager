@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.me.avankziar.aep.spigot.handler.TimeHandler;
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.FirstSpawn;
 import main.java.me.avankziar.general.object.Home;
@@ -33,6 +32,7 @@ import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.assistance.MatchApi;
+import main.java.me.avankziar.spigot.btm.assistance.TimeHandler;
 import main.java.me.avankziar.spigot.btm.assistance.Utility;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler.Type;
@@ -40,9 +40,7 @@ import main.java.me.avankziar.spigot.btm.events.listenable.playertoposition.Port
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.btm.handler.ForbiddenHandlerSpigot;
-import main.java.me.avankziar.spigot.btm.manager.firstspawn.FirstSpawnHandler;
 import main.java.me.avankziar.spigot.btm.manager.portal.PortalHandler.PortalPosition;
-import main.java.me.avankziar.spigot.btm.manager.respawn.RespawnHandler;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -116,7 +114,7 @@ public class PortalHelper
 								.replace("%player%", player.getName())));
 						return;
 					}*/
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyWarpsToUse")
+					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalToUse")
 							.replace("%amount%", String.valueOf(i))));
 					return;
 				}
@@ -228,7 +226,7 @@ public class PortalHelper
 				{
 					return;
 				}*/
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.RequestInProgress")));
+				//player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.RequestInProgress"))); Muss dat sein?
 				switch(portal.getTargetType())
 				{
 				case BACK:
@@ -239,6 +237,7 @@ public class PortalHelper
 					}
 					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 					plugin.getBackHelper().directBackMethode(player, portal.getOwnExitPosition());
+					plugin.getPortalHandler().throwback(portal, player);
 					return;
 				case DEATHBACK:
 					if(callEventIsCancelled(player, null, portal))
@@ -248,6 +247,7 @@ public class PortalHelper
 					}
 					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 					plugin.getBackHelper().directDeathBackMethode(player, portal.getOwnExitPosition());
+					plugin.getPortalHandler().throwback(portal, player);
 					return;
 				case COMMAND:
 					if(callEventIsCancelled(player, null, portal))
@@ -255,9 +255,16 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
-					plugin.getPortalHandler().sendPortalExistPointAsBack(player, portal.getOwnExitPosition());
-					Bukkit.dispatchCommand(player, portal.getTargetInformation());
 					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
+					plugin.getPortalHandler().sendPortalExistPointAsBack(player, portal.getOwnExitPosition()); //FIXME irgendwie wird yam und pitch nicht genommen
+					new BukkitRunnable()
+					{
+						@Override
+						public void run()
+						{
+							Bukkit.dispatchCommand(player, portal.getTargetInformation());
+						}
+					}.runTask(plugin);
 					plugin.getPortalHandler().throwback(portal, player);
 					return;
 				case FIRSTSPAWN:
@@ -269,8 +276,7 @@ public class PortalHelper
 							return;
 						}
 						FirstSpawn fs = (FirstSpawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", portal.getTargetInformation());
-						player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
-						new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, fs);
+						plugin.getPortalHandler().sendPlayerToDestination(player, fs.getLocation(), portal);
 					}
 					break;
 				case RESPAWN:
@@ -282,8 +288,7 @@ public class PortalHelper
 							return;
 						}
 						Respawn r = (Respawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.RESPAWN, "`displayname` = ?", portal.getTargetInformation());
-						player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
-						new RespawnHandler(plugin).sendPlayerToRespawn(player, r);
+						plugin.getPortalHandler().sendPlayerToDestination(player, r.getLocation(), portal);
 					}
 					break;
 				case HOME:
@@ -350,7 +355,6 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
-					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 					plugin.getPortalHandler().sendPlayerToDestination(player, home.getLocation(), portal);
 					return;
 				case LOCATION:
@@ -362,7 +366,6 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							return;
 						}
-						player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 						plugin.getPortalHandler().sendPlayerToDestination(player, loc, portal);
 						return;
 					}
@@ -376,11 +379,7 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							break;
 						}
-						boolean destowner = false;
-						if(portal.getOwner() != null)
-						{
-							destowner = portal.getOwner().equals(player.getUniqueId().toString());
-						}
+						boolean destowner = portal.getOwner() != null && portal.getOwner().equals(player.getUniqueId().toString());
 						if(!player.hasPermission(StaticValues.PERM_BYPASS_PORTAL) && !destowner)
 						{
 							if(dest.getBlacklist() != null)
@@ -427,12 +426,17 @@ public class PortalHelper
 								return;
 							}
 						}
+						if(dest.getOwnExitPosition() == null)
+						{
+							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalOwnExitIsNull")
+									.replace("%portalname%", portal.getName())));
+							return;
+						}
 						if(callEventIsCancelled(player, dest.getOwnExitPosition(), portal))
 						{
 							plugin.getPortalHandler().throwback(portal, player);
 							return;
 						}
-						player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 						plugin.getPortalHandler().sendPlayerToDestination(player, dest.getOwnExitPosition(), portal);
 						return;
 					} else
@@ -454,10 +458,17 @@ public class PortalHelper
 									.replace("%rtp%", rtpname)));
 							return;
 						}
-						
 					}
 					if(!player.hasPermission(plugin.getYamlHandler().getRTP().getString(rtpname+".PermissionToAccess")))
 					{
+						plugin.getPortalHandler().throwback(portal, player);
+						if(portal.getAccessDenialMessage() != null)
+						{
+							player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+									.replace("%portalname%", portal.getName())
+									.replace("%player%", player.getName())));
+							return;
+						}
 						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 		 				return;
 					}
@@ -466,6 +477,14 @@ public class PortalHelper
 						rt = plugin.getRandomTeleportHelper().getSimpleTarget(player, playeruuid, playername, rtpname);
 						if(rt == null)
 						{
+							plugin.getPortalHandler().throwback(portal, player);
+							if(portal.getAccessDenialMessage() != null)
+							{
+								player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+										.replace("%portalname%", portal.getName())
+										.replace("%player%", player.getName())));
+								return;
+							}
 							return;
 						}
 					} else
@@ -473,17 +492,25 @@ public class PortalHelper
 						rt = plugin.getRandomTeleportHelper().getComplexTarget(player, playeruuid, playername, rtpname);
 						if(rt == null)
 						{
+							plugin.getPortalHandler().throwback(portal, player);
+							if(portal.getAccessDenialMessage() != null)
+							{
+								player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+										.replace("%portalname%", portal.getName())
+										.replace("%player%", player.getName())));
+								return;
+							}
 							return;
 						}
 					}
 					//POSSIBLY Here PortalEvent? Maybe...
-					plugin.getUtility().givesEffect(player, Mechanics.RANDOMTELEPORT, true, true);
 					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
+					plugin.getUtility().givesEffect(player, Mechanics.RANDOMTELEPORT, true, true);
 					plugin.getRandomTeleportHandler().sendPlayerToRT(player, rtpname, rt, playername, playeruuid);
 					return;
 				case SAVEPOINT:
 					SavePoint sp = null;
-					boolean last = true;
+					//boolean last = true;
 					if(portal.getTargetInformation() != null)
 					{
 						sp = (SavePoint) plugin.getMysqlHandler().getData(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?",
@@ -497,7 +524,7 @@ public class PortalHelper
 						}
 					} else
 					{
-						last = false;
+						//last = false;
 						sp = (SavePoint) plugin.getMysqlHandler().getData(Type.SAVEPOINT, "`player_uuid` = ? ORDER BY `id` DESC",
 								player.getUniqueId().toString());
 						if(sp == null)
@@ -512,8 +539,7 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
-					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
-					plugin.getSavePointHandler().sendPlayerToSavePoint(player, sp, player.getName(), player.getUniqueId().toString(), last);
+					plugin.getPortalHandler().sendPlayerToDestination(player, sp.getLocation(), portal);
 					return;
 				case WARP:
 					if(portal.getTargetInformation() == null)
@@ -530,13 +556,22 @@ public class PortalHelper
 						return;
 					}
 					Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
-					if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP) && !warp.getOwner().equals(player.getUniqueId().toString()))
+					boolean warpowner = warp.getOwner() != null && !warp.getOwner().equals(player.getUniqueId().toString());
+					if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP) && warpowner)
 					{
 						if(warp.getBlacklist() != null)
 						{
 							if(warp.getBlacklist().contains(player.getUniqueId().toString())
 									&& !player.hasPermission(StaticValues.PERM_BYPASS_WARP_BLACKLIST))
 							{
+								plugin.getPortalHandler().throwback(portal, player);
+								if(portal.getAccessDenialMessage() != null)
+								{
+									player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+											.replace("%portalname%", portal.getName())
+											.replace("%player%", player.getName())));
+									return;
+								}
 								player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouAreOnTheBlacklist")
 										.replace("%warpname%", warp.getName())));
 								return;
@@ -546,24 +581,39 @@ public class PortalHelper
 						{
 							if(!player.hasPermission(warp.getPermission()))
 							{
+								plugin.getPortalHandler().throwback(portal, player);
+								if(portal.getAccessDenialMessage() != null)
+								{
+									player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+											.replace("%portalname%", portal.getName())
+											.replace("%player%", player.getName())));
+									return;
+								}
 								player.spigot().sendMessage(ChatApi.tctl(
 										plugin.getYamlHandler().getLang().getString("NoPermission")));
 								return;
 							}
 						} 
-						if(warp.isHidden() && !warp.getMember().contains(player.getUniqueId().toString()))
+						if(warp.isHidden() && (warp.getMember() != null && !warp.getMember().contains(player.getUniqueId().toString())))
 						{
+							plugin.getPortalHandler().throwback(portal, player);
+							if(portal.getAccessDenialMessage() != null)
+							{
+								player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+										.replace("%portalname%", portal.getName())
+										.replace("%player%", player.getName())));
+								return;
+							}
 							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
 							return;
 						}
 					}
-					ServerLocation loc = ServerLocationHandler.deserialised(portal.getTargetInformation());
+					ServerLocation loc = warp.getLocation();
 					if(callEventIsCancelled(player, loc, portal))
 					{
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
-					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 					plugin.getPortalHandler().sendPlayerToDestination(player, loc, portal);
 					return;
 				}
@@ -613,9 +663,14 @@ public class PortalHelper
 		ServerLocation ownExitPoint = new ServerLocation(
 				cfgh.getServer(),
 				player.getLocation().getWorld().getName(),
-				player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getX(),
+				player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(),
 				player.getLocation().getYaw(), player.getLocation().getPitch());
 		PortalPosition popos = plugin.getPortalHandler().getPortalPosition(player.getUniqueId());
+		if(popos == null)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotPositionOneSet")));
+			return;
+		}
 		if(popos.pos1 == null)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotPositionOneSet")));
@@ -643,10 +698,18 @@ public class PortalHelper
 		{
 			return;
 		}
+		ServerLocation pos1 = new ServerLocation(popos.pos1.getServer(), popos.pos1.getWorldName(),
+				Math.max(popos.pos1.getX(), popos.pos2.getX()), 
+				Math.max(popos.pos1.getY(), popos.pos2.getY()),
+				Math.max(popos.pos1.getZ(), popos.pos2.getZ()));
+		ServerLocation pos2 = new ServerLocation(popos.pos1.getServer(), popos.pos1.getWorldName(),
+				Math.min(popos.pos1.getX(), popos.pos2.getX()), 
+				Math.min(popos.pos1.getY(), popos.pos2.getY()),
+				Math.min(popos.pos1.getZ(), popos.pos2.getZ()));
 		Portal portal = new Portal(0, portalName, null, player.getUniqueId().toString(),
 				AccessType.CLOSED, null, null, "default", Material.AIR,
 				0, 0.7, 0, Long.MAX_VALUE, Sound.ENTITY_ENDERMAN_TELEPORT,
-				TargetType.BACK, null, "", null, popos.pos1, popos.pos2, ownExitPoint);
+				TargetType.BACK, null, null, null, pos1, pos2, ownExitPoint);
 		if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.PORTAL.getLower())
 				&& plugin.getEco() != null
 				&& cfgh.useVault())
@@ -683,7 +746,7 @@ public class PortalHelper
 		player.spigot().sendMessage(ChatApi.clickEvent(
 				plugin.getYamlHandler().getLang().getString("CmdPortal.PortalCreate")
 				.replace("%name%", portalName),
-				ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.PORTAL_INFO)+" "+portalName));
+				ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.PORTAL_INFO).trim()+" "+portalName));
 		plugin.getPortalHandler().removePortalPosition(player.getUniqueId());
 		plugin.getUtility().setPortalsTabCompleter(player);
 		return;
@@ -691,12 +754,21 @@ public class PortalHelper
 	
 	public void portalRemove(Player player, String[] args)
 	{
+		if(args.length != 1)
+		{
+			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+			player.spigot().sendMessage(ChatApi.clickEvent(
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+			return;
+		}
 		String portalName = args[0];
-		Portal portal = portalChangeIntroSub(player, args, 1);
+		final Portal portal = portalChangeIntroSub(player, args, 1);
 		if(portal == null)
 		{
 			return;
 		}
+		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalName);
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalDelete")
 				.replace("%name%", portalName)));
@@ -717,6 +789,7 @@ public class PortalHelper
 		String playername = player.getName();
 		String playeruuid = player.getUniqueId().toString();
 		String category = null;
+		boolean other = false;
 		if(args.length >= 1)
 		{
 			if(!MatchApi.isInteger(args[0]))
@@ -745,6 +818,7 @@ public class PortalHelper
 				return;
 			}
 			playeruuid = uuid.toString();
+			other = true;
 		}
 		if(args.length >= 3)
 		{
@@ -756,18 +830,24 @@ public class PortalHelper
 		if(category != null)
 		{
 			list = ConvertHandler.convertListII(
-					plugin.getMysqlHandler().getList(MysqlHandler.Type.PORTAL, "`category` ASC, `server` ASC, `world` ASC", start, quantity,
-							"`owner` = ?  OR (`member` LIKE ?)",
+					plugin.getMysqlHandler().getList(MysqlHandler.Type.PORTAL, "`category` ASC, `pos_one_server` ASC, `pos_one_world` ASC", start, quantity,
+							"`owner_uuid` = ?  OR (`member` LIKE ?)",
 							playeruuid, "%"+playeruuid+"%"));
 		} else
 		{
 			list = ConvertHandler.convertListII(
-					plugin.getMysqlHandler().getList(MysqlHandler.Type.PORTAL, "`server` ASC, `world` ASC", start, quantity,
-							"`owner` = ?  OR (`member` LIKE ?)",
+					plugin.getMysqlHandler().getList(MysqlHandler.Type.PORTAL, "`pos_one_server` ASC, `pos_one_world` ASC", start, quantity,
+							"`owner_uuid` = ?  OR (`member` LIKE ?)",
 							playeruuid, "%"+playeruuid+"%"));
 		}
 		if(list.isEmpty())
 		{
+			if(other)
+			{
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PlayerHaveNoPortals")
+						.replace("%value%", playername)));
+				return;
+			}
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.YouHaveNoPortals")));
 			return;
 		}
@@ -890,8 +970,8 @@ public class PortalHelper
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(plugin.getYamlHandler().getLang().getString("IsNegativ")
-						.replace("%arg%", args[0]));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+						.replace("%arg%", args[0])));
 				return;
 			}
 		}
@@ -906,13 +986,13 @@ public class PortalHelper
 		{
 			list = ConvertHandler.convertListII(
 					plugin.getMysqlHandler().getList(MysqlHandler.Type.PORTAL,
-							"`category` ASC, `server` ASC, `world` ASC", start, quantity,
+							"`category` ASC, `pos_one_server` ASC, `pos_one_world` ASC", start, quantity,
 							"`category` = ?", category));
 		} else
 		{
 			list = ConvertHandler.convertListII(
 					plugin.getMysqlHandler().getTop(MysqlHandler.Type.PORTAL,
-							"`server` ASC, `world` ASC", start, quantity));
+							"`pos_one_server` ASC, `pos_one_world` ASC", start, quantity));
 		}
 		String server = new ConfigHandler(plugin).getServer();
 		String world = player.getLocation().getWorld().getName();
@@ -1091,7 +1171,7 @@ public class PortalHelper
 			player.spigot().sendMessage(ChatApi.generateTextComponent(
 					plugin.getYamlHandler().getLang().getString("CmdPortal.InfoCategory")
 					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETCATEGORY).trim())
-					.replace("%category%", portal.getCategory())
+					.replace("%category%", portal.getCategory() != null ? portal.getCategory() : "/")
 					.replace("%portal%", portal.getName())));
 			if(admin)
 			{
@@ -1166,7 +1246,12 @@ public class PortalHelper
 				plugin.getYamlHandler().getLang().getString("CmdPortal.InfoTarget")
 				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETTARGET).trim())
 				.replace("%target%", portal.getTargetType().toString())
-				.replace("%info%", portal.getTargetInformation())
+				.replace("%info%", portal.getTargetInformation() != null ? portal.getTargetInformation() : "N.A.")
+				.replace("%portal%", portal.getName())));
+		player.spigot().sendMessage(ChatApi.generateTextComponent(
+				plugin.getYamlHandler().getLang().getString("CmdPortal.InfoTriggerblock")
+				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETTRIGGERBLOCK).trim())
+				.replace("%value%", portal.getTriggerBlock().toString())
 				.replace("%portal%", portal.getName())));
 		player.spigot().sendMessage(ChatApi.generateTextComponent(
 				plugin.getYamlHandler().getLang().getString("CmdPortal.InfoThrowback")
@@ -1175,23 +1260,24 @@ public class PortalHelper
 				.replace("%portal%", portal.getName())));
 		player.spigot().sendMessage(ChatApi.generateTextComponent(
 				plugin.getYamlHandler().getLang().getString("CmdPortal.InfoProtectionRadius")
-				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPORTALPROTECTION).trim())
+				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPROTECTION).trim())
 				.replace("%value%", String.valueOf(portal.getPortalProtectionRadius()))
 				.replace("%portal%", portal.getName())));
 		player.spigot().sendMessage(ChatApi.generateTextComponent(
 				plugin.getYamlHandler().getLang().getString("CmdPortal.InfoSound")
-				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPORTALSOUND).trim())
-				.replace("%value%", String.valueOf(portal.getPortalSound()))
+				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETSOUND).trim())
+				.replace("%value%", portal.getPortalSound().toString())
 				.replace("%portal%", portal.getName())));
 		player.spigot().sendMessage(ChatApi.generateTextComponent(
 				plugin.getYamlHandler().getLang().getString("CmdPortal.InfoPostTeleportMsg")
 				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPOSTTELEPORTMSG).trim())
-				.replace("%value%", portal.getPostTeleportMessage())
+				.replace("%value%", portal.getPostTeleportMessage() != null ? 
+						(!portal.getPostTeleportMessage().isBlank() ? portal.getPostTeleportMessage() : "N.A.") : "N.A.")
 				.replace("%portal%", portal.getName())));
 		player.spigot().sendMessage(ChatApi.generateTextComponent(
 				plugin.getYamlHandler().getLang().getString("CmdPortal.InfoAccessDenialMsg")
 				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETACCESSDENIALMSG).trim())
-				.replace("%value%", portal.getAccessDenialMessage())
+				.replace("%value%", portal.getAccessDenialMessage() != null ? portal.getAccessDenialMessage() : "N.A.")
 				.replace("%portal%", portal.getName())));
 	}
 	
@@ -1223,6 +1309,7 @@ public class PortalHelper
 				.replace("%world%", worldName)
 				.replace("%server%", serverName)
 				.replace("%amount%", String.valueOf(count))));
+		plugin.getPortalHandler().updatePortalAll();
 		for(Player all : plugin.getServer().getOnlinePlayers())
 		{
 			plugin.getUtility().setPortalsTabCompleter(all);
@@ -1243,9 +1330,17 @@ public class PortalHelper
 		int page = 0;
 		if(!MatchApi.isInteger(args[0]))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+					.replace("%arg%", args[0])));
 			return;
 		}
+		if(!MatchApi.isPositivNumber(page))
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+					.replace("%arg%", args[0])));
+			return;
+		}
+		page = Integer.parseInt(args[0]);
 		int start = page*10;
 		int quantity = 10;
 		int i = 1;
@@ -1261,7 +1356,11 @@ public class PortalHelper
 				continue;
 			}
 			String[] arg = args[i].split(":");
-			String option = arg[0];
+			if(arg.length != 2)
+			{
+				continue;
+			}
+			String option = arg[0].toLowerCase();
 			if(i > 1)
 			{
 				query += " AND ";
@@ -1271,27 +1370,27 @@ public class PortalHelper
 			switch(option)
 			{
 			case "server":
-				query += "`server` = ?";
+				query += "`pos_one_server` = ?";
 				whereObjects.add(arg[1]);
 				s += plugin.getYamlHandler().getLang().getString("CmdPortal.SearchValueInfo.Server").replace("%category%", "&b"+arg[1]+"&f");
 				break;
 			case "world":
-				query += "`world` = ?";
+				query += "`pos_one_world` = ?";
 				whereObjects.add(arg[1]);
 				s += plugin.getYamlHandler().getLang().getString("CmdPortal.SearchValueInfo.World").replace("%category%", "&d"+arg[1]+"&f");
 				break;
 			case "owner":
 				if(arg[1].equalsIgnoreCase("null"))
 				{
-					query += "`owner` IS NULL";
+					query += "`owner_uuid` IS NULL";
 					s += plugin.getYamlHandler().getLang().getString("CmdPortal.SearchValueInfo.Owner").replace("%category%", "&4null&f");
 				} else if(arg[1].equalsIgnoreCase("notnull"))
 				{
-					query += "`owner` IS NOT NULL";
+					query += "`owner_uuid` IS NOT NULL";
 					s += plugin.getYamlHandler().getLang().getString("CmdPortal.SearchValueInfo.Owner").replace("%category%", "&4not null&f");
 				} else
 				{
-					query += "`owner` = ?";
+					query += "`owner_uuid` = ?";
 					UUID uuid = Utility.convertNameToUUID(arg[1]);
 					if(uuid == null)
 					{
@@ -1319,8 +1418,16 @@ public class PortalHelper
 			i++;
 		}
 		Object[] whereObject = whereObjects.toArray(new Object[whereObjects.size()]);
-		ArrayList<Portal> list = ConvertHandler.convertListII(plugin.getMysqlHandler().getList(
-								Type.PORTAL, "`id` ASC", start, quantity, query, whereObject));
+		ArrayList<Portal> list = new ArrayList<>();
+		if(query.isBlank() || query.isBlank())
+		{
+			list = ConvertHandler.convertListII(plugin.getMysqlHandler().getTop(
+					Type.PORTAL, "`id` ASC", start, quantity));
+		} else
+		{
+			list = ConvertHandler.convertListII(plugin.getMysqlHandler().getList(
+					Type.PORTAL, "`id` ASC", start, quantity, query, whereObject));
+		}
 		String server = new ConfigHandler(plugin).getServer();
 		String world = player.getLocation().getWorld().getName();
 		int last = plugin.getMysqlHandler().lastID(MysqlHandler.Type.PORTAL);
@@ -1419,7 +1526,9 @@ public class PortalHelper
 		}
 		String warpNewName = args[1];
 		final int mysqlID = portal.getId();
+		plugin.getPortalHandler().deletePortalInList(portal);
 		portal.setName(warpNewName);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetName")
 				.replace("%portalold%", args[0])
@@ -1451,6 +1560,8 @@ public class PortalHelper
 			newowneruuid = uuid.toString();
 		}
 		portal.setOwner(newowneruuid);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		if(newowneruuid == null)
 		{
@@ -1485,6 +1596,8 @@ public class PortalHelper
 			perm = null;
 		}
 		portal.setPermission(perm);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		if(perm == null)
 		{
@@ -1534,6 +1647,8 @@ public class PortalHelper
 			return;
 		}
 		portal.setPricePerUse(price);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPrice")
 				.replace("%portal%", portal.getName())
@@ -1565,6 +1680,8 @@ public class PortalHelper
 		{
 			portal.getMember().add(newmember);
 		}
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.AddMember")
 				.replace("%portal%", portal.getName())
@@ -1598,6 +1715,8 @@ public class PortalHelper
 		{
 			portal.getMember().add(newmember);
 		}
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.AddMember")
 				.replace("%portal%", portal.getName())
@@ -1642,6 +1761,8 @@ public class PortalHelper
 		{
 			portal.setMember(null);
 		}
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.RemoveMember")
 				.replace("%portal%", portal.getName())
@@ -1671,6 +1792,8 @@ public class PortalHelper
 		{
 			portal.setMember(null);
 		}
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.RemoveMember")
 				.replace("%portal%", portal.getName())
@@ -1700,6 +1823,8 @@ public class PortalHelper
 		{
 			portal.getBlacklist().add(newmember);
 		}
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.AddBlacklist")
 				.replace("%portal%", portal.getName())
@@ -1729,9 +1854,11 @@ public class PortalHelper
 		{
 			portal.setBlacklist(null);
 		}
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.RemoveBlacklist")
-				.replace("%warp%", portal.getName())
+				.replace("%portal%", portal.getName())
 				.replace("%blacklist%", args[1])));
 		plugin.getTeleportHandler().sendMessage(player, player.getName(), args[1],
 				plugin.getYamlHandler().getLang().getString("CmdPortal.RemovingBlacklist").replace("%portal%", portal.getName()),
@@ -1762,7 +1889,14 @@ public class PortalHelper
 		{
 			return;
 		}
-		portal.setOwnExitPosition(Utility.getLocation(player.getLocation()));
+		ServerLocation ownExitPoint = new ServerLocation(
+				new ConfigHandler(plugin).getServer(),
+				player.getLocation().getWorld().getName(),
+				player.getLocation().getX(), player.getLocation().getY(), player.getLocation().getZ(),
+				player.getLocation().getYaw(), player.getLocation().getPitch());
+		portal.setOwnExitPosition(ownExitPoint);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPosition")
 				.replace("%portal%", portal.getName())));
@@ -1776,19 +1910,29 @@ public class PortalHelper
 		{
 			return;
 		}
-		PortalPosition pp = plugin.getPortalHandler().getPortalPosition(player.getUniqueId());
-		if(pp == null)
+		PortalPosition popos = plugin.getPortalHandler().getPortalPosition(player.getUniqueId());
+		if(popos == null)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoPositionSetted")));
 			return;
 		}
-		if(pp.pos1 == null || pp.pos2 == null)
+		if(popos.pos1 == null || popos.pos2 == null)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.OnlyOnePositionSetted")));
 			return;
 		}
-		portal.setPosition1(pp.pos1);
-		portal.setPosition2(pp.pos2);
+		ServerLocation pos1 = new ServerLocation(popos.pos1.getServer(), popos.pos1.getWorldName(),
+				Math.max(popos.pos1.getX(), popos.pos2.getX()), 
+				Math.max(popos.pos1.getY(), popos.pos2.getY()),
+				Math.max(popos.pos1.getZ(), popos.pos2.getZ()));
+		ServerLocation pos2 = new ServerLocation(popos.pos1.getServer(), popos.pos1.getWorldName(),
+				Math.min(popos.pos1.getX(), popos.pos2.getX()), 
+				Math.min(popos.pos1.getY(), popos.pos2.getY()),
+				Math.min(popos.pos1.getZ(), popos.pos2.getZ()));
+		portal.setPosition1(pos1);
+		portal.setPosition2(pos2);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPositions")
 				.replace("%portal%", portal.getName())));
@@ -1832,18 +1976,24 @@ public class PortalHelper
 		{
 			if(!args[i].contains(":"))
 			{
-				i++;
 				continue;
 			}
 			String[] arg = args[i].split(":");
+			if(arg.length != 2)
+			{
+				continue;
+			}
 			String option = arg[0];
 			String v = arg[1];
 			if(!MatchApi.isLong(v))
 			{
-				i++;
 				continue;
 			}
 			long value = Long.parseLong(v);
+			if(!MatchApi.isPositivNumber(value))
+			{
+				continue;
+			}
 			switch(option)
 			{
 			case "year":
@@ -1867,9 +2017,10 @@ public class PortalHelper
 				cd += value*1000;
 				break;
 			}
-			i++;
 		}
 		portal.setCooldown(cd);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetCooldown")
 				.replace("%portal%", portal.getName())
@@ -1916,6 +2067,7 @@ public class PortalHelper
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.WrongTargetType")
 					.replace("%target%", args[1])));
+			return;
 		}
 		String tinfos = null;
 		switch(target)
@@ -2016,7 +2168,7 @@ public class PortalHelper
 			tinfos = args[2];
 			break;
 		case COMMAND:
-			if(args.length < 3)
+			if(args.length < 2)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.MoreAdditionalArgs")
 						.replace("%type%", target.toString())
@@ -2025,8 +2177,8 @@ public class PortalHelper
 				return;
 			}
 			portal.setTargetType(target);
-			tinfos = "";
-			for(int i = 3; i < args.length; i++)
+			tinfos = "/";
+			for(int i = 2; i < args.length; i++)
 			{
 				tinfos += args[i];
 				if(i+1 < args.length)
@@ -2034,7 +2186,7 @@ public class PortalHelper
 					tinfos += " ";
 				}
 			}
-			portal.setTargetInformation(tinfos);
+			portal.setTargetInformation(tinfos.substring(1));
 			break;
 		case LOCATION:
 			if(args.length != 2)
@@ -2048,9 +2200,9 @@ public class PortalHelper
 			portal.setTargetInformation(tinfos);
 			break;
 		case FIRSTSPAWN:
-			if(args.length != 2)
+			if(args.length != 3)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.NoArgs")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.OneAdditionalArgs")
 						.replace("%type%", target.toString())));
 				return;
 			}
@@ -2058,9 +2210,9 @@ public class PortalHelper
 			tinfos = args[2];
 			portal.setTargetInformation(tinfos);
 		case RESPAWN:
-			if(args.length != 2)
+			if(args.length != 3)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.NoArgs")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.OneAdditionalArgs")
 						.replace("%type%", target.toString())));
 				return;
 			}
@@ -2068,6 +2220,8 @@ public class PortalHelper
 			tinfos = args[2];
 			portal.setTargetInformation(tinfos);
 		}
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		if(tinfos == null)
 		{
@@ -2117,7 +2271,7 @@ public class PortalHelper
 			return;
 		}
 		String msg = "";
-		for(int i = 2; i < args.length; i++)
+		for(int i = 1; i < args.length; i++)
 		{
 			msg += args[i];
 			if(i+1 < args.length)
@@ -2126,6 +2280,8 @@ public class PortalHelper
 			}
 		}
 		portal.setPostTeleportMessage(msg);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPostTeleportMessage")
 				.replace("%portal%", portal.getName())
@@ -2166,7 +2322,7 @@ public class PortalHelper
 			return;
 		}
 		String msg = "";
-		for(int i = 2; i < args.length; i++)
+		for(int i = 1; i < args.length; i++)
 		{
 			msg += args[i];
 			if(i+1 < args.length)
@@ -2174,7 +2330,9 @@ public class PortalHelper
 				msg += " ";
 			}
 		}
-		portal.setPostTeleportMessage(msg);
+		portal.setAccessDenialMessage(msg);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetAccesDenialMessage")
 				.replace("%portal%", portal.getName())
@@ -2199,6 +2357,8 @@ public class PortalHelper
 					.replace("%value%", args[1])));
 		}
 		portal.setTriggerBlock(m);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetTriggerBlock")
 				.replace("%portal%", portal.getName())
@@ -2227,6 +2387,8 @@ public class PortalHelper
 			return;
 		}
 		portal.setThrowback(tb);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetThrowback")
 				.replace("%portal%", portal.getName())
@@ -2255,6 +2417,8 @@ public class PortalHelper
 			return;
 		}
 		portal.setPortalProtectionRadius(ppr);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPortalProtectionRadius")
 				.replace("%portal%", portal.getName())
@@ -2277,8 +2441,11 @@ public class PortalHelper
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoSound")
 					.replace("%value%", args[1])));
+			return;
 		}
 		portal.setPortalSound(s);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetSound")
 				.replace("%portal%", portal.getName())
@@ -2304,6 +2471,8 @@ public class PortalHelper
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalIsNowClosed")
 					.replace("%portal%", portal.getName())));
 		}
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		return;
 	}
@@ -2360,24 +2529,24 @@ public class PortalHelper
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
-		if(plugin.getPortalHandler().portalCreateMode.contains(player.getUniqueId()))
+		if(PortalHandler.portalCreateMode.contains(player.getUniqueId()))
 		{
 			
 			int index = -1;
-			for(int i = 0; i < plugin.getPortalHandler().portalCreateMode.size(); i++)
+			for(int i = 0; i < PortalHandler.portalCreateMode.size(); i++)
 			{
-				UUID uuid = plugin.getPortalHandler().portalCreateMode.get(i);
+				UUID uuid = PortalHandler.portalCreateMode.get(i);
 				if(uuid.equals(player.getUniqueId()))
 				{
 					index = i;
 					break;
 				}
 			}
-			plugin.getPortalHandler().portalCreateMode.remove(index);
+			PortalHandler.portalCreateMode.remove(index);
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalCreationMode.Removed")));
 		} else
 		{
-			plugin.getPortalHandler().portalCreateMode.add(player.getUniqueId());
+			PortalHandler.portalCreateMode.add(player.getUniqueId());
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalCreationMode.Added")));
 		}
 	}
@@ -2394,10 +2563,30 @@ public class PortalHelper
 		}
 		ItemStack is = new ItemStack(Material.CLOCK);
 		ItemMeta im = is.getItemMeta();
-		im.setDisplayName(plugin.getYamlHandler().getCustomLang().getString("Portal.PortalRotater.Displayname"));
-		im.setLore(plugin.getYamlHandler().getCustomLang().getStringList("Portal.PortalRotater.Lore"));
+		im.setDisplayName(ChatApi.tl(plugin.getYamlHandler().getCustomLang().getString("Portal.PortalRotater.Displayname")));
+		ArrayList<String> lore = new ArrayList<>();
+		for(String s : plugin.getYamlHandler().getCustomLang().getStringList("Portal.PortalRotater.Lore"))
+		{
+			lore.add(ChatApi.tl(s));
+		}
+		im.setLore(lore);
 		is.setItemMeta(im);
 		player.getInventory().addItem(is);
+		ItemStack np = new ItemStack(Material.MAGENTA_WOOL);
+		ItemMeta npim = np.getItemMeta();
+		npim.setDisplayName(ChatApi.tl(plugin.getYamlHandler().getCustomLang().getString("Portal.Netherportal.Displayname")));
+		np.setItemMeta(npim);
+		player.getInventory().addItem(np);
+		ItemStack ep = new ItemStack(Material.GRAY_WOOL);
+		ItemMeta epim = ep.getItemMeta();
+		epim.setDisplayName(ChatApi.tl(plugin.getYamlHandler().getCustomLang().getString("Portal.Endportal.Displayname")));
+		ep.setItemMeta(epim);
+		player.getInventory().addItem(ep);
+		ItemStack eg = new ItemStack(Material.BLACK_WOOL);
+		ItemMeta egim = eg.getItemMeta();
+		egim.setDisplayName(ChatApi.tl(plugin.getYamlHandler().getCustomLang().getString("Portal.EndGateway.Displayname")));
+		eg.setItemMeta(egim);
+		player.getInventory().addItem(eg);
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalItemRotater")));
 	}
 	

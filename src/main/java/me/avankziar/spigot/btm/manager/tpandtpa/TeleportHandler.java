@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -503,6 +504,58 @@ public class TeleportHandler
 	{
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
 		sendForceObject(player, teleport, plugin.getYamlHandler().getLang().getString("NoPlayerExist", ""));
+	}
+	
+	public void tpsilent(Player player, String playeruuid, String playername)
+	{
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
+		if(Bukkit.getPlayer(UUID.fromString(playeruuid)) != null)
+		{
+			Player targets = Bukkit.getPlayer(UUID.fromString(playeruuid));
+			BackHandler bh = new BackHandler(plugin);
+			bh.sendBackObject(player, bh.getNewBack(player));
+			new BukkitRunnable()
+			{
+				@Override
+				public void run()
+				{
+					if(plugin.getYamlHandler().getConfig().getBoolean("SilentTp.DoVanish", true))
+					{
+						if(plugin.getVanish() != null)
+						{
+							if(!plugin.getVanish().isInvisible(player))
+							{
+								plugin.getVanish().hidePlayer(player);
+							}
+						} else
+						{
+							Bukkit.dispatchCommand(player, 
+									plugin.getYamlHandler().getConfig().getString("SilentTp.VanishCommand", "vanish"));
+						}
+					}
+					player.teleport(targets);
+					player.sendMessage(
+							ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.SilentPlayerTeleport")
+							.replace("%playerto%", targets.getName())));
+				}
+			}.runTaskLater(plugin, 1);
+		} else
+		{
+			ByteArrayOutputStream stream = new ByteArrayOutputStream();
+	        DataOutputStream out = new DataOutputStream(stream);
+	        try {
+				out.writeUTF(StaticValues.TP_SILENT);
+				out.writeUTF(player.getUniqueId().toString());
+				out.writeUTF(player.getName());
+				out.writeUTF(playeruuid);
+				out.writeUTF(playername);
+				out.writeUTF(plugin.getYamlHandler().getLang().getString("NoPlayerExist", ""));
+				new BackHandler(plugin).addingBack(player, out);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	        player.sendPluginMessage(plugin, StaticValues.TP_TOBUNGEE, stream.toByteArray());
+		}        
 	}
 	
 	public void tpAll(Player player, boolean isSpecific, String server, String world)

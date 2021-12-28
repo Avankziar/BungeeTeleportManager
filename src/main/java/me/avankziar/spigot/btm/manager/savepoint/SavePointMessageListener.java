@@ -46,6 +46,13 @@ public class SavePointMessageListener implements PluginMessageListener
                 	float yaw = in.readFloat();
                 	float pitch = in.readFloat();
                 	boolean last = in.readBoolean();
+                	if(Bukkit.getWorld(worldName) == null)
+					{
+						player.sendMessage(
+								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+										.replace("%world%", worldName)));
+						return;
+					}
                 	new BukkitRunnable()
 					{
             			int i = 0;

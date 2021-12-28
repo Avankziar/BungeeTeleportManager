@@ -22,6 +22,19 @@ Future =========================================================================
   - /entityteleportdelete | Der angeschaute Npc verliert alle verbundenen Teleportpunkte
 - BedSpawn (?)
   - Passiver Speicherpunkt ohne aktive Speicherung/Laden. Heißt, weder Spieler/Admins sollen den speichern können.
+- Mysql Performance Befehl
+- Registerierte EntitytsTeleporter dürfen nicht benannt oder teleportiert werden.
+- Forbiddenlist Entitytransport hinzufügen, mit EntityTypes einstellbar.
+- Registerierte EntitytsTeleporter dürfen nicht benannt oder teleportiert werden.
+
+Build 6-0-x
+- /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
+- +Eventuell die Lang aufsplitten
+- +tpa tabs gehen nicht
+- +tabs für addmember portal etc
+- +AdvancedPortals converter
+- +bei portalitem die replaceritems für netherportal, gateway und enderportalblock geben und listener umschreiben.
+- +/tpsilent <Spielername> hinzufügen. Ist eine Tpto, wo der ausführende Spieler vorher in GM 3 versetzt wird.
 
 Build 6 =======================================================================================================================
 - Bungee wie Spigot MysqlSetup connection und Reconnection treiber updaten, siehe Scc
@@ -50,12 +63,11 @@ Build 6 ========================================================================
 - ++Back Mysql Tabelle erhält neuen Wert. "home_priority". Dieses setzt das Home ein, welches priorisiert wird, falls /home ohne Argument eingesetzt wird.
 - ++/home, ohne Argument möglich machen, damit man das erste (priorisierte) Home nimmt.
   - ++/sethome <Homename> [Priorisiert(boolean)]
-  - ++/homeprio <Homename> | Einen vorher priorisierten Home, wird entpriorisiert. Andere Spieler Homes können NICHT prio werden. Auch keine bypass
+  - ++/homesetpriority <Homename> | Einen vorher priorisierten Home, wird entpriorisiert. Andere Spieler Homes können NICHT prio werden. Auch keine bypass
 - ++Explanation Pfad in der commands.yml wurde entfernt.
 - ++/warpsearch <Seitenzahl> <xxxx:Value>; Die Arguments sind so aufgebaut, dass ein Einsatzwert bspw. "server:" genommen wird.
     Sollte hinter dem ":" was stehen, wird genau danach gesucht. Falls der eintrag fehlt, wird nach allen gesucht,
     welche einen server haben. Weitere Argumente sind "owner", "world", "member", "category".
-- Mysql Performance Befehl
 - ++Warps mit dem Boolean PortalOnly ausstatten um den Warp nicht mehr per Befehl ansteuern zu können. Gegenteil auch möglich.
    Aka OnlyPortal(ONLY), NotPortal(FORBIDDEN), Keine(IRRELEVANT)
 - ++/warpsetportalaccess <Portalname> <Wert> hinzugefügt
@@ -81,9 +93,10 @@ Build 6 ========================================================================
 - ++/warpsetpassword, das passwort darf kein existierender Spielername sein.
 - ++/warpremove, hat nun Abfragen, dass nur der Eigentümer und der Admin den Warp entfernen darf.
 - +Permission einbauen, die steuern ob man die mechanik intern nur auf dem Server warpen kann, crosscluster oder proxy.
-- +WICHTIG! Permission "btm.permlevel.global.*"
-- /homesetpriority tab fehler
-- /warpsearch %arg% replacerfehler
+- +WICHTIG! Permission "btm.permlevel.global.*" 
+  - siehe Utility.canTeleportSection, bei anderen noch einbauen?
+- +/homesetpriority tab fehler
+- +/warpsearch %arg% replacerfehler
 - Preis => Benutzungspreis => /warpinfo
 - +CustomEvents added and call within the respective commands:
   - +BasePlayerTeleportToPlayerPreTeleportEvent
@@ -110,8 +123,6 @@ Build 6 ========================================================================
   - +/entitytransportsetowner <Spielername> | Das angeschaute entity wird dem neuen Eigentümer überschrieben.
   - +/entitytransportbuytickets <Zahl> [Spielername] [mustpay Boolean] | Kauft die x Anzahl an benutzbaren EntityTransport. Muss Console fähig sein.
     mustpay gibt an ob, wenn Admin oder Console es für andere Spieler ausführt, der Spieler das zahlen muss. Sonst ist es gratis.
-  - +Forbiddenlist Entitytransport hinzufügen, mit EntityTypes einstellbar.
-  - +Registerierte EntitytsTeleporter dürfen nicht benannt oder teleportiert werden.
   - +Custom Event schreiben, was den externen Teleport von Entity gewährt. Dabei kann Eigentumsrechte, ForbiddenList und Anzahl benutzbarer EntityTransporte berücksicht werden.
   - +Config Wert einbauen, welcher es erlaubt, per Mysql Tracking, die Anzahl an EntityTransport zu begrenzen.
   - +Entitys haben verschiedene gegenwerte an tickets.
@@ -168,24 +179,26 @@ Build 6 ========================================================================
   - +PermissionLevel für Portale hinzufügen.
   - +portal erstellung kann geld kosten.
   - ? Das Innenleben der Portale muss ich mir anschauen.
-- Deathzone:
+- +Deathzone:
     Eine Todeszone ist ein Bereich, eine Welt oder ein Server, welche als Bedingung für eine Tod zählt.
     Sollte ein Spieler innerhalb dieses Bereichs sterben, so wird der Respawn genommen, welcher Verlinkt ist.
     Sollten sich Todeszonen überschneiden, wird die die höhere Priorität genommen. Bei gleicher Prio, ist es Zufall.
-    - /deathzonecreate <DeathzoneName> <Priorität> <deathzonepfad>  | Erstellt eine Deathzone.
-    - /deathzonelist | Listet alle Deathzones auf.
-    - /deathzonesimulatedeath | Simuliert einen Tod, und listet die Schritte auf, welches das Plugin macht.
-    - /deathzonedelete <DeathzoneName> | Löscht die Deathzone.
-    - /deathzonemode | Toggelbefehl um die zwei punkte der deathzone zu setzten.
-    - /deathzoneinfo
-    - /deathzonesetname
-    - /deathzonesetcategory
-    - /deathzonesetpriority
-    - /deathzonesetdeathzonepath
-- TodesAblaufschema in der Config pro Server oder pro Welt.
-  - Hierbei wird pro Welt ein Schema mit Enums der Mechaniken gemacht. Diese geben an, in welcher Reihenfolge 
+    - +/deathzonecreate <DeathzoneName> <Priorität> <deathzonepfad>  | Erstellt eine Deathzone.
+    - +/deathzonelist | Listet alle Deathzones auf.
+    - +/deathzonesimulatedeath | Simuliert einen Tod, und listet die Schritte auf, welches das Plugin macht.
+    - +/deathzonedelete <DeathzoneName> | Löscht die Deathzone.
+    - +/deathzonemode | Toggelbefehl um die zwei punkte der deathzone zu setzten.
+    - +/deathzoneinfo
+    - +/deathzonesetname
+    - +/deathzonesetcategory
+    - +/deathzonesetpriority
+    - +/deathzonesetdeathzonepath
+- +TodesAblaufschema in der Config pro Server oder pro Welt.
+  - +Hierbei wird pro Welt ein Schema mit Enums der Mechaniken gemacht. Diese geben an, in welcher Reihenfolge 
     die Mechaniken greifen sollen. Bspw. Zuerst SavePoints(Welcher SavePointName), Respawn, BedSpawn, FristSpawn.
     Hierbei gilt natürlich, dass alle Mechaniken einen Datensatz für den Spieler in diesem Server und oder Welt haben.
+- +InterfaceHub
+  - +Teleport-Interface implementier als Provider.
 
 Build 5-13 =====================================================================================================================
 - Befehle konnten nicht umbenannt werden. Ist gefixt.

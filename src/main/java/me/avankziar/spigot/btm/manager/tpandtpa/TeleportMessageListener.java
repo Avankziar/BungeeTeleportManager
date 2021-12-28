@@ -196,6 +196,63 @@ public class TeleportMessageListener implements PluginMessageListener
 						}
 					}.runTaskTimerAsynchronously(plugin, 1L, 2L);
             	    return;
+            	} else if(task.equals(StaticValues.TP_SILENTPLAYERTOPLAYER))
+            	{
+            		String sender = in.readUTF();
+            		String target = in.readUTF();
+            		new BukkitRunnable()
+					{
+            			int i = 0;
+						@Override
+						public void run()
+						{
+							if(plugin.getServer().getPlayer(sender) != null)
+							{
+								if(plugin.getServer().getPlayer(sender).isOnline())
+								{
+									Player senders = plugin.getServer().getPlayer(sender);
+									Player targets = plugin.getServer().getPlayer(target);
+									if(targets != null)
+									{
+										new BukkitRunnable()
+										{
+											@Override
+											public void run()
+											{
+												if(plugin.getYamlHandler().getConfig().getBoolean("SilentTp.DoVanish", true))
+												{
+													if(plugin.getVanish() != null)
+													{
+														if(!plugin.getVanish().isInvisible(senders))
+														{
+															plugin.getVanish().hidePlayer(senders);
+														}
+													} else
+													{
+														Bukkit.dispatchCommand(senders, 
+																plugin.getYamlHandler().getConfig().getString("SilentTp.VanishCommand", "vanish"));
+													}
+												}
+												senders.teleport(targets);
+												senders.sendMessage(
+														ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.SilentPlayerTeleport")
+														.replace("%playerto%", targets.getName())));
+											}
+										}.runTaskLater(plugin, 1);
+										cancel();
+										return;
+									}
+								}
+							}
+							i++;
+							if(i >= 100)
+							{
+								cancel();
+								return;
+							}
+						}
+					}.runTaskTimerAsynchronously(plugin, 1L, 2L);
+            	    return;
             	} else if(task.equals(StaticValues.TP_SERVERQUITMESSAGE))
             	{
             		String playerName = in.readUTF();
@@ -214,6 +271,13 @@ public class TeleportMessageListener implements PluginMessageListener
                 	double z = in.readDouble();
                 	float yaw = in.readFloat();
                 	float pitch = in.readFloat();
+                	if(Bukkit.getWorld(worldName) == null)
+					{
+						player.sendMessage(
+								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+										.replace("%world%", worldName)));
+						return;
+					}
                 	new BukkitRunnable()
 					{
             			int i = 0;

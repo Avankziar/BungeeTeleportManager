@@ -21,17 +21,17 @@ public class PortalHandler
 		this.plugin = plugin;
 	}
 	
-	public void teleportPlayerToDestination(String playerName, ServerLocation location, String postTeleportMsg, boolean lava)
+	public void teleportPlayerToDestination(String playerName, ServerLocation location, String portalname, boolean lava)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(playerName);
 		if(player == null)
 		{
 			return;
 		}
-		teleportPlayer(player, location, postTeleportMsg, lava); //Back wurde schon gemacht
+		teleportPlayer(player, location, portalname, lava); //Back wurde schon gemacht
 	}
 	
-	public void teleportPlayer(ProxiedPlayer player, ServerLocation location, String postTeleportMsg, boolean lava)
+	public void teleportPlayer(ProxiedPlayer player, ServerLocation location, String portalname, boolean lava)
 	{
 		if(player == null || location == null)
 		{
@@ -78,7 +78,7 @@ public class PortalHandler
 					out.writeDouble(location.getZ());
 					out.writeFloat(location.getYaw());
 					out.writeFloat(location.getPitch());
-					out.writeUTF(postTeleportMsg);
+					out.writeUTF(portalname);
 					out.writeBoolean(lava);
 				} catch (IOException e) {
 					e.printStackTrace();

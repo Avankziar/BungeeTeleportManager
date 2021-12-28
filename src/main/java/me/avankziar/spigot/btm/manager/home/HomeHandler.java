@@ -82,13 +82,13 @@ public class HomeHandler
 				plugin.getSafeLocationHandler().safeLocationNetworkPending(player, uuid, playername, home);
 			} else
 			{
-				sendPlayerToHomePost(player, home, playername, uuid);
+				sendPlayerToHomePost(player, home);
 			}
 		}
         return;
 	}
 	
-	public void sendPlayerToHomePost(Player player, Home home, String playername, String uuid)
+	public void sendPlayerToHomePost(Player player, Home home)
 	{
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();

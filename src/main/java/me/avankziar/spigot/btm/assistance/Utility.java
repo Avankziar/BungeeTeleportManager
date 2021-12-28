@@ -177,7 +177,7 @@ public class Utility
 		return sl;
 	}
 	
-	public void setTpaPlayersTabCompleter()
+	public void setTpaPlayersTabComplete()
 	{
 		new BukkitRunnable()
 		{
@@ -238,48 +238,33 @@ public class Utility
 				{
 					if(p.getBlacklist() != null)
 					{
-						if(p.getBlacklist().contains(player.getUniqueId().toString()))
+						if(p.getBlacklist().contains(player.getUniqueId().toString())
+								&& !player.hasPermission(StaticValues.PERM_BYPASS_PORTAL)
+								&& p.getOwner() != null && !p.getOwner().equals(player.getUniqueId().toString()))
 						{
 							continue;
-						}
-					}
-					if(p.getOwner() != null)
-					{
-						if(p.getOwner().equals(player.getUniqueId().toString()))
+						} else if(p.getBlacklist().contains(player.getUniqueId().toString())
+								&& !player.hasPermission(StaticValues.PERM_BYPASS_PORTAL))
 						{
-							portals.add(p.getName());
 							continue;
 						}
 					}
 					if(p.getPermission() != null)
 					{
-						if(player.hasPermission(p.getPermission()))
+						if(p.getOwner() != null && !p.getOwner().equals(player.getUniqueId().toString())
+								&& !player.hasPermission(p.getPermission()) 
+								&& !p.getMember().contains(player.getUniqueId().toString())
+								&& !player.hasPermission(StaticValues.PERM_BYPASS_PORTAL))
 						{
-							portals.add(p.getName());
 							continue;
-						} else if(p.getMember().contains(player.getUniqueId().toString()))
-						{
-							portals.add(p.getName());
-							continue;
-						} else if(player.hasPermission(StaticValues.PERM_BYPASS_PORTAL))
-						{
-							portals.add(p.getName());
-							continue;
-						}
-					} else
-					{
-						if(p.getMember() != null)
-						{
-							if(p.getMember().contains(player.getUniqueId().toString()))
-							{
-								portals.add(p.getName());
-								continue;
-							}
-						} else
+						} else if(!player.hasPermission(p.getPermission()) 
+								&& !p.getMember().contains(player.getUniqueId().toString())
+								&& !player.hasPermission(StaticValues.PERM_BYPASS_PORTAL))
 						{
 							continue;
 						}
 					}
+					portals.add(p.getName());
 				}
 				if(BungeeTeleportManager.portals.containsKey(player.getName()))
 				{
@@ -374,7 +359,8 @@ public class Utility
 					}
 					if(w.getBlacklist() != null)
 					{
-						if(w.getBlacklist().contains(player.getUniqueId().toString()))
+						if(w.getBlacklist().contains(player.getUniqueId().toString())
+								&& !player.hasPermission(StaticValues.PERM_BYPASS_WARP))
 						{
 							continue;
 						}
@@ -408,7 +394,8 @@ public class Utility
 						{
 							if(w.getMember() != null)
 							{
-								if(w.getMember().contains(player.getUniqueId().toString()))
+								if(w.getMember().contains(player.getUniqueId().toString())
+										&& player.hasPermission(StaticValues.PERM_BYPASS_WARP))
 								{
 									warps.add(w.getName());
 									continue;

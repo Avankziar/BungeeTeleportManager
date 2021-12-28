@@ -418,36 +418,36 @@ public class MysqlHandler
 		return null;
 	}
 	
-	public ArrayList<?> getTop(Type type, String orderByColumn, int start, int end)
+	public ArrayList<?> getTop(Type type, String orderByColumn, int start, int quantity)
 	{
 		switch(type)
 		{
 		case HOME:
-			return Table01.super.getTopI(plugin, orderByColumn, start, end);
+			return Table01.super.getTopI(plugin, orderByColumn, start, quantity);
 		case PORTAL:
-			return Table02.super.getTopII(plugin, orderByColumn, start, end);
+			return Table02.super.getTopII(plugin, orderByColumn, start, quantity);
 		case BACK:
-			return Table03.super.getTopIII(plugin, orderByColumn, start, end);
+			return Table03.super.getTopIII(plugin, orderByColumn, start, quantity);
 		case RESPAWN:
-			return Table04.super.getTopIV(plugin, orderByColumn, start, end);
+			return Table04.super.getTopIV(plugin, orderByColumn, start, quantity);
 		case WARP:
-			return Table05.super.getTopV(plugin, orderByColumn, start, end);
+			return Table05.super.getTopV(plugin, orderByColumn, start, quantity);
 		case TELEPORTIGNORE:
-			return Table06.super.getTopVI(plugin, orderByColumn, start, end);
+			return Table06.super.getTopVI(plugin, orderByColumn, start, quantity);
 		case SAVEPOINT:
-			return Table07.super.getTopVII(plugin, orderByColumn, start, end);
+			return Table07.super.getTopVII(plugin, orderByColumn, start, quantity);
 		case ENTITYTRANSPORT_TARGETACCESS:
-			return Table08.super.getTopVIII(plugin, orderByColumn, start, end);
+			return Table08.super.getTopVIII(plugin, orderByColumn, start, quantity);
 		case ENTITYTRANSPORT_TICKET:
-			return Table09.super.getTopIX(plugin, orderByColumn, start, end);
+			return Table09.super.getTopIX(plugin, orderByColumn, start, quantity);
 		case ACCESSPERMISSION:
-			return Table10.super.getTopX(plugin, orderByColumn, start, end);
+			return Table10.super.getTopX(plugin, orderByColumn, start, quantity);
 		case PORTALCOOLDOWN:
-			return Table11.super.getTopXI(plugin, orderByColumn, start, end);
+			return Table11.super.getTopXI(plugin, orderByColumn, start, quantity);
 		case FIRSTSPAWN:
-			return Table12.super.getTopXII(plugin, orderByColumn, start, end);
+			return Table12.super.getTopXII(plugin, orderByColumn, start, quantity);
 		case DEATHZONE:
-			return Table13.super.getTopXIII(plugin, orderByColumn, start, end);
+			return Table13.super.getTopXIII(plugin, orderByColumn, start, quantity);
 		}
 		return null;
 	}

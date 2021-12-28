@@ -194,6 +194,24 @@ public class TpCmdExecutor implements CommandExecutor
 			plugin.getTeleportHelper().tpCmd(player, args, Teleport.Type.TPTO);
 			return true;
 		} else if(commandList.containsKey(cmd.getName()) 
+				&& commandList.get(cmd.getName()).getPath().equals("tpsilent"))
+		{
+			if (!(sender instanceof Player)) 
+			{
+				BungeeTeleportManager.log.info("%cmd% is only for Player!".replace("%cmd%", cmd.getName()));
+				return false;
+			}
+			Player player = (Player) sender;
+			if(!player.hasPermission(commandList.get(cmd.getName()).getPermission()))
+			{
+				///Du hast dafür keine Rechte!
+				player.spigot().sendMessage(ChatApi.tctl(
+						plugin.getYamlHandler().getLang().getString("NoPermission")));
+				return false;
+			}
+			plugin.getTeleportHelper().tpsilent(player, args);
+			return true;
+		} else if(commandList.containsKey(cmd.getName()) 
 				&& commandList.get(cmd.getName()).getPath().equals("tphere"))
 		{
 			if (!(sender instanceof Player)) 

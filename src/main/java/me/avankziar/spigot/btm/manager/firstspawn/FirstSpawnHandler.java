@@ -34,15 +34,7 @@ public class FirstSpawnHandler
 		{
 			return;
 		}
-		if(plugin.getYamlHandler().getConfig().get("Use.FirstSpawn.FirstTimePlayedPlayer.WhichFirstSpawn") == null)
-		{
-			return;
-		}
-		String server = plugin.getYamlHandler().getConfig().getString("Use.FirstSpawn.FirstTimePlayedPlayer.WhichFirstSpawn");
-		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", server))
-		{
-			return;
-		}
+		String server = new ConfigHandler(plugin).getServer();
 		if(plugin.getYamlHandler().getConfig().getBoolean("Use.FirstSpawn.Spigot.DoCommandsAtFirstTime", true))
 		{
 			for(String s : plugin.getYamlHandler().getConfig().getStringList("Use.FirstSpawn.Spigot.CommandAtFirstTime.AsPlayer"))
@@ -90,10 +82,10 @@ public class FirstSpawnHandler
 		}
 		FirstSpawn fs = (FirstSpawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", server);
 		plugin.getUtility().givesEffect(player, Mechanics.FIRSTSPAWN, true, true);
-		new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, fs);
+		new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, fs, true);
 	}
 	
-	public void sendPlayerToFirstSpawn(Player player, FirstSpawn fs)
+	public void sendPlayerToFirstSpawn(Player player, FirstSpawn fs, boolean firsttime)
 	{
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		if(fs.getLocation().getServer().equals(cfgh.getServer()) && player != null)
@@ -112,8 +104,11 @@ public class FirstSpawnHandler
 				public void run()
 				{
 					player.teleport(ConvertHandler.getLocation(fs.getLocation()));
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnTo")
-							.replace("%value%", fs.getServer())));
+					if(!firsttime)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnTo")
+								.replace("%value%", fs.getServer())));
+					}					
 				}
 			}.runTaskLater(plugin, delay);
 		} else

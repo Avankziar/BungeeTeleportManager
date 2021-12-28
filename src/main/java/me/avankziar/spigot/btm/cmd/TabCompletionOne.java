@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -27,21 +28,36 @@ import main.java.me.avankziar.spigot.btm.object.BTMSettings;
 public class TabCompletionOne implements TabCompleter
 {	
 	private BungeeTeleportManager plugin;
+	private static ArrayList<String> importtype = new ArrayList<String>();
+	private static ArrayList<String> importplugin = new ArrayList<String>();
 	private static ArrayList<String> deathflowchart = new ArrayList<String>();
 	private static ArrayList<String> deathzone = new ArrayList<String>();
 	private static ArrayList<String> deathzonecat = new ArrayList<String>();
 	private static ArrayList<String> deathzonesubcat = new ArrayList<String>();
 	private static ArrayList<String> entitytransport = new ArrayList<>();
 	private static ArrayList<String> firstspawnserver = new ArrayList<String>();
+	private static ArrayList<String> material = new ArrayList<String>();
 	private static ArrayList<String> respawn = new ArrayList<String>();
 	private static ArrayList<String> targettype = new ArrayList<String>();
 	private static ArrayList<String> sound = new ArrayList<String>();
+	private static ArrayList<String> portalsearch = new ArrayList<>();
+	//private static ArrayList<String> warpsearch = new ArrayList<>();
 	
 	
 	public TabCompletionOne(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
 		ConfigHandler cfgh = new ConfigHandler(plugin);
+		for(BTMImportCmdExecutor.Convert im : new ArrayList<BTMImportCmdExecutor.Convert>(EnumSet.allOf(BTMImportCmdExecutor.Convert.class)))
+		{
+			importtype.add(im.toString());
+		}
+		Collections.sort(importtype);
+		for(BTMImportCmdExecutor.Plugins im : new ArrayList<BTMImportCmdExecutor.Plugins>(EnumSet.allOf(BTMImportCmdExecutor.Plugins.class)))
+		{
+			importplugin.add(im.toString());
+		}
+		Collections.sort(importplugin);
 		if(cfgh.enableCommands(Mechanics.DEATHZONE))
 		{
 			if(plugin.getYamlHandler().getRespawn().get("DeathFlowChartTabProposals") != null)
@@ -56,9 +72,9 @@ public class TabCompletionOne implements TabCompleter
 		}
 		if(cfgh.enableCommands(Mechanics.ENTITYTRANSPORT))
 		{
-			entitytransport.add("h");
-			entitytransport.add("pl");
-			entitytransport.add("w");
+			entitytransport.add("h:");
+			entitytransport.add("pl:");
+			entitytransport.add("w:");
 		}
 		renewFirstSpawn();
 		if(cfgh.enableCommands(Mechanics.PORTAL))
@@ -73,6 +89,39 @@ public class TabCompletionOne implements TabCompleter
 				sound.add(s.toString());
 			}
 			Collections.sort(sound);
+			portalsearch.add("server:");
+			portalsearch.add("world:");
+			portalsearch.add("owner:");
+			portalsearch.add("category:");
+			portalsearch.add("member:");
+			material.add(Material.AIR.toString());
+			material.add(Material.WATER.toString());
+			material.add(Material.LAVA.toString());
+			material.add(Material.NETHER_PORTAL.toString());
+			material.add(Material.END_PORTAL.toString());
+			material.add(Material.END_GATEWAY.toString());
+			material.add(Material.COBWEB.toString());
+			material.add(Material.END_ROD.toString());
+			material.add(Material.ITEM_FRAME.toString());
+			material.add(Material.GLOW_ITEM_FRAME.toString());
+			material.add(Material.GLASS_PANE.toString());
+			material.add(Material.BLACK_STAINED_GLASS_PANE.toString());
+			material.add(Material.BLUE_STAINED_GLASS_PANE.toString());
+			material.add(Material.BROWN_STAINED_GLASS_PANE.toString());
+			material.add(Material.CYAN_STAINED_GLASS_PANE.toString());
+			material.add(Material.GRAY_STAINED_GLASS_PANE.toString());
+			material.add(Material.GREEN_STAINED_GLASS_PANE.toString());
+			material.add(Material.LIGHT_BLUE_STAINED_GLASS_PANE.toString());
+			material.add(Material.LIGHT_GRAY_STAINED_GLASS_PANE.toString());
+			material.add(Material.LIME_STAINED_GLASS_PANE.toString());
+			material.add(Material.MAGENTA_STAINED_GLASS_PANE.toString());
+			material.add(Material.ORANGE_STAINED_GLASS_PANE.toString());
+			material.add(Material.PINK_STAINED_GLASS_PANE.toString());
+			material.add(Material.PURPLE_STAINED_GLASS_PANE.toString());
+			material.add(Material.RED_STAINED_GLASS_PANE.toString());
+			material.add(Material.WHITE_STAINED_GLASS_PANE.toString());
+			material.add(Material.YELLOW_STAINED_GLASS_PANE.toString());
+			Collections.sort(material);
 		}
 		renewRespawn();
 	}
@@ -82,8 +131,10 @@ public class TabCompletionOne implements TabCompleter
 		firstspawnserver.clear();
 		if(new ConfigHandler(BungeeTeleportManager.getPlugin()).enableCommands(Mechanics.FIRSTSPAWN))
 		{
-			ArrayList<FirstSpawn> list = ConvertHandler.convertListXII(BungeeTeleportManager.getPlugin().getMysqlHandler().getAllListAt(
-					MysqlHandler.Type.FIRSTSPAWN,"`id`", false, "1"));
+			ArrayList<FirstSpawn> list = ConvertHandler.convertListXII(
+					BungeeTeleportManager.getPlugin().getMysqlHandler().getTop(
+							MysqlHandler.Type.FIRSTSPAWN, "`id` DESC", 0,
+							BungeeTeleportManager.getPlugin().getMysqlHandler().lastID(MysqlHandler.Type.FIRSTSPAWN)));
 			for(FirstSpawn fs : list)
 			{
 				firstspawnserver.add(fs.getServer());
@@ -97,8 +148,9 @@ public class TabCompletionOne implements TabCompleter
 		respawn.clear();
 		if(new ConfigHandler(BungeeTeleportManager.getPlugin()).enableCommands(Mechanics.RESPAWN))
 		{
-			ArrayList<Respawn> list = ConvertHandler.convertListIV(BungeeTeleportManager.getPlugin().getMysqlHandler().getAllListAt(
-					MysqlHandler.Type.RESPAWN,"`id`", false, "1"));
+			ArrayList<Respawn> list = ConvertHandler.convertListIV(BungeeTeleportManager.getPlugin().getMysqlHandler().getTop(
+					MysqlHandler.Type.RESPAWN, "`id` DESC", 0,
+					BungeeTeleportManager.getPlugin().getMysqlHandler().lastID(MysqlHandler.Type.RESPAWN)));
 			for(Respawn fs : list)
 			{
 				respawn.add(fs.getDisplayname());
@@ -114,8 +166,9 @@ public class TabCompletionOne implements TabCompleter
 		deathzonesubcat.clear();
 		if(new ConfigHandler(BungeeTeleportManager.getPlugin()).enableCommands(Mechanics.DEATHZONE))
 		{
-			ArrayList<Deathzone> list = ConvertHandler.convertListXIII(BungeeTeleportManager.getPlugin().getMysqlHandler().getAllListAt(
-					MysqlHandler.Type.DEATHZONE,"`id`", false, "1"));
+			ArrayList<Deathzone> list = ConvertHandler.convertListXIII(BungeeTeleportManager.getPlugin().getMysqlHandler().getTop(
+					MysqlHandler.Type.DEATHZONE, "`id` DESC", 0,
+					BungeeTeleportManager.getPlugin().getMysqlHandler().lastID(MysqlHandler.Type.DEATHZONE)));
 			for(Deathzone dz : list)
 			{
 				deathzone.add(dz.getDisplayname());
@@ -157,29 +210,88 @@ public class TabCompletionOne implements TabCompleter
 		List<String> list = new ArrayList<String>();
 		String command = "/"+lable;
 		ConfigHandler cfgh = new ConfigHandler(plugin);
-		if(cfgh.enableCommands(Mechanics.DEATHZONE))
+		if(command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.BTMIMPORT).trim()))
 		{
-			if(args.length == 1 && (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_REMOVE).trim())
-					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETCATEGORY).trim())
-					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETNAME).trim())
-					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETPRIORITY).trim())
-					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETDEATHZONEPATH).trim())))
+			if(args.length == 1)
 			{
 				if (!args[0].equals("")) 
 				{
-					for(String s : deathzone)
+					for(String s : importtype)
 					{
 						if(s.startsWith(args[0]))
 						{
 							list.add(s);
 						}
 					}
+					Collections.sort(list);
 					return list;
 				} else
 				{
-					return deathzone;
+					return importtype;
 				}
-			} else if(args.length == 2 && command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETDEATHZONEPATH).trim()))
+			} else if(args.length == 2)
+			{
+				if (!args[1].equals("")) 
+				{
+					for(String s : importplugin)
+					{
+						if(s.startsWith(args[1]))
+						{
+							list.add(s);
+						}
+					}
+					Collections.sort(list);
+					return list;
+				} else
+				{
+					return importplugin;
+				}
+			}			
+		} else if(cfgh.enableCommands(Mechanics.DEATHZONE) && args.length == 1 &&
+				(command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_REMOVE).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETCATEGORY).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_INFO).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETNAME).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETPRIORITY).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETDEATHZONEPATH).trim())))
+		{
+			if (!args[0].equals("")) 
+			{
+				for(String s : deathzone)
+				{
+					if(s.startsWith(args[0]))
+					{
+						list.add(s);
+					}
+				}
+				Collections.sort(list);
+				return list;
+			} else
+			{
+				return deathzone;
+			}
+		} else if(cfgh.enableCommands(Mechanics.DEATHZONE) && args.length == 2 
+				&& command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETDEATHZONEPATH).trim()))
+		{
+			if (!args[1].equals("")) 
+			{
+				for(String s : deathflowchart)
+				{
+					if(s.startsWith(args[1]))
+					{
+						list.add(s);
+					}
+				}
+				Collections.sort(list);
+				return list;
+			} else
+			{
+				return deathflowchart;
+			}
+		} else if(cfgh.enableCommands(Mechanics.DEATHZONE) && 
+				command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_CREATE).trim()))
+		{
+			if(args.length == 2)
 			{
 				if (!args[1].equals("")) 
 				{
@@ -190,101 +302,88 @@ public class TabCompletionOne implements TabCompleter
 							list.add(s);
 						}
 					}
+					Collections.sort(list);
 					return list;
 				} else
 				{
 					return deathflowchart;
 				}
-			} else if(command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_CREATE).trim()))
+			} else if(args.length == 3)
 			{
-				if(args.length == 2)
+				if (!args[2].equals("")) 
 				{
-					if (!args[1].equals("")) 
+					for(String s : deathzonecat)
 					{
-						for(String s : deathflowchart)
+						if(s.startsWith(args[2]))
 						{
-							if(s.startsWith(args[1]))
-							{
-								list.add(s);
-							}
+							list.add(s);
 						}
-						return list;
-					} else
-					{
-						return deathflowchart;
 					}
-				} else if(args.length == 3)
+					Collections.sort(list);
+					return list;
+				} else
 				{
-					if (!args[2].equals("")) 
-					{
-						for(String s : deathzonecat)
-						{
-							if(s.startsWith(args[2]))
-							{
-								list.add(s);
-							}
-						}
-						return list;
-					} else
-					{
-						return deathzonecat;
-					}
-				} else if(args.length == 4)
-				{
-					if (!args[3].equals("")) 
-					{
-						for(String s : deathzonesubcat)
-						{
-							if(s.startsWith(args[3]))
-							{
-								list.add(s);
-							}
-						}
-						return list;
-					} else
-					{
-						return deathzonesubcat;
-					}
+					return deathzonecat;
 				}
-			} else if(command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETCATEGORY).trim()))
+			} else if(args.length == 4)
 			{
-				if(args.length == 2)
+				if (!args[3].equals("")) 
 				{
-					if (!args[1].equals("")) 
+					for(String s : deathzonesubcat)
 					{
-						for(String s : deathzonecat)
+						if(s.startsWith(args[3]))
 						{
-							if(s.startsWith(args[1]))
-							{
-								list.add(s);
-							}
+							list.add(s);
 						}
-						return list;
-					} else
-					{
-						return deathzonecat;
 					}
-				} else if(args.length == 3)
+					Collections.sort(list);
+					return list;
+				} else
 				{
-					if (!args[2].equals("")) 
-					{
-						for(String s : deathzonesubcat)
-						{
-							if(s.startsWith(args[2]))
-							{
-								list.add(s);
-							}
-						}
-						return list;
-					} else
-					{
-						return deathzonesubcat;
-					}
+					return deathzonesubcat;
 				}
-				
 			}
+		} else if(cfgh.enableCommands(Mechanics.DEATHZONE) && 
+				command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_SETCATEGORY).trim()))
+		{
+			if(args.length == 2)
+			{
+				if (!args[1].equals("")) 
+				{
+					for(String s : deathzonecat)
+					{
+						if(s.startsWith(args[1]))
+						{
+							list.add(s);
+						}
+					}
+					Collections.sort(list);
+					return list;
+				} else
+				{
+					return deathzonecat;
+				}
+			} else if(cfgh.enableCommands(Mechanics.DEATHZONE) && args.length == 3)
+			{
+				if (!args[2].equals("")) 
+				{
+					for(String s : deathzonesubcat)
+					{
+						if(s.startsWith(args[2]))
+						{
+							list.add(s);
+						}
+					}
+					Collections.sort(list);
+					return list;
+				} else
+				{
+					return deathzonesubcat;
+				}
+			}
+			
 		} else if(cfgh.enableCommands(Mechanics.ENTITYTRANSPORT) && 
-				command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.ENTITYTRANSPORT)))
+				command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.ENTITYTRANSPORT).trim()))
 		{
 			if(args.length == 1)
 			{
@@ -299,6 +398,7 @@ public class TabCompletionOne implements TabCompleter
 								list.add(s);
 							}
 						}
+						Collections.sort(list);
 						return list;
 					} else 
 					{
@@ -374,66 +474,114 @@ public class TabCompletionOne implements TabCompleter
 					return entitytransport;
 				}
 			}
-		} else if (cfgh.enableCommands(Mechanics.HOME) && (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME).trim())
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_DEL).trim())
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_SET).trim())
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_REMOVE).trim())
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_CREATE).trim())))
+		} else if (cfgh.enableCommands(Mechanics.ENTITYTRANSPORT) 
+				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.ENTITYTRANSPORT_SETOWNER).trim()))
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.ENTITYTRANSPORT_SETACCESS).trim()))
 		{
 			if(args.length == 1)
 			{
 				if (!args[0].equals("")) 
 				{
-					if(BungeeTeleportManager.homes.containsKey(player.getName()))
+					for (String name : plugin.getMysqlPlayers()) 
 					{
-						for (String homeName : BungeeTeleportManager.homes.get(player.getName())) 
+						if (name.startsWith(args[0])
+								|| name.toLowerCase().startsWith(args[0])
+								|| name.toUpperCase().startsWith(args[0])) 
 						{
-							if (homeName.startsWith(args[0])
-									|| homeName.toLowerCase().startsWith(args[0])
-									 || homeName.toUpperCase().startsWith(args[0])) 
-							{
-								list.add(homeName);
-							}
+							list.add(name);
 						}
-						Collections.sort(list);
-						return list;
-					} else
-					{
-						list.addAll(BungeeTeleportManager.homes.get(player.getName()));
-						Collections.sort(list);
 					}
+					Collections.sort(list);
 					return list;
-					
 				} else
 				{
-					if(BungeeTeleportManager.homes.get(player.getName()) != null)
+					if(plugin.getMysqlPlayers() != null)
 					{
-						list.addAll(BungeeTeleportManager.homes.get(player.getName()));
+						list.addAll(plugin.getMysqlPlayers());
 						Collections.sort(list);
 					}
 					return list;
 				}
 			}
-		} else if (cfgh.enableCommands(Mechanics.PORTAL) && args.length == 1 
-				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_REMOVE).trim())
+		} else if (cfgh.enableCommands(Mechanics.FIRSTSPAWN) && args.length == 1 && (
+				   command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.FIRSTSPAWN).trim())))
+		{
+			if (!args[0].equals("")) 
+			{
+				for (String server : firstspawnserver) 
+				{
+					if (server.startsWith(args[0])
+							|| server.toLowerCase().startsWith(args[0])
+							 || server.toUpperCase().startsWith(args[0])) 
+					{
+						list.add(server);
+					}
+				}
+				
+			} else
+			{
+				list.addAll(firstspawnserver);
+			}
+			Collections.sort(list);
+			return list;
+		} else if (cfgh.enableCommands(Mechanics.HOME) && args.length == 1 && (
+				   command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_DEL).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_SET).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_REMOVE).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_CREATE).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.HOME_SETPRIORITY).trim())))
+		{
+			if (!args[0].equals("")) 
+			{
+				if(BungeeTeleportManager.homes.containsKey(player.getName()))
+				{
+					for (String homeName : BungeeTeleportManager.homes.get(player.getName())) 
+					{
+						if (homeName.startsWith(args[0])
+								|| homeName.toLowerCase().startsWith(args[0])
+								 || homeName.toUpperCase().startsWith(args[0])) 
+						{
+							list.add(homeName);
+						}
+					}
+					Collections.sort(list);
+				} else
+				{
+					list.addAll(BungeeTeleportManager.homes.get(player.getName()));
+					Collections.sort(list);
+				}
+				
+			} else
+			{
+				if(BungeeTeleportManager.homes.get(player.getName()) != null)
+				{
+					list.addAll(BungeeTeleportManager.homes.get(player.getName()));
+					Collections.sort(list);
+				}
+			}
+			return list;
+		} else if (cfgh.enableCommands(Mechanics.PORTAL) && args.length == 1 && (
+				           command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_REMOVE).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_ADDBLACKLIST).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_REMOVEBLACKLIST).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_ADDMEMBER).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_REMOVEMEMBER).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_INFO).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETCATEGORY).trim())
+						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETDEFAULTCOOLDOWN).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETNAME).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETOWNEXITPOINT).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPOSITIONS).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETOWNER).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPRICE).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPERMISSION).trim())
-						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETDEFAULTCOOLDOWN).trim())
+						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPOSTTELEPORTMSG).trim())
+						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPROTECTION).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETTARGET).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETTHROWBACK).trim())
-						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPORTALPROTECTION).trim())
-						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPORTALSOUND).trim())
-						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPOSTTELEPORTMSG).trim())
+						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETTRIGGERBLOCK).trim())
+						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETSOUND).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETACCESSDENIALMSG).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETACCESSTYPE).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_ADDBLACKLIST).trim())
@@ -452,18 +600,16 @@ public class TabCompletionOne implements TabCompleter
 							list.add(portal);
 						}
 					}
-					Collections.sort(list);
-					return list;
 				}
 			} else
 			{
 				if(BungeeTeleportManager.portals.get(player.getName()) != null)
 				{
 					list.addAll(BungeeTeleportManager.portals.get(player.getName()));
-					Collections.sort(list);
-				}
-				return list;
+				}				
 			}
+			Collections.sort(list);
+			return list;
 		} else if (cfgh.enableCommands(Mechanics.PORTAL) && args.length == 2
 				&& command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETTARGET).trim())) 
 		{
@@ -477,12 +623,32 @@ public class TabCompletionOne implements TabCompleter
 					{
 						list.add(tt);
 					}
-					Collections.sort(list);
-					return list;
 				}
+				Collections.sort(list);
+				return list;
 			} else
 			{
 				return targettype;
+			}
+		} else if (cfgh.enableCommands(Mechanics.PORTAL) && args.length == 2
+				&& command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETTRIGGERBLOCK).trim())) 
+		{
+			if (!args[1].equals("")) 
+			{
+				for(String m : material)
+				{
+					if (m.startsWith(args[1])
+							|| m.toLowerCase().startsWith(args[1])
+							|| m.toUpperCase().startsWith(args[1])) 
+					{
+						list.add(m);
+					}
+				}
+				Collections.sort(list);
+				return list;
+			} else
+			{
+				return material;
 			}
 		} else if (cfgh.enableCommands(Mechanics.PORTAL) && args.length == 2
 				&& command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETSOUND).trim())) 
@@ -497,15 +663,16 @@ public class TabCompletionOne implements TabCompleter
 					{
 						list.add(s);
 					}
-					Collections.sort(list);
-					return list;
 				}
+				Collections.sort(list);
+				return list;
 			} else
 			{
 				return sound;
 			}
 		} else if (cfgh.enableCommands(Mechanics.PORTAL) && args.length == 2
-				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_ADDMEMBER).trim())
+				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETOWNER).trim())
+					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_ADDMEMBER).trim())
 					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_REMOVEMEMBER).trim())
 					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_ADDBLACKLIST).trim())
 					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_REMOVEBLACKLIST).trim())
@@ -533,6 +700,32 @@ public class TabCompletionOne implements TabCompleter
 				}
 				return list;
 			}
+		} else if (cfgh.enableCommands(Mechanics.PORTAL) && args.length >= 2
+				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SEARCH).trim())))
+		{
+			int i = args.length-1;
+			if (!args[i].equals("")) 
+			{
+				for (String s : portalsearch) 
+				{
+					if(s.contains(":"))
+					{
+						break;
+					}
+					if (s.startsWith(args[i])
+							|| s.toLowerCase().startsWith(args[i])
+							|| s.toUpperCase().startsWith(args[i])) 
+					{
+						list.add(s);
+					}
+				}
+			} else
+			{
+				list.addAll(portalsearch);
+				
+			}
+			Collections.sort(list);
+			return list;
 		} else if (cfgh.enableCommands(Mechanics.RANDOMTELEPORT) 
 				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RANDOMTELEPORT).trim()))) 
 		{
@@ -595,10 +788,10 @@ public class TabCompletionOne implements TabCompleter
 					return list;
 				}
 			}
-		} else if (cfgh.enableCommands(Mechanics.RESPAWN) && args.length == 1 
-				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RESPAWN).trim())
-						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RESPAWN_CREATE).trim())
-						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RESPAWN_REMOVE).trim())
+		} else if (cfgh.enableCommands(Mechanics.RESPAWN) && args.length == 1 && (
+					   command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RESPAWN).trim())
+					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RESPAWN_CREATE).trim())
+					|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.RESPAWN_REMOVE).trim())
 						)) 
 		{
 			if (!args[0].equals("")) 
@@ -707,7 +900,7 @@ public class TabCompletionOne implements TabCompleter
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_ADDBLACKLIST).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_REMOVEBLACKLIST).trim())
 							))
-			{
+		{
 				if (!args[1].equals("")) 
 				{
 					for (String name : plugin.getMysqlPlayers()) 
@@ -730,12 +923,67 @@ public class TabCompletionOne implements TabCompleter
 					}
 					return list;
 				}
-			} else if (cfgh.enableCommands(Mechanics.TPA_ONLY) 
-				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPA).trim()) 
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAHERE).trim())
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TP).trim()) 
+		} else if (cfgh.enableCommands(Mechanics.WARP) && args.length == 2
+				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_SEARCH).trim())))
+		{
+			if (!args[1].equals("")) 
+			{
+				for (String s : portalsearch) //Portale und Warps teilen sich zuzeit die suchbaren categorien
+				{
+					if(s.contains(":"))
+					{
+						break;
+					}
+					if (s.startsWith(args[1])
+							|| s.toLowerCase().startsWith(args[1])
+							|| s.toUpperCase().startsWith(args[1])) 
+					{
+						list.add(s);
+					}
+				}
+			} else
+			{
+				list.addAll(portalsearch);
+				
+			}
+			Collections.sort(list);
+			return list;
+		} else if (cfgh.enableCommands(Mechanics.TPA_ONLY) 
+			&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPA).trim()) 
+			|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAHERE).trim())
+			|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TP).trim()) 
+			|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPHERE).trim())
+			|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAIGNORE).trim())))
+		{
+			if(args.length == 1)
+			{
+				if (!args[0].equals("")) 
+				{
+					for (String name : plugin.getMysqlPlayers()) 
+					{
+						if (name.startsWith(args[0])
+								|| name.toLowerCase().startsWith(args[0])
+								|| name.toUpperCase().startsWith(args[0])) 
+						{
+							list.add(name);
+						}
+					}
+					Collections.sort(list);
+					return list;
+				} else
+				{
+					if(plugin.getMysqlPlayers() != null)
+					{
+						list.addAll(plugin.getMysqlPlayers());
+						Collections.sort(list);
+					}
+					return list;
+				}
+			}
+		} else if (cfgh.enableCommands(Mechanics.TPA) 
+				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TP).trim()) 
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPHERE).trim())
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAIGNORE).trim())))
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPSILENT).trim())))
 		{
 			if(args.length == 1)
 			{
@@ -763,6 +1011,6 @@ public class TabCompletionOne implements TabCompleter
 				}
 			}
 		}
-		return null;
+		return list;
 	}
 }

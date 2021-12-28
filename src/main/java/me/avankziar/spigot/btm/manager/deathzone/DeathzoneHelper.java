@@ -59,7 +59,7 @@ public class DeathzoneHelper
 	
 	public void create(Player player, String[] args)
 	{
-		if(args.length < 1 || args.length > 3)
+		if(args.length < 2 || args.length > 5)
 		{
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
@@ -92,7 +92,7 @@ public class DeathzoneHelper
 			return;
 		}
 		DeathzonePosition popos = plugin.getRespawnHandler().getDeathzonePosition(player.getUniqueId());
-		if(popos.pos1 == null)
+		if(popos == null || popos.pos1 == null)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.NotPositionOneSet")));
 			return;
@@ -161,8 +161,8 @@ public class DeathzoneHelper
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(plugin.getYamlHandler().getLang().getString("IsNegativ")
-						.replace("%arg%", args[0]));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+						.replace("%arg%", args[0])));
 				return;
 			}
 		}
@@ -211,7 +211,7 @@ public class DeathzoneHelper
 		if(cat == null && subcat == null && server == null && world == null)
 		{
 			list = ConvertHandler.convertListXIII(plugin.getMysqlHandler().getTop(MysqlHandler.Type.DEATHZONE,
-							"`server` ASC, `world` ASC", start, quantity));
+							"`pos_one_server` ASC, `pos_one_world` ASC", start, quantity));
 		} else
 		{
 			if(cat != null)
@@ -234,7 +234,7 @@ public class DeathzoneHelper
 				{
 					query += " AND ";
 				}
-				query += "`server` = ?";
+				query += "`pos_one_server` = ?";
 				ob.add(server);
 			}
 			if(world != null)
@@ -243,7 +243,7 @@ public class DeathzoneHelper
 				{
 					query += " AND ";
 				}
-				query += "`world` = ?";
+				query += "`pos_one_world` = ?";
 				ob.add(world);
 			}
 			list = ConvertHandler.convertListXIII(
@@ -318,14 +318,18 @@ public class DeathzoneHelper
 					.replace("%value%", String.valueOf(r.getPriority()))
 					.replace("%valueII%", r.getDeathzonepath())
 					.replace("%valueIII%", r.getCategory())
-					.replace("%valueVI%", r.getSubCategory())
+					.replace("%valueIV%", r.getSubCategory())
 					+"~!~"+plugin.getYamlHandler().getLang().getString("KoordsHover")
 					.replace("%koords%", Utility.getLocationV2(r.getPosition1()))));
 		}
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ListHeadline")
 				.replace("%amount%", String.valueOf(last))));
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ListHelp")));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ListHelpII")));
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ListHelpII")
+				.replace("%server%", server != null ? server : "N.A.")
+				.replace("%world%", world != null ? world : "N.A.")
+				.replace("%cat%", cat != null ? cat : "N.A.")
+				.replace("%subcat%", subcat != null ? subcat : "N.A.")));
 		for(String serverkey : map.keySet())
 		{
 			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = map.get(serverkey);
@@ -512,24 +516,24 @@ public class DeathzoneHelper
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
-		if(plugin.getRespawnHandler().deathzoneCreateMode.contains(player.getUniqueId()))
+		if(RespawnHandler.deathzoneCreateMode.contains(player.getUniqueId()))
 		{
 			
 			int index = -1;
-			for(int i = 0; i < plugin.getRespawnHandler().deathzoneCreateMode.size(); i++)
+			for(int i = 0; i < RespawnHandler.deathzoneCreateMode.size(); i++)
 			{
-				UUID uuid = plugin.getRespawnHandler().deathzoneCreateMode.get(i);
+				UUID uuid = RespawnHandler.deathzoneCreateMode.get(i);
 				if(uuid.equals(player.getUniqueId()))
 				{
 					index = i;
 					break;
 				}
 			}
-			plugin.getRespawnHandler().deathzoneCreateMode.remove(index);
+			RespawnHandler.deathzoneCreateMode.remove(index);
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneCreationMode.Removed")));
 		} else
 		{
-			plugin.getRespawnHandler().deathzoneCreateMode.add(player.getUniqueId());
+			RespawnHandler.deathzoneCreateMode.add(player.getUniqueId());
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneCreationMode.Added")));
 		}
 	}

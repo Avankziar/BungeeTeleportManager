@@ -11,16 +11,20 @@ import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 
 public class EntityTeleportHandler
 {
-	private BungeeTeleportManager plugin;
+	//private BungeeTeleportManager plugin;
 	public static final String TARGET = "EntityTeleportTarget";
 	
 	public EntityTeleportHandler(BungeeTeleportManager plugin)
 	{
-		this.plugin = plugin;
+		//this.plugin = plugin;
 	}
 	
 	public static boolean isEntityTeleport(LivingEntity ley)
 	{
+		if(ley == null)
+		{
+			return false;
+		}
 		PersistentDataContainer pdc = ley.getPersistentDataContainer();
 		NamespacedKey ntarget = new NamespacedKey(BungeeTeleportManager.getPlugin(), EntityTeleportHandler.TARGET);
 		if(pdc.has(ntarget, PersistentDataType.STRING))
@@ -32,6 +36,10 @@ public class EntityTeleportHandler
 	
 	public static ServerLocation getEntityTeleport(LivingEntity ley)
 	{
+		if(ley == null)
+		{
+			return null;
+		}
 		PersistentDataContainer pdc = ley.getPersistentDataContainer();
 		NamespacedKey ntarget = new NamespacedKey(BungeeTeleportManager.getPlugin(), EntityTeleportHandler.TARGET);
 		if(pdc.has(ntarget, PersistentDataType.STRING))

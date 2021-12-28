@@ -44,6 +44,13 @@ public class HomeMessageListener implements PluginMessageListener
                 	double z = in.readDouble();
                 	float yaw = in.readFloat();
                 	float pitch = in.readFloat();
+                	if(Bukkit.getWorld(worldName) == null)
+					{
+						player.sendMessage(
+								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+										.replace("%world%", worldName)));
+						return;
+					}
                 	new BukkitRunnable()
 					{
             			int i = 0;

@@ -11,6 +11,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.object.serialization.LivingEntitySerialization;
 
 public class EntityTransportMessageListener implements PluginMessageListener
@@ -37,6 +39,9 @@ public class EntityTransportMessageListener implements PluginMessageListener
                 	float pitch = in.readFloat();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
+						player.sendMessage(
+								ChatApi.tl(BungeeTeleportManager.getPlugin().getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+										.replace("%world%", worldName)));
 						return;
 					}
                 	Location loc = new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);

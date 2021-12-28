@@ -164,6 +164,7 @@ public class WarpHelper
 				ConfigHandler cfgh = new ConfigHandler(plugin);
 				int canCheck = plugin.getUtility().canTeleportSection(player, Mechanics.WARP,
 						player.getWorld().getName(), warp.getLocation().getServer(), warp.getLocation().getWorldName());
+				canCheck = -1; //FIXME System erstmal deaktiviert.
 				if(canCheck > 0)
 				{
 					String answer = plugin.getUtility().canTeleportSectionAnswer(player, canCheck, Mechanics.WARP,
@@ -570,7 +571,7 @@ public class WarpHelper
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNameAlreadyExist")));
 			return;
 		}
-		if(!plugin.getPortalHandler().comparePortalAmount(player, true) 
+		if(!plugin.getWarpHandler().compareWarpAmount(player, true) 
 				&& !player.hasPermission(StaticValues.PERM_BYPASS_PORTAL_TOOMANY))
 		{
 			return;
@@ -851,8 +852,8 @@ public class WarpHelper
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(plugin.getYamlHandler().getLang().getString("IsNegativ")
-						.replace("%arg%", args[0]));
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+						.replace("%arg%", args[0])));
 				return;
 			}
 		}
@@ -1802,9 +1803,17 @@ public class WarpHelper
 		int page = 0;
 		if(!MatchApi.isInteger(args[0]))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+					.replace("%arg%", args[0])));
 			return;
 		}
+		if(!MatchApi.isPositivNumber(page))
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+					.replace("%arg%", args[0])));
+			return;
+		}
+		page = Integer.parseInt(args[0]);
 		int start = page*10;
 		int quantity = 10;
 		int i = 1;
@@ -1820,6 +1829,10 @@ public class WarpHelper
 				continue;
 			}
 			String[] arg = args[i].split(":");
+			if(arg.length != 2)
+			{
+				continue;
+			}
 			String option = arg[0];
 			if(i > 1)
 			{
@@ -1880,6 +1893,15 @@ public class WarpHelper
 		Object[] whereObject = whereObjects.toArray(new Object[whereObjects.size()]);
 		ArrayList<Warp> list = ConvertHandler.convertListV(plugin.getMysqlHandler().getList(
 								Type.WARP, "`id` ASC", start, quantity, query, whereObject));
+		if(query.isBlank() || query.isBlank())
+		{
+			list = ConvertHandler.convertListV(plugin.getMysqlHandler().getTop(
+					Type.WARP, "`id` ASC", start, quantity));
+		} else
+		{
+			list = ConvertHandler.convertListV(plugin.getMysqlHandler().getList(
+					Type.WARP, "`id` ASC", start, quantity, query, whereObject));
+		}
 		String server = new ConfigHandler(plugin).getServer();
 		String world = player.getLocation().getWorld().getName();
 		int last = plugin.getMysqlHandler().lastID(MysqlHandler.Type.WARP);

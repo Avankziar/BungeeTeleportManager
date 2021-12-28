@@ -38,13 +38,12 @@ import net.md_5.bungee.api.chat.BaseComponent;
 public class PortalHandler
 {
 	private BungeeTeleportManager plugin;
-	private ArrayList<Portal> portals = new ArrayList<>();
-	private ArrayList<Portal> portalsTotal = new ArrayList<>();
-	private ArrayList<String> playerInPortal = new ArrayList<>();
+	private static ArrayList<Portal> portals = new ArrayList<>();
+	private static ArrayList<String> playerInPortal = new ArrayList<>();
 	private final String server;
-	private final boolean canEntityUsePortals;
-	public ArrayList<UUID> portalCreateMode = new ArrayList<>();
-	private LinkedHashMap<UUID, PortalPosition> portalposition = new LinkedHashMap<>();
+	private static boolean canEntityUsePortals = false;
+	public static ArrayList<UUID> portalCreateMode = new ArrayList<>();
+	private static LinkedHashMap<UUID, PortalPosition> portalposition = new LinkedHashMap<>();
 	private long ownerCooldownPortal = 0L;
 	private long memberCooldownPortal = 0L;
 	private LinkedHashMap<String, Long> cooldownPortalmap = new LinkedHashMap<String, Long>();
@@ -53,7 +52,7 @@ public class PortalHandler
 	{
 		this.plugin = plugin;
 		server = new ConfigHandler(plugin).getServer();
-		canEntityUsePortals = plugin.getYamlHandler().getConfig().getBoolean("Enable.EntityCanAccessPortals", false);
+		//canEntityUsePortals = plugin.getYamlHandler().getConfig().getBoolean("Enable.EntityCanAccessPortals", false);
 		initPortals();
 		for(String s : plugin.getYamlHandler().getConfig().getStringList("Portal.CooldownAfterUse"))
 		{
@@ -160,25 +159,64 @@ public class PortalHandler
 	public void updatePortalAll()
 	{
 		portals = new ArrayList<>();
-		portalsTotal = new ArrayList<>();
 		ArrayList<Portal> intern = ConvertHandler.convertListII(
 				plugin.getMysqlHandler().getAllListAt(MysqlHandler.Type.PORTAL, "`id`", false, "`pos_one_server` = ?", server));
 		for(Portal p : intern)
 		{
 			portals.add(p);
-			portalsTotal.add(p);
 		}
-		ArrayList<Portal> extern = ConvertHandler.convertListII(
-				plugin.getMysqlHandler().getAllListAt(MysqlHandler.Type.PORTAL, "`id`", false, "`pos_one_server` != ?", server));
-		for(Portal p : extern)
+	}
+	
+	public void addPortal(final Portal portal)
+	{
+		portals.add(portal);
+	}
+	
+	public void deletePortalInList(final Portal portal)
+	{
+		int j = 0;
+		for(int i = 0; i < portals.size(); i++)
 		{
-			portalsTotal.add(p);
+			Portal p = portals.get(i);
+			if(p.getName().equals(portal.getName()))
+			{
+				j = i;
+				break;
+			}
 		}
+		portals.remove(j);
 	}
 	
 	public boolean canEntityUsePortals()
 	{
 		return canEntityUsePortals;
+	}
+	
+	public void checkIfCanBeTriggered(Player player, Location... locs)
+	{
+		if(playerInPortal.contains(player.getName()))
+		{
+			return;
+		}
+		for(Portal portal : portals)
+		{
+			for(Location loc : locs)
+			{
+				if(!isLocationInPortalTrigger(portal, loc, 0))
+				{
+					continue;
+				}
+				playerInPortal.add(player.getName());
+				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new RemovePlayerInPortal(player.getName()), 40);
+				plugin.getPortalHelper().portalTo(player, portal);
+				return;
+			}
+		}
+	}
+	
+	public boolean isLocationInPortalTrigger(Portal portal, Location loc, int additionalArea)
+	{
+		return portal.getTriggerBlock() == loc.getBlock().getType() && inPortalArea(portal, loc, additionalArea);
 	}
 	
 	public Portal getPortalInArea(Location loc, int additionalArea)
@@ -207,14 +245,8 @@ public class PortalHandler
 	
 	public Portal getPortalFromTotalList(String portalname)
 	{
-		for(Portal p : portalsTotal)
-		{
-			if(p.getName().equals(portalname))
-			{
-				return p;
-			}
-		}
-		return null;
+		
+		return (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);
 	}
 	
 	public boolean inPortalArea(Portal portal, Location loc, int additionalArea)
@@ -239,11 +271,6 @@ public class PortalHandler
 				);
 	}
 	
-	public boolean isLocationInPortalTrigger(Portal portal, Location loc, int additionalArea)
-	{
-		return portal.getTriggerBlock() == loc.getBlock().getType() && inPortalArea(portal, loc, additionalArea);
-	}
-	
 	public void throwback(Location loc, Entity entity)
 	{
 		Portal portal = plugin.getPortalHandler().getPortalInArea(loc, 0);
@@ -259,6 +286,21 @@ public class PortalHandler
 		entity.setVelocity(velocity.setY(0).normalize().multiply(-1).setY(portal.getThrowback()));
 	}
 	
+	public void sendPostMessage(Portal portal, Player player)
+	{
+		if(portal.getPostTeleportMessage() != null)
+		{
+			player.sendMessage(ChatApi.tl(portal.getPostTeleportMessage()
+					.replace("%player%", player.getName())
+					.replace("%portalname%", portal.getName())
+					.replace("%price%", String.valueOf(portal.getPricePerUse()))
+					.replace("%cooldown%", getTime(getCooldown(portal, player)))
+					.replace("%category%", portal.getCategory()))
+					.replace("%permission%", (portal.getPermission() != null ? portal.getPermission() : "N.A."))
+					);
+		}
+	}
+	
 	public long getCooldown(Portal portal, Player player)
 	{
 		PortalCooldown pc = (PortalCooldown) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTALCOOLDOWN,
@@ -268,44 +310,30 @@ public class PortalHandler
 	
 	public void setPortalCooldown(Portal portal, Player player)
 	{
-		long cd = 0;
-		for(String s : plugin.getYamlHandler().getConfig().getStringList("Portal.CooldownAfterUse"))
-		{ 
-			if(!s.contains(";"))
+		long cd = portal.getCooldown();
+		if(portal.getOwner() != null && portal.getOwner().equals(player.getUniqueId().toString())
+				&& cd > ownerCooldownPortal)
+		{
+			cd = ownerCooldownPortal;
+		}
+		if(portal.getMember() != null && !portal.getMember().isEmpty() && portal.getMember().contains(player.getUniqueId().toString())
+				&& cd > memberCooldownPortal)
+		{
+			cd = memberCooldownPortal;
+		}
+		for(String s : cooldownPortalmap.keySet())
+		{
+			if(!player.hasPermission(s))
 			{
 				continue;
 			}
-			String[] ss = s.split(";");
-			if(ss.length == 2)
+			long cooldown = cooldownPortalmap.get(s);
+			if(cd > cooldown)
 			{
-				long pcd = parseCooldown(ss[1]);
-				if(cd == 0 || cd > pcd)
-				{
-					if((ss[0].equalsIgnoreCase("Owner") && portal.getOwner().equals(player.getUniqueId().toString()))
-							|| (ss[0].equalsIgnoreCase("Member") && portal.getMember().contains(player.getUniqueId().toString())))
-					{
-						cd = pcd;
-					}
-				}
-			} else if(ss.length == 3)
-			{
-				if(!ss[0].equalsIgnoreCase("Perm"))
-				{
-					continue;
-				}
-				if(player.hasPermission(ss[2]))
-				{
-					long pcd = parseCooldown(ss[1]);
-					if(cd == 0 || cd > pcd)
-					{
-						cd = pcd;
-					}
-				}
-			} else 
-			{
-				continue;
+				cd = cooldown;
 			}
 		}
+		cd += System.currentTimeMillis();
 		PortalCooldown pc = (PortalCooldown) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTALCOOLDOWN,
 				"`portalid` = ? AND `player_uuid` = ?", portal.getId(), player.getUniqueId().toString());
 		if(pc == null)
@@ -318,28 +346,62 @@ public class PortalHandler
 			plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTALCOOLDOWN, pc, 
 					"`portalid` = ? AND `player_uuid` = ?", portal.getId(), player.getUniqueId().toString());
 		}
-	}
-	
-	public void checkIfCanBeTriggered(Player player, Location... locs)
-	{
-		if(playerInPortal.contains(player.getName()))
-		{
-			return;
-		}
-		for(Portal portal : portals)
-		{
-			for(Location loc : locs)
+		/*long cd = portal.getCooldown();
+		for(String s : plugin.getYamlHandler().getConfig().getStringList("Portal.CooldownAfterUse"))
+		{ 
+			if(!s.contains(";"))
 			{
-				if(!isLocationInPortalTrigger(portal, loc, 0))
+				continue;
+			}
+			String[] ss = s.split(";");
+			if(ss.length == 2)
+			{
+				if((ss[0].equalsIgnoreCase("Owner") 
+						&& portal.getOwner() != null 
+						&& portal.getOwner().equals(player.getUniqueId().toString()))
+					|| (ss[0].equalsIgnoreCase("Member") 
+						&& portal.getMember() != null 
+						&& portal.getMember().contains(player.getUniqueId().toString())))
+				{
+					long pcd = parseCooldown(ss[1]);
+					if(cd > pcd)
+					{
+						cd = pcd;
+					}
+				}
+				
+			} else if(ss.length == 3)
+			{
+				if(!ss[0].equalsIgnoreCase("Perm"))
 				{
 					continue;
 				}
-				playerInPortal.add(player.getName());
-				Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new RemovePlayerInPortal(player.getName()), 40);
-				plugin.getPortalHelper().portalTo(player, portal);
-				return;
+				if(player.hasPermission(ss[2]))
+				{
+					long pcd = parseCooldown(ss[1]);
+					if(cd > pcd)
+					{
+						cd = pcd;
+					}
+				}
+			} else 
+			{
+				continue;
 			}
 		}
+		cd += System.currentTimeMillis();
+		PortalCooldown pc = (PortalCooldown) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTALCOOLDOWN,
+				"`portalid` = ? AND `player_uuid` = ?", portal.getId(), player.getUniqueId().toString());
+		if(pc == null)
+		{
+			pc = new PortalCooldown(portal.getId(), player.getUniqueId().toString(), cd);
+			plugin.getMysqlHandler().create(MysqlHandler.Type.PORTALCOOLDOWN, pc);
+		} else
+		{
+			pc.setCooldownUntil(cd);
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTALCOOLDOWN, pc, 
+					"`portalid` = ? AND `player_uuid` = ?", portal.getId(), player.getUniqueId().toString());
+		}*/
 	}
 	
 	public void sendPortalExistPointAsBack(Player player, ServerLocation loc)
@@ -369,15 +431,12 @@ public class PortalHandler
 				public void run()
 				{
 					player.teleport(ConvertHandler.getLocation(destination));
-					if(portal.getPostTeleportMessage() != null)
-					{
-						player.sendMessage(ChatApi.tl(portal.getPostTeleportMessage()
-								.replace("%player%", player.getName())));
-					}
+					plugin.getPortalHandler().sendPostMessage(portal, player);
 					if(portal.getTriggerBlock() == Material.LAVA)
 					{
 						player.setFireTicks(0);
 					}
+					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
 				}
 			}.runTask(plugin);
 		} else
@@ -395,7 +454,7 @@ public class PortalHandler
 				out.writeDouble(destination.getZ());
 				out.writeFloat(destination.getYaw());
 				out.writeFloat(destination.getPitch());
-				out.writeUTF(portal.getPostTeleportMessage() == null ? "" : portal.getPostTeleportMessage());
+				out.writeUTF(portal.getName());
 				out.writeBoolean((portal.getTriggerBlock() == Material.LAVA ? true : false));
 				new BackHandler(plugin).addingBack(player, portal.getOwnExitPosition(), out);
 			} catch (IOException e) {
@@ -431,7 +490,6 @@ public class PortalHandler
 	public void updatePortalLocale(int mysqlID, String additional)
 	{
 		int intern = -1;
-		int extern = -1;
 		if(additional.equalsIgnoreCase("REMOVE"))
 		{
 			for(int i = 0; i < portals.size(); i++)
@@ -443,22 +501,9 @@ public class PortalHandler
 					break;
 				}
 			}
-			for(int i = 0; i < portalsTotal.size(); i++)
-			{
-				Portal p = portalsTotal.get(i);
-				if(p.getId() == mysqlID)
-				{
-					extern = i;
-					break;
-				}
-			}
 			if(intern != -1)
 			{
 				portals.remove(intern);
-			}
-			if(extern != -1)
-			{
-				portalsTotal.remove(extern);
 			}
 		} else if(additional.equalsIgnoreCase("CREATE"))
 		{
@@ -480,19 +525,6 @@ public class PortalHandler
 					portals.add(portal);
 				}
 			}
-			boolean existsT = false;
-			for(Portal p : portalsTotal)
-			{
-				if(p.getId() == portal.getId())
-				{
-					existsT = true;
-					break;
-				}
-			}
-			if(!existsT)
-			{
-				portalsTotal.add(portal);
-			}
 		} else if(additional.equalsIgnoreCase("UPDATE"))
 		{
 			Portal portal = (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`id` = ?", mysqlID);
@@ -505,24 +537,10 @@ public class PortalHandler
 					break;
 				}
 			}
-			for(int i = 0; i < portalsTotal.size(); i++)
-			{
-				Portal p = portalsTotal.get(i);
-				if(p.getId() == portal.getId())
-				{
-					extern = i;
-					break;
-				}
-			}
 			if(intern != -1)
 			{
 				portals.remove(intern);
 				portals.add(portal);
-			}
-			if(extern != -1)
-			{
-				portalsTotal.remove(extern);
-				portalsTotal.add(portal);
 			}
 		}
 	}
@@ -530,7 +548,6 @@ public class PortalHandler
 	public void updatePortalLocale(final Portal portal)
 	{
 		int intern = -1;
-		int extern = -1;
 		for(int i = 0; i < portals.size(); i++)
 		{
 			Portal p = portals.get(i);
@@ -540,24 +557,10 @@ public class PortalHandler
 				break;
 			}
 		}
-		for(int i = 0; i < portalsTotal.size(); i++)
-		{
-			Portal p = portalsTotal.get(i);
-			if(p.getId() == portal.getId())
-			{
-				extern = i;
-				break;
-			}
-		}
 		if(intern != -1)
 		{
 			portals.remove(intern);
 			portals.add(portal);
-		}
-		if(extern != -1)
-		{
-			portalsTotal.remove(extern);
-			portalsTotal.add(portal);
 		}
 	}
 	
@@ -621,7 +624,7 @@ public class PortalHandler
 	{
 		int globalLimit = 0;
 		int globalHomeCount = plugin.getMysqlHandler().countWhereID(
-				MysqlHandler.Type.WARP, "`owner` = ?",
+				MysqlHandler.Type.PORTAL, "`owner` = ?",
 				player.getUniqueId().toString());
 		if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_GLOBAL+"*"))
 		{
@@ -682,7 +685,7 @@ public class PortalHandler
 			}
 			where += " AND `owner_uuid` = ?";
 			int serverHomeCount = plugin.getMysqlHandler().countWhereID(
-					MysqlHandler.Type.WARP, where, o);
+					MysqlHandler.Type.PORTAL, where, o);
 			if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_SERVER+"*")
 					|| player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_SERVER+serverCluster+".*"))
 			{
@@ -708,7 +711,7 @@ public class PortalHandler
 			return i;
 		} else {
 			int serverHomeCount = plugin.getMysqlHandler().countWhereID(
-					MysqlHandler.Type.WARP, "`owner_uuid` = ? AND `pos_one_server` = ?",
+					MysqlHandler.Type.PORTAL, "`owner_uuid` = ? AND `pos_one_server` = ?",
 					player.getUniqueId().toString(), server);
 			if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_SERVER+"*")
 					|| player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_SERVER+server+".*"))
@@ -789,7 +792,7 @@ public class PortalHandler
 			}
 			where += " AND `owner_uuid` = ?";
 			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
-					MysqlHandler.Type.WARP, where, o);
+					MysqlHandler.Type.PORTAL, where, o);
 			if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_WORLD+"*")
 					|| player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_WORLD+cluster+".*"))
 			{
@@ -816,7 +819,7 @@ public class PortalHandler
 		} else
 		{
 			int worldHomeCount = plugin.getMysqlHandler().countWhereID(
-					MysqlHandler.Type.WARP, "`owner_uuid` = ? AND `pos_one_world` = ?",
+					MysqlHandler.Type.PORTAL, "`owner_uuid` = ? AND `pos_one_world` = ?",
 					player.getUniqueId().toString(), world);
 			if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_WORLD+"*")
 					|| player.hasPermission(StaticValues.PERM_PORTAL_COUNTWARPS_WORLD+world+".*"))
@@ -877,46 +880,6 @@ public class PortalHandler
 			mapmap.put(portal.getPosition1().getWorldName(), bc);
 			map.put(portal.getPosition1().getServer(), mapmap);
 			return map;
-		}
-	}
-	
-	public long getCooldown(Player player, Portal portal)
-	{
-		if(!portal.getBlacklist().isEmpty()
-				&& portal.getBlacklist().contains(player.getUniqueId().toString())
-				&& (portal.getOwner() == null || (portal.getOwner() != null && !portal.getOwner().equals(player.getUniqueId().toString())))
-				&& !player.hasPermission(StaticValues.PERM_BYPASS_PORTAL))
-		{
-			return Long.MAX_VALUE;
-		}
-		PortalCooldown pcd = (PortalCooldown) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTALCOOLDOWN, 
-				"`portalid` = ? AND `player_uuid` = ?", portal.getId(), player.getUniqueId().toString());
-		if(pcd != null && pcd.getCooldownUntil() > System.currentTimeMillis())
-		{
-			return pcd.getCooldownUntil();
-		}
-		if(portal.getOwner() != null && portal.getOwner().equals(player.getUniqueId().toString()))
-		{
-			return ownerCooldownPortal;
-		} else if(!portal.getMember().isEmpty() && portal.getMember().contains(player.getUniqueId().toString()))
-		{
-			return memberCooldownPortal;
-		} else
-		{
-			long cd = portal.getCooldown();
-			for(String s : cooldownPortalmap.keySet())
-			{
-				if(!player.hasPermission(s))
-				{
-					continue;
-				}
-				long cooldown = cooldownPortalmap.get(s);
-				if(cd > cooldown)
-				{
-					cd = cooldown;
-				}
-			}
-			return cd;
 		}
 	}
 	

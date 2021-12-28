@@ -191,6 +191,51 @@ public class TeleportHandler
 		}
 	}
 	
+	public void preTeleportPlayerToPlayerSilentUse(String uuid, String playername, String otherUUID, String otherName, String errormessage)
+	{
+		ProxiedPlayer sender = plugin.getProxy().getPlayer(playername);
+		ProxiedPlayer target = plugin.getProxy().getPlayer(otherName);
+		if(sender == null)
+		{
+			return;
+		}
+		if(target == null)
+		{
+			sender.sendMessage(ChatApi.tctl(errormessage));
+			return;
+		}
+		if(!sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
+		{
+			sender.connect(target.getServer().getInfo());
+		}
+		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if(sender == null || target == null)
+				{
+					return;
+				}
+				if(sender.getServer() == null || sender.getServer().getInfo() == null || sender.getServer().getInfo().getName() == null
+						|| target.getServer() == null || target.getServer().getInfo() == null || target.getServer().getInfo().getName() == null)
+				{
+					return;
+				}
+				ByteArrayOutputStream streamout = new ByteArrayOutputStream();
+		        DataOutputStream out = new DataOutputStream(streamout);
+		        try {
+					out.writeUTF(StaticValues.TP_SILENTPLAYERTOPLAYER);
+					out.writeUTF(sender.getName());
+					out.writeUTF(target.getName());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			    target.getServer().sendData(StaticValues.TP_TOSPIGOT, streamout.toByteArray());
+			}
+		}, 1, TimeUnit.MILLISECONDS);
+	}
+	
 	public void preTeleportAllPlayerToOnePlayer(String fromName, int delay, Object... objects)
 	{
 		ProxiedPlayer from = plugin.getProxy().getPlayer(fromName);
