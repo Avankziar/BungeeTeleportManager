@@ -303,6 +303,12 @@ public class YamlManager
 			configSpigotKeys.put("Enable.InterfaceHub.Consuming.Vanish"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
+			configSpigotKeys.put("Enable.VanillaNetherportal"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("Enable.VanillaEndportal"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
 			configSpigotKeys.put("SilentTp.DoVanish"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
@@ -1040,7 +1046,7 @@ public class YamlManager
 				"&c/portalsetaccessdenialmessage <Portalname> <Nachricht> &f| Setzt die Nachricht, welche gesendet wird, falls man das Portal nicht benutzten darf.",
 				"&c/portalsetaccessdenialmessage <portalname> <message> &f| Sets the message that will be sent if you are not allowed to use the portal.");
 		commandsInput("portalsettriggerblock", "portalsettriggerblock", "btm.cmd.user.portal.settriggerblock",
-				"/portalsettriggerblock <portalname> <material>", "/portaltriggerblock ",
+				"/portalsettriggerblock <portalname> <material>", "/portalsettriggerblock ",
 				"&c/portalsettriggerblock <Portalname> <Material> &f| Setzt das Material welches als Portaltrigger dient. Dieser muss ein transparenter Block sein.",
 				"&c/portalsettriggerblock <portalname> <material> &f| Sets the material that serves as the portal trigger. This must be a transparent block.");
 		commandsInput("portalsetthrowback", "portalsetthrowback", "btm.cmd.user.portal.setthrowback",
@@ -1326,7 +1332,7 @@ public class YamlManager
 		languageKeys.put("NoPermission",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast dafür keine Rechte!",
-						"&cYou don not have the rights!"}));
+						"&cYou dont not have the rights!"}));
 		languageKeys.put("NoPlayerExist",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Spieler ist nicht online oder existiert nicht!",
@@ -2362,6 +2368,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePost-Teleport-Nachricht:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportMsg>~hover@SHOW_TEXT@Hover.Message.Change",
 						"&ePostTeleportMessage:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportMsg>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfoCooldown", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDefault Cooldown: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Zeitkürzel:Wert>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eDefault Cooldown: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<timeShortcut:value>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoAccessDenialMsg", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZugangsverweigerungs-Nachricht:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change",
@@ -3254,8 +3264,8 @@ public class YamlManager
 						"&cWorld: %category%"}));
 		languageKeys.put(path+"SearchValueInfo.Owner",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cWelt: %category%, ",
-						"&cWorld: %category%"}));
+						"&cEigentümer: %category%, ",
+						"&cOwner: %category%"}));
 		languageKeys.put(path+"SearchValueInfo.Category",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cKategorie: %category%, ",
@@ -3312,10 +3322,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu kannst nicht vom Server Hub, Welt Spawn zum Server Nether Welt Spawn dein Back benutzen!",
 						"&cYou cannot use your back from Server Hub, World Spawn to Server Nether World Spawn!"}));
-		customLanguageKeys.put("PermissionLevel.Access.Denied.hub_spawn_nether_spawn",
+		/*customLanguageKeys.put("PermissionLevel.Access.Denied.hub_spawn_nether_spawn",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu kannst dich nicht vom Server Hub, Welt Spawn zum Server Nether Welt Spawn teleportieren!",
-						"&cYou cannot teleport from Server Hub, World Spawn to Server Nether World Spawn!"}));
+						"&cYou cannot teleport from Server Hub, World Spawn to Server Nether World Spawn!"}));*/
 		customLanguageKeys.put("Portal.PortalRotater.Displayname",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"&5Portal &6Rotater"}));
@@ -3576,12 +3586,6 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"hub","nether"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.FirstSpawn.World",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"spawnworld","city1"}));
-		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTransport.Server",
-				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-						"hub","nether"}));
-		forbiddenListSpigotKeys.put("ForbiddenToUse.EntityTransport.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawnworld","city1"}));
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Home.Server",

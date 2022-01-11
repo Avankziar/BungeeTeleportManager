@@ -748,6 +748,8 @@ public class PortalHelper
 				.replace("%name%", portalName),
 				ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.PORTAL_INFO).trim()+" "+portalName));
 		plugin.getPortalHandler().removePortalPosition(player.getUniqueId());
+		plugin.getPortalHandler().removePortalMode(player.getUniqueId());
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getUtility().setPortalsTabCompleter(player);
 		return;
 	}
@@ -1278,6 +1280,11 @@ public class PortalHelper
 				plugin.getYamlHandler().getLang().getString("CmdPortal.InfoAccessDenialMsg")
 				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETACCESSDENIALMSG).trim())
 				.replace("%value%", portal.getAccessDenialMessage() != null ? portal.getAccessDenialMessage() : "N.A.")
+				.replace("%portal%", portal.getName())));
+		player.spigot().sendMessage(ChatApi.generateTextComponent(
+				plugin.getYamlHandler().getLang().getString("CmdPortal.InfoCooldown")
+				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETDEFAULTCOOLDOWN).trim())
+				.replace("%value%", TimeHandler.getRepeatingTime(portal.getCooldown()))
 				.replace("%portal%", portal.getName())));
 	}
 	
@@ -1875,6 +1882,8 @@ public class PortalHelper
 		}
 		String portalNewCategory = args[1];
 		portal.setCategory(portalNewCategory);
+		plugin.getPortalHandler().deletePortalInList(portal);
+		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetCategory")
 				.replace("%portal%", args[0])
@@ -2106,9 +2115,9 @@ public class PortalHelper
 				return;
 			}
 			String portalName = args[2];
-			if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", portalName))
+			if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalName))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("TargetType.DestinationNotExist")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.argetType.DestinationNotExist")
 						.replace("%value%", portalName)
 						.replace("%type%", target.toString())));
 				return;

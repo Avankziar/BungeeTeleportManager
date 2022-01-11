@@ -129,7 +129,7 @@ Build 6-0-16+
   - /portalsetcategory <Portalname> <Kategorie> | Setzt eine Kategorie für das Portal.
   - /portalsetaccesstype <portal> &f| Toggelt ob ein Portal öffentlich oder privat ist. (Privat dürfen nur der Eigentümer und Mitglieder das Portal benutzten)
   - /portalsetdefaultcooldown <portal> <Zeitkürzel:value> &f| Setzt den Default Cooldown des Portal. (Config Cooldown ist priorisiert)
-  - /portalitem | Gibt ein Item, welches einen Netherportalblock rotieren lässt.
+  - /portalitem | Gibt ein Item, welches einen Netherportalblock rotieren lässt sowie die replaceritems für netherportal, gateway und enderportalblock geben.
   - PermissionLevel für Portale hinzufügen.
   - Portal erstellung kann geld kosten.
 - Deathzone:
@@ -151,4 +151,6 @@ Build 6-0-16+
     die Mechaniken greifen sollen. Bspw. Zuerst SavePoints(Welcher SavePointName), Respawn, BedSpawn, FristSpawn.
     Hierbei gilt natürlich, dass alle Mechaniken einen Datensatz für den Spieler in diesem Server und oder Welt haben.
 - InterfaceHub
-  - Teleport-Interface implementier als Provider.
+  - Teleport-Interface implementiert als Provider.
+  - Vanish-Interface implementiert als Consumer.
+- /tpsilent <Spielername> hinzufügen. Ist eine Tpto, wo der ausführende Spieler vorher in GM 3 versetzt wird.

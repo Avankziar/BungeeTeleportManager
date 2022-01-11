@@ -116,13 +116,14 @@ public class FirstSpawnHelper
 			return;
 		}
 		String fsName = args[0];
-		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.FIRSTSPAWN, "`displayname` = ?", fsName))
+		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", fsName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnNotExist")));
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.FirstSpawnNotExist")));
 			return;
 		}
-		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.FIRSTSPAWN, "`displayname` = ?", fsName);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnRemove")));
+		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", fsName);
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.RemoveSpawn")
+				.replace("%value%", fsName)));
 		TabCompletionOne.renewFirstSpawn();
 		return;
 	}

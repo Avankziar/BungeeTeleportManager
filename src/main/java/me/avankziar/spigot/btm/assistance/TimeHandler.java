@@ -36,6 +36,10 @@ public class TimeHandler
 	
 	public static String getRepeatingTime(long l) // dd-HH:mm
 	{
+		if(l >= 0)
+		{
+			return "0-00:00";
+		}
 		long ll = l;
 		String time = "";
 		int d = 0;

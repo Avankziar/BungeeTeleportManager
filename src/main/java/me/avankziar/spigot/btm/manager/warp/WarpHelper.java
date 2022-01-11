@@ -1816,6 +1816,10 @@ public class WarpHelper
 		page = Integer.parseInt(args[0]);
 		int start = page*10;
 		int quantity = 10;
+		if(start < 0)
+		{
+			start = 0;
+		}
 		int i = 1;
 		String query = "";
 		String argPagination = "";
@@ -1831,6 +1835,7 @@ public class WarpHelper
 			String[] arg = args[i].split(":");
 			if(arg.length != 2)
 			{
+				i++;
 				continue;
 			}
 			String option = arg[0];

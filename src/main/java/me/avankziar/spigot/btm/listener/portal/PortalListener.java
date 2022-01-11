@@ -40,11 +40,15 @@ public class PortalListener implements Listener
 {
 	private BungeeTeleportManager plugin;
 	private String rotater;
+	private boolean vanillaNetherportal = false;
+	private boolean vanillaEndportal = false;
 	
 	public PortalListener(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
 		rotater = ChatColor.stripColor(ChatApi.tl(plugin.getYamlHandler().getCustomLang().getString("Portal.PortalRotater.Displayname")));
+		vanillaNetherportal = plugin.getYamlHandler().getConfig().getBoolean("Enable.VanillaNetherportal", false);
+		vanillaEndportal = plugin.getYamlHandler().getConfig().getBoolean("Enable.VanillaEndportal", false);
 	}
 	
 	@EventHandler
@@ -94,6 +98,11 @@ public class PortalListener implements Listener
 		event.setCancelled(true);
 		if(event.getCause() == TeleportCause.END_PORTAL)
 		{
+			if(vanillaEndportal)
+			{
+				event.setCancelled(false);
+				return;
+			}
 			if(event.isCancelled())
 			{
 				return;
@@ -104,6 +113,11 @@ public class PortalListener implements Listener
 			}
 		} else if(event.getCause() == TeleportCause.NETHER_PORTAL)
 		{
+			if(vanillaNetherportal)
+			{
+				event.setCancelled(false);
+				return;
+			}
 			if(event.isCancelled())
 			{
 				return;
@@ -125,6 +139,16 @@ public class PortalListener implements Listener
 		final Player player = event.getPlayer();
 		plugin.getPortalHandler().checkIfCanBeTriggered(player, player.getLocation(), player.getEyeLocation());
 	}
+	
+	/*@EventHandler
+	public void onVehicelMove(VehicleMoveEvent event)
+	{
+		if(event.getVehicle().getPassengers().isEmpty())
+		{
+			return;
+		}
+		
+	}*/
 	
 	@EventHandler(ignoreCancelled = true)
 	public void onEntityPortal(EntityPortalEvent event)
@@ -183,6 +207,10 @@ public class PortalListener implements Listener
 				{
 					return;
 				}
+			}
+			if(event.getClickedBlock() == null)
+			{
+				return;
 			}
 			addCool(player);
 			final Location l = event.getClickedBlock().getLocation();

@@ -21,7 +21,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-import main.java.me.avankziar.aep.spigot.api.MatchApi;
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Portal;
 import main.java.me.avankziar.general.object.PortalCooldown;
@@ -29,6 +28,7 @@ import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
+import main.java.me.avankziar.spigot.btm.assistance.MatchApi;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
@@ -953,5 +953,10 @@ public class PortalHandler
 	public void removePortalPosition(UUID uuid)
 	{
 		portalposition.remove(uuid);
+	}
+	
+	public void removePortalMode(UUID uuid)
+	{
+		portalCreateMode.remove(uuid);
 	}
 }

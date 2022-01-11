@@ -38,6 +38,7 @@ public class BungeeTeleportManager extends Plugin
 	{
 		plugin = this;
 		log = getLogger();
+		//https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=BTM
 		log.info(" ██████╗ ████████╗███╗   ███╗ | API-Version: "+plugin.getDescription().getVersion());
 		log.info(" ██╔══██╗╚══██╔══╝████╗ ████║ | Author: "+plugin.getDescription().getAuthor());
 		log.info(" ██████╔╝   ██║   ██╔████╔██║ | Plugin Website: https://www.spigotmc.org/resources/bungeeteleportmanager.80677/");

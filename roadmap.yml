@@ -26,9 +26,16 @@ Future =========================================================================
 - Registerierte EntitytsTeleporter dürfen nicht benannt oder teleportiert werden.
 - Forbiddenlist Entitytransport hinzufügen, mit EntityTypes einstellbar.
 - Registerierte EntitytsTeleporter dürfen nicht benannt oder teleportiert werden.
+- Mit Minecarts durch Portale fahren können (VehicelMoveEvent), die Problematik mit den Entitys.
+  Guter Testboden, um eine Mechanik zu entwickeln, um einzelne Entitys mit Spieler zu teleportieren.
+- /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
 
 Build 6-0-x
-- /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
++ FirstSpawn tabs fix
++ /firstspawnremove fix
++ configboolean hinzugefügt um Vanilla Nether- und Endportale anzusteuern.
+
+Build 6-0-17
 - +Eventuell die Lang aufsplitten
 - +tpa tabs gehen nicht
 - +tabs für addmember portal etc

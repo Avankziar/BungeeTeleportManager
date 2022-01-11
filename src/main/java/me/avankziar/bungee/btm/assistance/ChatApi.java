@@ -240,26 +240,45 @@ public class ChatApi
     }
 
     @SuppressWarnings("deprecation")
-	private static String nearestColor(String hex) 
-    {
-        if (supportsHex()) 
-        {
-            return ChatColor.of((String)hex).toString();
-        }
-        Color awtColor = Color.decode(hex);
-        ChatColor nearestColor = ChatColor.WHITE;
-        double shorterDistance = -1.0;
-        for (ChatColor chatColor : ChatColor.values()) 
-        {
-            Color color = getChatColorPaint(chatColor, awtColor);
-            if (color == null) continue;
-            double distance = calcColorDistance(awtColor, color);
-            if (shorterDistance != -1.0 && !(distance < shorterDistance)) continue;
-            nearestColor = chatColor;
-            shorterDistance = distance;
-        }
-        return nearestColor.toString();
-    }
+	private static String nearestColor(String hex)
+	{
+		if (supportsHex())
+		{
+			if (hex.matches("[#][0-9a-fA-F]+"))
+				return ChatColor.of(hex).toString();
+			String newhex = "#";
+			for (int j = 1; j < hex.length(); j++)
+			{
+				String s = String.valueOf(hex.charAt(j));
+				if (!s.matches("[0-9a-fA-F]"))
+					s = "0";
+				newhex = String.valueOf(newhex) + s;
+			}
+			return ChatColor.of(newhex).toString();
+		}
+		Color awtColor = Color.decode(hex);
+		ChatColor nearestColor = ChatColor.WHITE;
+		double shorterDistance = -1.0D;
+		byte b;
+		int i;
+		ChatColor[] arrayOfChatColor;
+		for (i = (arrayOfChatColor = ChatColor.values()).length, b = 0; b < i;)
+		{
+			ChatColor chatColor = arrayOfChatColor[b];
+			Color color = getChatColorPaint(chatColor, awtColor);
+			if (color != null)
+			{
+				double distance = calcColorDistance(awtColor, color);
+				if (shorterDistance == -1.0D || distance < shorterDistance)
+				{
+					nearestColor = chatColor;
+					shorterDistance = distance;
+				}
+			}
+			b++;
+		}
+		return nearestColor.toString();
+	}
 
     private static Color getChatColorPaint(ChatColor chatColor, Color awtColor) 
     {

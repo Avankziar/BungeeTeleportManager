@@ -474,37 +474,38 @@ public class TabCompletionOne implements TabCompleter
 					return entitytransport;
 				}
 			}
-		} else if (cfgh.enableCommands(Mechanics.ENTITYTRANSPORT) 
-				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.ENTITYTRANSPORT_SETOWNER).trim()))
-				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.ENTITYTRANSPORT_SETACCESS).trim()))
+		} else if (cfgh.enableCommands(Mechanics.ENTITYTRANSPORT) && args.length == 1
+				&& (
+					command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.ENTITYTRANSPORT_SETOWNER).trim())
+				 || command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.ENTITYTRANSPORT_SETACCESS).trim())
+				 ))
 		{
-			if(args.length == 1)
+			if (!args[0].equals("")) 
 			{
-				if (!args[0].equals("")) 
+				for (String name : plugin.getMysqlPlayers()) 
 				{
-					for (String name : plugin.getMysqlPlayers()) 
+					if (name.startsWith(args[0])
+							|| name.toLowerCase().startsWith(args[0])
+							|| name.toUpperCase().startsWith(args[0])) 
 					{
-						if (name.startsWith(args[0])
-								|| name.toLowerCase().startsWith(args[0])
-								|| name.toUpperCase().startsWith(args[0])) 
-						{
-							list.add(name);
-						}
+						list.add(name);
 					}
-					Collections.sort(list);
-					return list;
-				} else
-				{
-					if(plugin.getMysqlPlayers() != null)
-					{
-						list.addAll(plugin.getMysqlPlayers());
-						Collections.sort(list);
-					}
-					return list;
 				}
+				Collections.sort(list);
+				return list;
+			} else
+			{
+				if(plugin.getMysqlPlayers() != null)
+				{
+					list.addAll(plugin.getMysqlPlayers());
+					Collections.sort(list);
+				}
+				return list;
 			}
 		} else if (cfgh.enableCommands(Mechanics.FIRSTSPAWN) && args.length == 1 && (
-				   command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.FIRSTSPAWN).trim())))
+				   command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.FIRSTSPAWN).trim())
+				   || command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.FIRSTSPAWN_REMOVE).trim())
+				   ))
 		{
 			if (!args[0].equals("")) 
 			{
@@ -517,7 +518,6 @@ public class TabCompletionOne implements TabCompleter
 						list.add(server);
 					}
 				}
-				
 			} else
 			{
 				list.addAll(firstspawnserver);
@@ -923,7 +923,7 @@ public class TabCompletionOne implements TabCompleter
 					}
 					return list;
 				}
-		} else if (cfgh.enableCommands(Mechanics.WARP) && args.length == 2
+		} else if (cfgh.enableCommands(Mechanics.WARP) && args.length >= 2
 				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_SEARCH).trim())))
 		{
 			if (!args[1].equals("")) 
