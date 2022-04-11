@@ -95,6 +95,10 @@ public class PortalListener implements Listener
 	@EventHandler(ignoreCancelled = true)
 	public void onPlayerPortal(PlayerPortalEvent event)
 	{
+		if(vanillaEndportal && vanillaNetherportal)
+		{
+			return;
+		}
 		event.setCancelled(true);
 		if(event.getCause() == TeleportCause.END_PORTAL)
 		{

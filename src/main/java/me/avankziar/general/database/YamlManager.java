@@ -1065,6 +1065,10 @@ public class YamlManager
 				"/portalsetaccesstype <portalname>", "/portalsetaccesstype ",
 				"&c/portalsetaccesstype <Portalname> &f| Toggelt ob ein Portal öffentlich oder privat ist. (Privat dürfen nur der Eigentümer und Mitglieder das Portal benutzten)",
 				"&c/portalsetaccesstype <portalname> &f| Toggles whether a portal is public or private. (Private only the owner and members may use the portal).");
+		commandsInput("portalupdate", "portalupdate", "btm.cmd.user.portal.update",
+				"/portalupdate <portalname>", "/portalupdate ",
+				"&c/portalupdate <Portalname> &f| Aktualisiert das Portal auf dem Server, wo der Spieler gerade ist.",
+				"&c/portalupdate <portalname> &f| Updates the portal on the server where the player is at the moment.");
 		commandsInput("portalmode", "portalmode", "btm.cmd.user.portal.mode",
 				"/portalmode <portalname>", "/portalmode ",
 				"&c/portalmode <Portalname> &f| Versetzt den Spieler in den Modus um die Eckpunkte eines Portal zu bestimmen.",
@@ -1206,7 +1210,7 @@ public class YamlManager
 				"&c/warp <Warpname> &f| Teleportiert dich zu dem Warppunkt.",
 				"&c/warp <Warpname> &f| Teleports you to the warppoint.");
 		commandsInput("warping", "warping", "btm.cmd.staff.warp.warping",
-				"/warp <warpname> <playername> [Values...]", "/warping ",
+				"/warping <warpname> <playername> [Values...]", "/warping ",
 				"&c/warping <Warpname> <Spielername> [Werte...] &f| Teleportiert den Spieler zu dem Warppunkt.",
 				"&c/warping <warpname> <playername> [values...] &f| Teleports the player to the warppoint.");
 		commandsInput("warps", "warps", "btm.cmd.user.warp.warps",
@@ -2940,7 +2944,7 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt darf kein Teleport benutzt werden!",
 						"&cNo Teleport may be used in this world!"}));
-		path = "CmdTpa.";
+		path = "CmdTPA.";
 		languageKeys.put(path+"ForbiddenServerUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server darf kein TPA benutzt werden!",

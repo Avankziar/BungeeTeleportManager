@@ -60,6 +60,7 @@ public class PortalCmdExecutor implements CommandExecutor
 				commandList.get(cmd.getName()).getPath().equals("portalsetaccesstype") ||
 				commandList.get(cmd.getName()).getPath().equals("portalsetsound") ||
 				commandList.get(cmd.getName()).getPath().equals("portalmode") ||
+				commandList.get(cmd.getName()).getPath().equals("portalupdate") ||
 				commandList.get(cmd.getName()).getPath().equals("portalitem")
 				))
 		{
@@ -152,6 +153,9 @@ public class PortalCmdExecutor implements CommandExecutor
 				return true;
 			case "portalsetsound":
 				plugin.getPortalHelper().portalSetSound(player, args);
+				return true;
+			case "portalupdate":
+				plugin.getPortalHelper().portalUpdate(player, args);
 				return true;
 			case "portalmode":
 				plugin.getPortalHelper().portalMode(player, args);

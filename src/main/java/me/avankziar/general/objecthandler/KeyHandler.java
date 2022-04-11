@@ -58,6 +58,7 @@ public class KeyHandler
 	public static String PORTAL_SETSOUND = "PORTAL_SETSOUND";
 	public static String PORTAL_SETACCESSTYPE = "PORTAL_SETACCESSTYPE";
 	public static String PORTAL_SETTRIGGERBLOCK = "PORTAL_SETTRIGGERBLOCK";
+	public static String PORTAL_UPDATE = "PORTAL_UPDATE";
 	public static String PORTAL_ITEM = "PORTAL_ITEM";
 	
 	public static String RANDOMTELEPORT = "RANDOMTELEPORT";

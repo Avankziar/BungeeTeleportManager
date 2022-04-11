@@ -585,6 +585,7 @@ public class TabCompletionOne implements TabCompleter
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETACCESSDENIALMSG).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETACCESSTYPE).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_ADDBLACKLIST).trim())
+						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_UPDATE).trim())
 						)) 
 		{
 			if (!args[0].equals("")) 

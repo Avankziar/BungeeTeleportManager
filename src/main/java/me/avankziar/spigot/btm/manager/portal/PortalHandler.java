@@ -174,7 +174,7 @@ public class PortalHandler
 	
 	public void deletePortalInList(final Portal portal)
 	{
-		int j = 0;
+		int j = -1;
 		for(int i = 0; i < portals.size(); i++)
 		{
 			Portal p = portals.get(i);
@@ -184,7 +184,10 @@ public class PortalHandler
 				break;
 			}
 		}
-		portals.remove(j);
+		if(j != -1)
+		{
+			portals.remove(j);
+		}
 	}
 	
 	public boolean canEntityUsePortals()
@@ -295,9 +298,9 @@ public class PortalHandler
 					.replace("%portalname%", portal.getName())
 					.replace("%price%", String.valueOf(portal.getPricePerUse()))
 					.replace("%cooldown%", getTime(getCooldown(portal, player)))
-					.replace("%category%", portal.getCategory()))
+					.replace("%category%", portal.getCategory())
 					.replace("%permission%", (portal.getPermission() != null ? portal.getPermission() : "N.A."))
-					);
+					));
 		}
 	}
 	
@@ -560,8 +563,8 @@ public class PortalHandler
 		if(intern != -1)
 		{
 			portals.remove(intern);
-			portals.add(portal);
 		}
+		portals.add(portal);
 	}
 	
 	public boolean comparePortalAmount(Player player, boolean message)

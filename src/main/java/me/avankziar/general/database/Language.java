@@ -56,7 +56,7 @@ public class Language
 				Object[] valuesArray = new String[multiply];
 				for(int j = 0; j < multiply; j++)
 				{
-					valuesArray[j] = values[i+j];
+					valuesArray[j] = values[i*multiply+j];
 				}
 				languageValues.put(languages[i], valuesArray);
 			}

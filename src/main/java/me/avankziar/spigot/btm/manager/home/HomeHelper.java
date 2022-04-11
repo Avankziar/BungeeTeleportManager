@@ -75,13 +75,17 @@ public class HomeHelper
 		{
 			exist = true;
 		}
-		if(plugin.getHomeHandler().compareHomeAmount(player, true, exist))
+		if(!player.hasPermission(StaticValues.PERM_BYPASS_HOME_TOOMANY))
 		{
-			return;
-		}
+			if(plugin.getHomeHandler().compareHomeAmount(player, true, exist))
+			{
+				return;
+			}
+		}		
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		Home home = new Home(player.getUniqueId(), player.getName(), homeName, Utility.getLocation(player.getLocation()));
-		if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.HOME.getLower()) && plugin.getEco() != null
+		if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.HOME.getLower()) 
+				&& plugin.getEco() != null
 				&& cfgh.useVault())
 		{
 			double homeCreateCost = cfgh.getCostCreation(Mechanics.HOME);
@@ -270,12 +274,15 @@ public class HomeHelper
 				Home home = (Home) plugin.getMysqlHandler().getData(MysqlHandler.Type.HOME,
 						"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName);
 				int i = plugin.getHomeHandler().compareHome(player, false);
-				if(i > 0 && !player.hasPermission(StaticValues.PERM_BYPASS_HOME_TOOMANY))
+				if(!player.hasPermission(StaticValues.PERM_BYPASS_HOME_TOOMANY))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesToUse")
-							.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.HOMES))
-							.replace("%amount%", String.valueOf(i))));
-					return;
+					if(i > 0)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesToUse")
+								.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.HOMES))
+								.replace("%amount%", String.valueOf(i))));
+						return;
+					}
 				}
 				ReturnStatment rsOne = AccessPermissionHandler.isAccessPermissionDenied(UUID.fromString(playeruuid), Mechanics.HOME);
 				if(rsOne.returnValue)

@@ -64,27 +64,28 @@ public class IFHMessageListener implements Listener
         		String s = in.readUTF();
         		post.add(s);
         	}
+        	String errormessage = in.readUTF();
         	boolean createBack = in.readBoolean();
         	if(createBack)
         	{
         		BackHandler.getBack(in, uuid, playerName, Mechanics.CUSTOM);
         	}
-        	teleportPlayerToDestination(playerName, new ServerLocation(server, worldName, x, y, z, yaw, pitch), post);
+        	teleportPlayerToDestination(playerName, new ServerLocation(server, worldName, x, y, z, yaw, pitch), post, errormessage);
         }
         return;
 	}
 	
-	private void teleportPlayerToDestination(String playerName, ServerLocation location, ArrayList<String> post)
+	private void teleportPlayerToDestination(String playerName, ServerLocation location, ArrayList<String> post, String errormessage)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(playerName);
 		if(player == null)
 		{
 			return;
 		}
-		teleportPlayer(player, location, post); //Back wurde schon gemacht
+		teleportPlayer(player, location, post, errormessage); //Back wurde schon gemacht
 	}
 	
-	private void teleportPlayer(ProxiedPlayer player, ServerLocation location, ArrayList<String> post)
+	private void teleportPlayer(ProxiedPlayer player, ServerLocation location, ArrayList<String> post, String errormessage)
 	{
 		if(player == null || location == null)
 		{
@@ -92,13 +93,14 @@ public class IFHMessageListener implements Listener
 		}
 		if(!plugin.getProxy().getServers().containsKey(location.getServer()))
 		{
-			player.sendMessage(ChatApi.tctl("Server is unknow!"));
+			player.sendMessage(ChatApi.tctl(errormessage));
 			return;
 		}
 		if(!player.getServer().getInfo().getName().equals(location.getServer()))
 		{
 			if(plugin.getProxy().getServerInfo(location.getServer()) == null)
 			{
+				player.sendMessage(ChatApi.tctl(errormessage));
 				return;
 			}
 			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
@@ -108,16 +110,14 @@ public class IFHMessageListener implements Listener
 			@Override
 			public void run()
 			{
-				if(player == null || location == null)
+				if(player == null || location == null || location.getServer() == null
+						|| player.getServer() == null || player.getServer().getInfo() == null 
+						|| player.getServer().getInfo().getName() == null)
 				{
-					return;
-				}
-				if(location.getServer() == null)
-				{
-					return;
-				}
-				if(player.getServer() == null || player.getServer().getInfo() == null || player.getServer().getInfo().getName() == null)
-				{
+					if(player != null)
+					{
+						player.sendMessage(ChatApi.tctl(errormessage));
+					}
 					return;
 				}
 				ByteArrayOutputStream streamout = new ByteArrayOutputStream();
@@ -136,6 +136,7 @@ public class IFHMessageListener implements Listener
 					{
 						out.writeUTF(s);
 					}
+					out.writeUTF(errormessage);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

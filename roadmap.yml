@@ -29,8 +29,18 @@ Future =========================================================================
 - Mit Minecarts durch Portale fahren können (VehicelMoveEvent), die Problematik mit den Entitys.
   Guter Testboden, um eine Mechanik zu entwickeln, um einzelne Entitys mit Spieler zu teleportieren.
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
+- PlaceHolder Api, Home amount, Tpatoggle, etc.
+- Durch die Portale und /server <Server>, wird man automatisch in das Portal zurückgesetzt und teleportiert, was aber nicht gewollt ist.
 
-Build 6-0-x
+Build 6-0-23
++ Perm toomany fixed by home & warp
++ Output error fix by tpa
+
+Build 6-0-22
++ /portalupdate <portal> added, as is was forgotten...
++ PortalUpdate Task fixed
+
+Build 6-0-21
 + FirstSpawn tabs fix
 + /firstspawnremove fix
 + configboolean hinzugefügt um Vanilla Nether- und Endportale anzusteuern.

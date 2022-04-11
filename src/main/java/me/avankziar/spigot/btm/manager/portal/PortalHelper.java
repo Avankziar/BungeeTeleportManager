@@ -104,19 +104,22 @@ public class PortalHelper
 					}
 				}
 				int i = plugin.getPortalHandler().comparePortal(player, false);
-				if(i > 0 && !player.hasPermission(StaticValues.PERM_BYPASS_PORTAL_TOOMANY))
+				if(!player.hasPermission(StaticValues.PERM_BYPASS_PORTAL_TOOMANY))
 				{
-					plugin.getPortalHandler().throwback(portal, player);
-					/*if(portal.getAccessDenialMessage() != null)
+					if(i > 0)
 					{
-						player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
-								.replace("%portalname%", portal.getName())
-								.replace("%player%", player.getName())));
+						plugin.getPortalHandler().throwback(portal, player);
+						/*if(portal.getAccessDenialMessage() != null)
+						{
+							player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+									.replace("%portalname%", portal.getName())
+									.replace("%player%", player.getName())));
+							return;
+						}*/
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalToUse")
+								.replace("%amount%", String.valueOf(i))));
 						return;
-					}*/
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalToUse")
-							.replace("%amount%", String.valueOf(i))));
-					return;
+					}
 				}
 				boolean owner = false;
 				if(portal.getOwner() != null)
@@ -693,10 +696,12 @@ public class PortalHelper
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNameAlreadyExist")));
 			return;
 		}
-		if(!plugin.getPortalHandler().comparePortalAmount(player, true) 
-				&& !player.hasPermission(StaticValues.PERM_BYPASS_PORTAL_TOOMANY))
+		if(!player.hasPermission(StaticValues.PERM_BYPASS_PORTAL_TOOMANY))
 		{
-			return;
+			if(!plugin.getPortalHandler().comparePortalAmount(player, true))
+			{
+				return;
+			}
 		}
 		ServerLocation pos1 = new ServerLocation(popos.pos1.getServer(), popos.pos1.getWorldName(),
 				Math.max(popos.pos1.getX(), popos.pos2.getX()), 
@@ -2488,7 +2493,8 @@ public class PortalHelper
 	
 	public void portalUpdate(Player player, String[] args)
 	{
-		if(args.length != 0 && args.length !=1)
+		if(//args.length != 0 && 
+				args.length !=1)
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(

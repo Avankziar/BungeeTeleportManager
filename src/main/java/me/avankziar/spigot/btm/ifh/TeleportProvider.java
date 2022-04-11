@@ -11,8 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.objecthandler.StaticValues;
@@ -26,14 +24,6 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 {
 	private BungeeTeleportManager plugin;
 	private static boolean isBack = true;
-	private static boolean isEffect = true;
-	private static ArrayList<PotionEffect> effects = new ArrayList<>();
-	
-	static
-	{
-		effects.add(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 40, 1));
-		effects.add(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 40, 1));
-	}
 	
 	public TeleportProvider(BungeeTeleportManager plugin)
 	{
@@ -47,76 +37,62 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 	}
 
 	@Override
-	public boolean isGiveEffects()
-	{
-		return isEffect;
-	}
-
-	@Override
 	public void setBackAsDefault(boolean active)
 	{
 		isBack = active;
 	}
 
 	@Override
-	public void setGiveEffects(boolean active, PotionEffect... potionEffect)
+	public boolean teleport(Player player, String server, String worldname, double x, double y, double z, float yaw, float pitch)
 	{
-		isEffect = active;
-		effects.clear();
-		for(PotionEffect pe : potionEffect)
-		{
-			effects.add(pe);
-		}
-	}
-
-	@Override
-	public boolean teleport(Player player, String server, Location location)
-	{
-		teleport(player, server, location, new ArrayList<>(), new ArrayList<>(), isBack);
+		teleport(player, server, worldname, x, y, z, yaw, pitch, new ArrayList<>(), new ArrayList<>(), "", isBack);
 		return false;
 	}
 
 	@Override
-	public boolean teleport(Player player, String server, Location location, 
+	public boolean teleport(Player player, String server, String worldname, double x, double y, double z, float yaw, float pitch, 
 			ArrayList<String> preTeleportMessage)
 	{
-		teleport(player, server, location, preTeleportMessage, new ArrayList<>(), isBack);
-		return false;
+		return teleport(player, server, worldname, x, y, z, yaw, pitch, preTeleportMessage, new ArrayList<>(), "", isBack);
 	}
 
 	@Override
-	public boolean teleport(Player player, String server, Location location, 
+	public boolean teleport(Player player, String server, String worldname, double x, double y, double z, float yaw, float pitch, 
 			ArrayList<String> preTeleportMessage, ArrayList<String> postTeleportMessage)
 	{
-		teleport(player, server, location, preTeleportMessage, postTeleportMessage, isBack);
-		return false;
+		return teleport(player, server, worldname, x, y, z, yaw, pitch, preTeleportMessage, postTeleportMessage, "", isBack);
+	}
+	
+	@Override
+	public boolean teleport(Player player, String server, String worldname, double x, double y, double z, float yaw, float pitch, 
+			ArrayList<String> preTeleportMessage, ArrayList<String> postTeleportMessage, String errormessage)
+	{
+		return teleport(player, server, worldname, x, y, z, yaw, pitch, preTeleportMessage, postTeleportMessage, errormessage, isBack);
 	}
 
 	@Override
-	public boolean teleport(Player player, String server, Location location, 
-			ArrayList<String> preTeleportMessage, ArrayList<String> postTeleportMessage,
+	public boolean teleport(Player player, String server, String worldname, double x, double y, double z, float yaw, float pitch, 
+			ArrayList<String> preTeleportMessage, ArrayList<String> postTeleportMessage, String errormessage,
 			boolean createBack)
 	{
-		sendPlayerTo(player, server, location, createBack, preTeleportMessage, postTeleportMessage);
+		sendPlayerTo(player, server, worldname, x, y, z, yaw, pitch, preTeleportMessage, postTeleportMessage,
+				errormessage, createBack);
 		return true;
 	}
 	
-	private void sendPlayerTo(Player player, String server, Location loc, boolean createBack,
-			ArrayList<String> preTeleportMessage, ArrayList<String> postTeleportMessage)
+	private void sendPlayerTo(Player player, String server, String worldname, double x, double y, double z, float yaw, float pitch,
+			ArrayList<String> preTeleportMessage, ArrayList<String> postTeleportMessage,
+			String errormessage, boolean createBack)
 	{
 		if(!preTeleportMessage.isEmpty())
 		{
 			for(String s : preTeleportMessage)
 			player.sendMessage(ChatApi.tl(s));
-		}
-		if(isEffect)
-		{
-			player.addPotionEffects(effects);
-		}		
+		}	
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		if(server.equals(cfgh.getServer()) && player != null)
 		{
-			if(isBack)
+			if(createBack)
 			{
 				BackHandler bh = new BackHandler(plugin);
 				bh.sendBackObject(player, bh.getNewBack(player));
@@ -126,7 +102,15 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 				@Override
 				public void run()
 				{
-					player.teleport(loc);
+					if(Bukkit.getWorld(worldname) == null)
+					{
+						if(errormessage != null)
+						{
+							player.sendMessage(ChatApi.tl(errormessage));
+						}
+						return;
+					}
+					player.teleport(new Location(Bukkit.getWorld(worldname), x, y, z, yaw, pitch));
 					if(!postTeleportMessage.isEmpty())
 					{
 						for(String s : postTeleportMessage)
@@ -140,19 +124,21 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 	        DataOutputStream out = new DataOutputStream(stream);
 	        try {
 				out.writeUTF(StaticValues.IFH_PLAYERTOPOSITION);
+				out.writeUTF(player.getUniqueId().toString());
 				out.writeUTF(player.getName());
 				out.writeUTF(server);
-				out.writeUTF(loc.getWorld().getName());
-				out.writeDouble(loc.getX());
-				out.writeDouble(loc.getY());
-				out.writeDouble(loc.getZ());
-				out.writeFloat(loc.getYaw());
-				out.writeFloat(loc.getPitch());
+				out.writeUTF(worldname);
+				out.writeDouble(x);
+				out.writeDouble(y);
+				out.writeDouble(z);
+				out.writeFloat(yaw);
+				out.writeFloat(pitch);
 				out.writeInt(postTeleportMessage.size());
 				for(String s : postTeleportMessage)
 				{
 					out.writeUTF(s);
 				}
+				out.writeUTF(errormessage != null ? errormessage : "");
 				out.writeBoolean(createBack);
 				new BackHandler(plugin).addingBack(player, out);
 			} catch (IOException e) 
@@ -191,11 +177,10 @@ public class TeleportProvider implements Teleport, PluginMessageListener
                 		String s = in.readUTF();
                 		post.add(s);
                 	}
+                	String errormessage = in.readUTF();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
-						player.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
-										.replace("%world%", worldName)));
+						player.sendMessage(ChatApi.tl(errormessage));
 						return;
 					}
                 	new BukkitRunnable()
@@ -214,9 +199,7 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 										Player player = plugin.getServer().getPlayer(playerName);
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
-															.replace("%world%", worldName)));
+											player.sendMessage(ChatApi.tl(errormessage));
 											cancel();
 											return;
 										}
@@ -230,7 +213,7 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 													player.teleport(loc);
 												} catch(NullPointerException e)
 												{
-													player.sendMessage(ChatApi.tl("Error! See Console!"));
+													player.sendMessage(ChatApi.tl(errormessage));
 												}
 											}
 										}.runTask(plugin);

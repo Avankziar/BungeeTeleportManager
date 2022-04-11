@@ -176,11 +176,14 @@ public class WarpHelper
 					return;
 				}
 				int i = plugin.getWarpHandler().compareWarp(player, false);
-				if(i > 0 && !player.hasPermission(StaticValues.PERM_BYPASS_WARP_TOOMANY))
+				if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP_TOOMANY))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsToUse")
-							.replace("%amount%", String.valueOf(i))));
-					return;
+					if(i > 0)
+					{
+						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsToUse")
+								.replace("%amount%", String.valueOf(i))));
+						return;
+					}
 				}
 				ReturnStatment rsOne = AccessPermissionHandler.isAccessPermissionDenied(UUID.fromString(playeruuid), Mechanics.WARP);
 				if(rsOne.returnValue)
@@ -571,11 +574,13 @@ public class WarpHelper
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNameAlreadyExist")));
 			return;
 		}
-		if(!plugin.getWarpHandler().compareWarpAmount(player, true) 
-				&& !player.hasPermission(StaticValues.PERM_BYPASS_PORTAL_TOOMANY))
+		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP_TOOMANY))
 		{
-			return;
-		}
+			if(!plugin.getWarpHandler().compareWarpAmount(player, true))
+			{
+				return;
+			}
+		}		
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		Warp warp = new Warp(warpName, Utility.getLocation(player.getLocation()),
 				false, player.getUniqueId().toString(), null, null, null, null, 0.0, "default", Warp.PortalAccess.IRRELEVANT);

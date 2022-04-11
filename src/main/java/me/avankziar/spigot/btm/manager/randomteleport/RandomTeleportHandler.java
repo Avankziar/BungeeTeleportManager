@@ -110,7 +110,7 @@ public class RandomTeleportHandler
 		int i = 0;
 		while(loc == null)
 		{
-			if(i > 500)
+			if(i > 50)
 			{
 				break;
 			}
@@ -205,20 +205,21 @@ public class RandomTeleportHandler
 				Block bup = up.getBlock();
 				Block bdown = down.getBlock();
 				Block bbottom = bottom.getBlock();
-				if(bbottom.getType().isSolid() && isTransparant(bdown) && isTransparant(bl) && isTransparant(bup))
+				if(count >= 25)
+				{
+					return null;
+				} else if(bbottom.getType().isSolid() && isTransparant(bdown) && isTransparant(bl) && isTransparant(bup))
 				{
 					return new Location(loc.getWorld(), bottom.getX(), down.getY(), bottom.getZ());
 				} else if(bdown.getType().isSolid() && isTransparant(bl) && isTransparant(bup))
 				{
 					return new Location(loc.getWorld(), down.getX(), l.getY(), down.getZ());
-				} else if(count >= 25)
-				{
-					return null;
 				}
 				l = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
 				up = new Location(l.getWorld(), l.getX(), l.getY() + 1, l.getZ());
 				down = new Location(l.getWorld(), l.getX(), l.getY() - 1, l.getZ());
 				bottom = new Location(l.getWorld(), l.getX(), l.getY() - 2, l.getZ());
+				count++;
 			}
 		}
 		return null;

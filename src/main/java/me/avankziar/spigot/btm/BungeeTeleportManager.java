@@ -220,7 +220,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		warpHelper = new WarpHelper(plugin);
 		warpHandler = new WarpHandler(plugin);
 		
-		setupLogHandler();
+		//setupLogHandler();
 		setupEconomy();
 		setupIFHProvider();
 		setupIFHConsumer();
@@ -683,6 +683,12 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(portalsetaccesstype.getName()).setExecutor(new PortalCmdExecutor(plugin, portalsetaccesstype));
 			getCommand(portalsetaccesstype.getName()).setTabCompleter(tabOne);
 			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETACCESSTYPE, portalsetaccesstype.getCommandString());
+			
+			CommandConstructor portalupdate = new CommandConstructor("portalupdate", false);
+			registerCommand(portalupdate.getName());
+			getCommand(portalupdate.getName()).setExecutor(new PortalCmdExecutor(plugin, portalupdate));
+			getCommand(portalupdate.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_UPDATE, portalupdate.getCommandString());
 			
 			CommandConstructor portalmode = new CommandConstructor("portalmode", false);
 			registerCommand(portalmode.getName());
