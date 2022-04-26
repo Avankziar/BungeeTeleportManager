@@ -206,9 +206,6 @@ public class YamlManager
 			configSpigotKeys.put("Language"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"ENG"}));
-			configSpigotKeys.put("Prefix"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"&7[&dBungeeTeleportManager&7] &r"}));
 			configSpigotKeys.put("Bungee"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					true}));
@@ -480,9 +477,6 @@ public class YamlManager
 		}
 		VaultSettings:
 		{
-			configSpigotKeys.put("UseVault"
-					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					true}));
 			configSpigotKeys.put("CostPer.Use.Back"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					100.0}));

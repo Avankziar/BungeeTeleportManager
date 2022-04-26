@@ -34,7 +34,9 @@ Future =========================================================================
 
 Build 6-1-0
 + IFH Support
-+ language.yml All "%amount% %currency%" in "%format%" changed.
++ Vault Unsupport
++ AEP only supported through IFH ;)
++ language.yml All "%amount% %currency%" or something similar, in "%format%" changed.
 
 
 Build 6-0-23
