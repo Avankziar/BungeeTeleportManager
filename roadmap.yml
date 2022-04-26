@@ -32,6 +32,11 @@ Future =========================================================================
 - PlaceHolder Api, Home amount, Tpatoggle, etc.
 - Durch die Portale und /server <Server>, wird man automatisch in das Portal zurückgesetzt und teleportiert, was aber nicht gewollt ist.
 
+Build 6-1-0
++ IFH Support
++ language.yml All "%amount% %currency%" in "%format%" changed.
+
+
 Build 6-0-23
 + Perm toomany fixed by home & warp
 + Output error fix by tpa

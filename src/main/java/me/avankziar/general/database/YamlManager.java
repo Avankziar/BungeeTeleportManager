@@ -1363,8 +1363,8 @@ public class YamlManager
 						"&cThe argument &f%arg% &must be a positive number!"}));
 		languageKeys.put("ToHigh",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cDie angegebene Zahl ist zu hoch! Erlaubtes Maximum: %max% %currency%",
-						"&cThe specified number is too high! Maximum allowed: %max% %currency%"}));
+						"&cDie angegebene Zahl ist zu hoch! Erlaubtes Maximum: %format%",
+						"&cThe specified number is too high! Maximum allowed: %format%"}));
 		languageKeys.put("GeneralHover",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eKlick mich!",
@@ -1454,15 +1454,15 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast nicht genug Geld dafür!",
 						"&cYou don not have enough money for it!"}));
-		languageKeys.put(path+"ETrUUID",
+		languageKeys.put(path+"BCategory",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"EntityTransportTicket",
-						"EntityTransportTicket"}));
-		languageKeys.put(path+"ETrName",
+						"Back",
+						"Back"}));
+		languageKeys.put(path+"BComment", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"EntityTransportTicket",
-						"EntityTransportTicket"}));
-		languageKeys.put(path+"ETrORDERER",
+						"&eBack Teleport zum letzten Standort.",
+						"&eBack Teleport to the last location."}));
+		languageKeys.put(path+"ETrCategory",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"EntityTransportTicket",
 						"EntityTransportTicket"}));
@@ -1470,15 +1470,7 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eKauft von &f%tickets% &eEntityTransportTickets",
 						"&ePurchases from &f%tickets% &eEntityTransportTickets"}));
-		languageKeys.put(path+"HUUID",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"Homes",
-						"Homes"}));
-		languageKeys.put(path+"HName",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"Homes",
-						"Homes"}));
-		languageKeys.put(path+"HORDERER",
+		languageKeys.put(path+"HCategory",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Homes",
 						"Homes"}));
@@ -1490,15 +1482,7 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eErstellung vom Home &f%home%",
 						"&eCreation of the Home &f%home%"}));
-		languageKeys.put(path+"PUUID",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"Portals",
-						"Portals"}));
-		languageKeys.put(path+"PName",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"Portals",
-						"Portals"}));
-		languageKeys.put(path+"PORDERER",
+		languageKeys.put(path+"PCategory",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Portals",
 						"Portals"}));
@@ -1510,15 +1494,7 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eErstellung des Portal &f%portalname%",
 						"&eCreation of the portal &f%portalname%"}));
-		languageKeys.put(path+"RTUUID",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"RandomTeleport",
-						"RandomTeleport"}));
-		languageKeys.put(path+"RTName",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"RandomTeleport",
-						"RandomTeleport"}));
-		languageKeys.put(path+"RTORDERER",
+		languageKeys.put(path+"RTCategory",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"RandomTeleport",
 						"RandomTeleport"}));
@@ -1526,15 +1502,7 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eTeleport zu einem zufälligen Ort.",
 						"&eTeleport too a random location."}));
-		languageKeys.put(path+"TUUID",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"TPA",
-						"TPA"}));
-		languageKeys.put(path+"TName",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"TPA",
-						"TPA"}));
-		languageKeys.put(path+"TORDERER",
+		languageKeys.put(path+"TCategory",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"TeleportSystem",
 						"TeleportSystem"}));
@@ -1542,15 +1510,7 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eTeleport &f%from% &ezu &f%to%",
 						"&eTeleport &f%from% &eto &f%to%"}));
-		languageKeys.put(path+"WUUID",
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"Warp",
-						"Warp"}));
-		languageKeys.put(path+"WName", 
-				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"Warp",
-						"Warp"}));
-		languageKeys.put(path+"WORDERER",
+		languageKeys.put(path+"WCategory",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"Warp",
 						"Warp"}));
@@ -1607,8 +1567,8 @@ public class YamlManager
 						"&cNo back may be used in this world!"}));
 		languageKeys.put(path+"NotifyAfterWithDraw", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDer Back-Teleport hat &f%amount% %currency% &egekostet.",
-						"&eThe back teleport cost &f%amount% %currency%&e."}));
+						"&eDer Back-Teleport hat &f%format% &egekostet.",
+						"&eThe back teleport cost &f%format%&e."}));
 		path = "CmdDeathback."; 
 		languageKeys.put(path+"ForbiddenServerUse", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -1949,8 +1909,8 @@ public class YamlManager
 						"&eThe owner of the entity is now &f%player%&e."}));
 		languageKeys.put(path+"BuyTickets",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDu hast &f%sum% %currency% &egezahlt!",
-						"&eYou paid &f%sum% %currency&e!"}));
+						"&eDu hast &f%format% &egezahlt!",
+						"&eYou paid &f%format%&e!"}));
 		languageKeys.put(path+"GetTickets",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDu hast &f%amount% &eTickets erhalten!",
@@ -2047,8 +2007,8 @@ public class YamlManager
 						"&cNo homes may be used in this world!"}));
 		languageKeys.put(path+"NotifyAfterWithDraw", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDer Home-Teleport hat &f%amount% %currency% &egekostet.",
-						"&eThe home teleport cost &f%amount% %currency%&e."}));
+						"&eDer Home-Teleport hat &f%format% &egekostet.",
+						"&eThe home teleport cost &f%format%&e."}));
 		languageKeys.put(path+"TooManyHomesWorld",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast schon das Maximum von &f%amount% &cHomes für diese Welt erstellt! Bitte lösche vorher einen deiner Homes um fortzufahren!",
@@ -2188,8 +2148,8 @@ public class YamlManager
 						"&cYou are on the blacklist of the portal &f%portalname%&c."}));
 		languageKeys.put(path+"NotifyAfterWithDraw", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDer Portal-Teleport hat &f%amount% %currency% &egekostet.",
-						"&eThe portal teleport cost &f%amount% %currency%&e."}));
+						"&eDer Portal-Teleport hat &f%format% &egekostet.",
+						"&eThe portal teleport cost &f%format%&e."}));
 		languageKeys.put(path+"HasNoDestination", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDer Portal &f%portalname% &chat kein Zielort!",
@@ -2426,8 +2386,8 @@ public class YamlManager
 						"&eThe permission from portal &f%portal% &ewas removed!"}));
 		languageKeys.put(path+"SetPrice", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDer Preis pro Teleport vom Portal &f%portal% &ewurde auf &f%price% %currency% &egesetzt!",
-						"&eThe price per teleport from portal &f%portal% &ewas set to &f%price% %currency% &egesetzt!"}));
+						"&eDer Preis pro Teleport vom Portal &f%portal% &ewurde auf &f%format% &egesetzt!",
+						"&eThe price per teleport from portal &f%portal% &ewas set to &f%format% &egesetzt!"}));
 		languageKeys.put(path+"RemoveMember",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDer Spieler &f%member% &aist nun kein Mitglied mehr beim Portal: &f%portal%",
@@ -2627,8 +2587,8 @@ public class YamlManager
 						"&cNo RandomTeleport may be used in this world!"}));
 		languageKeys.put(path+"NotifyAfterWithDraw", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDer RandomTeleport hat &f%amount% %currency% &egekostet.",
-						"&eThe randomteleport cost &f%amount% %currency%&e."}));
+						"&eDer RandomTeleport hat &f%format% &egekostet.",
+						"&eThe randomteleport cost &f%format%&e."}));
 	}
 	
 	private void langRespawn() //INFO:Respawn
@@ -2886,8 +2846,8 @@ public class YamlManager
 						"&cEither you or the requested player are in worlds that prohibit teleport requests!"}));
 		languageKeys.put(path+"NotifyAfterWithDraw", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDer Teleport hat &f%amount% %currency% &egekostet.",
-						"&eThe teleport cost &f%amount% %currency%&e."}));
+						"&eDer Teleport hat &f%format% &egekostet.",
+						"&eThe teleport cost &f%format%&e."}));
 		languageKeys.put(path+"BackCooldown", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&c%cmd% ist auf Cooldown! Warte noch ein bisschen!",
@@ -3048,8 +3008,8 @@ public class YamlManager
 						"&cYou are on the blacklist of warp &f%warpname%&c."}));
 		languageKeys.put(path+"PleaseConfirm", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&cAchtung! &eDer Warp nimmt &f%amount% %currency% &efür einen Teleport. Bitte bestätige den Teleport mit einem klick auf dieser Nachricht im Chat!",
-						"&cLook out! &The warp takes &f%amount% %currency% &for a teleport. Please confirm the teleport by clicking on this message in the chat!"}));
+						"&cAchtung! &eDer Warp nimmt &f%format% &efür einen Teleport. Bitte bestätige den Teleport mit einem klick auf dieser Nachricht im Chat!",
+						"&cLook out! &The warp takes &f%format% &for a teleport. Please confirm the teleport by clicking on this message in the chat!"}));
 		languageKeys.put(path+"ForbiddenServer", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf diesem Server dürfen keine Warps erstellt werden!",
@@ -3068,8 +3028,8 @@ public class YamlManager
 						"&cNo warps may be used on this world!"}));
 		languageKeys.put(path+"NotifyAfterWithDraw", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDer Warp-Teleport hat &f%amount% %currency% &egekostet.",
-						"&eThe warp teleport cost &f%amount% %currency%&e."}));
+						"&eDer Warp-Teleport hat &f%format% &egekostet.",
+						"&eThe warp teleport cost &f%format%&e."}));
 		languageKeys.put(path+"TooManyWarpsWorld", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast schon das Maximum von &f%amount% &cWarps für diese Welt erstellt! Bitte lösche vorher einen deiner Warps um fortzufahren!",
@@ -3208,8 +3168,8 @@ public class YamlManager
 						"&aThe warp &f%warp% &a is now hidden!"}));
 		languageKeys.put(path+"SetPrice", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&aDer Preis pro Teleport vom Warp &f%warp% &awurde auf &f%price% %currency% &agesetzt!",
-						"&aThe price per teleport from warp &f%warp% &was set to &f%price% %currency% &agesetzt!"}));
+						"&aDer Preis pro Teleport vom Warp &f%warp% &awurde auf &f%format% &agesetzt!",
+						"&aThe price per teleport from warp &f%warp% &was set to &f%format% &agesetzt!"}));
 		languageKeys.put(path+"RemoveMember",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDer Spieler &f%member% &aist nun kein Mitglied mehr beim Warp: &f%warp%",

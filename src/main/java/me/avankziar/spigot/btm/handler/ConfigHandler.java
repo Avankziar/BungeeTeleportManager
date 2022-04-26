@@ -67,11 +67,6 @@ public class ConfigHandler
 		return plugin.getYamlHandler().getConfig().getInt("MinimumTimeBefore."+mechanics.getKey(), 2000);
 	}
 	
-	public boolean useVault()
-	{
-		return plugin.getYamlHandler().getConfig().getBoolean("UseVault", false);
-	}
-	
 	public double getCostUse(Mechanics mechanics)
 	{
 		return plugin.getYamlHandler().getConfig().getDouble("CostPer.Use."+mechanics.getKey(), 0.0);

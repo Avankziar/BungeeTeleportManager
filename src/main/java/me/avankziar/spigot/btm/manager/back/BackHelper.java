@@ -10,6 +10,11 @@ import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
+import main.java.me.avankziar.ifh.general.economy.action.EconomyAction;
+import main.java.me.avankziar.ifh.general.economy.action.OrdererType;
+import main.java.me.avankziar.ifh.general.economy.currency.CurrencyType;
+import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
@@ -60,45 +65,29 @@ public class BackHelper
 						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdBack.ForbiddenWorldUse")));
 						return;
 					}
-					if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.BACK.getLower())
-							&& cfgh.useVault())
+					if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.BACK.getLower()))
 					{
 						double price = cfgh.getCostUse(Mechanics.BACK);
 		        		if(price > 0.0)
 		        		{
 		        			if(plugin.getEco() != null)
 		            		{
-		        				if(!plugin.getEco().has(player, price))
-		        				{
-		        					player.sendMessage(
-		                    				ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
-		        					return;
-		        				}
-		        				if(!plugin.getEco().withdrawPlayer(player, price).transactionSuccess())
-		        				{
-		        					return;
-		        				}
-		        				if(plugin.getAdvancedEconomyHandler() != null)
-		                		{
-		        					String comment = null;
-		        					plugin.getAdvancedEconomyHandler().EconomyLogger(
-		                					player.getUniqueId().toString(),
-		                					player.getName(),
-		                					plugin.getYamlHandler().getLang().getString("Economy.BUUID"),
-		                					plugin.getYamlHandler().getLang().getString("Economy.BName"),
-		                					plugin.getYamlHandler().getLang().getString("Economy.BORDERER"),
-		                					price,
-		                					"TAKEN",
-		                					comment);
-		        					plugin.getAdvancedEconomyHandler().TrendLogger(player, -price);
-		                		}
-		        				if(cfgh.notifyPlayerAfterWithdraw(Mechanics.BACK))
-		        				{
-		        					player.sendMessage(
-		                    				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdBack.NotifyAfterWithDraw")
-		                    						.replace("%amount%", String.valueOf(price))
-		                    						.replace("%currency%", plugin.getEco().currencyNamePlural())));
-		        				}
+		        				Account main = plugin.getEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, 
+		    							plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
+		    					if(main == null || main.getBalance() < price)
+		    					{
+		    						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
+		    						return;
+		    					}
+		    					String category = plugin.getYamlHandler().getLang().getString("Economy.BCategory");
+		    					String comment = plugin.getYamlHandler().getLang().getString("Economy.BComment");
+		    					EconomyAction ea = plugin.getEco().withdraw(main, price, 
+		    							OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
+		    					if(!ea.isSuccess())
+		    					{
+		    						player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+		    						return;
+		    					}
 		            		}
 		        		}
 					}

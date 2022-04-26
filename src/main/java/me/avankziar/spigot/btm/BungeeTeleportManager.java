@@ -26,6 +26,7 @@ import main.java.me.avankziar.general.database.YamlManager;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.ifh.spigot.economy.Economy;
 import main.java.me.avankziar.ifh.spigot.interfaces.Vanish;
 import main.java.me.avankziar.spigot.btm.assistance.AccessPermissionHandler;
 import main.java.me.avankziar.spigot.btm.assistance.BackgroundTask;
@@ -52,7 +53,6 @@ import main.java.me.avankziar.spigot.btm.cmd.tree.CommandConstructor;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 import main.java.me.avankziar.spigot.btm.database.MysqlSetup;
 import main.java.me.avankziar.spigot.btm.database.YamlHandler;
-import main.java.me.avankziar.spigot.btm.handler.AdvancedEconomyHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.SafeLocationHandler;
 import main.java.me.avankziar.spigot.btm.handler.SafeLocationMessageListener;
@@ -99,7 +99,6 @@ import main.java.me.avankziar.spigot.btm.manager.warp.WarpHelper;
 import main.java.me.avankziar.spigot.btm.manager.warp.WarpMessageListener;
 import main.java.me.avankziar.spigot.btm.metric.Metrics;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
-import net.milkbowl.vault.economy.Economy;
 
 public class BungeeTeleportManager extends JavaPlugin
 {
@@ -115,11 +114,9 @@ public class BungeeTeleportManager extends JavaPlugin
 	private Utility utility;
 	private static BackgroundTask backgroundTask;
 	
-	private Economy eco;
 	private TeleportProvider tpprovider;
 	private Vanish vanishconsumer;
-	
-	private AdvancedEconomyHandler advancedEconomyHandler;
+	private Economy ecoConsumer;
 	
 	private SafeLocationHandler safeLocationHandler;
 	private CommandHelper commandHelper;
@@ -1235,26 +1232,36 @@ public class BungeeTeleportManager extends JavaPlugin
 		return true;
 	}
 
-	private boolean setupEconomy()
+	private void setupEconomy()
     {
-        if (Bukkit.getPluginManager().getPlugin("Vault") == null) 
+		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
+	    {
+	    	return;
+	    }
+		new BukkitRunnable()
         {
-            return false;
-        }
-
-        RegisteredServiceProvider<Economy> rsp = getServer()
-        		.getServicesManager()
-        		.getRegistration(net.milkbowl.vault.economy.Economy.class);
-        if (rsp == null) 
-        {
-            return false;
-        }
-        eco = rsp.getProvider();
-        if(eco != null)
-        {
-    		log.info(pluginName + " detected Vault. Hooking!");
-        }
-        return eco != null;
+        	int i = 0;
+			@Override
+			public void run()
+			{
+			    if(i == 20)
+			    {
+				cancel();
+				return;
+			    }
+			    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.economy.Economy> rsp = 
+		                         getServer().getServicesManager().getRegistration(Economy.class);
+			    if (rsp == null) 
+			    {
+			    	i++;
+			        return;
+			    }
+			    ecoConsumer = rsp.getProvider();
+			    log.info(pluginName + " detected InterfaceHub >>> Economy.class is consumed!");
+			    cancel();
+			}
+        }.runTaskTimer(plugin, 20L, 20*2);
+        return;
     }
 	
 	private void setupIFHProvider()
@@ -1311,7 +1318,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	
 	public Economy getEco()
 	{
-		return this.eco;
+		return this.ecoConsumer;
 	}
 	
 	public Vanish getVanish()
@@ -1333,22 +1340,6 @@ public class BungeeTeleportManager extends JavaPlugin
 		}
 		log.info(pluginName+" hook with "+externPluginName);
 		return true;
-	}
-	
-	private void setupLogHandler()
-	{
-		if(existHook("AdvancedEconomyPlus"))
-		{
-			advancedEconomyHandler = new AdvancedEconomyHandler(plugin);
-		} else
-		{
-			advancedEconomyHandler = null;
-		}
-	}
-	
-	public AdvancedEconomyHandler getAdvancedEconomyHandler()
-	{
-		return advancedEconomyHandler;
 	}
 	
 	public SafeLocationHandler getSafeLocationHandler()

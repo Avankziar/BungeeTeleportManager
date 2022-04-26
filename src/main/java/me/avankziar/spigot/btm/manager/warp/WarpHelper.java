@@ -6,7 +6,6 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -16,12 +15,17 @@ import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
+import main.java.me.avankziar.ifh.general.economy.action.EconomyAction;
+import main.java.me.avankziar.ifh.general.economy.action.OrdererType;
+import main.java.me.avankziar.ifh.general.economy.currency.CurrencyType;
+import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.AccessPermissionHandler;
+import main.java.me.avankziar.spigot.btm.assistance.AccessPermissionHandler.ReturnStatment;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.assistance.MatchApi;
 import main.java.me.avankziar.spigot.btm.assistance.Utility;
-import main.java.me.avankziar.spigot.btm.assistance.AccessPermissionHandler.ReturnStatment;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler.Type;
 import main.java.me.avankziar.spigot.btm.events.listenable.playertoposition.WarpPreTeleportEvent;
@@ -33,7 +37,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.milkbowl.vault.economy.EconomyResponse;
 
 public class WarpHelper
 {
@@ -232,8 +235,7 @@ public class WarpHelper
 					if(warp.getPrice() > 0.0 
 							&& !player.hasPermission(StaticValues.BYPASS_COST+Mechanics.WARP.getLower()) 
 							&& !warp.getMember().contains(player.getUniqueId().toString())
-							&& plugin.getEco() != null
-							&& cfgh.useVault())
+							&& plugin.getEco() != null)
 					{
 						if(plugin.getYamlHandler().getConfig().getBoolean("MustConfirmWarpWhereYouPayForIt", false))
 						{
@@ -243,8 +245,8 @@ public class WarpHelper
 								{
 									player.spigot().sendMessage(
 											ChatApi.apiChat(plugin.getYamlHandler().getLang().getString("CmdWarp.PleaseConfirm")
-											.replace("%amount%", String.valueOf(warp.getPrice()))
-											.replace("%currency%", plugin.getEco().currencyNamePlural())
+											.replace("%format%", plugin.getEco().format(warp.getPrice(), 
+													plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))
 											.replace("%warpname%", warp.getName()),
 											ClickEvent.Action.SUGGEST_COMMAND,
 											BTMSettings.settings.getCommands(KeyHandler.WARP)+warp.getName()+" "+password+" confirm",
@@ -254,8 +256,8 @@ public class WarpHelper
 								{
 									player.spigot().sendMessage(
 											ChatApi.apiChat(plugin.getYamlHandler().getLang().getString("CmdWarp.PleaseConfirm")
-											.replace("%amount%", String.valueOf(warp.getPrice()))
-											.replace("%currency%", plugin.getEco().currencyNamePlural())
+											.replace("%format%", plugin.getEco().format(warp.getPrice(), 
+														plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))
 											.replace("%warpname%", warp.getName()),
 											ClickEvent.Action.SUGGEST_COMMAND,
 											BTMSettings.settings.getCommands(KeyHandler.WARP)+warp.getName()+" "+password+" "+playername+" confirm",
@@ -265,8 +267,8 @@ public class WarpHelper
 								{
 									player.spigot().sendMessage(
 											ChatApi.apiChat(plugin.getYamlHandler().getLang().getString("CmdWarp.PleaseConfirm")
-											.replace("%amount%", String.valueOf(warp.getPrice()))
-											.replace("%currency%", plugin.getEco().currencyNamePlural())
+													.replace("%format%", plugin.getEco().format(warp.getPrice(), 
+															plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))
 											.replace("%warpname%", warp.getName()),
 											ClickEvent.Action.SUGGEST_COMMAND,
 											BTMSettings.settings.getCommands(KeyHandler.WARP)+warp.getName()+" "+playername+" confirm",
@@ -276,8 +278,8 @@ public class WarpHelper
 								{
 									player.spigot().sendMessage(
 											ChatApi.apiChat(plugin.getYamlHandler().getLang().getString("CmdWarp.PleaseConfirm")
-											.replace("%amount%", String.valueOf(warp.getPrice()))
-											.replace("%currency%", plugin.getEco().currencyNamePlural())
+													.replace("%format%", plugin.getEco().format(warp.getPrice(), 
+															plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))
 											.replace("%warpname%", warp.getName()),
 											ClickEvent.Action.SUGGEST_COMMAND,
 											BTMSettings.settings.getCommands(KeyHandler.WARP)+warp.getName()+" confirm",
@@ -287,58 +289,37 @@ public class WarpHelper
 								return;
 							}
 						}
-						if(!plugin.getEco().has(player, warp.getPrice()))
+						Account main = plugin.getEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, 
+								plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
+						if(main == null || main.getBalance() < warp.getPrice())
 						{
 							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 							return;
 						}
-						if(!plugin.getEco().withdrawPlayer(player, warp.getPrice()).transactionSuccess())
-						{
-							return;
-						}
+						Account to = null;
 						if(warp.getOwner() != null)
 						{
-							plugin.getEco().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(warp.getOwner())), warp.getPrice());
+							to = plugin.getEco().getDefaultAccount(UUID.fromString(warp.getOwner()), AccountCategory.MAIN, 
+									plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
 						}
-						if(plugin.getAdvancedEconomyHandler() != null)
+						String category = plugin.getYamlHandler().getLang().getString("Economy.WCategory");
+						String comment = plugin.getYamlHandler().getLang().getString("Economy.WComment")
+	        					.replace("%warp%", warp.getName());
+						EconomyAction ea = null;
+						if(to != null)
 						{
-							String comment = plugin.getYamlHandler().getLang().getString("Economy.WComment")
-		        					.replace("%warp%", warp.getName());
-							if(warp.getOwner() != null)
-							{
-								OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(warp.getOwner()));
-								plugin.getAdvancedEconomyHandler().EconomyLogger(
-			        					player.getUniqueId().toString(),
-			        					player.getName(),
-			        					op.getUniqueId().toString(),
-			        					op.getName(),
-			        					plugin.getYamlHandler().getLang().getString("Economy.WORDERER"),
-			        					warp.getPrice(),
-			        					"DEPOSIT_WITHDRAW",
-			        					comment);
-								plugin.getAdvancedEconomyHandler().TrendLogger(player, -warp.getPrice());
-								plugin.getAdvancedEconomyHandler().TrendLogger(op, warp.getPrice());
-							} else
-							{
-								plugin.getAdvancedEconomyHandler().EconomyLogger(
-			        					player.getUniqueId().toString(),
-			        					player.getName(),
-			        					plugin.getYamlHandler().getLang().getString("Economy.WUUID"),
-			        					plugin.getYamlHandler().getLang().getString("Economy.WName"),
-			        					plugin.getYamlHandler().getLang().getString("Economy.WORDERER"),
-			        					warp.getPrice(),
-			        					"TAKEN",
-			        					comment);
-								plugin.getAdvancedEconomyHandler().TrendLogger(player, -warp.getPrice());
-							}
+							ea = plugin.getEco().transaction(main, to, warp.getPrice(), 
+									OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
+						} else
+						{
+							ea = plugin.getEco().withdraw(main, warp.getPrice(), 
+									OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
 						}
-						if(cfgh.notifyPlayerAfterWithdraw(Mechanics.WARP))
-        				{
-        					player.sendMessage(
-                    				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotifyAfterWithDraw")
-                    						.replace("%amount%", String.valueOf(warp.getPrice()))
-                    						.replace("%currency%", plugin.getEco().currencyNamePlural())));
-        				}
+						if(!ea.isSuccess())
+						{
+							player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+							return;
+						}
 					}
 				}
 				if(cooldown.containsKey(player)) cooldown.replace(player, System.currentTimeMillis()+1000L*3);
@@ -387,7 +368,6 @@ public class WarpHelper
 					return;
 				}
 				Player other = Bukkit.getPlayer(uuid);
-				OfflinePlayer otheroff = Bukkit.getOfflinePlayer(uuid);
 				String playeruuid = uuid.toString();
 				boolean ignorePortalAccess = true;
 				boolean ignoreBlackList = true;
@@ -474,65 +454,42 @@ public class WarpHelper
 					sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
 					return;
 				}
-				ConfigHandler cfgh = new ConfigHandler(plugin);
 				if(!ignoreCost
 						&& warp.getPrice() > 0.0 
 						&& !warp.getMember().contains(playeruuid)
-						&& plugin.getEco() != null
-						&& cfgh.useVault())
+						&& plugin.getEco() != null)
 				{
-					if(!plugin.getEco().has(otheroff, warp.getPrice()))
+					Account main = plugin.getEco().getDefaultAccount(other.getUniqueId(), AccountCategory.MAIN, 
+							plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
+					if(main == null || main.getBalance() < warp.getPrice())
 					{
 						sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 						return;
 					}
-					if(!plugin.getEco().withdrawPlayer(otheroff, warp.getPrice()).transactionSuccess())
-					{
-						return;
-					}
+					Account to = null;
 					if(warp.getOwner() != null)
 					{
-						plugin.getEco().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(warp.getOwner())), warp.getPrice());
+						to = plugin.getEco().getDefaultAccount(UUID.fromString(warp.getOwner()), AccountCategory.MAIN, 
+								plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
 					}
-					if(plugin.getAdvancedEconomyHandler() != null)
+					String category = plugin.getYamlHandler().getLang().getString("Economy.WCategory");
+					String comment = plugin.getYamlHandler().getLang().getString("Economy.WComment")
+        					.replace("%warp%", warp.getName());
+					EconomyAction ea = null;
+					if(to != null)
 					{
-						String comment = plugin.getYamlHandler().getLang().getString("Economy.WComment")
-	        					.replace("%warp%", warp.getName());
-						if(warp.getOwner() != null)
-						{
-							OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(warp.getOwner()));
-							plugin.getAdvancedEconomyHandler().EconomyLogger(
-		        					playeruuid,
-		        					sender.getName(),
-		        					op.getUniqueId().toString(),
-		        					op.getName(),
-		        					plugin.getYamlHandler().getLang().getString("Economy.WORDERER"),
-		        					warp.getPrice(),
-		        					"DEPOSIT_WITHDRAW",
-		        					comment);
-							plugin.getAdvancedEconomyHandler().TrendLogger(otheroff, -warp.getPrice());
-							plugin.getAdvancedEconomyHandler().TrendLogger(op, warp.getPrice());
-						} else
-						{
-							plugin.getAdvancedEconomyHandler().EconomyLogger(
-		        					playeruuid,
-		        					Bukkit.getName(),
-		        					plugin.getYamlHandler().getLang().getString("Economy.WUUID"),
-		        					plugin.getYamlHandler().getLang().getString("Economy.WName"),
-		        					plugin.getYamlHandler().getLang().getString("Economy.WORDERER"),
-		        					warp.getPrice(),
-		        					"TAKEN",
-		        					comment);
-							plugin.getAdvancedEconomyHandler().TrendLogger(otheroff, -warp.getPrice());
-						}
+						ea = plugin.getEco().transaction(main, to, warp.getPrice(), 
+								OrdererType.PLUGIN, sender.getName(), category, comment);
+					} else
+					{
+						ea = plugin.getEco().withdraw(main, warp.getPrice(), 
+								OrdererType.PLUGIN, sender.getName(), category, comment);
 					}
-					if(cfgh.notifyPlayerAfterWithdraw(Mechanics.WARP))
-    				{
-    					sender.sendMessage(
-                				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotifyAfterWithDraw")
-                						.replace("%amount%", String.valueOf(warp.getPrice()))
-                						.replace("%currency%", plugin.getEco().currencyNamePlural())));
-    				}
+					if(!ea.isSuccess())
+					{
+						sender.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+						return;
+					}
 				}
 				
 				if(other != null)
@@ -585,35 +542,25 @@ public class WarpHelper
 		Warp warp = new Warp(warpName, Utility.getLocation(player.getLocation()),
 				false, player.getUniqueId().toString(), null, null, null, null, 0.0, "default", Warp.PortalAccess.IRRELEVANT);
 		if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.WARP.getLower())
-				&& plugin.getEco() != null
-				&& cfgh.useVault())
+				&& plugin.getEco() != null)
 		{
 			double warpCreateCost = cfgh.getCostCreation(Mechanics.WARP);
-			if(!plugin.getEco().has(player, warpCreateCost))
+			Account main = plugin.getEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, 
+					plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
+			if(main == null || main.getBalance() < warpCreateCost)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 				return;
 			}
-			EconomyResponse er = plugin.getEco().withdrawPlayer(player, warpCreateCost);
-			if(!er.transactionSuccess())
+			String category = plugin.getYamlHandler().getLang().getString("Economy.WCategory");
+			String comment = plugin.getYamlHandler().getLang().getString("Economy.WComment")
+					.replace("%warp%", warp.getName());
+			EconomyAction ea = plugin.getEco().withdraw(main, warpCreateCost, 
+					OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
+			if(!ea.isSuccess())
 			{
-				player.sendMessage(ChatApi.tl(er.errorMessage));
+				player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
 				return;
-			}
-			if(plugin.getAdvancedEconomyHandler() != null)
-			{
-				String comment = plugin.getYamlHandler().getLang().getString("Economy.WCommentCreate")
-    					.replace("%warp%", warp.getName());
-				plugin.getAdvancedEconomyHandler().EconomyLogger(
-    					player.getUniqueId().toString(),
-    					player.getName(),
-    					plugin.getYamlHandler().getLang().getString("Economy.WUUID"),
-    					plugin.getYamlHandler().getLang().getString("Economy.WName"),
-    					player.getUniqueId().toString(),
-    					warpCreateCost,
-    					"TAKEN",
-    					comment);
-				plugin.getAdvancedEconomyHandler().TrendLogger(player, -warpCreateCost);
 			}
 		}
 		plugin.getMysqlHandler().create(MysqlHandler.Type.WARP, warp);
@@ -1401,16 +1348,14 @@ public class WarpHelper
 		if(price > maximum)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ToHigh")
-					.replace("%max%", String.valueOf(maximum))
-					.replace("%currency%", plugin.getEco().currencyNamePlural())));
+					.replace("%format%", plugin.getEco().format(maximum, plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))));
 			return;
 		}
 		warp.setPrice(price);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPrice")
 				.replace("%warp%", warp.getName())
-				.replace("%price%", args[1])
-				.replace("%currency%", plugin.getEco().currencyNamePlural())));
+				.replace("%format%", plugin.getEco().format(maximum, plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))));
 		return;
 	}
 	

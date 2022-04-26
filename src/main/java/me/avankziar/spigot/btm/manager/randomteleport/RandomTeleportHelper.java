@@ -9,16 +9,21 @@ import java.util.UUID;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.RandomTeleport;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
+import main.java.me.avankziar.ifh.general.economy.action.EconomyAction;
+import main.java.me.avankziar.ifh.general.economy.action.OrdererType;
+import main.java.me.avankziar.ifh.general.economy.currency.CurrencyType;
+import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.ForbiddenHandlerSpigot;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
-import main.java.me.avankziar.general.object.Mechanics;
 import net.md_5.bungee.api.chat.ClickEvent;
 
 public class RandomTeleportHelper
@@ -101,39 +106,24 @@ public class RandomTeleportHelper
 				double price = cfgh.getCostUse(Mechanics.RANDOMTELEPORT);
 				if(price > 0.0 
 						&& !player.hasPermission(StaticValues.BYPASS_COST+Mechanics.RANDOMTELEPORT.getLower())
-						&& plugin.getEco() != null
-						&& cfgh.useVault())
+						&& plugin.getEco() != null)
 				{
-					if(!plugin.getEco().has(player, price))
+					Account main = plugin.getEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, 
+							plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
+					if(main == null || main.getBalance() < price)
 					{
 						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 						return;
 					}
-					if(!plugin.getEco().withdrawPlayer(player, price).transactionSuccess())
+					String category = plugin.getYamlHandler().getLang().getString("Economy.RTCategory");
+					String comment = plugin.getYamlHandler().getLang().getString("Economy.RTComment");
+					EconomyAction ea = plugin.getEco().withdraw(main, price, 
+							OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
+					if(!ea.isSuccess())
 					{
+						player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
 						return;
 					}
-					if(plugin.getAdvancedEconomyHandler() != null)
-					{
-						String comment = plugin.getYamlHandler().getLang().getString("Economy.RTComment");
-						plugin.getAdvancedEconomyHandler().EconomyLogger(
-	        					player.getUniqueId().toString(),
-	        					player.getName(),
-	        					plugin.getYamlHandler().getLang().getString("Economy.RTUUID"),
-	        					plugin.getYamlHandler().getLang().getString("Economy.RTName"),
-	        					plugin.getYamlHandler().getLang().getString("Economy.RTORDERER"),
-	        					price,
-	        					"TAKEN",
-	        					comment);
-						plugin.getAdvancedEconomyHandler().TrendLogger(player, -price);
-					}
-					if(cfgh.notifyPlayerAfterWithdraw(Mechanics.RANDOMTELEPORT))
-    				{
-    					player.sendMessage(
-                				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.NotifyAfterWithDraw")
-                						.replace("%amount%", String.valueOf(price))
-                						.replace("%currency%", plugin.getEco().currencyNamePlural())));
-    				}
 				}
 				if(cooldown.containsKey(player)) cooldown.replace(player, System.currentTimeMillis()+1000L*3);
 				else cooldown.put(player, System.currentTimeMillis()+1000L*3);

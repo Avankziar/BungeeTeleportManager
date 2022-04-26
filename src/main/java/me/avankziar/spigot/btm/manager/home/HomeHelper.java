@@ -13,12 +13,17 @@ import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
+import main.java.me.avankziar.ifh.general.economy.action.EconomyAction;
+import main.java.me.avankziar.ifh.general.economy.action.OrdererType;
+import main.java.me.avankziar.ifh.general.economy.currency.CurrencyType;
+import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.AccessPermissionHandler;
+import main.java.me.avankziar.spigot.btm.assistance.AccessPermissionHandler.ReturnStatment;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.assistance.MatchApi;
 import main.java.me.avankziar.spigot.btm.assistance.Utility;
-import main.java.me.avankziar.spigot.btm.assistance.AccessPermissionHandler.ReturnStatment;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler.Type;
 import main.java.me.avankziar.spigot.btm.events.listenable.playertoposition.HomePreTeleportEvent;
@@ -30,7 +35,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.milkbowl.vault.economy.EconomyResponse;
 
 public class HomeHelper
 {
@@ -85,37 +89,27 @@ public class HomeHelper
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		Home home = new Home(player.getUniqueId(), player.getName(), homeName, Utility.getLocation(player.getLocation()));
 		if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.HOME.getLower()) 
-				&& plugin.getEco() != null
-				&& cfgh.useVault())
+				&& plugin.getEco() != null)
 		{
 			double homeCreateCost = cfgh.getCostCreation(Mechanics.HOME);
 			if(homeCreateCost > 0.0)
 			{
-				if(!plugin.getEco().has(player, homeCreateCost))
+				Account main = plugin.getEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, 
+						plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
+				if(main == null || main.getBalance() < homeCreateCost)
 				{
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 					return;
 				}
-				EconomyResponse er = plugin.getEco().withdrawPlayer(player, homeCreateCost);
-				if(!er.transactionSuccess())
+				String category = plugin.getYamlHandler().getLang().getString("Economy.RTCategory");
+				String comment = plugin.getYamlHandler().getLang().getString("Economy.HCommentCreate")
+    					.replace("%home%", home.getHomeName());
+				EconomyAction ea = plugin.getEco().withdraw(main, homeCreateCost, 
+						OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
+				if(!ea.isSuccess())
 				{
-					player.sendMessage(ChatApi.tl(er.errorMessage));
+					player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
 					return;
-				}
-				if(plugin.getAdvancedEconomyHandler() != null)
-				{
-					String comment = plugin.getYamlHandler().getLang().getString("Economy.HCommentCreate")
-	    					.replace("%home%", home.getHomeName());
-					plugin.getAdvancedEconomyHandler().EconomyLogger(
-	    					player.getUniqueId().toString(),
-	    					player.getName(),
-	    					plugin.getYamlHandler().getLang().getString("Economy.HUUID"),
-	    					plugin.getYamlHandler().getLang().getString("Economy.HName"),
-	    					player.getUniqueId().toString(),
-	    					homeCreateCost,
-	    					"TAKEN",
-	    					comment);
-					plugin.getAdvancedEconomyHandler().TrendLogger(player, -homeCreateCost);
 				}
 			}
 		}
@@ -293,45 +287,28 @@ public class HomeHelper
 					}
 					return;
 				}
-				if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.HOME.getLower()) && plugin.getEco() != null
-						&& cfgh.useVault())
+				if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.HOME.getLower()) && plugin.getEco() != null)
 				{
 					double homeUseCost = cfgh.getCostUse(Mechanics.HOME);
 					if(homeUseCost > 0.0)
 					{
-						if(!plugin.getEco().has(player, homeUseCost))
+						Account main = plugin.getEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, 
+								plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
+						if(main == null || main.getBalance() < homeUseCost)
 						{
 							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 							return;
 						}
-						EconomyResponse er = plugin.getEco().withdrawPlayer(player, homeUseCost);
-						if(!er.transactionSuccess())
+						String category = plugin.getYamlHandler().getLang().getString("Economy.RTCategory");
+						String comment = plugin.getYamlHandler().getLang().getString("Economy.HComment")
+		    					.replace("%home%", home.getHomeName());
+						EconomyAction ea = plugin.getEco().withdraw(main, homeUseCost, 
+								OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
+						if(!ea.isSuccess())
 						{
-							player.sendMessage(ChatApi.tl(er.errorMessage));
+							player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
 							return;
 						}
-						if(plugin.getAdvancedEconomyHandler() != null)
-						{
-							String comment = plugin.getYamlHandler().getLang().getString("Economy.HComment")
-			    					.replace("%home%", home.getHomeName());
-							plugin.getAdvancedEconomyHandler().EconomyLogger(
-			    					player.getUniqueId().toString(),
-			    					player.getName(),
-			    					plugin.getYamlHandler().getLang().getString("Economy.HUUID"),
-			    					plugin.getYamlHandler().getLang().getString("Economy.HName"),
-			    					player.getUniqueId().toString(),
-			    					homeUseCost,
-			    					"TAKEN",
-			    					comment);
-							plugin.getAdvancedEconomyHandler().TrendLogger(player, -homeUseCost);
-						}
-						if(cfgh.notifyPlayerAfterWithdraw(Mechanics.HOME))
-        				{
-        					player.sendMessage(
-                    				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.NotifyAfterWithDraw")
-                    						.replace("%amount%", String.valueOf(homeUseCost))
-                    						.replace("%currency%", plugin.getEco().currencyNamePlural())));
-        				}
 					}
 				}
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.RequestInProgress")));

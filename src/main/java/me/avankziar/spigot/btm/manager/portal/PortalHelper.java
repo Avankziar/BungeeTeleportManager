@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -29,6 +28,11 @@ import main.java.me.avankziar.general.object.Warp;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.ServerLocationHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
+import main.java.me.avankziar.ifh.general.economy.action.EconomyAction;
+import main.java.me.avankziar.ifh.general.economy.action.OrdererType;
+import main.java.me.avankziar.ifh.general.economy.currency.CurrencyType;
+import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.assistance.MatchApi;
@@ -46,7 +50,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.milkbowl.vault.economy.EconomyResponse;
 
 public class PortalHelper
 {
@@ -160,67 +163,42 @@ public class PortalHelper
 								.replace("%portalname%", portal.getName())));
 						return;
 					}
-					ConfigHandler cfgh = new ConfigHandler(plugin);
 					if(portal.getPricePerUse() > 0.0 
 							&& !player.hasPermission(StaticValues.BYPASS_COST+Mechanics.PORTAL.getLower()) 
 							&& !portal.getMember().contains(player.getUniqueId().toString())
-							&& plugin.getEco() != null
-							&& cfgh.useVault())
+							&& plugin.getEco() != null)
 					{
-						if(!plugin.getEco().has(player, portal.getPricePerUse()))
+						Account main = plugin.getEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, 
+								plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
+						if(main == null || main.getBalance() < portal.getPricePerUse())
 						{
-							plugin.getPortalHandler().throwback(portal, player);
 							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 							return;
 						}
-						if(!plugin.getEco().withdrawPlayer(player, portal.getPricePerUse()).transactionSuccess())
-						{
-							plugin.getPortalHandler().throwback(portal, player);
-							return;
-						}
+						Account to = null;
 						if(portal.getOwner() != null)
 						{
-							plugin.getEco().depositPlayer(Bukkit.getOfflinePlayer(UUID.fromString(portal.getOwner())), portal.getPricePerUse());
+							to = plugin.getEco().getDefaultAccount(UUID.fromString(portal.getOwner()), AccountCategory.MAIN, 
+									plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
 						}
-						if(plugin.getAdvancedEconomyHandler() != null)
+						String category = plugin.getYamlHandler().getLang().getString("Economy.PCategory");
+						String comment = plugin.getYamlHandler().getLang().getString("Economy.PComment")
+	        					.replace("%warp%", portal.getName());
+						EconomyAction ea = null;
+						if(to != null)
 						{
-							String comment = plugin.getYamlHandler().getLang().getString("Economy.PComment")
-		        					.replace("%warp%", portal.getName());
-							if(portal.getOwner() != null)
-							{
-								OfflinePlayer op = Bukkit.getOfflinePlayer(UUID.fromString(portal.getOwner()));
-								plugin.getAdvancedEconomyHandler().EconomyLogger(
-			        					player.getUniqueId().toString(),
-			        					player.getName(),
-			        					op.getUniqueId().toString(),
-			        					op.getName(),
-			        					plugin.getYamlHandler().getLang().getString("Economy.PORDERER"),
-			        					portal.getPricePerUse(),
-			        					"DEPOSIT_WITHDRAW",
-			        					comment);
-								plugin.getAdvancedEconomyHandler().TrendLogger(player, -portal.getPricePerUse());
-								plugin.getAdvancedEconomyHandler().TrendLogger(op, portal.getPricePerUse());
-							} else
-							{
-								plugin.getAdvancedEconomyHandler().EconomyLogger(
-			        					player.getUniqueId().toString(),
-			        					player.getName(),
-			        					plugin.getYamlHandler().getLang().getString("Economy.PUUID"),
-			        					plugin.getYamlHandler().getLang().getString("Economy.PName"),
-			        					plugin.getYamlHandler().getLang().getString("Economy.PORDERER"),
-			        					portal.getPricePerUse(),
-			        					"TAKEN",
-			        					comment);
-								plugin.getAdvancedEconomyHandler().TrendLogger(player, -portal.getPricePerUse());
-							}
+							ea = plugin.getEco().transaction(main, to, portal.getPricePerUse(), 
+									OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
+						} else
+						{
+							ea = plugin.getEco().withdraw(main, portal.getPricePerUse(), 
+									OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
 						}
-						if(cfgh.notifyPlayerAfterWithdraw(Mechanics.PORTAL))
-        				{
-        					player.sendMessage(
-                    				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotifyAfterWithDraw")
-                    						.replace("%amount%", String.valueOf(portal.getPricePerUse()))
-                    						.replace("%currency%", plugin.getEco().currencyNamePlural())));
-        				}
+						if(!ea.isSuccess())
+						{
+							player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+							return;
+						}
 					}
 				}
 				/*PortalPreTeleportEvent ppte = new PortalPreTeleportEvent(player, loc, portal);
@@ -716,35 +694,25 @@ public class PortalHelper
 				0, 0.7, 0, Long.MAX_VALUE, Sound.ENTITY_ENDERMAN_TELEPORT,
 				TargetType.BACK, null, null, null, pos1, pos2, ownExitPoint);
 		if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.PORTAL.getLower())
-				&& plugin.getEco() != null
-				&& cfgh.useVault())
+				&& plugin.getEco() != null)
 		{
 			double portalCreateCost = cfgh.getCostCreation(Mechanics.PORTAL);
-			if(!plugin.getEco().has(player, portalCreateCost))
+			Account main = plugin.getEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, 
+					plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
+			if(main == null || main.getBalance() < portalCreateCost)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 				return;
 			}
-			EconomyResponse er = plugin.getEco().withdrawPlayer(player, portalCreateCost);
-			if(!er.transactionSuccess())
+			String category = plugin.getYamlHandler().getLang().getString("Economy.PCategory");
+			String comment = plugin.getYamlHandler().getLang().getString("Economy.PCommentCreate")
+					.replace("%portal%", portal.getName());
+			EconomyAction ea = plugin.getEco().withdraw(main, portalCreateCost, 
+					OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
+			if(!ea.isSuccess())
 			{
-				player.sendMessage(ChatApi.tl(er.errorMessage));
+				player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
 				return;
-			}
-			if(plugin.getAdvancedEconomyHandler() != null)
-			{
-				String comment = plugin.getYamlHandler().getLang().getString("Economy.PCommentCreate")
-    					.replace("%portal%", portal.getName());
-				plugin.getAdvancedEconomyHandler().EconomyLogger(
-    					player.getUniqueId().toString(),
-    					player.getName(),
-    					plugin.getYamlHandler().getLang().getString("Economy.PUUID"),
-    					plugin.getYamlHandler().getLang().getString("Economy.PName"),
-    					player.getUniqueId().toString(),
-    					portalCreateCost,
-    					"TAKEN",
-    					comment);
-				plugin.getAdvancedEconomyHandler().TrendLogger(player, -portalCreateCost);
 			}
 		}
 		plugin.getMysqlHandler().create(MysqlHandler.Type.PORTAL, portal);
@@ -1654,8 +1622,7 @@ public class PortalHelper
 		if(price > maximum)
 		{
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ToHigh")
-					.replace("%max%", String.valueOf(maximum))
-					.replace("%currency%", plugin.getEco().currencyNamePlural())));
+					.replace("%format%", plugin.getEco().format(maximum, plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))));
 			return;
 		}
 		portal.setPricePerUse(price);
@@ -1664,8 +1631,7 @@ public class PortalHelper
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPrice")
 				.replace("%portal%", portal.getName())
-				.replace("%price%", args[1])
-				.replace("%currency%", plugin.getEco().currencyNamePlural())));
+				.replace("%format%", plugin.getEco().format(price, plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))));
 		return;
 	}
 	

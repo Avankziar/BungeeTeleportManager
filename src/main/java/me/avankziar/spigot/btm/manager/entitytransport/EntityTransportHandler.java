@@ -19,13 +19,18 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.me.avankziar.aep.spigot.assistance.Utility;
 import main.java.me.avankziar.general.object.EntityTransport;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
+import main.java.me.avankziar.ifh.general.economy.action.EconomyAction;
+import main.java.me.avankziar.ifh.general.economy.action.OrdererType;
+import main.java.me.avankziar.ifh.general.economy.currency.CurrencyType;
+import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
+import main.java.me.avankziar.spigot.btm.assistance.Utility;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
@@ -144,7 +149,7 @@ public class EntityTransportHandler
 	
 	public static boolean hasAccess(Player player, String othername)
 	{
-		String otheruuid = Utility.convertNameToUUID(othername);
+		UUID otheruuid = Utility.convertNameToUUID(othername);
 		if(otheruuid == null)
 		{
 			return false;
@@ -224,37 +229,28 @@ public class EntityTransportHandler
 		}
 		if(sum > 0.0 
 				&& (!hasPerm || mustpay)
-				&& BungeeTeleportManager.getPlugin().getEco() != null
-				&& new ConfigHandler(plugin).useVault())
+				&& BungeeTeleportManager.getPlugin().getEco() != null)
 		{
-			if(!plugin.getEco().has(player, sum))
+			Account main = plugin.getEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, 
+					plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
+			if(main == null || main.getBalance() < sum)
 			{
 				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 				return;
 			}
-			if(!plugin.getEco().withdrawPlayer(player, sum).transactionSuccess())
+			String category = plugin.getYamlHandler().getLang().getString("Economy.ETrCategory");
+			String comment = plugin.getYamlHandler().getLang().getString("Economy.ETrComment")
+					.replace("%ticket%", String.valueOf(amount));
+			EconomyAction ea = plugin.getEco().withdraw(main, sum, 
+					OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
+			if(!ea.isSuccess())
 			{
+				player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
 				return;
-			}
-			if(plugin.getAdvancedEconomyHandler() != null)
-			{
-				String comment = plugin.getYamlHandler().getLang().getString("Economy.ETrComment")
-    					.replace("%ticket%", String.valueOf(amount));
-				plugin.getAdvancedEconomyHandler().EconomyLogger(
-    					targetuuid,
-    					targetname,
-    					plugin.getYamlHandler().getLang().getString("Economy.ETrUUID"),
-    					plugin.getYamlHandler().getLang().getString("Economy.ETrName"),
-    					plugin.getYamlHandler().getLang().getString("Economy.ETrORDERER"),
-    					sum,
-    					"TAKEN",
-    					comment);
-				plugin.getAdvancedEconomyHandler().TrendLogger(player, -sum);
 			}
 			ticket.setSpendedMoney(ticket.getSpendedMoney()+sum);
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.BuyTickets")
-					.replace("%sum%", String.valueOf(amount))
-					.replace("%currency%", plugin.getEco().currencyNamePlural())));			
+					.replace("%format%", plugin.getEco().format(sum, plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))));			
 		}
 		ticket.setActualAmount(ticket.getActualAmount()+amount);
 		ticket.setTotalBuyedAmount(ticket.getTotalBuyedAmount()+amount);

@@ -14,6 +14,11 @@ import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.Teleport;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
+import main.java.me.avankziar.ifh.general.economy.action.EconomyAction;
+import main.java.me.avankziar.ifh.general.economy.action.OrdererType;
+import main.java.me.avankziar.ifh.general.economy.currency.CurrencyType;
+import main.java.me.avankziar.ifh.spigot.economy.account.Account;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.Utility;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
@@ -28,7 +33,6 @@ public class TeleportMessageListener implements PluginMessageListener
 		this.plugin = plugin;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void onPluginMessageReceived(String channel, Player player, byte[] bytes) 
 	{
@@ -57,53 +61,38 @@ public class TeleportMessageListener implements PluginMessageListener
 		            		if(from != null)
 		            		{
 		            			if(!from.hasPermission(StaticValues.BYPASS_COST+Mechanics.TPA_ONLY.getLower())
-		            					&& plugin.getEco() != null && cfgh.useVault())
+		            					&& plugin.getEco() != null)
 		            			{
 		            				double price = cfgh.getCostUse(Mechanics.TPA_ONLY);
 		                    		if(price > 0.0)
 		                    		{
-		                    			if(!plugin.getEco().has(fromName, price))
-	                    				{
-	                    					from.sendMessage(
-	                    							ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
-	                    					return;
-	                    				}
-	                    				if(!plugin.getEco().withdrawPlayer(fromName, price).transactionSuccess())
-	                    				{
-	                    					return;
-	                    				}
-	                    				if(plugin.getAdvancedEconomyHandler() != null)
-	                            		{
-	                    					String comment = null;
-	                    					if(type == Teleport.Type.TPTO)
-	                    					{
-	                    						comment = plugin.getYamlHandler().getLang().getString("Economy.TComment")
-	                                					.replace("%from%", fromName)
-	                                					.replace("%to%", toName);
-	                    					} else
-	                    					{
-	                    						comment = plugin.getYamlHandler().getLang().getString("Economy.TComment")
-	                        					.replace("%from%", toName)
-	                        					.replace("%to%", fromName);
-	                    					}
-	                            			plugin.getAdvancedEconomyHandler().EconomyLogger(
-	                            					Utility.convertNameToUUID(fromName).toString(),
-	                            					fromName,
-	                            					plugin.getYamlHandler().getLang().getString("Economy.TUUID"),
-	                            					plugin.getYamlHandler().getLang().getString("Economy.TName"),
-	                            					plugin.getYamlHandler().getLang().getString("Economy.TORDERER"),
-	                            					price,
-	                            					"TAKEN",
-	                            					comment);
-	                            			plugin.getAdvancedEconomyHandler().TrendLogger(from, -price);
-	                            		}
-	                    				if(cfgh.notifyPlayerAfterWithdraw(Mechanics.TPA))
-	                    				{
-	                    					player.sendMessage(
-	                                				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.NotifyAfterWithDraw")
-	                                						.replace("%amount%", String.valueOf(price))
-	                                						.replace("%currency%", plugin.getEco().currencyNamePlural())));
-	                    				}
+		                    			Account main = plugin.getEco().getDefaultAccount(player.getUniqueId(), AccountCategory.MAIN, 
+		        								plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
+		        						if(main == null || main.getBalance() < price)
+		        						{
+		        							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
+		        							return;
+		        						}
+		        						String category = plugin.getYamlHandler().getLang().getString("Economy.TCategory");
+		        						String comment = null;
+                    					if(type == Teleport.Type.TPTO)
+                    					{
+                    						comment = plugin.getYamlHandler().getLang().getString("Economy.TComment")
+                                					.replace("%from%", fromName)
+                                					.replace("%to%", toName);
+                    					} else
+                    					{
+                    						comment = plugin.getYamlHandler().getLang().getString("Economy.TComment")
+                        					.replace("%from%", toName)
+                        					.replace("%to%", fromName);
+                    					}
+		        						EconomyAction ea = plugin.getEco().withdraw(main, price, 
+	        									OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
+		        						if(!ea.isSuccess())
+		        						{
+		        							player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+		        							return;
+		        						}
 		                    		}
 		            			}
 		            		}
