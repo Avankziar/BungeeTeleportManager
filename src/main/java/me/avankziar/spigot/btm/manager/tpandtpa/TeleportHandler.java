@@ -158,7 +158,7 @@ public class TeleportHandler
         DataOutputStream out = new DataOutputStream(stream);
         try {
 			out.writeUTF(StaticValues.TP_ACCEPT);
-			out.writeUTF(teleport.getFromName());
+			out.writeUTF(teleport.getFromName() == null ? "nu" : teleport.getFromName());
 			out.writeUTF(teleport.getToName() == null ? "nu" : teleport.getToName());
 			out.writeUTF(returnmessage);
 			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.TPA_ONLY.getLower()))

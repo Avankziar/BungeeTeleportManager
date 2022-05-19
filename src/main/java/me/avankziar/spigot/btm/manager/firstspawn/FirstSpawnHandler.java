@@ -88,6 +88,10 @@ public class FirstSpawnHandler
 	public void sendPlayerToFirstSpawn(Player player, FirstSpawn fs, boolean firsttime)
 	{
 		ConfigHandler cfgh = new ConfigHandler(plugin);
+		if(fs == null)
+		{
+			return;
+		}
 		if(fs.getLocation().getServer().equals(cfgh.getServer()) && player != null)
 		{
 			BackHandler bh = new BackHandler(plugin);

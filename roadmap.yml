@@ -32,6 +32,20 @@ Future =========================================================================
 - PlaceHolder Api, Home amount, Tpatoggle, etc.
 - Durch die Portale und /server <Server>, wird man automatisch in das Portal zurückgesetzt und teleportiert, was aber nicht gewollt ist.
 
+Build 6-1-2
+Caused by: java.lang.NullPointerException: Cannot invoke "String.length()" because "str" is null
+at java.io.DataOutputStream.writeUTF(DataOutputStream.java:359) ~[?:?]
+at java.io.DataOutputStream.writeUTF(DataOutputStream.java:333) ~[?:?]
+at main.java.me.avankziar.spigot.btm.manager.tpandtpa.TeleportHandler.sendAccept(TeleportHandler.java:161) ~[bungeeteleportmanager-6-1-1 (1).jar:?]
+at main.java.me.avankziar.spigot.btm.manager.tpandtpa.TeleportHandler.tpAccept(TeleportHandler.java:457) ~[bungeeteleportmanager-6-1-1 (1).jar:?]
+at main.java.me.avankziar.spigot.btm.manager.tpandtpa.TeleportHelper.tpAccept(TeleportHelper.java:69) ~[bungeeteleportmanager-6-1-1 (1).jar:?]
+at main.java.me.avankziar.spigot.btm.cmd.TpCmdExecutor.onCommand(TpCmdExecutor.java:50) ~[bungeeteleportmanager-6-1-1 (1).jar:?]
+
+java.lang.NullPointerException: Cannot invoke "main.java.me.avankziar.general.object.FirstSpawn.getLocation()" because "fs" is null
+at main.java.me.avankziar.spigot.btm.manager.firstspawn.FirstSpawnHandler.sendPlayerToFirstSpawn(FirstSpawnHandler.java:91) ~[bungeeteleportmanager-6-1-1 (1).jar:?]
+at main.java.me.avankziar.spigot.btm.manager.firstspawn.FirstSpawnHandler.sendtoFirstSpawnIfActive(FirstSpawnHandler.java:85) ~[bungeeteleportmanager-6-1-1 (1).jar:?]
+at main.java.me.avankziar.spigot.btm.listener.back.BackListener$1.run(BackListener.java:76) ~[bungeeteleportmanager-6-1-1 (1).jar:?]
+
 Build 6-1-0
 + IFH Support
 + Vault Unsupport

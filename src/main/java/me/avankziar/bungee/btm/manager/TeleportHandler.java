@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
 
 import main.java.me.avankziar.bungee.btm.BungeeTeleportManager;
@@ -104,7 +105,64 @@ public class TeleportHandler
 	//Player to has accepted
 	public void preTeleportPlayerToPlayer(String fromName, String toName, String errormessage, int delay)
 	{
-		if(toName.equals("nu"))
+		if(fromName.equals("nu") && toName.equals("nu"))
+		{
+			return;
+		} else if(fromName.equals("nu"))
+		{
+			String fn = null;
+			for(Entry<String, Teleport> set : getPendingTeleports().entrySet())
+			{
+				if(set.getValue() == null || set.getValue().getFromName() == null ||set.getValue().getToName() == null 
+						|| !set.getValue().getToName().equals(toName))
+				{
+					continue;
+				}
+				fn = set.getValue().getFromName();
+				break;
+			}
+			if(fn == null)
+			{
+				ProxiedPlayer to = plugin.getProxy().getPlayer(toName); //Player witch execute the /tpa
+				if(to == null)
+				{
+					return;
+				}
+				to.sendMessage(ChatApi.tctl(errormessage));
+				return;
+			}
+			ProxiedPlayer from = plugin.getProxy().getPlayer(fn);
+			ProxiedPlayer to = plugin.getProxy().getPlayer(toName);
+			if(from == null)
+			{
+				return;
+			}
+			if(to == null)
+			{
+				from.sendMessage(ChatApi.tctl(errormessage));
+				return;
+			}
+			if(!getPendingTeleports().containsKey(fromName))
+	    	{
+				to.sendMessage(ChatApi.tctl(errormessage));
+				return;
+	    	}
+			Teleport teleport = pendingTeleports.get(fromName);
+			if(!teleport.getToName().equals(toName))
+			{
+				to.sendMessage(ChatApi.tctl(errormessage));
+				return;
+			}
+			getPendingTeleports().remove(fromName);
+			if(teleport.getType() == Teleport.Type.TPTO)
+			{
+				teleportPlayer(from, to, delay);
+			} else if(teleport.getType() == Teleport.Type.TPHERE)
+			{
+				teleportPlayer(to, from, delay);
+			}
+			return;
+		} else if(toName.equals("nu"))
 		{
 			ProxiedPlayer from = plugin.getProxy().getPlayer(fromName); //Player witch execute the /tpa
 			
