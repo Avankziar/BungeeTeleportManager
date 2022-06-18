@@ -335,6 +335,7 @@ public class YamlHandler
 		return yaml;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private boolean writeFile(File file, YamlConfiguration yml, LinkedHashMap<String, Language> keyMap) throws IOException
 	{
 		yml.options().header("For more explanation see \n https://www.spigotmc.org/resources/bungeeteleportmanager.80677/");

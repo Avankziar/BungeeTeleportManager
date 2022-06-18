@@ -147,7 +147,7 @@ public class TeleportHandler
 				to.sendMessage(ChatApi.tctl(errormessage));
 				return;
 	    	}
-			Teleport teleport = pendingTeleports.get(fromName);
+			final Teleport teleport = pendingTeleports.get(fromName);
 			if(!teleport.getToName().equals(toName))
 			{
 				to.sendMessage(ChatApi.tctl(errormessage));
