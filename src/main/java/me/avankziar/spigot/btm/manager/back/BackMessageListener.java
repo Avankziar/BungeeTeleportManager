@@ -15,7 +15,6 @@ import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
-import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 
 public class BackMessageListener implements PluginMessageListener
@@ -184,9 +183,7 @@ public class BackMessageListener implements PluginMessageListener
             		if(requester != null)
             		{
             			Back newback = plugin.getBackHandler().getNewBack(requester);
-            			plugin.getBackHandler().sendBackObject(requester, newback);
-            			plugin.getMysqlHandler().updateData(
-            					MysqlHandler.Type.BACK, newback, "`player_uuid` = ?", newback.getUuid().toString());
+            			plugin.getBackHandler().sendBackObject(requester, newback, true);
             		}
             	    return;
             	} else if(task.equals(StaticValues.BACK_NODEATHBACK))

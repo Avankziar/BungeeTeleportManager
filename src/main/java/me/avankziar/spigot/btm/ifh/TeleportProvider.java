@@ -95,7 +95,7 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 			if(createBack)
 			{
 				BackHandler bh = new BackHandler(plugin);
-				bh.sendBackObject(player, bh.getNewBack(player));
+				bh.sendBackObject(player, bh.getNewBack(player), false);
 			}
 			new BukkitRunnable()
 			{

@@ -36,7 +36,7 @@ public class CustomHandler
 			if(overrideBack)
 			{
 				BackHandler bh = new BackHandler(plugin);
-				bh.sendBackObject(senders, bh.getNewBack(senders));
+				bh.sendBackObject(senders, bh.getNewBack(senders), false);
 			}			
 			int delayed = cfgh.getMinimumTime(Mechanics.CUSTOM);
 			int delay = 1;
@@ -96,7 +96,7 @@ public class CustomHandler
 			if(overrideBack)
 			{
 				BackHandler bh = new BackHandler(plugin);
-				bh.sendBackObject(player, bh.getNewBack(player));
+				bh.sendBackObject(player, bh.getNewBack(player), false);
 			}
 			int delayed = cfgh.getMinimumTime(Mechanics.CUSTOM);
 			int delay = 1;

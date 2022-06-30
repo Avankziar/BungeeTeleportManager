@@ -95,7 +95,7 @@ public class FirstSpawnHandler
 		if(fs.getLocation().getServer().equals(cfgh.getServer()) && player != null)
 		{
 			BackHandler bh = new BackHandler(plugin);
-			bh.sendBackObject(player, bh.getNewBack(player));
+			bh.sendBackObject(player, bh.getNewBack(player), false);
 			int delayed = cfgh.getMinimumTime(Mechanics.FIRSTSPAWN);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.FIRSTSPAWN.getLower()))

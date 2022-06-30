@@ -224,7 +224,7 @@ public class TeleportHandler
 		{
 			Player targets = Bukkit.getPlayer(teleport.getToUUID());
 			BackHandler bh = new BackHandler(plugin);
-			bh.sendBackObject(player, bh.getNewBack(player));
+			bh.sendBackObject(player, bh.getNewBack(player), false);
 			int delayed = cfgh.getMinimumTime(Mechanics.TELEPORT);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.TELEPORT.getLower()))
@@ -336,7 +336,7 @@ public class TeleportHandler
 		if(sl.getServer().equals(cfgh.getServer()))
 		{
 			BackHandler bh = new BackHandler(plugin);
-			bh.sendBackObject(player, bh.getNewBack(player));
+			bh.sendBackObject(player, bh.getNewBack(player), false);
 			int delayed = cfgh.getMinimumTime(Mechanics.TELEPORT);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.TELEPORT.getLower()))
@@ -488,14 +488,12 @@ public class TeleportHandler
 		if(back.isToggle())
 		{
 			back.setToggle(false);
-			plugin.getMysqlHandler().updateData(MysqlHandler.Type.BACK, back, "`player_uuid` = ?", back.getUuid().toString());
-			plugin.getBackHandler().sendBackObject(player, back);
+			plugin.getBackHandler().sendBackObject(player, back, true);
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ToggleOff")));
 		} else
 		{
 			back.setToggle(true);
-			plugin.getMysqlHandler().updateData(MysqlHandler.Type.BACK, back, "`player_uuid` = ?", back.getUuid().toString());
-			plugin.getBackHandler().sendBackObject(player, back);
+			plugin.getBackHandler().sendBackObject(player, back, true);
 			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ToggleOn")));
 		}
 	}
@@ -513,7 +511,7 @@ public class TeleportHandler
 		{
 			Player targets = Bukkit.getPlayer(UUID.fromString(playeruuid));
 			BackHandler bh = new BackHandler(plugin);
-			bh.sendBackObject(player, bh.getNewBack(player));
+			bh.sendBackObject(player, bh.getNewBack(player), false);
 			new BukkitRunnable()
 			{
 				@Override

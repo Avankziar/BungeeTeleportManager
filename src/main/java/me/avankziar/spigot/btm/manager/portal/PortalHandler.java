@@ -410,9 +410,7 @@ public class PortalHandler
 	public void sendPortalExistPointAsBack(Player player, ServerLocation loc)
 	{
 		Back newback = plugin.getBackHandler().getNewBack(player, loc);
-		plugin.getMysqlHandler().updateData(
-				MysqlHandler.Type.BACK, newback, "`player_uuid` = ?", newback.getUuid().toString());
-		plugin.getBackHandler().sendBackObject(player, newback);
+		plugin.getBackHandler().sendBackObject(player, newback, true);
 	}
 	
 	public String getTime(long l)
@@ -427,7 +425,7 @@ public class PortalHandler
 		if(destination.getServer().equals(server) && player != null)
 		{
 			BackHandler bh = new BackHandler(plugin);
-			bh.sendBackObject(player, bh.getNewBack(player));
+			bh.sendBackObject(player, bh.getNewBack(player), false);
 			new BukkitRunnable()
 			{
 				@Override

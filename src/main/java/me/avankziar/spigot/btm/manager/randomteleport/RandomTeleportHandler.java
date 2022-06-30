@@ -39,7 +39,7 @@ public class RandomTeleportHandler
 		if(rt.getPoint1().getServer().equals(cfgh.getServer()))
 		{
 			BackHandler bh = new BackHandler(plugin);
-			bh.sendBackObject(player, bh.getNewBack(player));
+			bh.sendBackObject(player, bh.getNewBack(player), false);
 			int delayed = cfgh.getMinimumTime(Mechanics.RANDOMTELEPORT);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.RANDOMTELEPORT.getLower()))

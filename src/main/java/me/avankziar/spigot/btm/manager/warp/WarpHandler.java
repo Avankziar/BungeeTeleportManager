@@ -44,7 +44,7 @@ public class WarpHandler
 				}
 			}
 			BackHandler bh = new BackHandler(plugin);
-			bh.sendBackObject(player, bh.getNewBack(player));
+			bh.sendBackObject(player, bh.getNewBack(player), false);
 			int delayed = cfgh.getMinimumTime(Mechanics.WARP);
 			int delay = 1;
 			if(!player.hasPermission(StaticValues.BYPASS_DELAY+Mechanics.WARP.getLower()))

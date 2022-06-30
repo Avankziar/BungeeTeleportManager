@@ -75,11 +75,15 @@ public class BackHandler
 				oldback.isToggle(), oldback.getHomePriority());
 	}
 	
-	public void sendBackObject(Player player, Back back)
+	public void sendBackObject(Player player, Back back, boolean mysqlUpdate)
 	{
 		if(!BTMSettings.settings.isBungee())
 		{
 			return;
+		}
+		if(mysqlUpdate)
+		{
+			plugin.getMysqlHandler().updateData(MysqlHandler.Type.BACK, back, "`player_uuid` = ?", back.getUuid().toString());
 		}
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         DataOutputStream out = new DataOutputStream(stream);

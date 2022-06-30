@@ -146,7 +146,6 @@ public interface Table05
 		        	preparedStatement.setObject(i, o);
 		        	i++;
 		        }
-				plugin.getLogger().info(preparedStatement.toString());
 				preparedStatement.executeUpdate();
 				return true;
 			} catch (SQLException e) {

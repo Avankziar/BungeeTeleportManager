@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.btm.manager.back.BackHandler;
 
 public class ServerAndWordListener implements Listener
 {
@@ -49,6 +50,8 @@ public class ServerAndWordListener implements Listener
 	@EventHandler
 	public void onQuit(PlayerQuitEvent event)
 	{
+		BackHandler bh = new BackHandler(plugin);
+		bh.sendBackObject(event.getPlayer(), bh.getNewBack(event.getPlayer()), true);
 		BungeeTeleportManager.homes.remove(event.getPlayer().getName());
 		BungeeTeleportManager.savepoints.remove(event.getPlayer().getName());
 		BungeeTeleportManager.warps.remove(event.getPlayer().getName());

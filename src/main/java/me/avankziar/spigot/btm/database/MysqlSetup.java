@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.logging.Level;
 
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 
@@ -345,32 +346,12 @@ public class MysqlSetup
 	
 	private boolean baseSetup(String data) 
 	{
-		if (conn != null) 
+		try (Connection conn = getConnection(); PreparedStatement query = conn.prepareStatement(data))
 		{
-			PreparedStatement query = null;
-		      try 
-		      {
-		    	  query = conn.prepareStatement(data);
-		    	  query.execute();
-		      } catch (SQLException e) 
-		      {
-		    	  e.printStackTrace();
-		    	  BungeeTeleportManager.log.severe("Error creating tables! Error: " + e.getMessage());
-		    	  return false;
-		      } finally 
-		      {
-		    	  try 
-		    	  {
-		    		  if (query != null) 
-		    		  {
-		    			  query.close();
-		    		  }
-		    	  } catch (Exception e) 
-		    	  {
-		    		  e.printStackTrace();
-		    		  return false;
-		    	  }
-		      }
+			query.execute();
+		} catch (SQLException e) 
+		{
+			BungeeTeleportManager.log.log(Level.WARNING, "Could not build data source. Or connection is null", e);
 		}
 		return true;
 	}
@@ -386,17 +367,17 @@ public class MysqlSetup
 		try {
 			if (conn == null) 
 			{
-				BungeeTeleportManager.log.warning("Connection failed. Reconnecting...");
+				//MIM.log.warning("Connection failed. Reconnecting...");
 				reConnect();
 			}
 			if (!conn.isValid(3)) 
 			{
-				BungeeTeleportManager.log.warning("Connection is idle or terminated. Reconnecting...");
+				//MIM.log.warning("Connection is idle or terminated. Reconnecting...");
 				reConnect();
 			}
 			if (conn.isClosed() == true) 
 			{
-				BungeeTeleportManager.log.warning("Connection is closed. Reconnecting...");
+				//MIM.log.warning("Connection is closed. Reconnecting...");
 				reConnect();
 			}
 		} catch (Exception e) 
@@ -424,11 +405,11 @@ public class MysqlSetup
 	    		// Load old Drivers for spigot
 	    		Class.forName("com.mysql.jdbc.Driver");
 	    	}            
-            long start = 0;
-			long end = 0;
+            //long start = 0;
+			//long end = 0;
 			
-		    start = System.currentTimeMillis();
-		    BungeeTeleportManager.log.info("Attempting to establish a connection to the MySQL server!");
+		    //start = System.currentTimeMillis();
+		    //BungeeTeleportManager.log.info("Attempting to establish a connection to the MySQL server!");
             Properties properties = new Properties();
             properties.setProperty("user", plugin.getYamlHandler().getConfig().getString("Mysql.User"));
             properties.setProperty("password", plugin.getYamlHandler().getConfig().getString("Mysql.Password"));
@@ -444,9 +425,9 @@ public class MysqlSetup
             conn = DriverManager.getConnection("jdbc:mysql://" + plugin.getYamlHandler().getConfig().getString("Mysql.Host") 
             		+ ":" + plugin.getYamlHandler().getConfig().getInt("Mysql.Port", 3306) + "/" 
             		+ plugin.getYamlHandler().getConfig().getString("Mysql.DatabaseName"), properties);
-		    end = System.currentTimeMillis();
-		    BungeeTeleportManager.log.info("Connection to MySQL server established!");
-		    BungeeTeleportManager.log.info("Connection took " + ((end - start)) + "ms!");
+		    //end = System.currentTimeMillis();
+		    //BungeeTeleportManager.log.info("Connection to MySQL server established!");
+		    //BungeeTeleportManager.log.info("Connection took " + ((end - start)) + "ms!");
             return true;
 		} catch (Exception e) 
 		{

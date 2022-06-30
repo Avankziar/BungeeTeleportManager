@@ -56,6 +56,7 @@ import main.java.me.avankziar.spigot.btm.database.YamlHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.SafeLocationHandler;
 import main.java.me.avankziar.spigot.btm.handler.SafeLocationMessageListener;
+import main.java.me.avankziar.spigot.btm.ifh.LastKnownPositionProvider;
 import main.java.me.avankziar.spigot.btm.ifh.TeleportProvider;
 import main.java.me.avankziar.spigot.btm.listener.PlayerOnCooldownListener;
 import main.java.me.avankziar.spigot.btm.listener.ServerAndWordListener;
@@ -115,6 +116,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private static BackgroundTask backgroundTask;
 	
 	private TeleportProvider tpprovider;
+	private LastKnownPositionProvider lkpprovider;
 	private Vanish vanishconsumer;
 	private Economy ecoConsumer;
 	
@@ -1272,14 +1274,28 @@ public class BungeeTeleportManager extends JavaPlugin
 	    }
 	    if(yamlHandler.getConfig().getBoolean("Enable.InterfaceHub.Providing.Teleport", false))
 		{
-	    	tpprovider = new TeleportProvider(plugin);
+	    	try
+	    	{
+	    		tpprovider = new TeleportProvider(plugin);
+		    	plugin.getServer().getServicesManager().register(
+		        main.java.me.avankziar.ifh.spigot.teleport.Teleport.class,
+		        tpprovider,
+		        this,
+		        ServicePriority.Normal);
+		    	log.info(pluginName + " detected InterfaceHub >>> Teleport.class is provided!");
+	    	} catch (Exception e){}
+	    	
+		}
+	    try
+    	{
+	    	lkpprovider = new LastKnownPositionProvider(plugin);
 	    	plugin.getServer().getServicesManager().register(
-	        main.java.me.avankziar.ifh.spigot.teleport.Teleport.class,
-	        tpprovider,
+	        main.java.me.avankziar.ifh.spigot.position.LastKnownPosition.class,
+	        lkpprovider,
 	        this,
 	        ServicePriority.Normal);
-	    	log.info(pluginName + " detected InterfaceHub >>> Teleport.class is provided!");
-		}
+	    	log.info(pluginName + " detected InterfaceHub >>> LastKnownPosition.class is provided!");
+    	} catch (Exception e){}
 	}
 	
 	private void setupIFHConsumer()
