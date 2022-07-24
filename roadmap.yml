@@ -32,6 +32,9 @@ Future =========================================================================
 - PlaceHolder Api, Home amount, Tpatoggle, etc.
 - Durch die Portale und /server <Server>, wird man automatisch in das Portal zurückgesetzt und teleportiert, was aber nicht gewollt ist.
 
+Build 6-2-0
+- MC 1.19 support
+
 Build 6-1-2
 + Caused by: java.lang.NullPointerException: Cannot invoke "String.length()" because "str" is null
   at java.io.DataOutputStream.writeUTF(DataOutputStream.java:359) ~[?:?]

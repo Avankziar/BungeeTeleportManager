@@ -420,7 +420,7 @@ public class TeleportHelper
 				} else if(args.length == 7)
 				{
 					if(!MatchApi.isDouble(args[2]) || !MatchApi.isDouble(args[3]) || !MatchApi.isDouble(args[4])
-							|| !MatchApi.isInteger(args[5]) || !MatchApi.isInteger(args[6]))
+							|| !MatchApi.isFloat(args[5]) || !MatchApi.isFloat(args[6]))
 					{
 						player.spigot().sendMessage(ChatApi.clickEvent(
 								plugin.getYamlHandler().getLang().getString("InputIsWrong"),

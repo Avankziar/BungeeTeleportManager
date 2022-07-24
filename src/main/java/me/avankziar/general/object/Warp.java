@@ -8,6 +8,7 @@ public class Warp
 	{
 		ONLY, IRRELEVANT, FORBIDDEN;
 	}
+	
 	private String name;
 	private ServerLocation location;
 	private boolean hidden;

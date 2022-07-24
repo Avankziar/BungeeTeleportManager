@@ -2,7 +2,7 @@ name: BungeeTeleportManager
 main: main.java.me.avankziar.spigot.btm.BungeeTeleportManager
 version: 6
 author: Avankziar
-api-version: 1.18
+api-version: 1.19
 description: A Teleport plugin with Back, Deathback, EntityTransport, Homes, SavePoints, RTP, TPA, TP and Warps
 softdepend: [InterfaceHub]
 website: https://www.spigotmc.org/resources/bungeeteleportmanager.80677/
