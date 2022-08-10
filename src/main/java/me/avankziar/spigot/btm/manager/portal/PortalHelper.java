@@ -2121,7 +2121,7 @@ public class PortalHelper
 			String warpName = args[2];
 			if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("TargetType.DestinationNotExist")
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.DestinationNotExist")
 						.replace("%value%", warpName)
 						.replace("%type%", target.toString())));
 				return;
