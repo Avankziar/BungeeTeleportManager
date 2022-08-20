@@ -1246,21 +1246,27 @@ public class BungeeTeleportManager extends JavaPlugin
 			@Override
 			public void run()
 			{
-			    if(i == 20)
-			    {
-				cancel();
-				return;
-			    }
-			    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.economy.Economy> rsp = 
-		                         getServer().getServicesManager().getRegistration(Economy.class);
-			    if (rsp == null) 
-			    {
-			    	i++;
-			        return;
-			    }
-			    ecoConsumer = rsp.getProvider();
-			    log.info(pluginName + " detected InterfaceHub >>> Economy.class is consumed!");
-			    cancel();
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						return;
+				    }
+				    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.economy.Economy> rsp = 
+			                         getServer().getServicesManager().getRegistration(Economy.class);
+				    if (rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    ecoConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> Economy.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}			    
 			}
         }.runTaskTimer(plugin, 20L, 20*2);
         return;
@@ -1312,21 +1318,27 @@ public class BungeeTeleportManager extends JavaPlugin
     			@Override
     			public void run()
     			{
-    			    if(i == 20)
-    			    {
-    				cancel();
-    				return;
-    			    }
-    			    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.interfaces.Vanish> rsp = 
-    		                         getServer().getServicesManager().getRegistration(Vanish.class);
-    			    if (rsp == null) 
-    			    {
-    			    	i++;
-    			        return;
-    			    }
-    			    vanishconsumer = rsp.getProvider();
-    			    log.info(pluginName + " detected InterfaceHub >>> Vanish.class is consumed!");
-    			    cancel();
+    				try
+    				{
+    					if(i == 20)
+        			    {
+    	    				cancel();
+    	    				return;
+        			    }
+        			    RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.interfaces.Vanish> rsp = 
+        		                         getServer().getServicesManager().getRegistration(Vanish.class);
+        			    if (rsp == null) 
+        			    {
+        			    	i++;
+        			        return;
+        			    }
+        			    vanishconsumer = rsp.getProvider();
+        			    log.info(pluginName + " detected InterfaceHub >>> Vanish.class is consumed!");
+        			    cancel();
+    				} catch(NoClassDefFoundError e)
+    				{
+    					cancel();
+    				}    			    
     			}
             }.runTaskTimer(plugin, 20L, 20*2);
 		}
