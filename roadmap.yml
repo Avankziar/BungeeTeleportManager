@@ -32,6 +32,11 @@ Future =========================================================================
 - PlaceHolder Api, Home amount, Tpatoggle, etc.
 - Durch die Portale und /server <Server>, wird man automatisch in das Portal zurückgesetzt und teleportiert, was aber nicht gewollt ist.
 - Durch die config einen boolean setzten, so dass man bei /tpa nicht zum spieler sondern zu den Koordinaten teleportiert wird.
+
+Build 6-3-0
+- MC 1.19.2 support
+- IFH Administration implementiert
+
 Build 6-2-1
 - /portal settarget, Outputmessagefix
 

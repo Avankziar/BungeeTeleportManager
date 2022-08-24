@@ -26,6 +26,7 @@ import main.java.me.avankziar.general.database.YamlManager;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.ifh.spigot.administration.Administration;
 import main.java.me.avankziar.ifh.spigot.economy.Economy;
 import main.java.me.avankziar.ifh.spigot.interfaces.Vanish;
 import main.java.me.avankziar.spigot.btm.assistance.AccessPermissionHandler;
@@ -119,6 +120,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private LastKnownPositionProvider lkpprovider;
 	private Vanish vanishconsumer;
 	private Economy ecoConsumer;
+	private Administration administrationConsumer;
 	
 	private SafeLocationHandler safeLocationHandler;
 	private CommandHelper commandHelper;
@@ -169,6 +171,8 @@ public class BungeeTeleportManager extends JavaPlugin
 		log.info(" ██╔══██╗   ██║   ██║╚██╔╝██║ | Depend Plugins: "+plugin.getDescription().getDepend().toString());
 		log.info(" ██████╔╝   ██║   ██║ ╚═╝ ██║ | SoftDepend Plugins: "+plugin.getDescription().getSoftDepend().toString());
 		log.info(" ╚═════╝    ╚═╝   ╚═╝     ╚═╝ | LoadBefore: "+plugin.getDescription().getLoadBefore().toString());
+		
+		setupIFHAdministration();
 		
 		commandTree = new ArrayList<>();
 		helpList = new ArrayList<>();
@@ -237,13 +241,6 @@ public class BungeeTeleportManager extends JavaPlugin
 		homes.clear();
 		warps.clear();
 		HandlerList.unregisterAll(this);
-		if (yamlHandler.getConfig().getBoolean("Mysql.Status", false) == true)
-		{
-			if (mysqlSetup.getConnection() != null) 
-			{
-				mysqlSetup.closeConnection();
-			}
-		}
 		log.info(pluginName + " is disabled!");
 	}
 
@@ -1222,7 +1219,6 @@ public class BungeeTeleportManager extends JavaPlugin
 		}
 		if(yamlHandler.getConfig().getBoolean("Mysql.Status", false))
 		{
-			mysqlSetup.closeConnection();
 			if(!mysqlSetup.loadMysqlSetup())
 			{
 				return false;
@@ -1352,6 +1348,48 @@ public class BungeeTeleportManager extends JavaPlugin
 	public Vanish getVanish()
 	{
 		return this.vanishconsumer;
+	}
+	
+	private void setupIFHAdministration()
+	{ 
+		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
+	    {
+	    	return;
+	    }
+		new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+			    if(i == 20)
+			    {
+				cancel();
+				return;
+			    }
+			    try
+			    {
+			    	RegisteredServiceProvider<main.java.me.avankziar.ifh.spigot.administration.Administration> rsp = 
+	                         getServer().getServicesManager().getRegistration(Administration.class);
+				    if (rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    administrationConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> Administration.class is consumed!");
+			    } catch(NoClassDefFoundError e) 
+			    {
+			    	cancel();
+			    }		    
+			    cancel();
+			}
+        }.runTaskTimer(plugin,  0L, 20*2);
+	}
+	
+	public Administration getAdministration()
+	{
+		return administrationConsumer;
 	}
 	
 	public void setupBstats()

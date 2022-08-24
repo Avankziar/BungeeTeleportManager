@@ -136,7 +136,9 @@ public class YamlHandler
 		//Niederschreiben aller Werte für die Datei
 		writeFile(config, cfg, plugin.getYamlManager().getConfigSpigotKey());
 		
-		languages = cfg.getString("Language", "ENG").toUpperCase();
+		languages = plugin.getAdministration() == null 
+				? cfg.getString("Language", "ENG").toUpperCase() 
+				: plugin.getAdministration().getLanguage();
 		
 		commands = new File(plugin.getDataFolder(), "commands.yml");
 		if(!commands.exists()) 
