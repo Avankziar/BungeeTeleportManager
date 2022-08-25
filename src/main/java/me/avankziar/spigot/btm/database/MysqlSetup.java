@@ -120,7 +120,7 @@ public class MysqlSetup
             properties.setProperty("useSSL", String.valueOf(isSSLEnabled));
             properties.setProperty("requireSSL", String.valueOf(isSSLEnabled));
             //Connect to database
-            Connection conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, properties);
+            conn = DriverManager.getConnection("jdbc:mysql://" + host + ":" + port + "/" + database, properties);
             return conn;
 		} catch (Exception e) 
 		{
