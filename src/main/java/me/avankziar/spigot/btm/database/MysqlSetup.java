@@ -11,23 +11,24 @@ import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 
 public class MysqlSetup 
 {
-	private String host;
-	private int port;
-	private String database;
-	private String user;
-	private String password;
-	private boolean isAutoConnect;
-	private boolean isVerifyServerCertificate;
-	private boolean isSSLEnabled;
+	private Connection conn = null;
+	final private String host;
+	final private int port;
+	final private String database;
+	final private String user;
+	final private String password;
+	final private boolean isAutoConnect;
+	final private boolean isVerifyServerCertificate;
+	final private boolean isSSLEnabled;
 	
 	public MysqlSetup(BungeeTeleportManager plugin) 
 	{
 		boolean adm = plugin.getYamlHandler().getConfig().getBoolean("useIFHAdministration", false);
-		if(plugin.getAdministration() == null)
+		String path = plugin.getYamlHandler().getConfig().getString("IFHAdministrationPath");
+		if(plugin.getAdministration() == null || plugin.getAdministration().getHost(path) == null)
 		{
 			adm = false;
 		}
-		String path = plugin.getYamlHandler().getConfig().getString("IFHAdministrationPath");
 		
 		host = adm ? plugin.getAdministration().getHost(path)
 				: plugin.getYamlHandler().getConfig().getString("Mysql.Host");
@@ -62,9 +63,34 @@ public class MysqlSetup
 		return true;
 	}
 	
-	public Connection getConnection()
+	public Connection getConnection() 
 	{
-		return reConnect();
+		checkConnection();
+		return conn;
+	}
+	
+	public void checkConnection() 
+	{
+		try {
+			if (conn == null) 
+			{
+				//MIM.log.warning("Connection failed. Reconnecting...");
+				reConnect();
+			}
+			if (!conn.isValid(3)) 
+			{
+				//MIM.log.warning("Connection is idle or terminated. Reconnecting...");
+				reConnect();
+			}
+			if (conn.isClosed() == true) 
+			{
+				//MIM.log.warning("Connection is closed. Reconnecting...");
+				reConnect();
+			}
+		} catch (Exception e) 
+		{
+			BungeeTeleportManager.log.severe("Could not reconnect to Database! Error: " + e.getMessage());
+		}
 	}
 	
 	private Connection reConnect()
