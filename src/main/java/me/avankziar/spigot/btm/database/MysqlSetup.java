@@ -29,7 +29,10 @@ public class MysqlSetup
 		{
 			adm = false;
 		}
-		
+		if(adm)
+		{
+			BungeeTeleportManager.log.log(Level.INFO, "Using IFH Administration");
+		}		
 		host = adm ? plugin.getAdministration().getHost(path)
 				: plugin.getYamlHandler().getConfig().getString("Mysql.Host");
 		port = adm ? plugin.getAdministration().getPort(path)
