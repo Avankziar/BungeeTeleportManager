@@ -21,14 +21,8 @@ public class MysqlSetup
 	final private boolean isVerifyServerCertificate;
 	final private boolean isSSLEnabled;
 	
-	public MysqlSetup(BungeeTeleportManager plugin) 
+	public MysqlSetup(BungeeTeleportManager plugin, boolean adm, String path) 
 	{
-		boolean adm = plugin.getYamlHandler().getConfig().getBoolean("useIFHAdministration", false);
-		String path = plugin.getYamlHandler().getConfig().getString("IFHAdministrationPath");
-		if(plugin.getAdministration() == null || plugin.getAdministration().getHost(path) == null)
-		{
-			adm = false;
-		}
 		if(adm)
 		{
 			BungeeTeleportManager.log.log(Level.INFO, "Using IFH Administration");
