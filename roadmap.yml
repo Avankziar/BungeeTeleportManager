@@ -33,7 +33,7 @@ Future =========================================================================
 - Durch die Portale und /server <Server>, wird man automatisch in das Portal zurückgesetzt und teleportiert, was aber nicht gewollt ist.
 - Durch die config einen boolean setzten, so dass man bei /tpa nicht zum spieler sondern zu den Koordinaten teleportiert wird.
 
-Build 6-3-1
+Build 6-3-2
 - IFH Administration aktualisiert
 
 Build 6-3-0
