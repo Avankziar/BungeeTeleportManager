@@ -134,7 +134,7 @@ public class RandomTeleportHandler
 				double x = rt.getPoint1().getX() + getRoll()*getRandom(new Random(), 0, rt.getRadius());
 				double y = rt.getPoint1().getY() + rt.getRadius();
 				double minY = rt.getPoint1().getY() - rt.getRadius();
-				if(minY <= 0) {minY = 1;}
+				if(minY <= -64) {minY = -63;}
 				double z = rt.getPoint1().getZ() + getRoll()*getRandom(new Random(), 0, rt.getRadius());
 				loc = isSafe(rtpPath, new Location(Bukkit.getWorld(rt.getPoint1().getWorldName()), x, y, z), minY);
 			}
