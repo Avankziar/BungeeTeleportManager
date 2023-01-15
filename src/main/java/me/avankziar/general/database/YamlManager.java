@@ -539,7 +539,7 @@ public class YamlManager
 					"HIGHEST"}));
 			configSpigotKeys.put("Use.CountPerm.Portal"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-					"f"}));
+					"ADDUP"}));
 			configSpigotKeys.put("Use.CountPerm.Warp"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"HIGHEST"}));
@@ -1066,9 +1066,9 @@ public class YamlManager
 				"&c/portalsetprotectionradius <Portalname> &f| Setzt den Radius an Blöcken, wo sich kein Block durch Wasser, Lava oder eine Creeperexplosion verändern kann.",
 				"&c/portalsetprotectionradius <portalname> &f| Sets the radius at blocks where no block can be changed by water, lava or a creeper explosion.");
 		commandsInput("portalsetsound", "portalsetsound", "btm.cmd.user.portal.setsound",
-				"/portalsetsound <portalname> <sound>", "/portalsetsound ",
-				"&c/portalsetsound <Portalname> <Sound> &f| Setzt den Sound der abgespielt wird, wenn man erfolgreich durch ein Portal teleportiert wird.",
-				"&c/portalsetsound <portalname> <sound> &f| Sets the sound that is played when you are successfully teleported through a portal.");
+				"/portalsetsound <portalname> <sound> <soundcategory>", "/portalsetsound ",
+				"&c/portalsetsound <Portalname> <Sound> <SoundCategory> &f| Setzt den Sound der abgespielt wird, wenn man erfolgreich durch ein Portal teleportiert wird.",
+				"&c/portalsetsound <portalname> <sound> <soundcategory> &f| Sets the sound that is played when you are successfully teleported through a portal.");
 		commandsInput("portalsetaccesstype", "portalsetaccesstype", "btm.cmd.user.portal.setaccesstype",
 				"/portalsetaccesstype <portalname>", "/portalsetaccesstype ",
 				"&c/portalsetaccesstype <Portalname> &f| Toggelt ob ein Portal öffentlich oder privat ist. (Privat dürfen nur der Eigentümer und Mitglieder das Portal benutzten)",

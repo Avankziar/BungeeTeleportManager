@@ -58,7 +58,7 @@ Build 6-5-0
   Führt nach der Ankunft der Zielkoordinaten den angegeben Befehl als Spieler oder als Console aus. Der PlaceHolder %player% setzten den Spielernamen ein.
 - /portalsetpostteleportmessage & /portalsetaccessDenialMessage & /portalsetpostteleportexecutingcommand werden, wenn die Nachricht oder der
   Befehl leer ist, wird dies aus "null" gesetzt und somit deaktiviert.
-  
+- Bugfix zu den CountPerms bei Warps & Portals
 
 Build 6-4-1
 - PlayerDeathEvent NPE fix

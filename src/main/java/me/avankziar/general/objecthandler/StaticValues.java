@@ -136,9 +136,9 @@ public class StaticValues
 		PERM_BYPASS_PORTAL_BLACKLIST = "btm.bypass.portal.blacklist",
 		PERM_BYPASS_PORTAL_TOOMANY = "btm.bypass.portal.toomany",
 		
-		PERM_PORTAL_COUNTWARPS_WORLD = "btm.count.portal.world.",
-		PERM_PORTAL_COUNTWARPS_SERVER = "btm.count.portal.server.",
-		PERM_PORTAL_COUNTWARPS_GLOBAL = "btm.count.portal.global.",
+		PERM_PORTAL_COUNTPORTALS_WORLD = "btm.count.portal.world.",
+		PERM_PORTAL_COUNTPORTALS_SERVER = "btm.count.portal.server.",
+		PERM_PORTAL_COUNTPORTALS_GLOBAL = "btm.count.portal.global.",
 		
 		//SavePoint Bypass
 		PERM_BYPASS_SAVEPOINT_OTHER = "btm.bypass.savepoint.other",

@@ -1047,9 +1047,9 @@ public class BungeeTeleportManager extends JavaPlugin
 		StaticValues.PERM_BYPASS_PORTALPLACER = yamlHandler.getCom().getString(path+"Portal.Placer");
 		StaticValues.PERM_BYPASS_PORTAL_BLACKLIST = yamlHandler.getCom().getString(path+"Portal.Blacklist");
 		StaticValues.PERM_BYPASS_PORTAL_TOOMANY = yamlHandler.getCom().getString(path+"Portal.Toomany");
-		StaticValues.PERM_PORTAL_COUNTWARPS_WORLD = yamlHandler.getCom().getString(path+"Portal.Count.World");
-		StaticValues.PERM_PORTAL_COUNTWARPS_SERVER = yamlHandler.getCom().getString(path+"Portal.Count.Server");
-		StaticValues.PERM_PORTAL_COUNTWARPS_GLOBAL = yamlHandler.getCom().getString(path+"Portal.Count.Global");
+		StaticValues.PERM_PORTAL_COUNTPORTALS_WORLD = yamlHandler.getCom().getString(path+"Portal.Count.World");
+		StaticValues.PERM_PORTAL_COUNTPORTALS_SERVER = yamlHandler.getCom().getString(path+"Portal.Count.Server");
+		StaticValues.PERM_PORTAL_COUNTPORTALS_GLOBAL = yamlHandler.getCom().getString(path+"Portal.Count.Global");
 		
 		StaticValues.PERM_BYPASS_SAVEPOINT_OTHER = yamlHandler.getCom().getString(path+"SavePoint.Other");
 		StaticValues.PERM_BYPASS_SAVEPOINTS_OTHER = yamlHandler.getCom().getString(path+"SavePoint.SavePointsOther");
