@@ -711,7 +711,8 @@ public class BungeeTeleportManager extends JavaPlugin
 					portalsearch, portalsetname, portalsetowner, portalsetpermission, portalsetprice, portaladdmember,
 					portalremovemember, portaladdblacklist, portalremoveblacklist, portalsetcategory, portalsetownexitpoint,
 					portalsetposition, portalsetdefaultcooldown, portalsettarget, portalsetpostteleportmessage, 
-					portalsetaccessdenialmessage, portalsettriggerblock, portalsetthrowback, portalsetprotectionradius, 
+					portalsetaccessdenialmessage, portalsetpostteleportexecutingcommand,
+					portalsettriggerblock, portalsetthrowback, portalsetprotectionradius, 
 					portalsetaccesstype, portalsetsound, portalmode, portalitem);
 		}
 		
