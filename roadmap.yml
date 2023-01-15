@@ -31,7 +31,6 @@ Future =========================================================================
   Guter Testboden, um eine Mechanik zu entwickeln, um einzelne Entitys mit Spieler zu teleportieren.
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
 - PlaceHolder Api, Home amount, Tpatoggle, etc.
-- Wenn man durch das Portal geht, soll man bei der ankunft nochmal eine Auswahl an befehlen ausführen aus der Datenbank.
 - xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
 
 Build 6-5-0
