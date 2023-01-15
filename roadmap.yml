@@ -1,5 +1,6 @@
 Future =========================================================================================================================
 - xWenn der Spieler auf einem Entity sitzt. Sollen die Entitys mitteleportiert werden. Sicherheitsrisiko
+- xDurch die config einen boolean setzten, so dass man bei /tpa nicht zum spieler sondern zu den Koordinaten teleportiert wird.
 - Zählen, welche Warps/home angesteuert werden, um sowas wie Beliebtheit darstellen zu können. Verbessernkann Ideentechnisch.
 - Eine einstellbare Einstellung für Warps, dass man von anderen server diese nicht sehen kann. Whitelist boolean, Server Whitelist Liste
 - EntityTeleport (irgendwie nicht mehr gut?)
@@ -30,9 +31,38 @@ Future =========================================================================
   Guter Testboden, um eine Mechanik zu entwickeln, um einzelne Entitys mit Spieler zu teleportieren.
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
 - PlaceHolder Api, Home amount, Tpatoggle, etc.
+- Wenn man durch das Portal geht, soll man bei der ankunft nochmal eine Auswahl an befehlen ausführen aus der Datenbank.
+- xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
+
+Build 6-5-0
+- MYSQL Änderungen:
+    ALTER TABLE `btmportals` ADD `soundcategory` TEXT NOT NULL AFTER `sound`;
+    ALTER TABLE `btmportals` ADD `postteleportexecutingcommand` TEXT NOT NULL AFTER `accessdenialmessage`, ADD `postteleportexecutercommand` TEXT NOT NULL AFTER `postteleportexecutingcommand`;
+    UPDATE `btmportals` SET `soundcategory`='AMBIENT',`postteleportexecutingcommand`=NULL,`postteleportexecutercommand`='PLAYER' WHERE 1
+- Es sind ist die Language Datei zu überarbeiten bzw. neu erstellen zu lassen.
+- CMI Homes Import hinzugefügt (Nicht getestet, habe dazu keine Daten)
 - Durch die Portale und /server <Server>, wird man automatisch in das Portal zurückgesetzt und teleportiert, was aber nicht gewollt ist.
-- Durch die config einen boolean setzten, so dass man bei /tpa nicht zum spieler sondern zu den Koordinaten teleportiert wird.
-- Portal playSound die SoundCategory mitaufnehmen.
+  Fix dadurch, dass beim Betreten einen Spigot Servers der JoinCooldown + 2s auch auf den PortalTrigger angewandt wird.
+  In dieser Zeit kann man sich aus dem Portal herausbewegen.
+- PortalSoundCategory hinzugefügt.
+- /portalsetsound <portal> <sound> <soundcategory>, hat nun eine neues Argument. Soundcategory.
+- Durch einen ConfigWert werden alle neuerstellten Portale Override auf ein spezielles Portal verwiesen.
+  Bedeutet, dass man pro Welt auf dem Server ein Portal als Standart/Override nehmen kann.
+  Dafür steht in der Config der Pfad: Use.Portal.ConfigPredefinePortalTargets
+- Portale können nach dem Teleport, einen Befehl ausführen. Nicht zu verwechseln mit dem Generellen Command, dass beim Eintreten ausgelöst werden kann,
+  sollte das TargetType COMMAND sein.
+  Dies geht nur bei TargetType FIRSTSPAWN, RESPAWN, HOME, LOCATION, CONFIGPREDEFINE, PORTAL, SAVEPOIN & WARP.
+  Nicht Möglich bei BACK, DEATHBACK, COMMAND & RANDOMTELEPORT.
+  Kann mit dem Befehl /portalsetpostteleportexecutingcommand gesetzt werden.
+  Muss in der Mysql nachgefügt werden mit:
+- /portalsetpostteleportexecutingcommand <portal> <Player/Console> <Cmd...> hinzugefügt.
+  Führt nach der Ankunft der Zielkoordinaten den angegeben Befehl als Spieler oder als Console aus. Der PlaceHolder %player% setzten den Spielernamen ein.
+- /portalsetpostteleportmessage & /portalsetaccessDenialMessage & /portalsetpostteleportexecutingcommand werden, wenn die Nachricht oder der
+  Befehl leer ist, wird dies aus "null" gesetzt und somit deaktiviert.
+  
+
+Build 6-4-1
+- PlayerDeathEvent NPE fix
 
 Build 6-4-0
 - RTP MinY = -63

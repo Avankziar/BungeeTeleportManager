@@ -654,6 +654,12 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(portalsetaccessdenialmessage.getName()).setTabCompleter(tabOne);
 			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETACCESSDENIALMSG, portalsetaccessdenialmessage.getCommandString());
 			
+			CommandConstructor portalsetpostteleportexecutingcommand = new CommandConstructor("portalsetpostteleportexecutingcommand", false);
+			registerCommand(portalsetpostteleportexecutingcommand.getName());
+			getCommand(portalsetpostteleportexecutingcommand.getName()).setExecutor(new PortalCmdExecutor(plugin, portalsetpostteleportexecutingcommand));
+			getCommand(portalsetpostteleportexecutingcommand.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.PORTAL_SETPOSTTELEPORTEXECUTINGCOMMAND, portalsetpostteleportexecutingcommand.getCommandString());
+			
 			CommandConstructor portalsettriggerblock = new CommandConstructor("portalsettriggerblock", false);
 			registerCommand(portalsettriggerblock.getName());
 			getCommand(portalsettriggerblock.getName()).setExecutor(new PortalCmdExecutor(plugin, portalsettriggerblock));

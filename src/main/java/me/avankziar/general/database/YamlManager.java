@@ -594,6 +594,10 @@ public class YamlManager
 			configSpigotKeys.put("Use.SafeTeleport.Warp"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
+			configSpigotKeys.put("Use.Portal.ConfigPredefinePortalTargets"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					"HereWorldname;HerePortalname",
+					"HereOtherWorldname;HereOtherPortalname"}));
 			
 		}
 		EntityTransportTicket:
@@ -1045,6 +1049,10 @@ public class YamlManager
 				"/portalsetaccessdenialmessage <portalname> <message>", "/portalsetaccessdenialmessage ",
 				"&c/portalsetaccessdenialmessage <Portalname> <Nachricht> &f| Setzt die Nachricht, welche gesendet wird, falls man das Portal nicht benutzten darf.",
 				"&c/portalsetaccessdenialmessage <portalname> <message> &f| Sets the message that will be sent if you are not allowed to use the portal.");
+		commandsInput("portalsetpostteleportexecutingcommand", "portalsetpostteleportexecutingcommand", "btm.cmd.user.portal.setpostteleportexecutingcommand",
+				"/portalsetpostteleportexecutingcommand <portalname> <PLAYER/CONSOLE> <cmd...>", "/portalsetpostteleportexecutingcommand ",
+				"&c/portalsetpostteleportexecutingcommand <Portalname> <PLAYER/CONSOLE> <Befehl...> &f| Setzt den Befehl und von wem er ausgeführt werden soll, welche nach dem Teleport ausgeführt wird.",
+				"&c/portalsetpostteleportexecutingcommand <portalname> <PLAYER/CONSOLE> <cmd...> &f| Sets the command and by whom it should be executed, which will be executed after the teleport.");
 		commandsInput("portalsettriggerblock", "portalsettriggerblock", "btm.cmd.user.portal.settriggerblock",
 				"/portalsettriggerblock <portalname> <material>", "/portalsettriggerblock ",
 				"&c/portalsettriggerblock <Portalname> <Material> &f| Setzt das Material welches als Portaltrigger dient. Dieser muss ein transparenter Block sein.",
@@ -1587,6 +1595,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cBitte wähle eine valide Input Mechanik aus!",
 						"&cPlease select a valid input mechanism!"}));
+		languageKeys.put(path+"PluginDontSupportThatMechanic", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cDas ausgewählte Plugin, unterstützt nicht die zu importierende Mechanic!",
+						"&cThe selected plugin, does not support the mechanic to import!"}));
 		languageKeys.put(path+"NoSupportedPlugin", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cBitte wähle eine unterstütztes Plugin für den Import aus!",
@@ -1603,6 +1615,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Import der Portale des Plugins AdvancedPortals ist abgeschlossen! Importierte Portale: &f%valueI% &e| Schon vorhanden: &f%valueII%",
 						"&eThe import of the portals of the AdvancedPortals plugin is completed! Imported portals: &f%valueI% &e| Already present: &f%valueII%"}));
+		languageKeys.put(path+"CIMHomeImportFinish", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Import der Homes des Plugins CMI ist abgeschlossen! Importierte Homes: &f%valueI% &e| Fehlgeschlagene Homeimporte: &f%valueII%",
+						"&eThe import of the homes of the CMI plugin is completed! Imported homes: &f%valueI% &e| Failed homeimports: &f%valueII%"}));
 	}
 	
 	private void langDeathzone()
@@ -2326,8 +2342,8 @@ public class YamlManager
 						"&eProtectionRadius: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<protectionradius>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoSound", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eSound: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Sound>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&eSound: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Sound>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&eSound: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Sound>+<SoundCategory>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eSound: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Sound>+<SoundCategory>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoPostTeleportMsg", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePost-Teleport-Nachricht:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportMsg>~hover@SHOW_TEXT@Hover.Message.Change",
@@ -2340,6 +2356,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZugangsverweigerungs-Nachricht:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change",
 						"&eAccessDenialMessage:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfopostTeleportExecutingCommand", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&ePost Tp Auszuführender Befehl:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePost Tp Executing Cmd:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"NotOwner",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu bist nicht der Eigentümer des Potral!",
@@ -2494,12 +2514,16 @@ public class YamlManager
 						"&eThe TargetType &f%type% &ewas set for the &f%portal% &eportal! Targetinfo: &f%info%"}));
 		languageKeys.put(path+"SetPostTeleportMessage",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDie PostTeleport Nachricht >&f%msg% &e< wurde für das Portal &f%portal% &egesetzt!",
-						"&eThe PostTeleport message >&f%msg% &e< has been set for the portal &f%portal%&e!"}));
+						"&eDie PostTeleport Nachricht >&f%msg%&e< wurde für das Portal &f%portal% &egesetzt!",
+						"&eThe PostTeleport message >&f%msg%&e< has been set for the portal &f%portal%&e!"}));
 		languageKeys.put(path+"SetAccesDenialMessage",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDie Zugangsverweigerungsnachricht >&f%msg% &e< wurde für das Portal &f%portal% &egesetzt!",
-						"&eThe accessdenial message >&f%msg% &e< has been set for the portal &f%portal%&e!"}));
+						"&eDie Zugangsverweigerungsnachricht >&f%msg%&e< wurde für das Portal &f%portal% &egesetzt!",
+						"&eThe accessdenial message >&f%msg%&e< has been set for the portal &f%portal%&e!"}));
+		languageKeys.put(path+"SetPostTeleportExecutingCommand",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer PostTeleport auszuführende Befehl >&f%cmd%&e< (&f%type%&e)wurde für das Portal &f%portal% &egesetzt!",
+						"&eThe PostTeleport executing command >&f%cmd%&e< (&f%type%&e) has been set for the portal &f%portal%&e!"}));
 		languageKeys.put(path+"NoTriggerBlock",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&f%value% &cist kein Minecraft Material!",

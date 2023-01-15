@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 
 import main.java.me.avankziar.general.object.Portal;
 import main.java.me.avankziar.general.object.Portal.AccessType;
@@ -34,7 +35,8 @@ public interface Table02
 						+ "`(`portalname`, `owner_uuid`, `permission`, `accesstype`, `member`, `blacklist`,"
 						+ " `category`, `triggerblock`, `price`, `throwback`, `portalprotectionradius`,"
 						+ " `cooldown`,"
-						+ " `sound`, `targettype`, `targetinformation`, `postteleportmessage`, `accessdenialmessage`,"
+						+ " `sound`, `soundcategory`, `targettype`, `targetinformation`, `postteleportmessage`, `accessdenialmessage`,"
+						+ " `postteleportexecutingcommand`, `postteleportexecutercommand`, "
 						+ " `pos_one_server`, `pos_one_world`, `pos_one_x`, `pos_one_y`, `pos_one_z`,"
 						+ " `pos_two_server`, `pos_two_world`, `pos_two_x`, `pos_two_y`, `pos_two_z`,"
 						+ " `pos_ownexit_server`, `pos_ownexit_world`, `pos_ownexit_x`, `pos_ownexit_y`, `pos_ownexit_z`,"
@@ -43,7 +45,8 @@ public interface Table02
 						+ "?, ?, ?, ?, ?, ?, "
 						+ "?, ?, ?, ?, ?, "
 						+ "?, "
-						+ "?, ?, ?, ?, ?, "
+						+ "?, ?, ?, ?, ?, ?, "
+						+ "?, ?, "
 						+ "?, ?, ?, ?, ?,"
 						+ "?, ?, ?, ?, ?,"
 						+ "?, ?, ?, ?, ?, ?, ?)";
@@ -71,29 +74,33 @@ public interface Table02
 		        preparedStatement.setInt(11, w.getPortalProtectionRadius());
 		        preparedStatement.setLong(12, w.getCooldown());
 		        preparedStatement.setString(13, w.getPortalSound().toString());
+		        preparedStatement.setString(14, w.getPortalSoundCategory().toString());
 		        
-		        preparedStatement.setString(14, w.getTargetType().toString());
-		        preparedStatement.setString(15, w.getTargetInformation());
-		        preparedStatement.setString(16, w.getPostTeleportMessage());
-		        preparedStatement.setString(17, w.getAccessDenialMessage());
+		        preparedStatement.setString(15, w.getTargetType().toString());
+		        preparedStatement.setString(16, w.getTargetInformation());
+		        preparedStatement.setString(17, w.getPostTeleportMessage());
+		        preparedStatement.setString(18, w.getAccessDenialMessage());
 		        
-		        preparedStatement.setString(18, w.getPosition1().getServer());
-		        preparedStatement.setString(19, w.getPosition1().getWorldName());
-		        preparedStatement.setDouble(20, w.getPosition1().getX());
-		        preparedStatement.setDouble(21, w.getPosition1().getY());
-		        preparedStatement.setDouble(22, w.getPosition1().getZ());
-		        preparedStatement.setString(23, w.getPosition2().getServer());
-		        preparedStatement.setString(24, w.getPosition2().getWorldName());
-		        preparedStatement.setDouble(25, w.getPosition2().getX());
-		        preparedStatement.setDouble(26, w.getPosition2().getY());
-		        preparedStatement.setDouble(27, w.getPosition2().getZ());
-		        preparedStatement.setString(28, w.getOwnExitPosition().getServer());
-		        preparedStatement.setString(29, w.getOwnExitPosition().getWorldName());
-		        preparedStatement.setDouble(30, w.getOwnExitPosition().getX());
-		        preparedStatement.setDouble(31, w.getOwnExitPosition().getY());
-		        preparedStatement.setDouble(32, w.getOwnExitPosition().getZ());
-		        preparedStatement.setFloat(33, w.getOwnExitPosition().getYaw());
-		        preparedStatement.setFloat(34, w.getOwnExitPosition().getPitch());
+		        preparedStatement.setString(19, w.getPostTeleportExecutingCommand());
+		        preparedStatement.setString(20, w.getPostTeleportExecuterCommand().toString());
+		       
+		        preparedStatement.setString(21, w.getPosition1().getServer());
+		        preparedStatement.setString(22, w.getPosition1().getWorldName());
+		        preparedStatement.setDouble(23, w.getPosition1().getX());
+		        preparedStatement.setDouble(24, w.getPosition1().getY());
+		        preparedStatement.setDouble(25, w.getPosition1().getZ());
+		        preparedStatement.setString(26, w.getPosition2().getServer());
+		        preparedStatement.setString(27, w.getPosition2().getWorldName());
+		        preparedStatement.setDouble(28, w.getPosition2().getX());
+		        preparedStatement.setDouble(29, w.getPosition2().getY());
+		        preparedStatement.setDouble(30, w.getPosition2().getZ());
+		        preparedStatement.setString(31, w.getOwnExitPosition().getServer());
+		        preparedStatement.setString(32, w.getOwnExitPosition().getWorldName());
+		        preparedStatement.setDouble(33, w.getOwnExitPosition().getX());
+		        preparedStatement.setDouble(34, w.getOwnExitPosition().getY());
+		        preparedStatement.setDouble(35, w.getOwnExitPosition().getZ());
+		        preparedStatement.setFloat(36, w.getOwnExitPosition().getYaw());
+		        preparedStatement.setFloat(37, w.getOwnExitPosition().getPitch());
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
@@ -139,7 +146,9 @@ public interface Table02
 						+ "` SET `portalname` = ?, `owner_uuid` = ?, `permission` = ?, `accesstype` = ?, `member` = ?, `blacklist` = ?,"
 						+ " `category` = ?, `triggerblock` = ?, `price` = ?, `throwback` = ?, `portalprotectionradius` = ?,"
 						+ " `cooldown` = ?,"
-						+ " `sound` = ?, `targettype` = ?, `targetinformation` = ?, `postteleportmessage` = ?, `accessdenialmessage` = ?,"
+						+ " `sound` = ?, `soundcategory` = ?, `targettype` = ?, `targetinformation` = ?,"
+						+ " `postteleportmessage` = ?, `accessdenialmessage` = ?,"
+						+ " `postteleportexecutingcommand` = ?, `postteleportexecutercommand` = ?, "
 						+ " `pos_one_server` = ?, `pos_one_world` = ?, `pos_one_x` = ?, `pos_one_y` = ?, `pos_one_z` = ?,"
 						+ " `pos_two_server` = ?, `pos_two_world` = ?, `pos_two_x` = ?, `pos_two_y` = ?, `pos_two_z` = ?,"
 						+ " `pos_ownexit_server` = ?, `pos_ownexit_world` = ?, `pos_ownexit_x` = ?, `pos_ownexit_y` = ?, `pos_ownexit_z` = ?,"
@@ -175,31 +184,35 @@ public interface Table02
 		        preparedStatement.setInt(11, w.getPortalProtectionRadius());
 		        preparedStatement.setLong(12, w.getCooldown());
 		        preparedStatement.setString(13, w.getPortalSound().toString());
+		        preparedStatement.setString(14, w.getPortalSoundCategory().toString());
 		        
-		        preparedStatement.setString(14, w.getTargetType().toString());
-		        preparedStatement.setString(15, w.getTargetInformation());
-		        preparedStatement.setString(16, w.getPostTeleportMessage());
-		        preparedStatement.setString(17, w.getAccessDenialMessage());
+		        preparedStatement.setString(15, w.getTargetType().toString());
+		        preparedStatement.setString(16, w.getTargetInformation());
+		        preparedStatement.setString(17, w.getPostTeleportMessage());
+		        preparedStatement.setString(18, w.getAccessDenialMessage());
 		        
-		        preparedStatement.setString(18, w.getPosition1().getServer());
-		        preparedStatement.setString(19, w.getPosition1().getWorldName());
-		        preparedStatement.setDouble(20, w.getPosition1().getX());
-		        preparedStatement.setDouble(21, w.getPosition1().getY());
-		        preparedStatement.setDouble(22, w.getPosition1().getZ());
-		        preparedStatement.setString(23, w.getPosition2().getServer());
-		        preparedStatement.setString(24, w.getPosition2().getWorldName());
-		        preparedStatement.setDouble(25, w.getPosition2().getX());
-		        preparedStatement.setDouble(26, w.getPosition2().getY());
-		        preparedStatement.setDouble(27, w.getPosition2().getZ());
-		        preparedStatement.setString(28, w.getOwnExitPosition().getServer());
-		        preparedStatement.setString(29, w.getOwnExitPosition().getWorldName());
-		        preparedStatement.setDouble(30, w.getOwnExitPosition().getX());
-		        preparedStatement.setDouble(31, w.getOwnExitPosition().getY());
-		        preparedStatement.setDouble(32, w.getOwnExitPosition().getZ());
-		        preparedStatement.setFloat(33, w.getOwnExitPosition().getYaw());
-		        preparedStatement.setFloat(34, w.getOwnExitPosition().getPitch());
+		        preparedStatement.setString(19, w.getPostTeleportExecutingCommand());
+		        preparedStatement.setString(20, w.getPostTeleportExecuterCommand().toString());
+		       
+		        preparedStatement.setString(21, w.getPosition1().getServer());
+		        preparedStatement.setString(22, w.getPosition1().getWorldName());
+		        preparedStatement.setDouble(23, w.getPosition1().getX());
+		        preparedStatement.setDouble(24, w.getPosition1().getY());
+		        preparedStatement.setDouble(25, w.getPosition1().getZ());
+		        preparedStatement.setString(26, w.getPosition2().getServer());
+		        preparedStatement.setString(27, w.getPosition2().getWorldName());
+		        preparedStatement.setDouble(28, w.getPosition2().getX());
+		        preparedStatement.setDouble(29, w.getPosition2().getY());
+		        preparedStatement.setDouble(30, w.getPosition2().getZ());
+		        preparedStatement.setString(31, w.getOwnExitPosition().getServer());
+		        preparedStatement.setString(32, w.getOwnExitPosition().getWorldName());
+		        preparedStatement.setDouble(33, w.getOwnExitPosition().getX());
+		        preparedStatement.setDouble(34, w.getOwnExitPosition().getY());
+		        preparedStatement.setDouble(35, w.getOwnExitPosition().getZ());
+		        preparedStatement.setFloat(36, w.getOwnExitPosition().getYaw());
+		        preparedStatement.setFloat(37, w.getOwnExitPosition().getPitch());
 		        
-		        int i = 35;
+		        int i = 38;
 		        for(Object o : whereObject)
 		        {
 		        	preparedStatement.setObject(i, o);
@@ -272,10 +285,13 @@ public interface Table02
 		        			result.getInt("portalprotectionradius"),
 		        			result.getLong("cooldown"),
 		        			Sound.valueOf(result.getString("sound")),
+		        			SoundCategory.valueOf(result.getString("soundcategory")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
 		        			result.getString("postteleportmessage"),
 		        			result.getString("accessdenialmessage"),
+		        			result.getString("postteleportexecutingcommand"),
+		        			Portal.PostTeleportExecuterCommand.valueOf(result.getString("postteleportexecutercommand")),
 		        			new ServerLocation(
 		        					result.getString("pos_one_server"),
 		        					result.getString("pos_one_world"),
@@ -373,10 +389,13 @@ public interface Table02
 		        			result.getInt("portalprotectionradius"),
 		        			result.getLong("cooldown"),
 		        			Sound.valueOf(result.getString("sound")),
+		        			SoundCategory.valueOf(result.getString("soundcategory")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
 		        			result.getString("postteleportmessage"),
 		        			result.getString("accessdenialmessage"),
+		        			result.getString("postteleportexecutingcommand"),
+		        			Portal.PostTeleportExecuterCommand.valueOf(result.getString("postteleportexecutercommand")),
 		        			new ServerLocation(
 		        					result.getString("pos_one_server"),
 		        					result.getString("pos_one_world"),
@@ -471,10 +490,13 @@ public interface Table02
 		        			result.getInt("portalprotectionradius"),
 		        			result.getLong("cooldown"),
 		        			Sound.valueOf(result.getString("sound")),
+		        			SoundCategory.valueOf(result.getString("soundcategory")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
 		        			result.getString("postteleportmessage"),
 		        			result.getString("accessdenialmessage"),
+		        			result.getString("postteleportexecutingcommand"),
+		        			Portal.PostTeleportExecuterCommand.valueOf(result.getString("postteleportexecutercommand")),
 		        			new ServerLocation(
 		        					result.getString("pos_one_server"),
 		        					result.getString("pos_one_world"),
@@ -582,10 +604,13 @@ public interface Table02
 		        			result.getInt("portalprotectionradius"),
 		        			result.getLong("cooldown"),
 		        			Sound.valueOf(result.getString("sound")),
+		        			SoundCategory.valueOf(result.getString("soundcategory")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
 		        			result.getString("postteleportmessage"),
 		        			result.getString("accessdenialmessage"),
+		        			result.getString("postteleportexecutingcommand"),
+		        			Portal.PostTeleportExecuterCommand.valueOf(result.getString("postteleportexecutercommand")),
 		        			new ServerLocation(
 		        					result.getString("pos_one_server"),
 		        					result.getString("pos_one_world"),

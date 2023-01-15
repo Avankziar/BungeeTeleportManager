@@ -31,6 +31,7 @@ import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
+import main.java.me.avankziar.spigot.btm.listener.PlayerOnCooldownListener;
 import main.java.me.avankziar.spigot.btm.manager.portal.PortalHandler;
 import main.java.me.avankziar.spigot.btm.manager.portal.PortalHandler.PortalPosition;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
@@ -139,6 +140,11 @@ public class PortalListener implements Listener
 		if(event.isCancelled())
 		{
 			return;
+		}
+		if(PlayerOnCooldownListener.playerCooldownlist.containsKey(event.getPlayer())
+				&& PlayerOnCooldownListener.playerCooldownlist.get(event.getPlayer())+2000L >= System.currentTimeMillis())
+		{
+			event.setCancelled(true);
 		}
 		final Player player = event.getPlayer();
 		plugin.getPortalHandler().checkIfCanBeTriggered(player, player.getLocation(), player.getEyeLocation());

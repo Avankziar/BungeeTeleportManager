@@ -54,6 +54,7 @@ public class PortalCmdExecutor implements CommandExecutor
 				commandList.get(cmd.getName()).getPath().equals("portalsettarget") ||
 				commandList.get(cmd.getName()).getPath().equals("portalsetpostteleportmessage") ||
 				commandList.get(cmd.getName()).getPath().equals("portalsetaccessdenialmessage") ||
+				commandList.get(cmd.getName()).getPath().equals("portalsetpostteleportexecutingcommand") ||
 				commandList.get(cmd.getName()).getPath().equals("portalsettriggerblock") ||
 				commandList.get(cmd.getName()).getPath().equals("portalsetthrowback") ||
 				commandList.get(cmd.getName()).getPath().equals("portalsetprotectionradius") ||
@@ -72,7 +73,6 @@ public class PortalCmdExecutor implements CommandExecutor
 			Player player = (Player) sender;
 			if(!player.hasPermission(commandList.get(cmd.getName()).getPermission()))
 			{
-				///Du hast dafür keine Rechte!
 				player.spigot().sendMessage(ChatApi.tctl(
 						plugin.getYamlHandler().getLang().getString("NoPermission")));
 				return false;
@@ -138,6 +138,9 @@ public class PortalCmdExecutor implements CommandExecutor
 				return true;
 			case "portalsetaccessdenialmessage":
 				plugin.getPortalHelper().portalSetAccessDenialMessage(player, args);
+				return true;
+			case "portalsetpostteleportexecutingcommand":
+				plugin.getPortalHelper().portalSetPostTeleportExecutingCommand(player, args);
 				return true;
 			case "portalsettriggerblock":
 				plugin.getPortalHelper().portalSetTriggerBlock(player, args);

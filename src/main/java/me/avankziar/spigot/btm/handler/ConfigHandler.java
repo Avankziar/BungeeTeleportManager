@@ -105,4 +105,24 @@ public class ConfigHandler
 	{
 		return plugin.getYamlHandler().getConfig().getBoolean("CostPer.NotifyAfterWithdraw."+mechanics.getKey(), false);
 	}
+	
+	public String useConfigPredefinePortalTarget(String worldname)
+	{
+		String portalname = null;
+		for(String s : plugin.getYamlHandler().getConfig().getStringList("Use.Portal.ConfigPredefinePortalTargets"))
+		{
+			String[] ssp = s.split(";");
+			if(ssp.length != 2)
+			{
+				continue;
+			}
+			if(!ssp[0].equals(worldname))
+			{
+				continue;
+			}
+			portalname = ssp[1];
+			break;
+		}
+		return portalname;
+	}
 }

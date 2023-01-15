@@ -73,5 +73,4 @@ public class Teleport
 	{
 		this.type = type;
 	}
-
 }

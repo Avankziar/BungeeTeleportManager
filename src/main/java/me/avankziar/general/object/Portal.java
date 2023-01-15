@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 
 import main.java.me.avankziar.general.objecthandler.ServerLocationHandler;
 
@@ -11,6 +12,7 @@ public class Portal
 {
 	public enum TargetType
 	{
+		CONFIGPREDEFINE,
 		COMMAND, 
 		LOCATION,
 		BACK, DEATHBACK,
@@ -21,6 +23,11 @@ public class Portal
 	public enum AccessType
 	{
 		CLOSED, OPEN
+	}
+	
+	public enum PostTeleportExecuterCommand
+	{
+		PLAYER, CONSOLE;
 	}
 	
 	private int id;
@@ -37,6 +44,7 @@ public class Portal
 	private double throwback = 0.7;
 	private int portalProtectionRadius = 0;
 	private Sound portalSound = Sound.ENTITY_ENDERMAN_TELEPORT;
+	private SoundCategory portalSoundCategory = SoundCategory.AMBIENT;
 	
 	private long cooldown;
 	
@@ -44,6 +52,8 @@ public class Portal
 	private String targetInformation;
 	private String postTeleportMessage;
 	private String accessDenialMessage;
+	private PostTeleportExecuterCommand postTeleportExecuterCommand;
+	private String postTeleportExecutingCommand;
 	
 	private ServerLocation position1;
 	private ServerLocation position2;
@@ -52,8 +62,10 @@ public class Portal
 	public Portal(int id, String portalName, String permission, 
 			String ownerUUID, AccessType accessType, ArrayList<String> members, ArrayList<String> blacklist,
 			String category, Material triggerBlock,
-			double pricePerUse, double throwback, int portalProtectionRadius, long cooldown, Sound portalSound, 
+			double pricePerUse, double throwback, int portalProtectionRadius, long cooldown, Sound portalSound,
+			SoundCategory portalSoundCategory,
 			TargetType targetType, String targetInformation, String postTeleportMessage, String accessDenialMessage,
+			String postTeleportExecutingCommand, PostTeleportExecuterCommand postTeleportExecuterCommand,
 			ServerLocation position1, ServerLocation position2, ServerLocation ownExitPosition)
 	{
 		setId(id);
@@ -70,6 +82,7 @@ public class Portal
 		setThrowback(throwback);
 		setPortalProtectionRadius(portalProtectionRadius);
 		setPortalSound(portalSound);
+		setPortalSoundCategory(portalSoundCategory);
 		
 		setCooldown(cooldown);
 		
@@ -77,6 +90,7 @@ public class Portal
 		setTargetInformation(targetInformation);
 		setPostTeleportMessage(postTeleportMessage);
 		setAccessDenialMessage(accessDenialMessage);
+		setPostTeleportExecutingCommand(postTeleportExecutingCommand);
 		
 		setPosition1(position1);
 		setPosition2(position2);
@@ -249,6 +263,16 @@ public class Portal
 		this.portalSound = portalSound;
 	}
 
+	public SoundCategory getPortalSoundCategory()
+	{
+		return portalSoundCategory;
+	}
+
+	public void setPortalSoundCategory(SoundCategory portalSoundCategory)
+	{
+		this.portalSoundCategory = portalSoundCategory;
+	}
+
 	public long getCooldown()
 	{
 		return cooldown;
@@ -304,6 +328,26 @@ public class Portal
 		this.postTeleportMessage = postTeleportMessage;
 	}
 	
+	public String getPostTeleportExecutingCommand()
+	{
+		return postTeleportExecutingCommand;
+	}
+
+	public void setPostTeleportExecutingCommand(String postTeleportExecutingCommand)
+	{
+		this.postTeleportExecutingCommand = postTeleportExecutingCommand;
+	}
+
+	public PostTeleportExecuterCommand getPostTeleportExecuterCommand()
+	{
+		return postTeleportExecuterCommand;
+	}
+
+	public void setPostTeleportExecuterCommand(PostTeleportExecuterCommand postTeleportExecuterCommand)
+	{
+		this.postTeleportExecuterCommand = postTeleportExecuterCommand;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -315,11 +359,14 @@ public class Portal
 				this.pricePerUse+", "+
 				this.throwback+", "+
 				this.portalProtectionRadius+", "+
-				this.portalSound+", "+
+				this.portalSound.toString()+", "+
+				this.portalSoundCategory.toString()+", "+
 				this.targetType+", "+
 				this.targetInformation+", "+
 				this.postTeleportMessage+", "+
 				this.accessDenialMessage+", "+
+				this.postTeleportExecutingCommand+", "+
+				this.postTeleportExecuterCommand.toString()+", "+
 				ServerLocationHandler.serialised(this.position1)+", "+
 				ServerLocationHandler.serialised(this.position2)+", "+
 				ServerLocationHandler.serialised(this.ownExitPosition);

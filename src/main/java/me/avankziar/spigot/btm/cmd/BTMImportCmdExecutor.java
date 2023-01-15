@@ -1,19 +1,27 @@
 package main.java.me.avankziar.spigot.btm.cmd;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.Portal;
 import main.java.me.avankziar.general.object.Portal.AccessType;
+import main.java.me.avankziar.general.object.Portal.PostTeleportExecuterCommand;
 import main.java.me.avankziar.general.object.Portal.TargetType;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
@@ -91,9 +99,23 @@ public class BTMImportCmdExecutor implements CommandExecutor
 		}
 		switch(convert)
 		{
+		case HOME:
+			switch(plugins)
+			{
+			case CMI:
+				return cmiHomes(player);
+			case ADVANCEDPORTALS:
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.PluginDontSupportThatMechanic")));
+				inProcess = false;
+				return false;
+			}
 		case PORTAL:
 			switch(plugins)
 			{
+			case CMI:
+				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.PluginDontSupportThatMechanic")));
+				inProcess = false;
+				return false;
 			case ADVANCEDPORTALS:
 				return advancedPortal(player);
 			}
@@ -191,7 +213,9 @@ public class BTMImportCmdExecutor implements CommandExecutor
 			Portal portal = new Portal(0, s.name, null, null,
 					AccessType.CLOSED, null, null, "default", s.triggerblock,
 					0, 0.7, 0, Long.MAX_VALUE, Sound.ENTITY_ENDERMAN_TELEPORT,
-					tt, tinfo, null, null, s.pos1, s.pos2, s.pos2);
+					SoundCategory.AMBIENT,
+					tt, tinfo, null, null, null, PostTeleportExecuterCommand.PLAYER,
+					s.pos1, s.pos2, s.pos2);
 			plugin.getMysqlHandler().create(MysqlHandler.Type.PORTAL, portal);
 		}
 		int importp = por.size()-alreadyExistingPortals.size();
@@ -202,14 +226,99 @@ public class BTMImportCmdExecutor implements CommandExecutor
 		return true;
 	}
 	
+	public boolean cmiHomes(Player player)
+	{
+		final String server = new ConfigHandler(plugin).getServer();
+		int normalhomes = 0;
+		int errorhomes = 0;
+		ArrayList<Home> list = new ArrayList<>();
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+		Connection conn = plugin.getMysqlSetup().getConnection();
+		if (conn != null) 
+		{
+			try 
+			{			
+				String sql = "SELECT * FROM `Homes` WHERE 1";
+		        preparedStatement = conn.prepareStatement(sql);
+		        result = preparedStatement.executeQuery();
+		        while (result.next()) 
+		        {
+		        	UUID uuid = UUID.fromString(result.getString("player_uuid"));
+		        	String playername = result.getString("player_name");
+		        	String[] homes = result.getString("homes").split(";");
+		        	for(String home : homes)
+		        	{
+		        		String[] hw = home.split("%%");
+		        		if(hw.length != 2)
+		        		{
+		        			errorhomes++;
+		        			continue;
+		        		}
+		        		String homename = hw[0];
+		        		String[] h = hw[1].split(":");
+		        		if(h.length != 6)
+		        		{
+		        			errorhomes++;
+		        			continue;
+		        		}
+		        		ServerLocation sl = new ServerLocation(
+	        					server,
+	        					h[0],
+	        					Double.parseDouble(h[1]),
+	        					Double.parseDouble(h[2]),
+	        					Double.parseDouble(h[3]),
+	        					Float.parseFloat(h[4]),
+	        					Float.parseFloat(h[5]));
+		        		Home btmh = new Home(uuid, playername, homename, sl);
+		        		list.add(btmh);
+		        		normalhomes++;
+		        	}		        			
+		        }
+		    } catch (SQLException e) 
+			{
+				  BungeeTeleportManager.log.warning("Error: " + e.getMessage());
+				  e.printStackTrace();
+		    } finally 
+			{
+		    	  try 
+		    	  {
+		    		  if (result != null) 
+		    		  {
+		    			  result.close();
+		    		  }
+		    		  if (preparedStatement != null) 
+		    		  {
+		    			  preparedStatement.close();
+		    		  }
+		    	  } catch (Exception e) {
+		    		  e.printStackTrace();
+		    	  }
+		      }
+		}
+		for(Home h : list)
+		{
+			if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.HOME, "`player_uuid` = ? AND `home_name` = ?",
+					h.getUuid().toString(), h.getHomeName()))
+			{
+				plugin.getMysqlHandler().create(MysqlHandler.Type.HOME, h);
+			}
+		}
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.CIMHomeImportFinish")
+				.replace("%valueI%", String.valueOf(normalhomes))
+				.replace("%valueII%", String.valueOf(errorhomes))));
+		inProcess = false;
+		return true;
+	}
+	
 	public enum Convert
 	{
-		PORTAL
+		HOME, PORTAL
 	}
 	
 	public enum Plugins
 	{
-		ADVANCEDPORTALS
+		ADVANCEDPORTALS, CMI
 	}
 	
 	private class AdvancedPortals

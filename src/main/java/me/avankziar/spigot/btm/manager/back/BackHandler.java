@@ -64,7 +64,7 @@ public class BackHandler
 		Back oldback = (Back) plugin.getMysqlHandler().getData(MysqlHandler.Type.BACK,
 				"`player_uuid` = ?",  player.getUniqueId().toString());
 		return new Back(player.getUniqueId(), player.getName(), Utility.getLocation(player.getLocation()),
-				oldback.isToggle(), oldback.getHomePriority());
+				oldback != null ? oldback.isToggle() : false, oldback != null ? oldback.getHomePriority() : "");
 	}
 	
 	public Back getNewBack(Player player, ServerLocation override)
@@ -72,7 +72,7 @@ public class BackHandler
 		Back oldback = (Back) plugin.getMysqlHandler().getData(MysqlHandler.Type.BACK,
 				"`player_uuid` = ?",  player.getUniqueId().toString());
 		return new Back(player.getUniqueId(), player.getName(), (override != null ? override : Utility.getLocation(player.getLocation())),
-				oldback.isToggle(), oldback.getHomePriority());
+				oldback != null ? oldback.isToggle() : false, oldback != null ? oldback.getHomePriority() : "");
 	}
 	
 	public void sendBackObject(Player player, Back back, boolean mysqlUpdate)

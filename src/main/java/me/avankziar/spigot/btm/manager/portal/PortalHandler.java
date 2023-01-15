@@ -437,7 +437,19 @@ public class PortalHandler
 					{
 						player.setFireTicks(0);
 					}
-					player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
+					player.playSound(player.getLocation(), portal.getPortalSound(), portal.getPortalSoundCategory(), 3.0F, 0.5F);
+					if(portal.getPostTeleportExecutingCommand() != null)
+					{
+						switch(portal.getPostTeleportExecuterCommand())
+						{
+						case CONSOLE:
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+									portal.getPostTeleportExecutingCommand().replace("%player%", player.getName())); break;
+						case PLAYER:
+							Bukkit.dispatchCommand(player,
+									portal.getPostTeleportExecutingCommand().replace("%player%", player.getName())); break;
+						}
+					}
 				}
 			}.runTask(plugin);
 		} else
@@ -457,6 +469,8 @@ public class PortalHandler
 				out.writeFloat(destination.getPitch());
 				out.writeUTF(portal.getName());
 				out.writeBoolean((portal.getTriggerBlock() == Material.LAVA ? true : false));
+				out.writeUTF(portal.getPostTeleportExecuterCommand().toString());
+				out.writeUTF(portal.getPostTeleportExecutingCommand() == null ? "nil" : portal.getPostTeleportExecutingCommand());
 				new BackHandler(plugin).addingBack(player, portal.getOwnExitPosition(), out);
 			} catch (IOException e) {
 				e.printStackTrace();

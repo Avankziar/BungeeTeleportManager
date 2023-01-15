@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -16,6 +17,7 @@ import main.java.me.avankziar.general.object.Deathzone;
 import main.java.me.avankziar.general.object.FirstSpawn;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.Portal;
+import main.java.me.avankziar.general.object.Portal.PostTeleportExecuterCommand;
 import main.java.me.avankziar.general.object.Respawn;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
@@ -40,7 +42,9 @@ public class TabCompletionOne implements TabCompleter
 	private static ArrayList<String> respawn = new ArrayList<String>();
 	private static ArrayList<String> targettype = new ArrayList<String>();
 	private static ArrayList<String> sound = new ArrayList<String>();
+	private static ArrayList<String> soundcategory = new ArrayList<String>();
 	private static ArrayList<String> portalsearch = new ArrayList<>();
+	private static ArrayList<String> portalptec = new ArrayList<>();
 	//private static ArrayList<String> warpsearch = new ArrayList<>();
 	
 	
@@ -89,6 +93,11 @@ public class TabCompletionOne implements TabCompleter
 				sound.add(s.toString());
 			}
 			Collections.sort(sound);
+			for(SoundCategory s : new ArrayList<SoundCategory>(EnumSet.allOf(SoundCategory.class)))
+			{
+				soundcategory.add(s.toString());
+			}
+			Collections.sort(soundcategory);
 			portalsearch.add("server:");
 			portalsearch.add("world:");
 			portalsearch.add("owner:");
@@ -122,6 +131,11 @@ public class TabCompletionOne implements TabCompleter
 			material.add(Material.WHITE_STAINED_GLASS_PANE.toString());
 			material.add(Material.YELLOW_STAINED_GLASS_PANE.toString());
 			Collections.sort(material);
+			for(PostTeleportExecuterCommand s : new ArrayList<PostTeleportExecuterCommand>(EnumSet.allOf(PostTeleportExecuterCommand.class)))
+			{
+				portalptec.add(s.toString());
+			}
+			Collections.sort(portalptec);
 		}
 		renewRespawn();
 	}
@@ -583,6 +597,7 @@ public class TabCompletionOne implements TabCompleter
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETTRIGGERBLOCK).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETSOUND).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETACCESSDENIALMSG).trim())
+						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPOSTTELEPORTEXECUTINGCOMMAND).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETACCESSTYPE).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_ADDBLACKLIST).trim())
 						|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_UPDATE).trim())
@@ -670,6 +685,46 @@ public class TabCompletionOne implements TabCompleter
 			} else
 			{
 				return sound;
+			}
+		} else if (cfgh.enableCommands(Mechanics.PORTAL) && args.length == 3
+				&& command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETSOUND).trim())) 
+		{
+			if (!args[1].equals("")) 
+			{
+				for(String s : soundcategory)
+				{
+					if (s.startsWith(args[2])
+							|| s.toLowerCase().startsWith(args[2])
+							|| s.toUpperCase().startsWith(args[2])) 
+					{
+						list.add(s);
+					}
+				}
+				Collections.sort(list);
+				return list;
+			} else
+			{
+				return soundcategory;
+			}
+		} else if (cfgh.enableCommands(Mechanics.PORTAL) && args.length == 2
+				&& command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPOSTTELEPORTEXECUTINGCOMMAND).trim())) 
+		{
+			if (!args[1].equals("")) 
+			{
+				for(String s : portalptec)
+				{
+					if (s.startsWith(args[1])
+							|| s.toLowerCase().startsWith(args[1])
+							|| s.toUpperCase().startsWith(args[1])) 
+					{
+						list.add(s);
+					}
+				}
+				Collections.sort(list);
+				return list;
+			} else
+			{
+				return portalptec;
 			}
 		} else if (cfgh.enableCommands(Mechanics.PORTAL) && args.length == 2
 				&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETOWNER).trim())

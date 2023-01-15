@@ -12,6 +12,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.Portal;
+import main.java.me.avankziar.general.object.Portal.PostTeleportExecuterCommand;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
@@ -48,6 +49,8 @@ public class PortalMessageListener implements PluginMessageListener
                 	float pitch = in.readFloat();
                 	String portalname = in.readUTF();
                 	boolean lava = in.readBoolean();
+                	PostTeleportExecuterCommand pterc = PostTeleportExecuterCommand.valueOf(in.readUTF());
+                	String ptegc = in.readUTF();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
 						player.sendMessage(
@@ -90,6 +93,25 @@ public class PortalMessageListener implements PluginMessageListener
 													}
 													plugin.getUtility().givesEffect(player, Mechanics.PORTAL, false, false);
 													player.teleport(loc);
+													if(!ptegc.equalsIgnoreCase("nil"))
+													{
+														new BukkitRunnable()
+														{
+															@Override
+															public void run()
+															{
+																switch(pterc)
+																{
+																case CONSOLE:
+																	Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
+																			ptegc.replace("%player%", player.getName())); break;
+																case PLAYER:
+																	Bukkit.dispatchCommand(player,
+																			ptegc.replace("%player%", player.getName())); break;
+																}
+															}
+														}.runTaskLater(plugin, 5L);
+													}
 												} catch(NullPointerException e)
 												{
 													player.sendMessage(ChatApi.tl("Error! See Console!"));
@@ -98,7 +120,7 @@ public class PortalMessageListener implements PluginMessageListener
 										}.runTask(plugin);
 										Portal portal = (Portal) plugin.getMysqlHandler().getData(
 												MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);
-										player.playSound(player.getLocation(), portal.getPortalSound(), 3.0F, 0.5F);
+										player.playSound(player.getLocation(), portal.getPortalSound(), portal.getPortalSoundCategory(), 3.0F, 0.5F);
 										plugin.getPortalHandler().sendPostMessage(portal, player);
 										cancel();
 										return;
