@@ -144,7 +144,7 @@ public class PortalListener implements Listener
 		if(PlayerOnCooldownListener.playerCooldownlist.containsKey(event.getPlayer())
 				&& PlayerOnCooldownListener.playerCooldownlist.get(event.getPlayer())+2000L >= System.currentTimeMillis())
 		{
-			event.setCancelled(true);
+			return;
 		}
 		final Player player = event.getPlayer();
 		plugin.getPortalHandler().checkIfCanBeTriggered(player, player.getLocation(), player.getEyeLocation());
