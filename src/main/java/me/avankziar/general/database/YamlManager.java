@@ -2360,10 +2360,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eZugangsverweigerungs-Nachricht: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change",
 						"&eAccessDenialMessage: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change"}));
-		languageKeys.put(path+"InfopostTeleportExecutingCommand", 
+		languageKeys.put(path+"InfoPostTeleportExecutingCommand", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&ePost Tp Auszuführender Befehl: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&ePost Tp Executing Cmd: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&ePost Tp Auszuführender Befehl: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PLAYER/CONSOLE>+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePost Tp Executing Cmd: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PLAYER/CONSOLE>+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"NotOwner",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu bist nicht der Eigentümer des Potral!",
@@ -3144,8 +3144,8 @@ public class YamlManager
 						"&eCategory: &r%category% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<category>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfopostTeleportExecutingCommand", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&ePost Tp Auszuführender Befehl: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&ePost Tp Executing Cmd: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&ePost Tp Auszuführender Befehl: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<PLAYER/CONSOLE>+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePost Tp Executing Cmd: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<PLAYER/CONSOLE>+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"SetName",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDer Warp &f%warpold% &awurde in &f%warpnew% &aumbenannt!",

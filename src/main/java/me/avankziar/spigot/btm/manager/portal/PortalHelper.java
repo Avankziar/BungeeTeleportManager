@@ -1328,7 +1328,7 @@ public class PortalHelper
 				.replace("%value%", portal.getAccessDenialMessage() != null ? portal.getAccessDenialMessage() : "N.A.")
 				.replace("%portal%", portal.getName())));
 		player.spigot().sendMessage(ChatApi.generateTextComponent(
-				plugin.getYamlHandler().getLang().getString("CmdPortal.InfopostTeleportExecutingCommand")
+				plugin.getYamlHandler().getLang().getString("CmdPortal.InfoPostTeleportExecutingCommand")
 				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPOSTTELEPORTEXECUTINGCOMMAND).trim())
 				.replace("%value%", portal.getPostTeleportExecutingCommand() != null ?
 						portal.getPostTeleportExecuterCommand().toString()+" | "+portal.getPostTeleportExecutingCommand() : "N.A.")
