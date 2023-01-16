@@ -9,6 +9,7 @@ import java.util.Arrays;
 
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.object.Warp;
+import main.java.me.avankziar.general.object.Warp.PostTeleportExecuterCommand;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 
@@ -28,8 +29,9 @@ public interface Table05
 			{
 				String sql = "INSERT INTO `" + MysqlHandler.Type.WARP.getValue() 
 						+ "`(`warpname`, `server`, `world`, `x`, `y`, `z`, `yaw`, `pitch`,"
-						+ " `hidden`, `owner`, `permission`, `password`, `member`, `blacklist`, `price`, `category`, `portalaccess`) " 
-						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+						+ " `hidden`, `owner`, `permission`, `password`, `member`, `blacklist`, `price`, `category`, `portalaccess`,"
+						+ " `postteleportexecutingcommand`, `postteleportexecutercommand`) " 
+						+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				String m = null;
 				if(w.getMember() != null)
 				{
@@ -58,6 +60,8 @@ public interface Table05
 		        preparedStatement.setDouble(15, w.getPrice());
 		        preparedStatement.setString(16, w.getCategory());
 		        preparedStatement.setString(17, w.getPortalAccess().toString());
+		        preparedStatement.setString(18, w.getPostTeleportExecutingCommand());
+		        preparedStatement.setString(19, w.getPostTeleportExecuterCommand().toString());
 		        
 		        preparedStatement.executeUpdate();
 		        return true;
@@ -103,7 +107,8 @@ public interface Table05
 						+ "` SET `warpname` = ?, `server` = ?, `world` = ?,"
 						+ " `x` = ?, `y` = ?, `z` = ?, `yaw` = ?, `pitch` = ?,"
 						+ " `hidden` = ?, `owner` = ?, `permission` = ?, `password` = ?, `member` = ?,"
-						+ " `blacklist` = ?, `price` = ?, `category` = ?, `portalaccess` = ?" 
+						+ " `blacklist` = ?, `price` = ?, `category` = ?, `portalaccess` = ?,"
+						+ " `postteleportexecutingcommand` = ?, `postteleportexecutercommand` = ?" 
 						+ " WHERE "+whereColumn;
 				String m = null;
 				if(w.getMember() != null)
@@ -139,8 +144,10 @@ public interface Table05
 		        preparedStatement.setDouble(15, w.getPrice());
 		        preparedStatement.setString(16, w.getCategory());
 		        preparedStatement.setString(17, w.getPortalAccess().toString());
+		        preparedStatement.setString(18, w.getPostTeleportExecutingCommand());
+		        preparedStatement.setString(19, w.getPostTeleportExecuterCommand().toString());
 		        
-		        int i = 18;
+		        int i = 20;
 		        for(Object o : whereObject)
 		        {
 		        	preparedStatement.setObject(i, o);
@@ -214,7 +221,9 @@ public interface Table05
 		        			b,
 		        			result.getDouble("price"),
 		        			result.getString("category"),
-		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")));
+		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")),
+		        			PostTeleportExecuterCommand.valueOf(result.getString("postteleportexecutercommand")),
+		        			result.getString("postteleportexecutingcommand"));
 		        }
 		    } catch (SQLException e) 
 			{
@@ -290,7 +299,9 @@ public interface Table05
 		        			b,
 		        			result.getDouble("price"),
 		        			result.getString("category"),
-		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")));
+		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")),
+		        			PostTeleportExecuterCommand.valueOf(result.getString("postteleportexecutercommand")),
+		        			result.getString("postteleportexecutingcommand"));
 		        	list.add(w);
 		        }
 		        return list;
@@ -363,7 +374,9 @@ public interface Table05
 		        			b,
 		        			result.getDouble("price"),
 		        			result.getString("category"),
-		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")));
+		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")),
+		        			PostTeleportExecuterCommand.valueOf(result.getString("postteleportexecutercommand")),
+		        			result.getString("postteleportexecutingcommand"));
 		        	list.add(w);
 		        }
 		        return list;
@@ -449,7 +462,9 @@ public interface Table05
 		        			b,
 		        			result.getDouble("price"),
 		        			result.getString("category"),
-		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")));
+		        			Warp.PortalAccess.valueOf(result.getString("portalaccess")),
+		        			PostTeleportExecuterCommand.valueOf(result.getString("postteleportexecutercommand")),
+		        			result.getString("postteleportexecutingcommand"));
 		        	list.add(w);
 		        }
 		        return list;

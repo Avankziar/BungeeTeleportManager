@@ -923,6 +923,7 @@ public class TabCompletionOne implements TabCompleter
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_SETPORTALACCESS).trim())
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_SETPOSITION).trim())
 				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_SETPRICE).trim())
+				|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_SETPOSTTELEPORTEXECUTINGCOMMAND).trim())
 				))
 		{
 			if (!args[0].equals("")) 
@@ -1004,6 +1005,26 @@ public class TabCompletionOne implements TabCompleter
 			}
 			Collections.sort(list);
 			return list;
+		}  else if (cfgh.enableCommands(Mechanics.WARP) && args.length == 2
+				&& command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.WARP_SETPOSTTELEPORTEXECUTINGCOMMAND).trim())) 
+		{
+			if (!args[1].equals("")) 
+			{
+				for(String s : portalptec)
+				{
+					if (s.startsWith(args[1])
+							|| s.toLowerCase().startsWith(args[1])
+							|| s.toUpperCase().startsWith(args[1])) 
+					{
+						list.add(s);
+					}
+				}
+				Collections.sort(list);
+				return list;
+			} else
+			{
+				return portalptec;
+			}
 		} else if (cfgh.enableCommands(Mechanics.TPA_ONLY) 
 			&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPA).trim()) 
 			|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAHERE).trim())

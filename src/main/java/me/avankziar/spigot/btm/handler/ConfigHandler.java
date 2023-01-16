@@ -16,6 +16,11 @@ public class ConfigHandler
 	
 	public String getServer()
 	{
+		if(plugin.getYamlHandler().getConfig().getBoolean("useIFHAdministration")
+				&& plugin.getAdministration() != null)
+		{
+			return plugin.getAdministration().getSpigotServerName();
+		}
 		return plugin.getYamlHandler().getConfig().getString("ServerName");
 	}
 	

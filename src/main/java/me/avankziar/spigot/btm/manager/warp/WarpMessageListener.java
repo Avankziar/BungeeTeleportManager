@@ -14,6 +14,7 @@ import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.general.object.Mechanics;
+import main.java.me.avankziar.general.object.Warp.PostTeleportExecuterCommand;
 
 public class WarpMessageListener implements PluginMessageListener
 {
@@ -45,6 +46,8 @@ public class WarpMessageListener implements PluginMessageListener
                 	double z = in.readDouble();
                 	float yaw = in.readFloat();
                 	float pitch = in.readFloat();
+                	PostTeleportExecuterCommand pterc = PostTeleportExecuterCommand.valueOf(in.readUTF());
+                	String ptegc = in.readUTF();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
 						player.sendMessage(
@@ -85,13 +88,27 @@ public class WarpMessageListener implements PluginMessageListener
 												{
 													plugin.getUtility().givesEffect(player, Mechanics.WARP, false, false);
 													player.teleport(loc);
+													if(!ptegc.equalsIgnoreCase("nil"))
+													{
+														String s = ptegc.replace("%player%", player.getName());
+														if(s.startsWith("/"))
+														{
+															s = s.substring(1);
+														}
+														switch(pterc)
+														{
+														case CONSOLE:
+															Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s); break;
+														case PLAYER:
+															Bukkit.dispatchCommand(player, s); break;
+														}
+													}
 												} catch(NullPointerException e)
 												{
 													player.sendMessage(ChatApi.tl("Error! See Console!"));
 												}
 											}
 										}.runTask(plugin);
-										
 										player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpTo")
 												.replace("%warp%", warpName)));
 										cancel();

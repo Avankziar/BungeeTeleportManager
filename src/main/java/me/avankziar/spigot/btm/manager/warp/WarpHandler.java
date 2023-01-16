@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -60,6 +61,21 @@ public class WarpHandler
 					player.teleport(ConvertHandler.getLocation(warp.getLocation()));
 					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpTo")
 							.replace("%warp%", warp.getName())));
+					if(warp.getPostTeleportExecutingCommand() != null)
+					{
+						String s = warp.getPostTeleportExecutingCommand().replace("%player%", player.getName());
+						if(s.startsWith("/"))
+						{
+							s = s.substring(1);
+						}
+						switch(warp.getPostTeleportExecuterCommand())
+						{
+						case CONSOLE:
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s); break;
+						case PLAYER:
+							Bukkit.dispatchCommand(player, s); break;
+						}
+					}
 				}
 			}.runTaskLater(plugin, delay);
 		} else
@@ -99,6 +115,8 @@ public class WarpHandler
 			{
 				out.writeInt(25);
 			}
+			out.writeUTF(warp.getPostTeleportExecuterCommand().toString());
+			out.writeUTF(warp.getPostTeleportExecutingCommand() == null ? "nil" : warp.getPostTeleportExecutingCommand());
 			new BackHandler(plugin).addingBack(player, out);
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -1008,9 +1008,16 @@ public class BungeeTeleportManager extends JavaPlugin
 			getCommand(warpsetportalaccess.getName()).setTabCompleter(tabOne);
 			BTMSettings.settings.addCommands(KeyHandler.WARP_SETPORTALACCESS, warpsetportalaccess.getCommandString());
 			
+			CommandConstructor warpsetpostteleportexecutingcommand = new CommandConstructor("warpsetpostteleportexecutingcommand", false);
+			registerCommand(warpsetpostteleportexecutingcommand.getName());
+			getCommand(warpsetpostteleportexecutingcommand.getName()).setExecutor(new WarpCmdExecutor(plugin, warpsetpostteleportexecutingcommand));
+			getCommand(warpsetpostteleportexecutingcommand.getName()).setTabCompleter(tabOne);
+			BTMSettings.settings.addCommands(KeyHandler.WARP_SETPOSTTELEPORTEXECUTINGCOMMAND, warpsetpostteleportexecutingcommand.getCommandString());
+			
 			addingHelps(warp, warps, warpcreate, warpremove, warplist, warpinfo, warpsetname, warpsetowner, warpsetposition,
 					warpsetpassword, warpsetprice, warphidden, warpaddmember, warpremovemember, warpaddblacklist, warpremoveblacklist,
-					warpsetcategory, warpsdeleteserverworld, warpsearch, warpsetportalaccess);
+					warpsetcategory, warpsdeleteserverworld, warpsearch, warpsetportalaccess,
+					warpsetpostteleportexecutingcommand);
 		}
 		
 		/*

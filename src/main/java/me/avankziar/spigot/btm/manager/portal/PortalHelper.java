@@ -764,7 +764,7 @@ public class PortalHelper
 				SoundCategory.AMBIENT,
 				new ConfigHandler(plugin).useConfigPredefinePortalTarget(popos.pos1.getWorldName()) == null 
 				? TargetType.BACK : TargetType.CONFIGPREDEFINE, 
-				null, null, null, null,  PostTeleportExecuterCommand.PLAYER,
+				null, null, null, null, PostTeleportExecuterCommand.PLAYER,
 				pos1, pos2, ownExitPoint);
 		if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.PORTAL.getLower())
 				&& plugin.getEco() != null)
@@ -1330,8 +1330,8 @@ public class PortalHelper
 		player.spigot().sendMessage(ChatApi.generateTextComponent(
 				plugin.getYamlHandler().getLang().getString("CmdPortal.InfopostTeleportExecutingCommand")
 				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.PORTAL_SETPOSTTELEPORTEXECUTINGCOMMAND).trim())
-				.replace("%value%", portal.getAccessDenialMessage() != null ?
-						portal.getPostTeleportExecuterCommand().toString()+" | "+portal.getAccessDenialMessage() : "N.A.")
+				.replace("%value%", portal.getPostTeleportExecutingCommand() != null ?
+						portal.getPostTeleportExecuterCommand().toString()+" | "+portal.getPostTeleportExecutingCommand() : "N.A.")
 				.replace("%portal%", portal.getName())));
 		player.spigot().sendMessage(ChatApi.generateTextComponent(
 				plugin.getYamlHandler().getLang().getString("CmdPortal.InfoCooldown")
@@ -2339,7 +2339,7 @@ public class PortalHelper
 				msg += " ";
 			}
 		}
-		if(msg.isEmpty())
+		if(msg.startsWith("null"))
 		{
 			msg = null;
 		}
@@ -2394,7 +2394,7 @@ public class PortalHelper
 				msg += " ";
 			}
 		}
-		if(msg.isEmpty())
+		if(msg.startsWith("null"))
 		{
 			msg = null;
 		}
@@ -2412,7 +2412,6 @@ public class PortalHelper
 	{
 		if(args.length < 3)
 		{
-			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
@@ -2454,7 +2453,7 @@ public class PortalHelper
 				msg += " ";
 			}
 		}
-		if(msg.isEmpty())
+		if(msg.startsWith("null"))
 		{
 			msg = null;
 		}
@@ -2463,7 +2462,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("SetPostTeleportExecutingCommand")
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPostTeleportExecutingCommand")
 				.replace("%portal%", portal.getName())
 				.replace("%type%", ptec.toString())
 				.replace("%cmd%", msg == null ? "N.A." : msg)));

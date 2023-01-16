@@ -442,14 +442,17 @@ public class PortalHandler
 					player.playSound(player.getLocation(), portal.getPortalSound(), portal.getPortalSoundCategory(), 3.0F, 0.5F);
 					if(portal.getPostTeleportExecutingCommand() != null)
 					{
+						String s = portal.getPostTeleportExecutingCommand().replace("%player%", player.getName());
+						if(s.startsWith("/"))
+						{
+							s = s.substring(1);
+						}
 						switch(portal.getPostTeleportExecuterCommand())
 						{
 						case CONSOLE:
-							Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-									portal.getPostTeleportExecutingCommand().replace("%player%", player.getName())); break;
+							Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s); break;
 						case PLAYER:
-							Bukkit.dispatchCommand(player,
-									portal.getPostTeleportExecutingCommand().replace("%player%", player.getName())); break;
+							Bukkit.dispatchCommand(player, s); break;
 						}
 					}
 				}

@@ -20,17 +20,18 @@ public class WarpHandler
 		this.plugin = plugin;
 	}
 	
-	public void teleportPlayerToWarp(String playerName, String warpName, ServerLocation location, int delayed)
+	public void teleportPlayerToWarp(String playerName, String warpName, ServerLocation location, int delayed,
+			String pterc, String ptegc)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(playerName);
 		if(player == null)
 		{
 			return;
 		}
-		teleportPlayer(player, delayed, warpName, location); //Back wurde schon gemacht
+		teleportPlayer(player, delayed, warpName, location, pterc, ptegc); //Back wurde schon gemacht
 	}
 	
-	public void teleportPlayer(ProxiedPlayer player, int delay, String warpName, ServerLocation location)
+	public void teleportPlayer(ProxiedPlayer player, int delay, String warpName, ServerLocation location, String pterc, String ptegc)
 	{
 		if(player == null || location == null)
 		{
@@ -78,6 +79,8 @@ public class WarpHandler
 					out.writeDouble(location.getZ());
 					out.writeFloat(location.getYaw());
 					out.writeFloat(location.getPitch());
+					out.writeUTF(pterc);
+					out.writeUTF(ptegc);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

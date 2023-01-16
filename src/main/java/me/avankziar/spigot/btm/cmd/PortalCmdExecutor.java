@@ -166,7 +166,6 @@ public class PortalCmdExecutor implements CommandExecutor
 			case "portalitem":
 				plugin.getPortalHelper().portalItem(player, args);
 				return true;
-				
 			}
 			return false;
 		} else if(commandList.containsKey(cmd.getName())

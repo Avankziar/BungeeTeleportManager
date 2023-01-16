@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.Warp;
+import main.java.me.avankziar.general.object.Warp.PostTeleportExecuterCommand;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.ifh.general.economy.account.AccountCategory;
@@ -540,7 +541,8 @@ public class WarpHelper
 		}		
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		Warp warp = new Warp(warpName, Utility.getLocation(player.getLocation()),
-				false, player.getUniqueId().toString(), null, null, null, null, 0.0, "default", Warp.PortalAccess.IRRELEVANT);
+				false, player.getUniqueId().toString(), null, null, null, null, 0.0, "default", Warp.PortalAccess.IRRELEVANT,
+				PostTeleportExecuterCommand.PLAYER, null);
 		if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.WARP.getLower())
 				&& plugin.getEco() != null)
 		{
@@ -1088,6 +1090,12 @@ public class WarpHelper
 					.replace("%cmdII%", BTMSettings.settings.getCommands(KeyHandler.WARP_REMOVEBLACKLIST).trim())
 					.replace("%blacklist%", String.join(", ", blacklist))
 					.replace("%warp%", warp.getName())));
+			player.spigot().sendMessage(ChatApi.generateTextComponent(
+					plugin.getYamlHandler().getLang().getString("CmdWarp.InfopostTeleportExecutingCommand")
+					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPOSTTELEPORTEXECUTINGCOMMAND).trim())
+					.replace("%value%", warp.getPostTeleportExecutingCommand() != null ?
+							warp.getPostTeleportExecuterCommand().toString()+" | "+warp.getPostTeleportExecutingCommand() : "N.A.")
+					.replace("%portal%", warp.getName())));
 		}
 		if(!owner)
 		{
@@ -2014,6 +2022,66 @@ public class WarpHelper
 			break;
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
+		return;
+	}
+	
+	public void warpSetPostTeleportExecutingCommand(Player player, String[] args)
+	{
+		if(args.length < 3)
+		{
+			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
+			player.spigot().sendMessage(ChatApi.clickEvent(
+					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+			return;
+		}
+		String warpName = args[0];
+		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+			return;
+		}
+		Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
+		if(warp == null)
+		{
+			return;
+		}
+		boolean owner = false;
+		if(warp.getOwner() != null)
+		{
+			owner = warp.getOwner().equals(player.getUniqueId().toString());
+		}
+		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
+				&& !owner)
+		{
+			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
+			return;
+		}
+		PostTeleportExecuterCommand ptec = PostTeleportExecuterCommand.PLAYER;
+		try
+		{
+			ptec = PostTeleportExecuterCommand.valueOf(args[1]);
+		} catch(Exception e) {}
+		String msg = "";
+		for(int i = 2; i < args.length; i++)
+		{
+			msg += args[i];
+			if(i+1 < args.length)
+			{
+				msg += " ";
+			}
+		}
+		if(msg.startsWith("null"))
+		{
+			msg = null;
+		}
+		warp.setPostTeleportExecuterCommand(ptec);
+		warp.setPostTeleportExecutingCommand(msg);
+		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
+		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPostTeleportExecutingCommand")
+				.replace("%warp%", warp.getName())
+				.replace("%type%", ptec.toString())
+				.replace("%cmd%", msg == null ? "N.A." : msg)));
 		return;
 	}
 }

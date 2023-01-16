@@ -91,6 +91,7 @@ public class Portal
 		setPostTeleportMessage(postTeleportMessage);
 		setAccessDenialMessage(accessDenialMessage);
 		setPostTeleportExecutingCommand(postTeleportExecutingCommand);
+		setPostTeleportExecuterCommand(postTeleportExecuterCommand);
 		
 		setPosition1(position1);
 		setPosition2(position2);

@@ -1289,6 +1289,10 @@ public class YamlManager
 				"/warpsetportalaccess <warpname> <value>", "/warpsetportalaccess ",
 				"&c/warpsetportalaccess <Warpname> <Wert> &f| Gibt den Zugang eines Portals zu diesem Warp an. Möglich sind: ONLY, IRRELEVANT, FORBIDDEN",
 				"&c/warpsetportalaccess <warpname> <value> &f| Specifies the access of a portal to this warp. Possible are: ONLY, IRRELEVANT, FORBIDDEN");
+		commandsInput("warpsetpostteleportexecutingcommand", "warpsetpostteleportexecutingcommand", "btm.cmd.user.warp.setpostteleportexecutingcommand",
+				"/warpsetpostteleportexecutingcommand <warpname> <PLAYER/CONSOLE> <cmd...>", "/warpsetpostteleportexecutingcommand ",
+				"&c/warpsetpostteleportexecutingcommand <Warpname> <PLAYER/CONSOLE> <Befehl...> &f| Setzt den Befehl und von wem er ausgeführt werden soll, welche nach dem Teleport ausgeführt wird.",
+				"&c/warpsetpostteleportexecutingcommand <warpname> <PLAYER/CONSOLE> <cmd...> &f| Sets the command and by whom it should be executed, which will be executed after the teleport.");
 	}
 	
 	private void commandsInput(String path, String name, String basePermission, 
@@ -2346,20 +2350,20 @@ public class YamlManager
 						"&eSound: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Sound>+<SoundCategory>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoPostTeleportMsg", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&ePost-Teleport-Nachricht:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportMsg>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&ePostTeleportMessage:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportMsg>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&ePost-Teleport-Nachricht: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportMsg>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePostTeleportMessage: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportMsg>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoCooldown", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDefault Cooldown: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<Zeitkürzel:Wert>~hover@SHOW_TEXT@Hover.Message.Change",
 						"&eDefault Cooldown: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<timeShortcut:value>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfoAccessDenialMsg", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eZugangsverweigerungs-Nachricht:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&eAccessDenialMessage:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&eZugangsverweigerungs-Nachricht: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&eAccessDenialMessage: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<AccessDenialMsg>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"InfopostTeleportExecutingCommand", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&ePost Tp Auszuführender Befehl:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change",
-						"&ePost Tp Executing Cmd:&r %value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change"}));
+						"&ePost Tp Auszuführender Befehl: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePost Tp Executing Cmd: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%portal%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"NotOwner",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu bist nicht der Eigentümer des Potral!",
@@ -2522,7 +2526,7 @@ public class YamlManager
 						"&eThe accessdenial message >&f%msg%&e< has been set for the portal &f%portal%&e!"}));
 		languageKeys.put(path+"SetPostTeleportExecutingCommand",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
-						"&eDer PostTeleport auszuführende Befehl >&f%cmd%&e< (&f%type%&e)wurde für das Portal &f%portal% &egesetzt!",
+						"&eDer PostTeleport auszuführende Befehl >&f%cmd%&e< (&f%type%&e) wurde für das Portal &f%portal% &egesetzt!",
 						"&eThe PostTeleport executing command >&f%cmd%&e< (&f%type%&e) has been set for the portal &f%portal%&e!"}));
 		languageKeys.put(path+"NoTriggerBlock",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -3138,6 +3142,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eKategorie: &r%category% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<Kategorie>~hover@SHOW_TEXT@Hover.Message.Change",
 						"&eCategory: &r%category% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<category>~hover@SHOW_TEXT@Hover.Message.Change"}));
+		languageKeys.put(path+"InfopostTeleportExecutingCommand", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&ePost Tp Auszuführender Befehl: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change",
+						"&ePost Tp Executing Cmd: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change"}));
 		languageKeys.put(path+"SetName",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&aDer Warp &f%warpold% &awurde in &f%warpnew% &aumbenannt!",
@@ -3282,6 +3290,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Warp &f%warp% &ekann nur noch von Portalen angesteuert werden!",
 						"&eThe warp &f%warp% &ecan only be accessed by portals!"}));
+		languageKeys.put(path+"SetPostTeleportExecutingCommand",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer PostTeleport auszuführende Befehl >&f%cmd%&e< (&f%type%&e) wurde für den Warp &f%warp% &egesetzt!",
+						"&eThe PostTeleport executing command >&f%cmd%&e< (&f%type%&e) has been set for the warp &f%warp%&e!"}));
 	}
 	
 	public void initCustomLanguage() //INFO:CustomLanguages

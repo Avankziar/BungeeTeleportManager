@@ -308,7 +308,9 @@ public class MysqlSetup
 		+ " blacklist longtext,"
 		+ " price double DEFAULT '0.00',"
 		+ " category text,"
-		+ " portalaccess text);";
+		+ " portalaccess text,"
+		+ " postteleportexecutingcommand text,"
+		+ " postteleportexecutercommand text);";
 		return baseSetup(data);
 	}
 	

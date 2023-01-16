@@ -34,10 +34,12 @@ Future =========================================================================
 - xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
 
 Build 6-5-0
-- MYSQL Änderungen:
+- MYSQL Änderungen (In phpMyAdmin oder ähnlichem Ausführen):
     ALTER TABLE `btmportals` ADD `soundcategory` TEXT NOT NULL AFTER `sound`;
-    ALTER TABLE `btmportals` ADD `postteleportexecutingcommand` TEXT NOT NULL AFTER `accessdenialmessage`, ADD `postteleportexecutercommand` TEXT NOT NULL AFTER `postteleportexecutingcommand`;
-    UPDATE `btmportals` SET `soundcategory`='AMBIENT',`postteleportexecutingcommand`=NULL,`postteleportexecutercommand`='PLAYER' WHERE 1
+    ALTER TABLE `btmportals` ADD `postteleportexecutingcommand` TEXT NULL DEFAULT NULL AFTER `accessdenialmessage`, ADD `postteleportexecutercommand` TEXT NOT NULL AFTER `postteleportexecutingcommand`;
+    UPDATE `btmportals` SET `soundcategory`='AMBIENT',`postteleportexecutercommand`='PLAYER' WHERE 1
+    ALTER TABLE `btmwarps` ADD `postteleportexecutingcommand` TEXT NULL DEFAULT NULL AFTER `portalaccess`, ADD `postteleportexecutercommand` TEXT NOT NULL AFTER `postteleportexecutingcommand`; 
+    UPDATE `btmwarps` SET `postteleportexecutercommand`='PLAYER' WHERE 1
 - Es sind ist die Language Datei zu überarbeiten bzw. neu erstellen zu lassen.
 - CMI Homes Import hinzugefügt (Nicht getestet, habe dazu keine Daten)
 - Durch die Portale und /server <Server>, wird man automatisch in das Portal zurückgesetzt und teleportiert, was aber nicht gewollt ist.
@@ -53,12 +55,15 @@ Build 6-5-0
   Dies geht nur bei TargetType FIRSTSPAWN, RESPAWN, HOME, LOCATION, CONFIGPREDEFINE, PORTAL, SAVEPOIN & WARP.
   Nicht Möglich bei BACK, DEATHBACK, COMMAND & RANDOMTELEPORT.
   Kann mit dem Befehl /portalsetpostteleportexecutingcommand gesetzt werden.
-  Muss in der Mysql nachgefügt werden mit:
 - /portalsetpostteleportexecutingcommand <portal> <Player/Console> <Cmd...> hinzugefügt.
-  Führt nach der Ankunft der Zielkoordinaten den angegeben Befehl als Spieler oder als Console aus. Der PlaceHolder %player% setzten den Spielernamen ein.
+  Führt nach der Ankunft an den Zielkoordinaten den angegeben Befehl als Spieler oder als Console aus. Der PlaceHolder %player% setzten den Spielernamen ein.
 - /portalsetpostteleportmessage & /portalsetaccessDenialMessage & /portalsetpostteleportexecutingcommand werden, wenn die Nachricht oder der
   Befehl leer ist, wird dies aus "null" gesetzt und somit deaktiviert.
 - Bugfix zu den CountPerms bei Warps & Portals
+- Warps können nach dem Teleport, einen Befehl ausführen.
+  Kann mit dem Befehl /warpsetpostteleportexecutingcommand gesetzt werden.
+- /warpsetpostteleportexecutingcommand <warp> <Player/Console> <Cmd...> hinzugefügt.
+  Führt nach der Ankunft an den Zielkoordinaten den angegeben Befehl als Spieler oder als Console aus. Der PlaceHolder %player% setzten den Spielernamen ein.
 
 Build 6-4-1
 - PlayerDeathEvent NPE fix

@@ -95,22 +95,18 @@ public class PortalMessageListener implements PluginMessageListener
 													player.teleport(loc);
 													if(!ptegc.equalsIgnoreCase("nil"))
 													{
-														new BukkitRunnable()
+														String s = ptegc.replace("%player%", player.getName());
+														if(s.startsWith("/"))
 														{
-															@Override
-															public void run()
-															{
-																switch(pterc)
-																{
-																case CONSOLE:
-																	Bukkit.dispatchCommand(Bukkit.getConsoleSender(),
-																			ptegc.replace("%player%", player.getName())); break;
-																case PLAYER:
-																	Bukkit.dispatchCommand(player,
-																			ptegc.replace("%player%", player.getName())); break;
-																}
-															}
-														}.runTaskLater(plugin, 5L);
+															s = s.substring(1);
+														}
+														switch(pterc)
+														{
+														case CONSOLE:
+															Bukkit.dispatchCommand(Bukkit.getConsoleSender(), s); break;
+														case PLAYER:
+															Bukkit.dispatchCommand(player, s); break;
+														}
 													}
 												} catch(NullPointerException e)
 												{

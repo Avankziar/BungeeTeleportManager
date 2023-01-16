@@ -9,6 +9,11 @@ public class Warp
 		ONLY, IRRELEVANT, FORBIDDEN;
 	}
 	
+	public enum PostTeleportExecuterCommand
+	{
+		PLAYER, CONSOLE;
+	}
+	
 	private String name;
 	private ServerLocation location;
 	private boolean hidden;
@@ -20,10 +25,14 @@ public class Warp
 	private ArrayList<String> blacklist;
 	private String category;
 	private PortalAccess portalAccess;
+	private PostTeleportExecuterCommand postTeleportExecuterCommand;
+	private String postTeleportExecutingCommand;
 	
 	public Warp(String name, ServerLocation location, boolean hidden,
 			String owner, String permission, String password,
-			ArrayList<String> member, ArrayList<String> blacklist, double price, String category, PortalAccess portalAccess)
+			ArrayList<String> member, ArrayList<String> blacklist, double price, String category, PortalAccess portalAccess,
+			PostTeleportExecuterCommand postTeleportExecuterCommand,
+			String postTeleportExecutingCommand)
 	{
 		setName(name);
 		setLocation(location);
@@ -36,6 +45,8 @@ public class Warp
 		setPrice(price);
 		setCategory(category);
 		setPortalAccess(portalAccess);
+		setPostTeleportExecuterCommand(postTeleportExecuterCommand);
+		setPostTeleportExecutingCommand(postTeleportExecutingCommand);
 	}
 
 	public String getName()
@@ -146,5 +157,25 @@ public class Warp
 	public void setPortalAccess(PortalAccess portalAccess)
 	{
 		this.portalAccess = portalAccess;
+	}
+
+	public PostTeleportExecuterCommand getPostTeleportExecuterCommand()
+	{
+		return postTeleportExecuterCommand;
+	}
+
+	public void setPostTeleportExecuterCommand(PostTeleportExecuterCommand postTeleportExecuterCommand)
+	{
+		this.postTeleportExecuterCommand = postTeleportExecuterCommand;
+	}
+
+	public String getPostTeleportExecutingCommand()
+	{
+		return postTeleportExecutingCommand;
+	}
+
+	public void setPostTeleportExecutingCommand(String postTeleportExecutingCommand)
+	{
+		this.postTeleportExecutingCommand = postTeleportExecutingCommand;
 	}
 }
