@@ -34,6 +34,7 @@ Future =========================================================================
 - xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
 
 Build 6-5-0
+- Mc 1.19.3 support
 - MYSQL Änderungen (In phpMyAdmin oder ähnlichem Ausführen):
     ALTER TABLE `btmportals` ADD `soundcategory` TEXT NOT NULL AFTER `sound`;
     ALTER TABLE `btmportals` ADD `postteleportexecutingcommand` TEXT NULL DEFAULT NULL AFTER `accessdenialmessage`, ADD `postteleportexecutercommand` TEXT NOT NULL AFTER `postteleportexecutingcommand`;
