@@ -33,6 +33,13 @@ Future =========================================================================
 - PlaceHolder Api, Home amount, Tpatoggle, etc.
 - xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
 
+Build 6-5-2
+- /warppostteleportexecutingcommand replacer fix, language Datei neugenerieren lassen!
+- TabCompletion NPE fix 
+
+Build 6-5-1
+- PlayerMoveEvent fix
+
 Build 6-5-0
 - Mc 1.19.3 support
 - MYSQL Änderungen (In phpMyAdmin oder ähnlichem Ausführen):

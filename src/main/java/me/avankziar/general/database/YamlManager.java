@@ -3142,7 +3142,7 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eKategorie: &r%category% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<Kategorie>~hover@SHOW_TEXT@Hover.Message.Change",
 						"&eCategory: &r%category% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<category>~hover@SHOW_TEXT@Hover.Message.Change"}));
-		languageKeys.put(path+"InfopostTeleportExecutingCommand", 
+		languageKeys.put(path+"InfoPostTeleportExecutingCommand", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&ePost Tp Auszuführender Befehl: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<PLAYER/CONSOLE>+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change",
 						"&ePost Tp Executing Cmd: &r%value% | &2✐~click@SUGGEST_COMMAND@%cmd%+%warp%+<PLAYER/CONSOLE>+<PostTeleportExecutingCommand>~hover@SHOW_TEXT@Hover.Message.Change"}));

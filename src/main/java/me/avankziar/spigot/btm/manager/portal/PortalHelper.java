@@ -2237,7 +2237,7 @@ public class PortalHelper
 				return;
 			}
 			portal.setTargetType(target);
-			tinfos = "/";
+			tinfos = "";
 			for(int i = 2; i < args.length; i++)
 			{
 				tinfos += args[i];

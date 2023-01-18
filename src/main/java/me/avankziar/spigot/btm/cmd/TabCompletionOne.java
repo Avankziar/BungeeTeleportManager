@@ -1028,8 +1028,6 @@ public class TabCompletionOne implements TabCompleter
 		} else if (cfgh.enableCommands(Mechanics.TPA_ONLY) 
 			&& (command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPA).trim()) 
 			|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAHERE).trim())
-			|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TP).trim()) 
-			|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPHERE).trim())
 			|| command.equalsIgnoreCase(BTMSettings.settings.getCommands(KeyHandler.TPAIGNORE).trim())))
 		{
 			if(args.length == 1)

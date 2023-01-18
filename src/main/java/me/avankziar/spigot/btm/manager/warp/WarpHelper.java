@@ -1091,11 +1091,11 @@ public class WarpHelper
 					.replace("%blacklist%", String.join(", ", blacklist))
 					.replace("%warp%", warp.getName())));
 			player.spigot().sendMessage(ChatApi.generateTextComponent(
-					plugin.getYamlHandler().getLang().getString("CmdWarp.InfopostTeleportExecutingCommand")
+					plugin.getYamlHandler().getLang().getString("CmdWarp.InfoPostTeleportExecutingCommand")
 					.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.WARP_SETPOSTTELEPORTEXECUTINGCOMMAND).trim())
 					.replace("%value%", warp.getPostTeleportExecutingCommand() != null ?
 							warp.getPostTeleportExecuterCommand().toString()+" | "+warp.getPostTeleportExecutingCommand() : "N.A.")
-					.replace("%portal%", warp.getName())));
+					.replace("%warp%", warp.getName())));
 		}
 		if(!owner)
 		{
