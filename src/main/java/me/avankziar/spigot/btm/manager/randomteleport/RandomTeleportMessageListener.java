@@ -71,7 +71,7 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
 						{
 							if(loc == null)
 	            			{
-								player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.SecurityBreach")));
+								player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.SecurityBreach")));
 								return;
 	            			}
 							if(plugin.getServer().getPlayer(playerName) != null)
@@ -83,8 +83,7 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
 										Player player = plugin.getServer().getPlayer(playerName);
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+											player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -102,7 +101,7 @@ public class RandomTeleportMessageListener  implements PluginMessageListener
 											}
 										}.runTask(plugin);
 										
-										player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.WarpTo")
+										player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.WarpTo")
 												.replace("%server%", cfgh.getServer())
 												.replace("%world%", rt.getPoint1().getWorldName())));
 										cancel();

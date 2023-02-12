@@ -73,7 +73,7 @@ public class PortalHelper
 				if(cd > System.currentTimeMillis())
 				{
 					plugin.getPortalHandler().throwback(portal, player);
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.OnCooldown")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.OnCooldown")
 							.replace("%time%", plugin.getPortalHandler().getTime(cd))));
 					return;
 				}
@@ -81,13 +81,13 @@ public class PortalHelper
 				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.PORTAL, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.PORTAL.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.ForbiddenServerUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ForbiddenServerUse")));
 					return;
 				}
 				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.PORTAL, player, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.PORTAL.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.ForbiddenWorldUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ForbiddenWorldUse")));
 					return;
 				}
 				if(portal.getBlacklist() != null)
@@ -98,12 +98,12 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						if(portal.getAccessDenialMessage() != null)
 						{
-							player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+							player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 									.replace("%portalname%", portal.getName())
 									.replace("%player%", player.getName())));
 							return;
 						}
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.YouAreOnTheBlacklist")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.YouAreOnTheBlacklist")
 								.replace("%portalname%", portal.getName())));
 						return;
 					}
@@ -116,12 +116,12 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						/*if(portal.getAccessDenialMessage() != null)
 						{
-							player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+							player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 									.replace("%portalname%", portal.getName())
 									.replace("%player%", player.getName())));
 							return;
 						}*/
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalToUse")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalToUse")
 								.replace("%amount%", String.valueOf(i))));
 						return;
 					}
@@ -140,7 +140,7 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							if(portal.getAccessDenialMessage() != null)
 							{
-								player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+								player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 										.replace("%portalname%", portal.getName())
 										.replace("%player%", player.getName())));
 								return;
@@ -156,12 +156,12 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						if(portal.getAccessDenialMessage() != null)
 						{
-							player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+							player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 									.replace("%portalname%", portal.getName())
 									.replace("%player%", player.getName())));
 							return;
 						}
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalIsClosed")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalIsClosed")
 								.replace("%portalname%", portal.getName())));
 						return;
 					}
@@ -174,7 +174,7 @@ public class PortalHelper
 								plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
 						if(main == null || main.getBalance() < portal.getPricePerUse())
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 							return;
 						}
 						Account to = null;
@@ -198,12 +198,12 @@ public class PortalHelper
 						}
 						if(!ea.isSuccess())
 						{
-							player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+							player.spigot().sendMessage(ChatApi.tctl(ea.getDefaultErrorMessage()));
 							return;
 						}
 					}
 				}
-				//player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.RequestInProgress"))); Muss dat sein?
+				//player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.RequestInProgress"))); Muss dat sein?
 				switch(portal.getTargetType())
 				{
 				case BACK:
@@ -249,7 +249,7 @@ public class PortalHelper
 					{
 						if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", portal.getTargetInformation()))
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnNotExist")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnNotExist")));
 							return;
 						}
 						FirstSpawn fs = (FirstSpawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", portal.getTargetInformation());
@@ -261,7 +261,7 @@ public class PortalHelper
 					{
 						if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.RESPAWN, "`displayname` = ?", portal.getTargetInformation()))
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RespawnNotExist")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RespawnNotExist")));
 							return;
 						}
 						Respawn r = (Respawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.RESPAWN, "`displayname` = ?", portal.getTargetInformation());
@@ -281,12 +281,12 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							if(portal.getAccessDenialMessage() != null)
 							{
-								player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+								player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 										.replace("%portalname%", portal.getName())
 										.replace("%player%", player.getName())));
 								return;
 							}
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeNotExist")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeNotExist")));
 							return;
 						}
 						home = (Home) plugin.getMysqlHandler().getData(MysqlHandler.Type.HOME,
@@ -301,12 +301,12 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							if(portal.getAccessDenialMessage() != null)
 							{
-								player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+								player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 										.replace("%portalname%", portal.getName())
 										.replace("%player%", player.getName())));
 								return;
 							}
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.NoHomePriority")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.NoHomePriority")));
 							return;
 						}
 						homeName = back.getHomePriority();
@@ -316,12 +316,12 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							if(portal.getAccessDenialMessage() != null)
 							{
-								player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+								player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 										.replace("%portalname%", portal.getName())
 										.replace("%player%", player.getName())));
 								return;
 							}
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeNotExist")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeNotExist")));
 							return;
 						}
 						home = (Home) plugin.getMysqlHandler().getData(MysqlHandler.Type.HOME,
@@ -371,12 +371,12 @@ public class PortalHelper
 								plugin.getPortalHandler().throwback(portal, player);
 								if(desti.getAccessDenialMessage() != null)
 								{
-									player.sendMessage(ChatApi.tl(desti.getAccessDenialMessage()
+									player.spigot().sendMessage(ChatApi.tctl(desti.getAccessDenialMessage()
 											.replace("%portalname%", desti.getName())
 											.replace("%player%", player.getName())));
 									return;
 								}
-								player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.YouAreOnTheBlacklist")
+								player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.YouAreOnTheBlacklist")
 										.replace("%portalname%", desti.getName())));
 								return;
 							}
@@ -388,7 +388,7 @@ public class PortalHelper
 								plugin.getPortalHandler().throwback(portal, player);
 								if(portal.getAccessDenialMessage() != null)
 								{
-									player.sendMessage(ChatApi.tl(desti.getAccessDenialMessage()
+									player.spigot().sendMessage(ChatApi.tctl(desti.getAccessDenialMessage()
 											.replace("%portalname%", desti.getName())
 											.replace("%player%", player.getName())));
 									return;
@@ -402,14 +402,14 @@ public class PortalHelper
 								&& !desti.getMember().contains(player.getUniqueId().toString()))
 						{
 							plugin.getPortalHandler().throwback(portal, player);
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalIsClosed")
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalIsClosed")
 									.replace("%portalname%", portal.getName())));
 							return;
 						}
 					}
 					if(desti.getOwnExitPosition() == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalOwnExitIsNull")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalOwnExitIsNull")
 								.replace("%portalname%", portal.getName())));
 						return;
 					}
@@ -440,12 +440,12 @@ public class PortalHelper
 									plugin.getPortalHandler().throwback(portal, player);
 									if(dest.getAccessDenialMessage() != null)
 									{
-										player.sendMessage(ChatApi.tl(dest.getAccessDenialMessage()
+										player.spigot().sendMessage(ChatApi.tctl(dest.getAccessDenialMessage()
 												.replace("%portalname%", dest.getName())
 												.replace("%player%", player.getName())));
 										return;
 									}
-									player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.YouAreOnTheBlacklist")
+									player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.YouAreOnTheBlacklist")
 											.replace("%portalname%", dest.getName())));
 									return;
 								}
@@ -457,7 +457,7 @@ public class PortalHelper
 									plugin.getPortalHandler().throwback(portal, player);
 									if(portal.getAccessDenialMessage() != null)
 									{
-										player.sendMessage(ChatApi.tl(dest.getAccessDenialMessage()
+										player.spigot().sendMessage(ChatApi.tctl(dest.getAccessDenialMessage()
 												.replace("%portalname%", dest.getName())
 												.replace("%player%", player.getName())));
 										return;
@@ -471,14 +471,14 @@ public class PortalHelper
 									&& !dest.getMember().contains(player.getUniqueId().toString()))
 							{
 								plugin.getPortalHandler().throwback(portal, player);
-								player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalIsClosed")
+								player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalIsClosed")
 										.replace("%portalname%", portal.getName())));
 								return;
 							}
 						}
 						if(dest.getOwnExitPosition() == null)
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalOwnExitIsNull")
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalOwnExitIsNull")
 									.replace("%portalname%", portal.getName())));
 							return;
 						}
@@ -504,7 +504,7 @@ public class PortalHelper
 						rtpname = portal.getTargetInformation();
 						if(plugin.getYamlHandler().getRTP().get(rtpname+".UseSimpleTarget") == null)
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.RtpNotExist")
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.RtpNotExist")
 									.replace("%rtp%", rtpname)));
 							return;
 						}
@@ -514,12 +514,12 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						if(portal.getAccessDenialMessage() != null)
 						{
-							player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+							player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 									.replace("%portalname%", portal.getName())
 									.replace("%player%", player.getName())));
 							return;
 						}
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 		 				return;
 					}
 					if(plugin.getYamlHandler().getRTP().getBoolean(rtpname+".UseSimpleTarget", true))
@@ -530,7 +530,7 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							if(portal.getAccessDenialMessage() != null)
 							{
-								player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+								player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 										.replace("%portalname%", portal.getName())
 										.replace("%player%", player.getName())));
 								return;
@@ -545,7 +545,7 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							if(portal.getAccessDenialMessage() != null)
 							{
-								player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+								player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 										.replace("%portalname%", portal.getName())
 										.replace("%player%", player.getName())));
 								return;
@@ -568,7 +568,7 @@ public class PortalHelper
 						if(sp == null)
 						{
 							plugin.getPortalHandler().throwback(portal, player);
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDontExist")
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDontExist")
 									.replace("%savepoint%", portal.getTargetInformation())));
 							return;
 						}
@@ -580,7 +580,7 @@ public class PortalHelper
 						if(sp == null)
 						{
 							plugin.getPortalHandler().throwback(portal, player);
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.LastSavePointDontExist")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.LastSavePointDontExist")));
 							return;
 						}						
 					}
@@ -594,14 +594,14 @@ public class PortalHelper
 				case WARP:
 					if(portal.getTargetInformation() == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
 					String warpName = portal.getTargetInformation();
 					if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
@@ -617,12 +617,12 @@ public class PortalHelper
 								plugin.getPortalHandler().throwback(portal, player);
 								if(portal.getAccessDenialMessage() != null)
 								{
-									player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+									player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 											.replace("%portalname%", portal.getName())
 											.replace("%player%", player.getName())));
 									return;
 								}
-								player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouAreOnTheBlacklist")
+								player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouAreOnTheBlacklist")
 										.replace("%warpname%", warp.getName())));
 								return;
 							}
@@ -634,7 +634,7 @@ public class PortalHelper
 								plugin.getPortalHandler().throwback(portal, player);
 								if(portal.getAccessDenialMessage() != null)
 								{
-									player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+									player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 											.replace("%portalname%", portal.getName())
 											.replace("%player%", player.getName())));
 									return;
@@ -649,12 +649,12 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							if(portal.getAccessDenialMessage() != null)
 							{
-								player.sendMessage(ChatApi.tl(portal.getAccessDenialMessage()
+								player.spigot().sendMessage(ChatApi.tctl(portal.getAccessDenialMessage()
 										.replace("%portalname%", portal.getName())
 										.replace("%player%", player.getName())));
 								return;
 							}
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
 							return;
 						}
 					}
@@ -668,7 +668,7 @@ public class PortalHelper
 					return;
 				}
 				plugin.getPortalHandler().throwback(portal, player);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.HasNoDestination")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.HasNoDestination")
 						.replace("%portalname%", portal.getName())));
 				return;
 			}
@@ -699,13 +699,13 @@ public class PortalHelper
 		if(ForbiddenHandlerSpigot.isForbiddenToCreateServer(plugin, Mechanics.PORTAL)
 				&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_CREATE+Mechanics.PORTAL.getLower()))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.ForbiddenServer")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ForbiddenServer")));
 			return;
 		}
 		if(ForbiddenHandlerSpigot.isForbiddenToCreateWorld(plugin, Mechanics.PORTAL, player)
 				&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_CREATE+Mechanics.PORTAL.getLower()))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.ForbiddenWorld")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ForbiddenWorld")));
 			return;
 		}
 		ConfigHandler cfgh = new ConfigHandler(plugin);
@@ -718,29 +718,29 @@ public class PortalHelper
 		PortalPosition popos = plugin.getPortalHandler().getPortalPosition(player.getUniqueId());
 		if(popos == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotPositionOneSet")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotPositionOneSet")));
 			return;
 		}
 		if(popos.pos1 == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotPositionOneSet")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotPositionOneSet")));
 			return;
 		}
 		if(popos.pos2 == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotPositionTwoSet")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotPositionTwoSet")));
 			return;
 		}
 		if(plugin.getPortalHandler().inPortalArea(player.getLocation(), 0)
 				|| plugin.getPortalHandler().inPortalArea(popos.getLocation1(), 0)
 				|| plugin.getPortalHandler().inPortalArea(popos.getLocation2(), 0))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.YouOrThePositionAreInAOtherPortal")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.YouOrThePositionAreInAOtherPortal")));
 			return;
 		}
 		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNameAlreadyExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNameAlreadyExist")));
 			return;
 		}
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_PORTAL_TOOMANY))
@@ -774,7 +774,7 @@ public class PortalHelper
 					plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
 			if(main == null || main.getBalance() < portalCreateCost)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 				return;
 			}
 			String category = plugin.getYamlHandler().getLang().getString("Economy.PCategory");
@@ -784,7 +784,7 @@ public class PortalHelper
 					OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
 			if(!ea.isSuccess())
 			{
-				player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+				player.spigot().sendMessage(ChatApi.tctl(ea.getDefaultErrorMessage()));
 				return;
 			}
 		}
@@ -818,7 +818,7 @@ public class PortalHelper
 		}
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalName);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalDelete")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalDelete")
 				.replace("%name%", portalName)));
 		return;
 	}
@@ -842,14 +842,14 @@ public class PortalHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0])));
 				return;
 			}
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 						.replace("%arg%", args[0])));
 				return;
 			}
@@ -862,7 +862,7 @@ public class PortalHelper
 			UUID uuid = Utility.convertNameToUUID(args[1]);
 			if(uuid == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			playeruuid = uuid.toString();
@@ -892,11 +892,11 @@ public class PortalHelper
 		{
 			if(other)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PlayerHaveNoPortals")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PlayerHaveNoPortals")
 						.replace("%value%", playername)));
 				return;
 			}
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.YouHaveNoPortals")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.YouHaveNoPortals")));
 			return;
 		}
 		String server = new ConfigHandler(plugin).getServer();
@@ -908,14 +908,14 @@ public class PortalHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalsHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalsHeadline")
 				.replace("%amount%", String.valueOf(last))));
 		if(category != null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHelpII")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHelpII")
 					.replace("%category%", category)));
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHelp")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdPortal.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdPortal.ListSameWorld");
@@ -1011,14 +1011,14 @@ public class PortalHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0])));
 				return;
 			}
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 						.replace("%arg%", args[0])));
 				return;
 			}
@@ -1050,14 +1050,14 @@ public class PortalHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHeadline")
 				.replace("%amount%", String.valueOf(last))));
 		if(category != null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHelpII")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHelpII")
 					.replace("%category%", category)));
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHelp")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdPortal.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdPortal.ListSameWorld");
@@ -1155,7 +1155,7 @@ public class PortalHelper
 		String portalname = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
 			return;
 		}
 		Portal portal = (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);
@@ -1355,7 +1355,7 @@ public class PortalHelper
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL,
 				"`server` = ? AND `world` = ?", serverName, worldName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalsNotExist")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalsNotExist")
 					.replace("%world%", worldName)
 					.replace("%server%", serverName)));
 			return;
@@ -1364,7 +1364,7 @@ public class PortalHelper
 				"`server` = ? AND `world` = ?", serverName, worldName);
 		plugin.getMysqlHandler().deleteData(
 				MysqlHandler.Type.PORTAL, "`server` = ? AND `world` = ?", serverName, worldName);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalServerWorldDelete")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalServerWorldDelete")
 				.replace("%world%", worldName)
 				.replace("%server%", serverName)
 				.replace("%amount%", String.valueOf(count))));
@@ -1389,13 +1389,13 @@ public class PortalHelper
 		int page = 0;
 		if(!MatchApi.isInteger(args[0]))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 					.replace("%arg%", args[0])));
 			return;
 		}
 		if(!MatchApi.isPositivNumber(page))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 					.replace("%arg%", args[0])));
 			return;
 		}
@@ -1453,7 +1453,7 @@ public class PortalHelper
 					UUID uuid = Utility.convertNameToUUID(arg[1]);
 					if(uuid == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 						return;
 					}
 					whereObjects.add(uuid.toString());
@@ -1471,7 +1471,7 @@ public class PortalHelper
 				s += plugin.getYamlHandler().getLang().getString("CmdPortal.SearchValueInfo.Member").replace("%category%", "&e"+arg[1]+"&f");
 				break;
 			default:
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SearchOptionValues")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SearchOptionValues")));
 				return;
 			}
 			i++;
@@ -1495,10 +1495,10 @@ public class PortalHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHeadline")
 				.replace("%amount%", String.valueOf(list.size()))));
-		player.sendMessage(ChatApi.tl(s));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHelp")));
+		player.spigot().sendMessage(ChatApi.tctl(s));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdPortal.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdPortal.ListSameWorld");
@@ -1589,7 +1589,7 @@ public class PortalHelper
 		portal.setName(warpNewName);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetName")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetName")
 				.replace("%portalold%", args[0])
 				.replace("%portalnew%", args[1])));
 		plugin.getPortalHandler().updatePortalOverBungee(mysqlID, "UPDATE");
@@ -1613,7 +1613,7 @@ public class PortalHelper
 			UUID uuid = Utility.convertNameToUUID(newowner);
 			if(uuid == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			newowneruuid = uuid.toString();
@@ -1624,11 +1624,11 @@ public class PortalHelper
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		if(newowneruuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetOwnerNull")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetOwnerNull")
 					.replace("%portal%", portal.getName())));
 		} else
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetOwner")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetOwner")
 					.replace("%portal%", portal.getName())
 					.replace("%player%", newowner)));
 		}
@@ -1660,11 +1660,11 @@ public class PortalHelper
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		if(perm == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPermissionNull")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPermissionNull")
 					.replace("%portal%", portal.getName())));
 		} else
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPermission")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPermission")
 					.replace("%portal%", portal.getName())
 					.replace("%perm%", perm)));
 		}
@@ -1680,27 +1680,27 @@ public class PortalHelper
 		}
 		if(plugin.getEco() == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.EcoIsNull")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("Economy.EcoIsNull")));
 			return;
 		}
 		double price = 0.0;
 		if(!MatchApi.isDouble(args[1]))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoDouble")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoDouble")
 					.replace("%arg%", args[1])));
 			return;
 		}
 		price = Double.parseDouble(args[1]);
 		if(!MatchApi.isPositivNumber(price))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 					.replace("%arg%", args[1])));
 			return;
 		}
 		double maximum = plugin.getYamlHandler().getConfig().getDouble("CostPer.Use.PortalServerAllowedMaximum", 10000.0);
 		if(price > maximum)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ToHigh")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("ToHigh")
 					.replace("%format%", plugin.getEco().format(maximum, plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))));
 			return;
 		}
@@ -1708,7 +1708,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPrice")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPrice")
 				.replace("%portal%", portal.getName())
 				.replace("%format%", plugin.getEco().format(price, plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))));
 		return;
@@ -1724,7 +1724,7 @@ public class PortalHelper
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String newmember = uuid.toString();
@@ -1740,7 +1740,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.AddMember")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.AddMember")
 				.replace("%portal%", portal.getName())
 				.replace("%member%", args[1])));
 		plugin.getTeleportHandler().sendMessage(player, player.getName(), args[1],
@@ -1759,7 +1759,7 @@ public class PortalHelper
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String newmember = uuid.toString();
@@ -1775,7 +1775,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.AddMember")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.AddMember")
 				.replace("%portal%", portal.getName())
 				.replace("%member%", args[1])));
 		if(Bukkit.getOnlinePlayers().size() > 0)
@@ -1804,13 +1804,13 @@ public class PortalHelper
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String oldmember = uuid.toString();
 		if(oldmember == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		portal.getMember().remove(oldmember);
@@ -1821,7 +1821,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.RemoveMember")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.RemoveMember")
 				.replace("%portal%", portal.getName())
 				.replace("%member%", args[1])));
 		plugin.getTeleportHandler().sendMessage(player, player.getName(), args[1],
@@ -1840,7 +1840,7 @@ public class PortalHelper
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String oldmember = uuid.toString();
@@ -1852,7 +1852,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.RemoveMember")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.RemoveMember")
 				.replace("%portal%", portal.getName())
 				.replace("%member%", args[1])));
 	}
@@ -1867,7 +1867,7 @@ public class PortalHelper
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String newmember = uuid.toString();
@@ -1883,7 +1883,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.AddBlacklist")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.AddBlacklist")
 				.replace("%portal%", portal.getName())
 				.replace("%blacklist%", args[1])));
 		plugin.getTeleportHandler().sendMessage(player, player.getName(), args[1],
@@ -1902,7 +1902,7 @@ public class PortalHelper
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String oldmember = uuid.toString();
@@ -1914,7 +1914,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.RemoveBlacklist")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.RemoveBlacklist")
 				.replace("%portal%", portal.getName())
 				.replace("%blacklist%", args[1])));
 		plugin.getTeleportHandler().sendMessage(player, player.getName(), args[1],
@@ -1935,7 +1935,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetCategory")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetCategory")
 				.replace("%portal%", args[0])
 				.replace("%category%", args[1])));
 		return;
@@ -1957,7 +1957,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPosition")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPosition")
 				.replace("%portal%", portal.getName())));
 		return;
 	}
@@ -1972,12 +1972,12 @@ public class PortalHelper
 		PortalPosition popos = plugin.getPortalHandler().getPortalPosition(player.getUniqueId());
 		if(popos == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoPositionSetted")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoPositionSetted")));
 			return;
 		}
 		if(popos.pos1 == null || popos.pos2 == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.OnlyOnePositionSetted")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.OnlyOnePositionSetted")));
 			return;
 		}
 		ServerLocation pos1 = new ServerLocation(popos.pos1.getServer(), popos.pos1.getWorldName(),
@@ -1993,7 +1993,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPositions")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPositions")
 				.replace("%portal%", portal.getName())));
 		return;
 	}
@@ -2011,7 +2011,7 @@ public class PortalHelper
 		String portalname = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
 			return;
 		}
 		Portal portal = (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);
@@ -2027,7 +2027,7 @@ public class PortalHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_PORTAL)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
 			return;
 		}
 		long cd = 0;
@@ -2081,7 +2081,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetCooldown")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetCooldown")
 				.replace("%portal%", portal.getName())
 				.replace("%time%", TimeHandler.getRepeatingTime(cd))));
 	}
@@ -2099,7 +2099,7 @@ public class PortalHelper
 		String portalname = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
 			return;
 		}
 		Portal portal = (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);
@@ -2115,7 +2115,7 @@ public class PortalHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_PORTAL)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
 			return;
 		}
 		TargetType target = TargetType.BACK;
@@ -2124,7 +2124,7 @@ public class PortalHelper
 			target = TargetType.valueOf(args[1]);
 		} catch(Exception e)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.WrongTargetType")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.WrongTargetType")
 					.replace("%target%", args[1])));
 			return;
 		}
@@ -2136,7 +2136,7 @@ public class PortalHelper
 		case CONFIGPREDEFINE:
 			if(args.length != 2)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.NoArgs")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.NoArgs")
 						.replace("%type%", target.toString())));
 				return;
 			}
@@ -2147,7 +2147,7 @@ public class PortalHelper
 		case RANDOMTELEPORT:
 			if(args.length > 3)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.EventuallyOneAdditionalArgs")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.EventuallyOneAdditionalArgs")
 						.replace("%type%", target.toString())));
 				return;
 			}
@@ -2161,14 +2161,14 @@ public class PortalHelper
 		case PORTAL:
 			if(args.length != 3)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.OneAdditionalArgs")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.OneAdditionalArgs")
 						.replace("%type%", target.toString())));
 				return;
 			}
 			String portalName = args[2];
 			if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalName))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.argetType.DestinationNotExist")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.argetType.DestinationNotExist")
 						.replace("%value%", portalName)
 						.replace("%type%", target.toString())));
 				return;
@@ -2183,7 +2183,7 @@ public class PortalHelper
 			{
 				if(portaldest.getPermission() != null)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
 					return;
 				}
 			}
@@ -2194,14 +2194,14 @@ public class PortalHelper
 		case WARP:
 			if(args.length != 3)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.OneAdditionalArgs")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.OneAdditionalArgs")
 						.replace("%type%", target.toString())));
 				return;
 			}
 			String warpName = args[2];
 			if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.DestinationNotExist")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.DestinationNotExist")
 						.replace("%value%", warpName)
 						.replace("%type%", target.toString())));
 				return;
@@ -2209,7 +2209,7 @@ public class PortalHelper
 			Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
 			if(warp.getPortalAccess() == Warp.PortalAccess.FORBIDDEN)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenPortal")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenPortal")
 						.replace("%warp%", warp.getName())));
 				return;
 			}
@@ -2220,7 +2220,7 @@ public class PortalHelper
 			}
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP) && !warpowner)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 				return;
 			}
 			portal.setTargetType(target);
@@ -2230,7 +2230,7 @@ public class PortalHelper
 		case COMMAND:
 			if(args.length < 2)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.MoreAdditionalArgs")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.MoreAdditionalArgs")
 						.replace("%type%", target.toString())
 						.replace("%amount%", "x")
 						.replace("%needed%", "Command Text")));
@@ -2251,7 +2251,7 @@ public class PortalHelper
 		case LOCATION:
 			if(args.length != 2)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.NoArgs")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.NoArgs")
 						.replace("%type%", target.toString())));
 				return;
 			}
@@ -2262,7 +2262,7 @@ public class PortalHelper
 		case FIRSTSPAWN:
 			if(args.length != 3)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.OneAdditionalArgs")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.OneAdditionalArgs")
 						.replace("%type%", target.toString())));
 				return;
 			}
@@ -2272,7 +2272,7 @@ public class PortalHelper
 		case RESPAWN:
 			if(args.length != 3)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.OneAdditionalArgs")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TargetType.OneAdditionalArgs")
 						.replace("%type%", target.toString())));
 				return;
 			}
@@ -2285,12 +2285,12 @@ public class PortalHelper
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
 		if(tinfos == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetTargetTypeWithout")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetTargetTypeWithout")
 					.replace("%portal%", portal.getName())
 					.replace("%type%", target.toString())));
 		} else
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetTargetTypeWith")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetTargetTypeWith")
 					.replace("%portal%", portal.getName())
 					.replace("%type%", target.toString())
 					.replace("%info%", tinfos)));
@@ -2311,7 +2311,7 @@ public class PortalHelper
 		String portalname = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
 			return;
 		}
 		Portal portal = (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);
@@ -2327,7 +2327,7 @@ public class PortalHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_PORTAL)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
 			return;
 		}
 		String msg = "";
@@ -2347,7 +2347,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPostTeleportMessage")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPostTeleportMessage")
 				.replace("%portal%", portal.getName())
 				.replace("%msg%", msg == null ? "N.A." : msg)));
 		return;
@@ -2366,7 +2366,7 @@ public class PortalHelper
 		String portalname = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
 			return;
 		}
 		Portal portal = (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);
@@ -2382,7 +2382,7 @@ public class PortalHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_PORTAL)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
 			return;
 		}
 		String msg = "";
@@ -2402,7 +2402,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetAccesDenialMessage")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetAccesDenialMessage")
 				.replace("%portal%", portal.getName())
 				.replace("%msg%", msg == null ? "N.A." : msg)));
 		return;
@@ -2420,7 +2420,7 @@ public class PortalHelper
 		String portalname = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
 			return;
 		}
 		Portal portal = (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);
@@ -2436,7 +2436,7 @@ public class PortalHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_PORTAL)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
 			return;
 		}
 		PostTeleportExecuterCommand ptec = PostTeleportExecuterCommand.PLAYER;
@@ -2462,7 +2462,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPostTeleportExecutingCommand")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPostTeleportExecutingCommand")
 				.replace("%portal%", portal.getName())
 				.replace("%type%", ptec.toString())
 				.replace("%cmd%", msg == null ? "N.A." : msg)));
@@ -2482,14 +2482,14 @@ public class PortalHelper
 			m = Material.valueOf(args[1].toUpperCase());
 		} catch(Exception e)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoTriggerBlock")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoTriggerBlock")
 					.replace("%value%", args[1])));
 		}
 		portal.setTriggerBlock(m);
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetTriggerBlock")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetTriggerBlock")
 				.replace("%portal%", portal.getName())
 				.replace("%value%", m.toString())));
 		return;
@@ -2504,14 +2504,14 @@ public class PortalHelper
 		}
 		if(!MatchApi.isDouble(args[1]))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoDouble")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoDouble")
 					.replace("%arg%", args[1])));
 			return;
 		}
 		double tb = Double.parseDouble(args[1]);
 		if(!MatchApi.isPositivNumber(tb))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 					.replace("%arg%", args[1])));
 			return;
 		}
@@ -2519,7 +2519,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetThrowback")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetThrowback")
 				.replace("%portal%", portal.getName())
 				.replace("%value%", String.valueOf(tb))));
 		return;
@@ -2534,14 +2534,14 @@ public class PortalHelper
 		}
 		if(!MatchApi.isInteger(args[1]))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 					.replace("%arg%", args[1])));
 			return;
 		}
 		int ppr = Integer.parseInt(args[1]);
 		if(!MatchApi.isPositivNumber(ppr))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 					.replace("%arg%", args[1])));
 			return;
 		}
@@ -2549,7 +2549,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPortalProtectionRadius")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetPortalProtectionRadius")
 				.replace("%portal%", portal.getName())
 				.replace("%value%", String.valueOf(ppr))));
 		return;
@@ -2568,7 +2568,7 @@ public class PortalHelper
 			s = Sound.valueOf(args[1].toUpperCase());
 		} catch(Exception e)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoSound")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoSound")
 					.replace("%value%", args[1])));
 			return;
 		}
@@ -2578,7 +2578,7 @@ public class PortalHelper
 			sc = SoundCategory.valueOf(args[2].toUpperCase());
 		} catch(Exception e)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoSound")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoSound")
 					.replace("%value%", args[2])));
 			return;
 		}
@@ -2587,7 +2587,7 @@ public class PortalHelper
 		plugin.getPortalHandler().deletePortalInList(portal);
 		plugin.getPortalHandler().addPortal(portal);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.PORTAL, portal, "`portalname` = ?", portal.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetSound")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.SetSound")
 				.replace("%portal%", portal.getName())
 				.replace("%value%", s.toString())));
 		return;
@@ -2603,12 +2603,12 @@ public class PortalHelper
 		if(portal.getAccessType() == AccessType.CLOSED)
 		{
 			portal.setAccessType(AccessType.OPEN);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalIsNowOpen")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalIsNowOpen")
 					.replace("%portal%", portal.getName())));
 		} else
 		{
 			portal.setAccessType(AccessType.CLOSED);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalIsNowClosed")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalIsNowClosed")
 					.replace("%portal%", portal.getName())));
 		}
 		plugin.getPortalHandler().deletePortalInList(portal);
@@ -2631,14 +2631,14 @@ public class PortalHelper
 		if(args.length == 0)
 		{
 			plugin.getPortalHandler().updatePortalAll();
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.UpdatePortalAll")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.UpdatePortalAll")));
 			return;
 		} else
 		{
 			String portalname = args[0];
 			if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
 				return;
 			}
 			Portal portal = (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);
@@ -2650,11 +2650,11 @@ public class PortalHelper
 			if(!player.hasPermission(StaticValues.PERM_BYPASS_PORTAL)
 					&& !owner)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
 				return;
 			}
 			plugin.getPortalHandler().updatePortalLocale(portal);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.UpdatePortal")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.UpdatePortal")
 					.replace("%portal%", portal.getName())));
 			return;
 		}
@@ -2684,11 +2684,11 @@ public class PortalHelper
 				}
 			}
 			PortalHandler.portalCreateMode.remove(index);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalCreationMode.Removed")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalCreationMode.Removed")));
 		} else
 		{
 			PortalHandler.portalCreateMode.add(player.getUniqueId());
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalCreationMode.Added")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalCreationMode.Added")));
 		}
 	}
 	
@@ -2728,7 +2728,7 @@ public class PortalHelper
 		egim.setDisplayName(ChatApi.tl(plugin.getYamlHandler().getCustomLang().getString("Portal.EndGateway.Displayname")));
 		eg.setItemMeta(egim);
 		player.getInventory().addItem(eg);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalItemRotater")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalItemRotater")));
 	}
 	
 	private Portal portalChangeIntroSub(Player player, String[] args, int i)
@@ -2744,7 +2744,7 @@ public class PortalHelper
 		String portalname = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
 			return null;
 		}
 		Portal portal = (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);
@@ -2760,7 +2760,7 @@ public class PortalHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_PORTAL)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
 			return null;
 		}
 		return portal;
@@ -2778,7 +2778,7 @@ public class PortalHelper
 		String portalname = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.PortalNotExist")));
 			return null;
 		}
 		return (Portal) plugin.getMysqlHandler().getData(MysqlHandler.Type.PORTAL, "`portalname` = ?", portalname);

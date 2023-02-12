@@ -39,8 +39,7 @@ public class EntityTransportMessageListener implements PluginMessageListener
                 	float pitch = in.readFloat();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
-						player.sendMessage(
-								ChatApi.tl(BungeeTeleportManager.getPlugin().getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+						player.spigot().sendMessage(ChatApi.tctl(BungeeTeleportManager.getPlugin().getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 										.replace("%world%", worldName)));
 						return;
 					}

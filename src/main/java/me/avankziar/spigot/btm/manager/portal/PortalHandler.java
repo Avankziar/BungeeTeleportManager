@@ -295,7 +295,7 @@ public class PortalHandler
 	{
 		if(portal.getPostTeleportMessage() != null)
 		{
-			player.sendMessage(ChatApi.tl(portal.getPostTeleportMessage()
+			player.spigot().sendMessage(ChatApi.tctl(portal.getPostTeleportMessage()
 					.replace("%player%", player.getName())
 					.replace("%portalname%", portal.getName())
 					.replace("%price%", String.valueOf(portal.getPricePerUse()))
@@ -423,7 +423,7 @@ public class PortalHandler
 	
 	public void sendPlayerToDestination(Player player, ServerLocation destination, final Portal portal)
 	{
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.RequestInProgress")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.RequestInProgress")));
 		if(destination.getServer().equals(server) && player != null)
 		{
 			BackHandler bh = new BackHandler(plugin);
@@ -678,7 +678,7 @@ public class PortalHandler
 		{
 			if(message)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalGlobal")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalGlobal")
 						.replace("%amount%", String.valueOf(globalLimit))));
 			}
 		}
@@ -754,7 +754,7 @@ public class PortalHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalServerCluster")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalServerCluster")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -796,7 +796,7 @@ public class PortalHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalServer")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalServer")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -891,7 +891,7 @@ public class PortalHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalWorld")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}
@@ -934,7 +934,7 @@ public class PortalHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalWorld")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.TooManyPortalWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}

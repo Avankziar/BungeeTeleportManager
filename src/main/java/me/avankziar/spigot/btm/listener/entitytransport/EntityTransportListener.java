@@ -46,7 +46,7 @@ public class EntityTransportListener implements Listener
 			{
 				if(event.isSendErrorMessageToSender())
 				{
-					event.getSender().sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+					event.getSender().spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 					return;
 				}
 				return;
@@ -87,7 +87,7 @@ public class EntityTransportListener implements Listener
 		{
 			if(isSendErrorMessageToSender)
 			{
-				player.sendMessage(ChatApi.tl(
+				player.spigot().sendMessage(ChatApi.tctl(
 						plugin.getYamlHandler().getLang().getString("CmdEntityTransport.EntityIsARegisteredEntityTeleport")));
 			}
 			return false;
@@ -98,7 +98,7 @@ public class EntityTransportListener implements Listener
 			{
 				if(isSendErrorMessageToSender)
 				{
-					player.sendMessage(ChatApi.tl(
+					player.spigot().sendMessage(ChatApi.tctl(
 							plugin.getYamlHandler().getLang().getString("CmdEntityTransport.HasNoRightToSerializeThatType")
 							.replace("%type%", target.getType().toString())));
 				}
@@ -114,7 +114,7 @@ public class EntityTransportListener implements Listener
 				{
 					if(isSendErrorMessageToSender)
 					{
-						player.sendMessage(ChatApi.tl(
+						player.spigot().sendMessage(ChatApi.tctl(
 								plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotOwnerOrMember")));
 					}
 					return false;
@@ -128,7 +128,7 @@ public class EntityTransportListener implements Listener
 			{
 				if(isSendErrorMessageToSender)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ForbiddenServerUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ForbiddenServerUse")));
 				}
 				return false;
 			}
@@ -137,7 +137,7 @@ public class EntityTransportListener implements Listener
 			{
 				if(isSendErrorMessageToSender)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ForbiddenWorldUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ForbiddenWorldUse")));
 				}
 				return false;
 			}
@@ -148,7 +148,7 @@ public class EntityTransportListener implements Listener
 			{
 				if(isSendErrorMessageToSender)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotEnoughTickets")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotEnoughTickets")
 							.replace("%actual%", String.valueOf(EntityTransportHandler.getTicket(player)))
 							.replace("%needed%", String.valueOf(EntityTransportHandler.getTicket(target)))));
 				}				

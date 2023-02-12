@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
+import main.java.me.avankziar.bungee.btm.assistance.ChatApi;
 import main.java.me.avankziar.general.object.Mechanics;
 
 public class HomeMessageListener implements PluginMessageListener
@@ -82,9 +82,11 @@ public class HomeMessageListener implements PluginMessageListener
 												player.teleport(loc);
 											}
 										}.runTask(plugin);
-										
-										player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeTo")
-												.replace("%home%", homeName)));
+										if(plugin.getYamlHandler().getConfig().getBoolean("Home.UsePostTeleportMessage"))
+										{
+											player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeTo")
+													.replace("%home%", homeName)));
+										}
 										cancel();
 										return;
 									}									

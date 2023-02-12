@@ -51,11 +51,11 @@ public class EntityNameChangeListener implements Listener
 		{
 			if(!EntityTransportHandler.isOwner(player, ent))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotOwner")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotOwner")));
 				return;
 			} else
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.SetOwner")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.SetOwner")
 						.replace("%player%", player.getName())));
 			}
 		} else
@@ -63,7 +63,7 @@ public class EntityNameChangeListener implements Listener
 			PersistentDataContainer pdc = ent.getPersistentDataContainer();
 			pdc.set(new NamespacedKey(BungeeTeleportManager.getPlugin(), EntityTransportHelper.OWNER),
 					PersistentDataType.STRING, player.getUniqueId().toString());
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.SetOwner")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.SetOwner")
 					.replace("%player%", player.getName())));
 		}
 	}

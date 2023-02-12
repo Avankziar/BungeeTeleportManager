@@ -71,7 +71,7 @@ public class BTMImportCmdExecutor implements CommandExecutor
 		}
 		if(inProcess)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.InProcess")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.InProcess")));
 			return false;
 		}
 		inProcess = true;
@@ -82,7 +82,7 @@ public class BTMImportCmdExecutor implements CommandExecutor
 			convert = Convert.valueOf(conv);
 		} catch(Exception e)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.NoCorrectInput")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.NoCorrectInput")));
 			inProcess = false;
 			return false;
 		}
@@ -93,7 +93,7 @@ public class BTMImportCmdExecutor implements CommandExecutor
 			plugins = Plugins.valueOf(pluginname);
 		} catch(Exception e)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.NoSupportedPlugin")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.NoSupportedPlugin")));
 			inProcess = false;
 			return false;
 		}
@@ -105,7 +105,7 @@ public class BTMImportCmdExecutor implements CommandExecutor
 			case CMI:
 				return cmiHomes(player);
 			case ADVANCEDPORTALS:
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.PluginDontSupportThatMechanic")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.PluginDontSupportThatMechanic")));
 				inProcess = false;
 				return false;
 			}
@@ -113,7 +113,7 @@ public class BTMImportCmdExecutor implements CommandExecutor
 			switch(plugins)
 			{
 			case CMI:
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.PluginDontSupportThatMechanic")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.PluginDontSupportThatMechanic")));
 				inProcess = false;
 				return false;
 			case ADVANCEDPORTALS:
@@ -134,7 +134,7 @@ public class BTMImportCmdExecutor implements CommandExecutor
 			yp.load(portals);
 		} catch(Exception e)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.CouldNotLoadFile")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.CouldNotLoadFile")
 					.replace("%file%", "portals.yml")));
 			inProcess = false;
 			return false;
@@ -147,7 +147,7 @@ public class BTMImportCmdExecutor implements CommandExecutor
 			yd.load(destinations);
 		} catch(Exception e)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.CouldNotLoadFile")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.CouldNotLoadFile")
 					.replace("%file%", "destinations.yml")));
 			inProcess = false;
 			return false;
@@ -183,7 +183,7 @@ public class BTMImportCmdExecutor implements CommandExecutor
 		}
 		if(por.isEmpty())
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.NoAdvancedPortalsToImport")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.NoAdvancedPortalsToImport")));
 			inProcess = false;
 			return false;
 		}
@@ -219,7 +219,7 @@ public class BTMImportCmdExecutor implements CommandExecutor
 			plugin.getMysqlHandler().create(MysqlHandler.Type.PORTAL, portal);
 		}
 		int importp = por.size()-alreadyExistingPortals.size();
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.AdvancedPortalImportFinish")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.AdvancedPortalImportFinish")
 				.replace("%valueI%", String.valueOf(importp))
 				.replace("%valueII%", String.valueOf(alreadyExistingPortals.size()))));
 		inProcess = false;
@@ -304,7 +304,7 @@ public class BTMImportCmdExecutor implements CommandExecutor
 				plugin.getMysqlHandler().create(MysqlHandler.Type.HOME, h);
 			}
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdImport.CIMHomeImportFinish")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.CIMHomeImportFinish")
 				.replace("%valueI%", String.valueOf(normalhomes))
 				.replace("%valueII%", String.valueOf(errorhomes))));
 		inProcess = false;

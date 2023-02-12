@@ -600,6 +600,7 @@ public class YamlManager
 					"HereOtherWorldname;HereOtherPortalname"}));
 			
 		}
+		
 		EntityTransportTicket:
 		{
 			configSpigotKeys.put("EntityTransport.DefaultTicketPerEntity"
@@ -609,6 +610,23 @@ public class YamlManager
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					"COW;2", "SHEEP:3", "SKELETON:25"}));
 		}
+		
+		Home:
+		{
+			configSpigotKeys.put("Home.Homes.UseServer"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Home.Homes.UseWorld"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Home.UsePreTeleportMessage"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Home.UsePostTeleportMessage"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+		}
+		
 		Portal:
 		{
 			configSpigotKeys.put("Portal.LoadPortalInRAM"
@@ -624,6 +642,17 @@ public class YamlManager
 					"Perm;0y-0d-0h-0m-5s-5ms;btm.portalcooldown.staff",
 					"Perm;0y-0d-0h-10m-0s-0ms;btm.portalcooldown.user"}));
 		}
+		
+		Warp:
+		{
+			configSpigotKeys.put("Warp.UsePreTeleportMessage"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("Warp.UsePostTeleportMessage"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+		}
+		
 		Generator:
 		{
 			configSpigotKeys.put("Identifier.Click"

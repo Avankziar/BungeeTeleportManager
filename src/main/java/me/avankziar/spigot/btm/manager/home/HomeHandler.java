@@ -53,7 +53,7 @@ public class HomeHandler
 			{
 				if(!plugin.getSafeLocationHandler().isSafeDestination(home.getLocation()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotSafeLocation")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NotSafeLocation")));
 					return;
 				}
 			}
@@ -71,8 +71,11 @@ public class HomeHandler
 				public void run()
 				{
 					player.teleport(ConvertHandler.getLocation(home.getLocation()));
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeTo")
-							.replace("%home%", home.getHomeName())));
+					if(plugin.getYamlHandler().getConfig().getBoolean("Home.UsePostTeleportMessage"))
+					{
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeTo")
+								.replace("%home%", home.getHomeName())));
+					}
 				}
 			}.runTaskLater(plugin, delay);
 		} else
@@ -236,11 +239,11 @@ public class HomeHandler
 		{
 			if(message && exist == false && i >= 0)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesGlobal")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesGlobal")
 						.replace("%amount%", String.valueOf(globalLimit))));
 			} else if(message && exist == true && i > 0)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesGlobal")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesGlobal")
 						.replace("%amount%", String.valueOf(globalLimit))));
 			}
 		}
@@ -319,11 +322,11 @@ public class HomeHandler
 			{
 				if(message && exist == false && i >= 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServerCluster")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServerCluster")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				} else if(message && exist == true && i > 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServerCluster")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServerCluster")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -366,11 +369,11 @@ public class HomeHandler
 			{
 				if(message && exist == false && i >= 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServer")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServer")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				} else if(message && exist == true && i > 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServer")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesServer")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -461,11 +464,11 @@ public class HomeHandler
 			{
 				if(message && exist == false && i >= 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				} else if(message && exist == true && i > 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}
@@ -509,11 +512,11 @@ public class HomeHandler
 				
 				if(message && exist == false && i >= 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				} else if(message && exist == true && i > 0)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.TooManyHomesWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}
@@ -524,7 +527,7 @@ public class HomeHandler
 	public LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> mapping(
 			Home home,
 			LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map,
-			BaseComponent bct)
+			BaseComponent bct, boolean noServer, boolean noWorld)
 	{
 		if(map.containsKey(home.getLocation().getServer()))
 		{
@@ -539,7 +542,19 @@ public class HomeHandler
 			} else
 			{
 				ArrayList<BaseComponent> bc = new ArrayList<>();
-				bc.add(ChatApi.tctl("  &e"+home.getLocation().getWorldName()+": "));
+				if(noServer && noWorld)
+				{
+					bc.add(ChatApi.tctl(" "));
+				} else if(noServer && !noWorld)
+				{
+					bc.add(ChatApi.tctl("&e"+home.getLocation().getWorldName()+": "));
+				} else if(!noServer && noWorld)
+				{
+					bc.add(ChatApi.tctl("  "));
+				} else
+				{
+					bc.add(ChatApi.tctl("  &e"+home.getLocation().getWorldName()+": "));
+				}
 				bc.add(bct);
 				mapmap.put(home.getLocation().getWorldName(), bc);
 				map.replace(home.getLocation().getServer(), mapmap);
@@ -549,7 +564,19 @@ public class HomeHandler
 		{
 			LinkedHashMap<String, ArrayList<BaseComponent>> mapmap = new LinkedHashMap<String, ArrayList<BaseComponent>>();
 			ArrayList<BaseComponent> bc = new ArrayList<>();
-			bc.add(ChatApi.tctl("  &e"+home.getLocation().getWorldName()+": "));
+			if(noServer && noWorld)
+			{
+				bc.add(ChatApi.tctl("  "));
+			} else if(noServer && !noWorld)
+			{
+				bc.add(ChatApi.tctl("&e"+home.getLocation().getWorldName()+": "));
+			} else if(!noServer && noWorld)
+			{
+				bc.add(ChatApi.tctl("  "));
+			} else
+			{
+				bc.add(ChatApi.tctl("  &e"+home.getLocation().getWorldName()+": "));
+			}		
 			bc.add(bct);
 			mapmap.put(home.getLocation().getWorldName(), bc);
 			map.put(home.getLocation().getServer(), mapmap);

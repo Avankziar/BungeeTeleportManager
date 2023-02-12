@@ -110,31 +110,31 @@ public class TeleportHelper
 				{
 					if(player.getName().equals(args[0]))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.TpaTooYourself")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.TpaTooYourself")));
 						return;
 					}
 					if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.TPA_ONLY, null)
 							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TPA_ONLY.getLower()))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTPA.ForbiddenServerUse")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTPA.ForbiddenServerUse")));
 						return;
 					}
 					if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.TPA_ONLY, player, null)
 							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TPA_ONLY.getLower()))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTPA.ForbiddenWorldUse")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTPA.ForbiddenWorldUse")));
 						return;
 					}
 					UUID uuid = Utility.convertNameToUUID(args[0]);
 					if(uuid == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 						return;
 					}
 					String name = Utility.convertUUIDToName(uuid.toString());
 					if(name == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 						return;
 					}
 					ReturnStatment rsOne = AccessPermissionHandler.isAccessPermissionDenied(player.getUniqueId(), Mechanics.TPA);
@@ -143,11 +143,11 @@ public class TeleportHelper
 					{
 						if(rsOne.callBackMessage != null)
 						{
-							player.sendMessage(ChatApi.tl(rsOne.callBackMessage));
+							player.spigot().sendMessage(ChatApi.tctl(rsOne.callBackMessage));
 						}
 						if(rsTwo.callBackMessage != null)
 						{
-							player.sendMessage(ChatApi.tl(rsTwo.callBackMessage));
+							player.spigot().sendMessage(ChatApi.tctl(rsTwo.callBackMessage));
 						}
 						return;
 					}
@@ -157,11 +157,11 @@ public class TeleportHelper
 							tpi.getUUID().toString(), tpi.getIgnoredUUID().toString());
 					if(ignore && !player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_TPATOGGLE))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.Ignored")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.Ignored")));
 						return;
 					} else if(ignore && player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_TPATOGGLE))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoredBypass")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoredBypass")));
 					}
 					if(type == Teleport.Type.TPTO)
 					{
@@ -205,31 +205,31 @@ public class TeleportHelper
 				{
 					if(player.getName().equals(args[0]))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.TpaTooYourself")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.TpaTooYourself")));
 						return;
 					}
 					if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.TELEPORT, null)
 							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenServerUse")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenServerUse")));
 						return;
 					}
 					if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.TELEPORT, player, null)
 							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenWorldUse")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenWorldUse")));
 						return;
 					}
 					UUID uuid = Utility.convertNameToUUID(args[0]);
 					if(uuid == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 						return;
 					}
 					String name = Utility.convertUUIDToName(uuid.toString());
 					if(name == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 						return;
 					}
 					ReturnStatment rsOne = AccessPermissionHandler.isAccessPermissionDenied(player.getUniqueId(), Mechanics.TELEPORT);
@@ -238,11 +238,11 @@ public class TeleportHelper
 					{
 						if(rsOne.callBackMessage != null)
 						{
-							player.sendMessage(ChatApi.tl(rsOne.callBackMessage));
+							player.spigot().sendMessage(ChatApi.tctl(rsOne.callBackMessage));
 						}
 						if(rsTwo.callBackMessage != null)
 						{
-							player.sendMessage(ChatApi.tl(rsTwo.callBackMessage));
+							player.spigot().sendMessage(ChatApi.tctl(rsTwo.callBackMessage));
 						}
 						return;
 					}
@@ -289,13 +289,13 @@ public class TeleportHelper
 					String name = args[0];
 					if(player.getName().equals(name))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.TpaTooYourself")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.TpaTooYourself")));
 						return;
 					}
 					UUID uuid = Utility.convertNameToUUID(name);
 					if(uuid == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 						return;
 					}
 					plugin.getTeleportHandler().tpsilent(player, uuid.toString(), name);
@@ -321,13 +321,13 @@ public class TeleportHelper
 				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.TELEPORT, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenServerUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenServerUse")));
 					return;
 				}
 				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.TELEPORT, player, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenWorldUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenWorldUse")));
 					return;
 				}
 				if(args.length == 0)
@@ -359,13 +359,13 @@ public class TeleportHelper
 				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.TELEPORT, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenServerUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenServerUse")));
 					return;
 				}
 				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.TELEPORT, player, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.TELEPORT.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenWorldUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenWorldUse")));
 					return;
 				}
 				ConfigHandler cfgh = new ConfigHandler(plugin);
@@ -459,7 +459,7 @@ public class TeleportHelper
 		TeleportIgnore tpi = new TeleportIgnore(player.getUniqueId(), Utility.convertNameToUUID(args[0]));
 		if(tpi.getIgnoredUUID() == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 			return;
 		}
 		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.TELEPORTIGNORE,
@@ -469,12 +469,12 @@ public class TeleportHelper
 			plugin.getMysqlHandler().deleteData(MysqlHandler.Type.TELEPORTIGNORE,
 					"`player_uuid` = ? AND `ignore_uuid` = ?",
 					tpi.getUUID().toString(), tpi.getIgnoredUUID().toString());
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoreDelete")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoreDelete")
 					.replace("%target%", args[0])));
 		} else
 		{
 			plugin.getMysqlHandler().create(MysqlHandler.Type.TELEPORTIGNORE, tpi);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoreCreate")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.IgnoreCreate")
 					.replace("%target%", args[0])));
 		}
 		return;
@@ -495,7 +495,7 @@ public class TeleportHelper
 				msg += name+" &9| ";
 			}
 		}
-		player.sendMessage(ChatApi.tl(msg));
+		player.spigot().sendMessage(ChatApi.tctl(msg));
 		return;
 	}
 }

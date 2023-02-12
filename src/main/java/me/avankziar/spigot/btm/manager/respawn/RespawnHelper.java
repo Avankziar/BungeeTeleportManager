@@ -56,7 +56,7 @@ public class RespawnHelper
 				String respawnname = args[0];
 				if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.RESPAWN, "`displayname` = ?", respawnname))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RespawnNotExist")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RespawnNotExist")));
 					return;
 				}
 				Respawn r = (Respawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.RESPAWN, "`displayname` = ?", respawnname);
@@ -71,7 +71,7 @@ public class RespawnHelper
 				{
 					return;
 				}*/
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RequestInProgress")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RequestInProgress")));
 				plugin.getUtility().givesEffect(player, Mechanics.RESPAWN, true, true);
 				new RespawnHandler(plugin).sendPlayerToRespawn(player, r);
 				return;
@@ -134,11 +134,11 @@ public class RespawnHelper
 		String respawnname = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.RESPAWN, "`displayname` = ?", respawnname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RespawnNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RespawnNotExist")));
 			return;
 		}
 		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.RESPAWN, "`displayname` = ?", respawnname);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RespawnDelete")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RespawnDelete")
 				.replace("%name%", respawnname)));
 		return;
 	}
@@ -158,7 +158,7 @@ public class RespawnHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0])));
 				return;
 			}
@@ -177,7 +177,7 @@ public class RespawnHelper
 						"`server` ASC, `world` ASC", start, quantity));
 		if(list.isEmpty())
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRespawn.ThereIsNoRespawn")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRespawn.ThereIsNoRespawn")));
 			return;
 		}
 		String server = new ConfigHandler(plugin).getServer();
@@ -188,9 +188,9 @@ public class RespawnHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRespawn.ListHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRespawn.ListHeadline")
 				.replace("%amount%", String.valueOf(last))));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRespawn.ListHelp")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRespawn.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdRespawn.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdRespawn.ListSameWorld");

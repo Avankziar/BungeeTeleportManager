@@ -47,8 +47,7 @@ public class BackHelper
 					{
 						if(cooldown.get(player) >= System.currentTimeMillis())
 						{
-							player.sendMessage(
-									ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.BackCooldown")
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.BackCooldown")
 											.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.BACK))));
 							return;
 						}
@@ -56,13 +55,13 @@ public class BackHelper
 					if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.BACK, null)
 							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.BACK.getLower()))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdBack.ForbiddenServerUse")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdBack.ForbiddenServerUse")));
 						return;
 					}
 					if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.BACK, player, null)
 							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.BACK.getLower()))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdBack.ForbiddenWorldUse")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdBack.ForbiddenWorldUse")));
 						return;
 					}
 					if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.BACK.getLower()))
@@ -76,7 +75,7 @@ public class BackHelper
 		    							plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
 		    					if(main == null || main.getBalance() < price)
 		    					{
-		    						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
+		    						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 		    						return;
 		    					}
 		    					String category = plugin.getYamlHandler().getLang().getString("Economy.BCategory");
@@ -85,13 +84,13 @@ public class BackHelper
 		    							OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
 		    					if(!ea.isSuccess())
 		    					{
-		    						player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+		    						player.spigot().sendMessage(ChatApi.tctl(ea.getDefaultErrorMessage()));
 		    						return;
 		    					}
 		            		}
 		        		}
 					}
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdBack.RequestInProgress")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdBack.RequestInProgress")));
 					directBackMethode(player, null);
 				} else
 				{
@@ -125,16 +124,16 @@ public class BackHelper
 					if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.DEATHBACK, null)
 							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.DEATHBACK.getLower()))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathback.ForbiddenServerUse")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathback.ForbiddenServerUse")));
 						return;
 					}
 					if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.DEATHBACK, player, null)
 							&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.DEATHBACK.getLower()))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathback.ForbiddenWorldUse")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathback.ForbiddenWorldUse")));
 						return;
 					}
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdBack.RequestInProgress")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdBack.RequestInProgress")));
 					directDeathBackMethode(player, null);
 				} else
 				{

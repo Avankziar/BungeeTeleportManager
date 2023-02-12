@@ -110,7 +110,7 @@ public class FirstSpawnHandler
 					player.teleport(ConvertHandler.getLocation(fs.getLocation()));
 					if(!firsttime)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnTo")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnTo")
 								.replace("%value%", fs.getServer())));
 					}					
 				}

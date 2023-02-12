@@ -50,12 +50,10 @@ public class CustomHandler
 				public void run()
 				{
 					senders.teleport(targets);
-					senders.sendMessage(
-							ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
+					senders.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 							.replace("%playerfrom%", senders.getName())
 							.replace("%playerto%", targets.getName())));
-					targets.sendMessage(
-							ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
+					targets.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 							.replace("%playerfrom%", senders.getName())
 							.replace("%playerto%", targets.getName())));
 				}
@@ -112,14 +110,13 @@ public class CustomHandler
 					player.teleport(ConvertHandler.getLocation(sl));
 					if(message == null)
 					{
-						player.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PositionTeleport")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PositionTeleport")
 								.replace("%server%", sl.getServer())
 								.replace("%world%", sl.getWorldName())
 								.replace("%coords%", sl.getX()+" "+sl.getY()+" "+sl.getZ()+" | "+sl.getYaw()+" "+sl.getPitch())));
 					} else
 					{
-						player.sendMessage(ChatApi.tl(message));
+						player.spigot().sendMessage(ChatApi.tctl(message));
 					}
 				}
 			}.runTaskLater(plugin, delay);

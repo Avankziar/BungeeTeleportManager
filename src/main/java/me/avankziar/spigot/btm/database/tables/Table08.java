@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import main.java.me.avankziar.general.object.EntityTransport;
+import main.java.me.avankziar.general.object.EntityTransportTargetAccess;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 
@@ -14,11 +14,11 @@ public interface Table08
 {
 	default boolean createVIII(BungeeTeleportManager plugin, Object object) 
 	{
-		if(!(object instanceof EntityTransport))
+		if(!(object instanceof EntityTransportTargetAccess))
 		{
 			return false;
 		}
-		EntityTransport.TargetAccess h = (EntityTransport.TargetAccess) object;
+		EntityTransportTargetAccess h = (EntityTransportTargetAccess) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) {
@@ -56,7 +56,7 @@ public interface Table08
 	
 	default boolean updateDataVIII(BungeeTeleportManager plugin, Object object, String whereColumn, Object... whereObject) 
 	{
-		if(!(object instanceof EntityTransport))
+		if(!(object instanceof EntityTransportTargetAccess))
 		{
 			return false;
 		}
@@ -64,7 +64,7 @@ public interface Table08
 		{
 			return false;
 		}
-		EntityTransport.TargetAccess h = (EntityTransport.TargetAccess) object;
+		EntityTransportTargetAccess h = (EntityTransportTargetAccess) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) 
@@ -126,7 +126,7 @@ public interface Table08
 		        while (result.next()) 
 		        {
 		        	
-		        	return new EntityTransport(). new TargetAccess(
+		        	return new EntityTransportTargetAccess(
 		        			result.getString("target_uuid"),
 		        			result.getString("access_uuid"));
 		        }
@@ -154,7 +154,7 @@ public interface Table08
 		return null;
 	}
 	
-	default ArrayList<EntityTransport.TargetAccess> getListVIII(BungeeTeleportManager plugin, String orderByColumn,
+	default ArrayList<EntityTransportTargetAccess> getListVIII(BungeeTeleportManager plugin, String orderByColumn,
 			int start, int end, String whereColumn, Object...whereObject)
 	{
 		PreparedStatement preparedStatement = null;
@@ -174,10 +174,10 @@ public interface Table08
 		        	i++;
 		        }
 		        result = preparedStatement.executeQuery();
-		        ArrayList<EntityTransport.TargetAccess> list = new ArrayList<EntityTransport.TargetAccess>();
+		        ArrayList<EntityTransportTargetAccess> list = new ArrayList<EntityTransportTargetAccess>();
 		        while (result.next()) 
 		        {
-		        	EntityTransport.TargetAccess ep = new EntityTransport(). new TargetAccess(
+		        	EntityTransportTargetAccess ep = new EntityTransportTargetAccess(
 		        			result.getString("target_uuid"),
 		        			result.getString("access_uuid"));
 		        	list.add(ep);
@@ -207,7 +207,7 @@ public interface Table08
 		return null;
 	}
 	
-	default ArrayList<EntityTransport.TargetAccess> getTopVIII(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
+	default ArrayList<EntityTransportTargetAccess> getTopVIII(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -221,10 +221,10 @@ public interface Table08
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
-		        ArrayList<EntityTransport.TargetAccess> list = new ArrayList<EntityTransport.TargetAccess>();
+		        ArrayList<EntityTransportTargetAccess> list = new ArrayList<EntityTransportTargetAccess>();
 		        while (result.next()) 
 		        {
-		        	EntityTransport.TargetAccess ep = new EntityTransport(). new TargetAccess(
+		        	EntityTransportTargetAccess ep = new EntityTransportTargetAccess(
 		        			result.getString("target_uuid"),
 		        			result.getString("access_uuid"));
 		        	list.add(ep);
@@ -254,7 +254,7 @@ public interface Table08
 		return null;
 	}
 	
-	default ArrayList<EntityTransport.TargetAccess> getAllListAtVIII(BungeeTeleportManager plugin, String orderByColumn,
+	default ArrayList<EntityTransportTargetAccess> getAllListAtVIII(BungeeTeleportManager plugin, String orderByColumn,
 			boolean desc, String whereColumn, Object...whereObject)
 	{
 		PreparedStatement preparedStatement = null;
@@ -282,10 +282,10 @@ public interface Table08
 		        	i++;
 		        }
 		        result = preparedStatement.executeQuery();
-		        ArrayList<EntityTransport.TargetAccess> list = new ArrayList<EntityTransport.TargetAccess>();
+		        ArrayList<EntityTransportTargetAccess> list = new ArrayList<EntityTransportTargetAccess>();
 		        while (result.next()) 
 		        {
-		        	EntityTransport.TargetAccess ep = new EntityTransport(). new TargetAccess(
+		        	EntityTransportTargetAccess ep = new EntityTransportTargetAccess(
 		        			result.getString("target_uuid"),
 		        			result.getString("access_uuid"));
 		        	list.add(ep);

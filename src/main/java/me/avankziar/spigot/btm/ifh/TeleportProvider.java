@@ -87,7 +87,7 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 		if(!preTeleportMessage.isEmpty())
 		{
 			for(String s : preTeleportMessage)
-			player.sendMessage(ChatApi.tl(s));
+			player.spigot().sendMessage(ChatApi.tctl(s));
 		}	
 		ConfigHandler cfgh = new ConfigHandler(plugin);
 		if(server.equals(cfgh.getServer()) && player != null)
@@ -106,7 +106,7 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 					{
 						if(errormessage != null)
 						{
-							player.sendMessage(ChatApi.tl(errormessage));
+							player.spigot().sendMessage(ChatApi.tctl(errormessage));
 						}
 						return;
 					}
@@ -114,7 +114,7 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 					if(!postTeleportMessage.isEmpty())
 					{
 						for(String s : postTeleportMessage)
-						player.sendMessage(ChatApi.tl(s));
+						player.spigot().sendMessage(ChatApi.tctl(s));
 					}
 				}
 			}.runTaskLater(plugin, 1);
@@ -180,7 +180,7 @@ public class TeleportProvider implements Teleport, PluginMessageListener
                 	String errormessage = in.readUTF();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
-						player.sendMessage(ChatApi.tl(errormessage));
+						player.spigot().sendMessage(ChatApi.tctl(errormessage));
 						return;
 					}
                 	new BukkitRunnable()
@@ -199,7 +199,7 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 										Player player = plugin.getServer().getPlayer(playerName);
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(ChatApi.tl(errormessage));
+											player.spigot().sendMessage(ChatApi.tctl(errormessage));
 											cancel();
 											return;
 										}
@@ -213,7 +213,7 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 													player.teleport(loc);
 												} catch(NullPointerException e)
 												{
-													player.sendMessage(ChatApi.tl(errormessage));
+													player.spigot().sendMessage(ChatApi.tctl(errormessage));
 												}
 											}
 										}.runTask(plugin);
@@ -221,7 +221,7 @@ public class TeleportProvider implements Teleport, PluginMessageListener
 										{
 											for(String s : post)
 											{
-												player.sendMessage(ChatApi.tl(s));
+												player.spigot().sendMessage(ChatApi.tctl(s));
 											}
 										}
 										cancel();

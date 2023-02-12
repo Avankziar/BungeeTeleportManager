@@ -8,7 +8,7 @@ import org.bukkit.Location;
 import main.java.me.avankziar.general.object.AccessPermission;
 import main.java.me.avankziar.general.object.Back;
 import main.java.me.avankziar.general.object.Deathzone;
-import main.java.me.avankziar.general.object.EntityTransport;
+import main.java.me.avankziar.general.object.EntityTransportTargetAccess;
 import main.java.me.avankziar.general.object.FirstSpawn;
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.Portal;
@@ -114,14 +114,14 @@ public class ConvertHandler
 		return el;
 	}
 	
-	public static ArrayList<EntityTransport.TargetAccess> convertListVIII(ArrayList<?> list)
+	public static ArrayList<EntityTransportTargetAccess> convertListVIII(ArrayList<?> list)
 	{
-		ArrayList<EntityTransport.TargetAccess> el = new ArrayList<>();
+		ArrayList<EntityTransportTargetAccess> el = new ArrayList<>();
 		for(Object o : list)
 		{
-			if(o instanceof EntityTransport.TargetAccess)
+			if(o instanceof EntityTransportTargetAccess)
 			{
-				el.add((EntityTransport.TargetAccess) o);
+				el.add((EntityTransportTargetAccess) o);
 			}
 		}
 		return el;

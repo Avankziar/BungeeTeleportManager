@@ -48,8 +48,7 @@ public class SavePointMessageListener implements PluginMessageListener
                 	boolean last = in.readBoolean();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
-						player.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 										.replace("%world%", worldName)));
 						return;
 					}
@@ -69,8 +68,7 @@ public class SavePointMessageListener implements PluginMessageListener
 										Player player = plugin.getServer().getPlayer(playerName);
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+											player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -86,17 +84,17 @@ public class SavePointMessageListener implements PluginMessageListener
 													player.teleport(loc);
 												} catch(NullPointerException e)
 												{
-													player.sendMessage(ChatApi.tl("Error! See Console!"));
+													player.spigot().sendMessage(ChatApi.tctl("Error! See Console!"));
 												}
 											}
 										}.runTask(plugin);
 										if(last)
 										{
-											player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpToLast")
+											player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpToLast")
 													.replace("%savepoint%", savePointName)));
 										} else
 										{
-											player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpTo")
+											player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpTo")
 													.replace("%savepoint%", savePointName)));
 										}
 										cancel();

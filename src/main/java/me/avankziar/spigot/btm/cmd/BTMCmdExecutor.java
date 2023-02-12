@@ -133,7 +133,7 @@ public class BTMCmdExecutor implements CommandExecutor
 		int start = page*10;
 		int end = page*10+9;
 		int last = 0;
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString(
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString(
 				BungeeTeleportManager.infoCommandPath+".Headline")));
 		for(BaseConstructor bc : plugin.getHelpList())
 		{

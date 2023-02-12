@@ -19,7 +19,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import main.java.me.avankziar.general.object.EntityTransport;
+import main.java.me.avankziar.general.object.EntityTransportTicket;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.ServerLocation;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
@@ -179,7 +179,7 @@ public class EntityTransportHandler
 	
 	public static int getTicket(Player player)
 	{
-		return ((EntityTransport.Ticket) BungeeTeleportManager.getPlugin().getMysqlHandler()
+		return ((EntityTransportTicket) BungeeTeleportManager.getPlugin().getMysqlHandler()
 				.getData(MysqlHandler.Type.ENTITYTRANSPORT_TICKET, "`player_uuid` = ?", player.getUniqueId().toString())).getActualAmount();
 		
 	}
@@ -192,7 +192,7 @@ public class EntityTransportHandler
 		{
 			BungeeTeleportManager.getPlugin().getMysqlHandler()
 				.create(MysqlHandler.Type.ENTITYTRANSPORT_TICKET, 
-					new EntityTransport(). new Ticket(player.getUniqueId().toString(), 0, 0, 0.0));
+					new EntityTransportTicket(player.getUniqueId().toString(), 0, 0, 0.0));
 		}
 		int actualAmount = getTicket(player);
 		if(actualAmount >= neededTicketAmount)
@@ -205,15 +205,15 @@ public class EntityTransportHandler
 	public static void addingTickets(CommandSender sender, String targetuuid, String targetname, int amount, boolean mustpay)
 	{
 		BungeeTeleportManager plugin = BungeeTeleportManager.getPlugin();
-		EntityTransport.Ticket ticket = null;
+		EntityTransportTicket ticket = null;
 		if(!plugin.getMysqlHandler()
 				.exist(MysqlHandler.Type.ENTITYTRANSPORT_TICKET, "`player_uuid` = ?", targetuuid))
 		{
-			ticket = new EntityTransport(). new Ticket(targetuuid, 0, 0, 0.0);
+			ticket = new EntityTransportTicket(targetuuid, 0, 0, 0.0);
 			plugin.getMysqlHandler().create(MysqlHandler.Type.ENTITYTRANSPORT_TICKET, ticket);
 		} else
 		{
-			ticket = (EntityTransport.Ticket) plugin.getMysqlHandler()
+			ticket = (EntityTransportTicket) plugin.getMysqlHandler()
 					.getData(MysqlHandler.Type.ENTITYTRANSPORT_TICKET, "`player_uuid` = ?", targetuuid);
 		}
 		double sum = new ConfigHandler(plugin).getCostUse(Mechanics.ENTITYTRANSPORT)*(double) amount;
@@ -235,7 +235,7 @@ public class EntityTransportHandler
 					plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
 			if(main == null || main.getBalance() < sum)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 				return;
 			}
 			String category = plugin.getYamlHandler().getLang().getString("Economy.ETrCategory");
@@ -245,11 +245,11 @@ public class EntityTransportHandler
 					OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
 			if(!ea.isSuccess())
 			{
-				player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+				player.spigot().sendMessage(ChatApi.tctl(ea.getDefaultErrorMessage()));
 				return;
 			}
 			ticket.setSpendedMoney(ticket.getSpendedMoney()+sum);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.BuyTickets")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.BuyTickets")
 					.replace("%format%", plugin.getEco().format(sum, plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))));			
 		}
 		ticket.setActualAmount(ticket.getActualAmount()+amount);
@@ -261,7 +261,7 @@ public class EntityTransportHandler
 	public static void withdrawTickets(Player player, LivingEntity ley)
 	{
 		int neededTicketAmount = getTicket(ley);
-		EntityTransport.Ticket ticket = (EntityTransport.Ticket) BungeeTeleportManager.getPlugin().getMysqlHandler()
+		EntityTransportTicket ticket = (EntityTransportTicket) BungeeTeleportManager.getPlugin().getMysqlHandler()
 				.getData(MysqlHandler.Type.ENTITYTRANSPORT_TICKET, "`player_uuid` = ?", player.getUniqueId().toString());
 		ticket.setActualAmount(ticket.getActualAmount()-neededTicketAmount);
 		BungeeTeleportManager.getPlugin().getMysqlHandler()
@@ -282,14 +282,14 @@ public class EntityTransportHandler
 					switch(shortcut)
 					{
 					default:
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToPosition")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToPosition")));
 						break;
 					case "h":
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToHome")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToHome")
 								.replace("%target%", target)));
 						break;
 					case "w":
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToWarp")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToWarp")
 								.replace("%target%", target)));
 						break;
 					}
@@ -318,14 +318,14 @@ public class EntityTransportHandler
 	        switch(shortcut)
 			{
 			default:
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToPosition")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToPosition")));
 				break;
 			case "h":
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToHome")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToHome")
 						.replace("%target%", target)));
 				break;
 			case "w":
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToWarp")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToWarp")
 						.replace("%target%", target)));
 				break;
 			}
@@ -345,7 +345,7 @@ public class EntityTransportHandler
 				public void run()
 				{
 					ley.teleport(targetplayer.getLocation());
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToPlayer")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToPlayer")
 							.replace("%target%", target)));
 				}
 			}.runTaskLater(plugin, 1);
@@ -370,7 +370,7 @@ public class EntityTransportHandler
 			}
 	        player.sendPluginMessage(plugin, StaticValues.ENTITYTRANSPORT_TOBUNGEE, stream.toByteArray());
 	        ley.remove();
-	        player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToPlayer")
+	        player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ToPlayer")
 					.replace("%target%", target)));
 		}
         return;

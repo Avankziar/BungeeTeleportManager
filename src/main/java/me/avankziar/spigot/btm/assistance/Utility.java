@@ -164,6 +164,43 @@ public class Utility
 				round(sl.getPitch(),1)+"&r ";
 	}
 	
+	public static String getLocationV2(ServerLocation sl, boolean noServer, boolean noWorld)
+	{
+		if(noServer && noWorld)
+		{
+			return "&a"+
+					round(sl.getX(),1)+" "+
+					round(sl.getY(),1)+" "+
+					round(sl.getZ(),1)+" &2| &d"+
+					round(sl.getYaw(),1)+" "+
+					round(sl.getPitch(),1)+"&r ";
+		} else if(!noServer && noWorld)
+		{
+			return "&c"+sl.getServer()+" &2| &a"+
+					round(sl.getX(),1)+" "+
+					round(sl.getY(),1)+" "+
+					round(sl.getZ(),1)+" &2| &d"+
+					round(sl.getYaw(),1)+" "+
+					round(sl.getPitch(),1)+"&r ";
+		} else if(noServer && !noWorld)
+		{
+			return "&e"+sl.getWorldName()+" &2| &a"+
+					round(sl.getX(),1)+" "+
+					round(sl.getY(),1)+" "+
+					round(sl.getZ(),1)+" &2| &d"+
+					round(sl.getYaw(),1)+" "+
+					round(sl.getPitch(),1)+"&r ";
+		} else
+		{
+			return "&c"+sl.getServer()+" &e"+sl.getWorldName()+" &2| &a"+
+					round(sl.getX(),1)+" "+
+					round(sl.getY(),1)+" "+
+					round(sl.getZ(),1)+" &2| &d"+
+					round(sl.getYaw(),1)+" "+
+					round(sl.getPitch(),1)+"&r ";
+		}		
+	}
+	
 	public static ServerLocation getLocation(Location loc)
 	{
 		ServerLocation sl = new ServerLocation(

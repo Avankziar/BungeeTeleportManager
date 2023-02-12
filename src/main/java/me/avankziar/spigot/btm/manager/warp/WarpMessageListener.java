@@ -50,8 +50,7 @@ public class WarpMessageListener implements PluginMessageListener
                 	String ptegc = in.readUTF();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
-						player.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 										.replace("%world%", worldName)));
 						return;
 					}
@@ -72,8 +71,7 @@ public class WarpMessageListener implements PluginMessageListener
 										Player player = plugin.getServer().getPlayer(playerName);
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+											player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -105,12 +103,15 @@ public class WarpMessageListener implements PluginMessageListener
 													}
 												} catch(NullPointerException e)
 												{
-													player.sendMessage(ChatApi.tl("Error! See Console!"));
+													player.spigot().sendMessage(ChatApi.tctl("Error! See Console!"));
 												}
 											}
 										}.runTask(plugin);
-										player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpTo")
-												.replace("%warp%", warpName)));
+										if(plugin.getYamlHandler().getConfig().getBoolean("Warp.UsePostTeleportMessage"))
+										{
+											player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpTo")
+													.replace("%warp%", warpName)));
+										}										
 										cancel();
 										return;
 									}

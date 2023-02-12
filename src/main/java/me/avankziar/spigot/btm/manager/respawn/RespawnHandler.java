@@ -68,7 +68,7 @@ public class RespawnHandler
 				public void run()
 				{
 					player.teleport(ConvertHandler.getLocation(respawn.getLocation()));
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRespawn.WarpTo")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRespawn.WarpTo")
 							.replace("%respawn%", respawn.getDisplayname())));
 				}
 			}.runTaskLater(plugin, 1);
@@ -129,7 +129,7 @@ public class RespawnHandler
 				}
 				s = s.replace(replacer[i], replacer[i+1]);
 			}
-			player.sendMessage(ChatApi.tl(s));
+			player.spigot().sendMessage(ChatApi.tctl(s));
 		}
 	}
 	

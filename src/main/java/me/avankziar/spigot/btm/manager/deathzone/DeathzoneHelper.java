@@ -46,7 +46,7 @@ public class DeathzoneHelper
 			{
 				if(cooldown.containsKey(player) && cooldown.get(player) > System.currentTimeMillis())
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.SimulationIsAlreadyRunning")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.SimulationIsAlreadyRunning")));
 					return;
 				}
 				if(cooldown.containsKey(player)) cooldown.replace(player, System.currentTimeMillis()+1000L*10);
@@ -88,23 +88,23 @@ public class DeathzoneHelper
 		}
 		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNameAlreadyExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNameAlreadyExist")));
 			return;
 		}
 		DeathzonePosition popos = plugin.getRespawnHandler().getDeathzonePosition(player.getUniqueId());
 		if(popos == null || popos.pos1 == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.NotPositionOneSet")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.NotPositionOneSet")));
 			return;
 		}
 		if(popos.pos2 == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.NotPositionTwoSet")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.NotPositionTwoSet")));
 			return;
 		}
 		Deathzone dz = new Deathzone(dzname, priority, dzpath, popos.pos1, popos.pos2, cat, subcat);
 		plugin.getMysqlHandler().create(MysqlHandler.Type.DEATHZONE, dz);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneCreate")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneCreate")
 				.replace("%name%", dzname)
 				.replace("%prio%", String.valueOf(priority))
 				.replace("%cat%", cat)
@@ -126,11 +126,11 @@ public class DeathzoneHelper
 		String dzname = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
 			return;
 		}
 		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneDelete")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneDelete")
 				.replace("%name%", dzname)));
 		return;
 	}
@@ -154,14 +154,14 @@ public class DeathzoneHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0])));
 				return;
 			}
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 						.replace("%arg%", args[0])));
 				return;
 			}
@@ -268,7 +268,7 @@ public class DeathzoneHelper
 		}
 		if(list.isEmpty())
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ThereIsNoDeathzone")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ThereIsNoDeathzone")));
 			return;
 		}
 		int last = plugin.getMysqlHandler().lastID(MysqlHandler.Type.DEATHZONE);
@@ -322,10 +322,10 @@ public class DeathzoneHelper
 					+"~!~"+plugin.getYamlHandler().getLang().getString("KoordsHover")
 					.replace("%koords%", Utility.getLocationV2(r.getPosition1()))));
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ListHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ListHeadline")
 				.replace("%amount%", String.valueOf(last))));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ListHelp")));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ListHelpII")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ListHelp")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.ListHelpII")
 				.replace("%server%", server != null ? server : "N.A.")
 				.replace("%world%", world != null ? world : "N.A.")
 				.replace("%cat%", cat != null ? cat : "N.A.")
@@ -359,7 +359,7 @@ public class DeathzoneHelper
 		String dzname = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
 			return;
 		}
 		Deathzone dz = (Deathzone) plugin.getMysqlHandler().getData(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname);
@@ -407,14 +407,14 @@ public class DeathzoneHelper
 		String subcat = args[2];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
 			return;
 		}
 		Deathzone dz = (Deathzone) plugin.getMysqlHandler().getData(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname);
 		dz.setCategory(cat);
 		dz.setSubCategory(subcat);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.DEATHZONE, dz, "`displayname` = ?", dzname);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.SetCategory")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.SetCategory")
 				.replace("%dz%", dzname)
 				.replace("%cat%", cat)
 				.replace("%subcat%", subcat)));
@@ -435,13 +435,13 @@ public class DeathzoneHelper
 		String newdzname = args[1];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
 			return;
 		}
 		Deathzone dz = (Deathzone) plugin.getMysqlHandler().getData(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname);
 		dz.setDisplayname(newdzname);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.DEATHZONE, dz, "`displayname` = ?", dzname);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.SetName")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.SetName")
 				.replace("%dzold%", dzname)
 				.replace("%dznew%", newdzname)));
 		return;
@@ -461,20 +461,20 @@ public class DeathzoneHelper
 		int prio = 0;
 		if(!MatchApi.isInteger(args[1]))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 					.replace("%arg%", args[1])));
 			return;
 		}
 		prio = Integer.parseInt(args[1]);
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
 			return;
 		}
 		Deathzone dz = (Deathzone) plugin.getMysqlHandler().getData(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname);
 		dz.setPriority(prio);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.DEATHZONE, dz, "`displayname` = ?", dzname);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.SetPriority")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.SetPriority")
 				.replace("%dz%", args[0])
 				.replace("%prio%", args[1])));
 		return;
@@ -494,13 +494,13 @@ public class DeathzoneHelper
 		String dzpath = args[1];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneNotExist")));
 			return;
 		}
 		Deathzone dz = (Deathzone) plugin.getMysqlHandler().getData(MysqlHandler.Type.DEATHZONE, "`displayname` = ?", dzname);
 		dz.setDeathzonepath(dzpath);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.DEATHZONE, dz, "`displayname` = ?", dzname);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.SetDeathzonepath")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.SetDeathzonepath")
 				.replace("%dz%", dzname)
 				.replace("%dzpath%", dzpath)));
 		return;
@@ -530,11 +530,11 @@ public class DeathzoneHelper
 				}
 			}
 			RespawnHandler.deathzoneCreateMode.remove(index);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneCreationMode.Removed")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneCreationMode.Removed")));
 		} else
 		{
 			RespawnHandler.deathzoneCreateMode.add(player.getUniqueId());
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneCreationMode.Added")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathzone.DeathzoneCreationMode.Added")));
 		}
 	}
 }

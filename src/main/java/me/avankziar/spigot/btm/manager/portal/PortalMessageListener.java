@@ -53,8 +53,7 @@ public class PortalMessageListener implements PluginMessageListener
                 	String ptegc = in.readUTF();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
-						player.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 										.replace("%world%", worldName)));
 						return;
 					}
@@ -74,8 +73,7 @@ public class PortalMessageListener implements PluginMessageListener
 									{
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+											player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -110,7 +108,7 @@ public class PortalMessageListener implements PluginMessageListener
 													}
 												} catch(NullPointerException e)
 												{
-													player.sendMessage(ChatApi.tl("Error! See Console!"));
+													player.spigot().sendMessage(ChatApi.tctl("Error! See Console!"));
 												}
 											}
 										}.runTask(plugin);

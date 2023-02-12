@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-import main.java.me.avankziar.general.object.EntityTransport;
+import main.java.me.avankziar.general.object.EntityTransportTargetAccess;
 import main.java.me.avankziar.general.object.Home;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.object.Warp;
@@ -59,67 +59,67 @@ public class EntityTransportHelper
 			LivingEntity target = plugin.getUtility().getFocusEntity(player);
 			if(target == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NoEntityAtLeashOrFocused")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NoEntityAtLeashOrFocused")));
 				return;
 			}
 			if(!LivingEntitySerialization.canBeSerialized(target))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.EntityCannotBeSerialized")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.EntityCannotBeSerialized")));
 				return;
 			}
 			String data = LivingEntitySerialization.serializeEntityAsString(target);
-			player.sendMessage(ChatApi.tl("&c============================================="));
-			player.sendMessage(ChatApi.tl("&6LivingEntity Serialization:"));
+			player.spigot().sendMessage(ChatApi.tctl("&c============================================="));
+			player.spigot().sendMessage(ChatApi.tctl("&6LivingEntity Serialization:"));
 			player.sendMessage(data);
 			System.out.println("DataSTART:"+data+":DataEND");
 			//LivingEntitySerialization.spawnEntity(player.getLocation(), data);
-			player.sendMessage(ChatApi.tl("&c============================================="));
+			player.spigot().sendMessage(ChatApi.tctl("&c============================================="));
 			return;
 		}
 		if(!args[0].contains(":"))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NoSeperatorValue")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NoSeperatorValue")));
 			return;
 		}
 		String[] value = args[0].split(":");
 		if(value.length != 2)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ValueLenghtNotRight")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ValueLenghtNotRight")));
 			return;
 		}
 		String param = value[0];
 		String destination = value[1];
 		if(!param.equalsIgnoreCase("h") && !param.equalsIgnoreCase("pl") && !param.equalsIgnoreCase("w"))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ParameterDontExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ParameterDontExist")));
 			return;
 		}
 		if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.ENTITYTRANSPORT, null)
 				&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.ENTITYTRANSPORT.getLower()))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ForbiddenServerUse")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ForbiddenServerUse")));
 			return;
 		}
 		if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.ENTITYTRANSPORT, player, null)
 				&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.ENTITYTRANSPORT.getLower()))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ForbiddenWorldUse")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.ForbiddenWorldUse")));
 			return;
 		}
 		final LivingEntity target = plugin.getUtility().getFocusEntity(player);
 		if(EntityTeleportHandler.isEntityTeleport(target))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.EntityIsARegisteredEntityTeleport")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.EntityIsARegisteredEntityTeleport")));
 			return;
 		}
 		if(!LivingEntitySerialization.canBeSerialized(target))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.EntityCannotBeSerialized")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.EntityCannotBeSerialized")));
 			return;
 		}
 		if(!EntityTransportHandler.canSerialize(player, target))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.HasNoRightToSerializeThatType")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.HasNoRightToSerializeThatType")
 					.replace("%type%", target.getType().toString())));
 			return;
 		}
@@ -128,7 +128,7 @@ public class EntityTransportHelper
 			if(!EntityTransportHandler.isOwner(player, target) //&& !EntityTransportHandler.isMember(player, target)
 					)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotOwner")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotOwner")));
 				return;
 			}
 		}
@@ -136,7 +136,7 @@ public class EntityTransportHelper
 		{
 			if(!EntityTransportHandler.hasTicket(player, target))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotEnoughTickets")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotEnoughTickets")
 						.replace("%actual%", String.valueOf(EntityTransportHandler.getTicket(player)))
 						.replace("%needed%", String.valueOf(EntityTransportHandler.getTicket(target)))));
 				return;
@@ -149,7 +149,7 @@ public class EntityTransportHelper
 					player.getUniqueId().toString(), destination);
 			if(home == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.HomeNotExist")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.HomeNotExist")));
 				return;
 			}
 			new EntityTransportHandler(plugin).sendEntityToPosition(player, target, home.getLocation(), param, destination);
@@ -159,12 +159,12 @@ public class EntityTransportHelper
 			UUID targetuuid = Utility.convertNameToUUID(destination);
 			if(targetuuid == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 				return;
 			}
 			if(!EntityTransportHandler.hasAccess(player, destination))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.HasNoAccess")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.HasNoAccess")
 						.replace("%player%", destination)));
 				return;
 			}
@@ -179,7 +179,7 @@ public class EntityTransportHelper
 				if(warp.getBlacklist().contains(playeruuid)
 						&& !player.hasPermission(StaticValues.PERM_BYPASS_WARP_BLACKLIST))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouAreOnTheBlacklist")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouAreOnTheBlacklist")
 							.replace("%warpname%", warp.getName())));
 					return;
 				}
@@ -202,7 +202,7 @@ public class EntityTransportHelper
 					}
 				} else if(warp.isHidden() && !warp.getMember().contains(playeruuid))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
 					return;
 				}
 			}
@@ -225,31 +225,31 @@ public class EntityTransportHelper
 		UUID otherplayeruuid = Utility.convertNameToUUID(otherplayername);
 		if(otherplayeruuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 			return;
 		}
-		EntityTransport.TargetAccess etta = (EntityTransport.TargetAccess) plugin.getMysqlHandler()
+		EntityTransportTargetAccess etta = (EntityTransportTargetAccess) plugin.getMysqlHandler()
 				.getData(MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS, "`target_uuid` = ? AND `access_uuid` = ?",
 						player.getUniqueId().toString(), otherplayeruuid.toString());
 		if(etta == null)
 		{
-			etta = new EntityTransport(). new TargetAccess(player.getUniqueId().toString(), otherplayeruuid.toString());
+			etta = new EntityTransportTargetAccess(player.getUniqueId().toString(), otherplayeruuid.toString());
 			plugin.getMysqlHandler().create(MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS, etta);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.AddAccess")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.AddAccess")
 					.replace("%player%", otherplayername)));
 		} else
 		{
 			plugin.getMysqlHandler().deleteData(MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS, 
 					"`target_uuid` = ? AND `access_uuid` = ?",
 					player.getUniqueId().toString(), otherplayeruuid.toString());
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.AddAccess")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.AddAccess")
 					.replace("%player%", otherplayername)));
 		}
 	}
 	
 	public void entityTransportAccessList(Player player, String[] args)
 	{
-		if(args.length != 1 && args.length != 2)
+		if(args.length > 3)
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
@@ -262,14 +262,14 @@ public class EntityTransportHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0])));
 				return;
 			}
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 						.replace("%arg%", args[0])));
 				return;
 			}
@@ -286,21 +286,21 @@ public class EntityTransportHelper
 			UUID uuid = Utility.convertNameToUUID(args[1]);
 			if(uuid == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			playeruuid = uuid.toString();
 		}
-		ArrayList<EntityTransport.TargetAccess> list = new ArrayList<>();
+		ArrayList<EntityTransportTargetAccess> list = new ArrayList<>();
 		list = ConvertHandler.convertListVIII(plugin.getMysqlHandler().getList(MysqlHandler.Type.ENTITYTRANSPORT_TARGETACCESS,
 						"`id` ASC", start, quantity, "`target_uuid` = ?", playeruuid));
 		if(list.isEmpty())
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NoAccessInList")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NoAccessInList")));
 			return;
 		}
 		ArrayList<BaseComponent> bclist = new ArrayList<>();
-		for(EntityTransport.TargetAccess etta : list)
+		for(EntityTransportTargetAccess etta : list)
 		{
 			String otherplayer = Utility.convertUUIDToName(etta.getAccessUUID());
 			if(otherplayer == null)
@@ -312,7 +312,7 @@ public class EntityTransportHelper
 					HoverEvent.Action.SHOW_TEXT, plugin.getYamlHandler().getLang().getString("CmdEntityTransport.AccessListHover")
 					.replace("%player%", otherplayer)));
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.AccessListHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.AccessListHeadline")
 				.replace("%player%", playername)));
 		TextComponent tc = new TextComponent();
 		tc.setExtra(bclist);
@@ -333,42 +333,42 @@ public class EntityTransportHelper
 		UUID uuid = Utility.convertNameToUUID(playername);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		final LivingEntity target = plugin.getUtility().getFocusEntity(player);
 		if(EntityTeleportHandler.isEntityTeleport(target))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.EntityIsARegisteredEntityTeleport")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.EntityIsARegisteredEntityTeleport")));
 			return;
 		}
 		if(!LivingEntitySerialization.canBeSerialized(target))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.EntityCannotBeSerialized")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.EntityCannotBeSerialized")));
 			return;
 		}
 		if(!EntityTransportHandler.canSerialize(player, target))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.HasNoRightToSerializeThatType")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.HasNoRightToSerializeThatType")
 					.replace("%type%", target.getType().toString())));
 			return;
 		}
 		if(!EntityTransportHandler.hasOwner(player, target))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.HasNoOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.HasNoOwner")));
 			return;
 		}
 		if(!EntityTransportHandler.isOwner(player, target) //&& !EntityTransportHandler.isMember(player, target)
 				&& !player.hasPermission(StaticValues.BYPASS_ENTITYTRANSPORT))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.NotOwner")));
 			return;
 		}
 		PersistentDataContainer pdc = target.getPersistentDataContainer();
 		NamespacedKey nowner = new NamespacedKey(BungeeTeleportManager.getPlugin(), EntityTransportHelper.OWNER);
 		pdc.remove(nowner);
 		pdc.set(nowner,	PersistentDataType.STRING, uuid.toString());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.SetOwner")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.SetOwner")
 				.replace("%player%", playername)));
 	}
 	
@@ -385,14 +385,14 @@ public class EntityTransportHelper
 		int amount = 0;
 		if(!MatchApi.isInteger(args[0]))
 		{
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+			sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 					.replace("%arg%", args[0])));
 			return;
 		}
 		amount = Integer.parseInt(args[0]);
 		if(!MatchApi.isPositivNumber(amount))
 		{
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+			sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 					.replace("%arg%", args[0])));
 			return;
 		}
@@ -412,7 +412,7 @@ public class EntityTransportHelper
 		
 		if(uuid == null)
 		{
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		boolean mustpay = false;
@@ -429,11 +429,11 @@ public class EntityTransportHelper
 			Player player = (Player) sender;
 			if(uuid.toString().equals(player.getUniqueId().toString()))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.GetTickets")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.GetTickets")
 						.replace("%amount%", String.valueOf(amount))));
 			} else
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.OtherGetTickets")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.OtherGetTickets")
 						.replace("%amount%", String.valueOf(amount))
 						.replace("%player%", playername)));
 			}
@@ -442,10 +442,10 @@ public class EntityTransportHelper
 			Player other = Bukkit.getPlayer(uuid);
 			if(other != null)
 			{
-				other.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.GetTickets")
+				other.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.GetTickets")
 						.replace("%amount%", String.valueOf(amount))));
 			}
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.OtherGetTickets")
+			sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdEntityTransport.OtherGetTickets")
 					.replace("%amount%", String.valueOf(amount))
 					.replace("%player%", playername)));
 		}		

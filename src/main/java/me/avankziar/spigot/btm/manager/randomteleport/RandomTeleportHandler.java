@@ -49,7 +49,7 @@ public class RandomTeleportHandler
 			Location loc = getRandomTeleport(rtpPath, rt);
 			if(loc == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.SecurityBreach")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.SecurityBreach")));
 				return;
 			}
 			new BukkitRunnable()
@@ -59,7 +59,7 @@ public class RandomTeleportHandler
 				{
 					plugin.getUtility().givesEffect(player, Mechanics.RANDOMTELEPORT, false, false);
 					player.teleport(loc);
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.WarpTo")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRandomTeleport.WarpTo")
 							.replace("%server%", rt.getPoint1().getServer())
 							.replace("%world%", rt.getPoint1().getWorldName())));
 				}

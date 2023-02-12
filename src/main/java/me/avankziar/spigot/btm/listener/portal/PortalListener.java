@@ -233,14 +233,14 @@ public class PortalListener implements Listener
 				event.setUseInteractedBlock(Result.DENY);
 				event.setUseItemInHand(Result.DENY);
 				plugin.getPortalHandler().addPortalPosition(player.getUniqueId(), true, loc);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.InteractEvent.PosOne")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.InteractEvent.PosOne")));
 			} else if(event.getAction() == Action.RIGHT_CLICK_BLOCK)
 			{
 				event.setCancelled(true);
 				event.setUseInteractedBlock(Result.DENY);
 				event.setUseItemInHand(Result.DENY);
 				plugin.getPortalHandler().addPortalPosition(player.getUniqueId(), false, loc);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.InteractEvent.PosTwo")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.InteractEvent.PosTwo")));
 			} else
 			{
 				return;

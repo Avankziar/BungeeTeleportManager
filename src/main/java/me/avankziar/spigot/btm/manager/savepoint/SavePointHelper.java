@@ -58,13 +58,13 @@ public class SavePointHelper
 				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.SAVEPOINT, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.SAVEPOINT.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ForbiddenServerUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ForbiddenServerUse")));
 					return;
 				}
 				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.SAVEPOINT, player, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.SAVEPOINT.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ForbiddenWorldUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ForbiddenWorldUse")));
 					return;
 				}
 				if(args.length == 0)
@@ -73,10 +73,10 @@ public class SavePointHelper
 							player.getUniqueId().toString());
 					if(sp == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.LastSavePointDontExist")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.LastSavePointDontExist")));
 						return;
 					}
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.RequestInProgress")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.RequestInProgress")));
 					plugin.getSavePointHandler().sendPlayerToSavePoint(player, sp, player.getName(), player.getUniqueId().toString(), true);
 				} else if(args.length >= 1)
 				{
@@ -88,14 +88,14 @@ public class SavePointHelper
 						UUID uuid = Utility.convertNameToUUID(args[1]);
 						if(uuid == null)
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 							return;
 						}
 						otherplayeruuid = uuid.toString();
 					} else if(args.length >= 2 && !player.hasPermission(StaticValues.PERM_BYPASS_SAVEPOINT_OTHER) 
 							&& !args[1].equals(player.getName()))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPermission")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPermission")));
 						return;
 					}
 					if(!plugin.getMysqlHandler().exist(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?",
@@ -103,18 +103,18 @@ public class SavePointHelper
 					{
 						if(args.length >= 2)
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDontExistOther")
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDontExistOther")
 									.replace("%player%", args[1])
 									.replace("%savepoint%", savepointname)));
 							return;
 						}
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDontExist")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDontExist")
 								.replace("%savepoint%", savepointname)));
 						return;
 					}
 					sp = (SavePoint) plugin.getMysqlHandler().getData(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?",
 							player.getUniqueId().toString(), savepointname);
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.RequestInProgress")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.RequestInProgress")));
 					plugin.getSavePointHandler().sendPlayerToSavePoint(player, sp, player.getName(), player.getUniqueId().toString(), false);
 				}
 				return;
@@ -159,7 +159,7 @@ public class SavePointHelper
 			UUID uuid = Utility.convertNameToUUID(args[1]);
 			if(uuid == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			playeruuid = uuid.toString();
@@ -172,7 +172,7 @@ public class SavePointHelper
 						playeruuid));
 		if(list.isEmpty())
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.YouHaveNoSavePoints")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.YouHaveNoSavePoints")));
 			return;
 		}
 		String server = new ConfigHandler(plugin).getServer();
@@ -183,9 +183,9 @@ public class SavePointHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointHeadline")
 				.replace("%amount%", String.valueOf(last))));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListHelp")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListSameWorld");
@@ -252,7 +252,7 @@ public class SavePointHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0])));
 				return;
 			}
@@ -277,9 +277,9 @@ public class SavePointHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListHeadline")
 				.replace("%amount%", String.valueOf(last))));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListHelp")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdSavePoint.ListSameWorld");
@@ -364,7 +364,7 @@ public class SavePointHelper
 			Player otherplayer = Bukkit.getPlayer(playerName);
 			if(otherplayer == null)
 			{
-				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+				sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			uuid = otherplayer.getUniqueId();
@@ -380,7 +380,7 @@ public class SavePointHelper
 			uuid = Utility.convertNameToUUID(playerName);
 			if(uuid == null)
 			{
-				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+				sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			server = args[2];
@@ -391,7 +391,7 @@ public class SavePointHelper
 					|| !MatchApi.isNumber(args[7])
 					|| !MatchApi.isNumber(args[8]))
 			{
-				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumberII")));
+				sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumberII")));
 				return;
 			}
 			x = Double.parseDouble(args[4]);
@@ -405,27 +405,27 @@ public class SavePointHelper
 		if(plugin.getMysqlHandler().exist(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?", uuid.toString(), savePointName))
 		{
 			plugin.getMysqlHandler().updateData(Type.SAVEPOINT, sp, "`player_uuid` = ? AND `savepoint_name` = ?", uuid.toString(), savePointName);
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.UpdateSavePointConsole")
+			sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.UpdateSavePointConsole")
 					.replace("%player%", playerName)
 					.replace("%savepoint%", savePointName)));
 			Player otherplayer = Bukkit.getPlayer(playerName);
 			if(otherplayer != null)
 			{
 				plugin.getUtility().setSavePointsTabCompleter(otherplayer);
-				otherplayer.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.UpdateSavePoint")
+				otherplayer.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.UpdateSavePoint")
 						.replace("%savepoint%", savePointName)));
 			}
 		} else
 		{
 			plugin.getMysqlHandler().create(Type.SAVEPOINT, sp);
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.CreateSavePointConsole")
+			sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.CreateSavePointConsole")
 					.replace("%player%", playerName)
 					.replace("%savepoint%", savePointName)));
 			Player otherplayer = Bukkit.getPlayer(playerName);
 			if(otherplayer != null)
 			{
 				plugin.getUtility().setSavePointsTabCompleter(otherplayer);
-				otherplayer.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.CreateSavePoint")
+				otherplayer.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.CreateSavePoint")
 						.replace("%savepoint%", savePointName)));
 			}
 		}
@@ -445,7 +445,7 @@ public class SavePointHelper
 		UUID uuid = Utility.convertNameToUUID(otherplayername);
 		if(uuid == null)
 		{
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
+			sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("PlayerDontExist")));
 			return;
 		}
 		String savepoints = null;
@@ -457,33 +457,33 @@ public class SavePointHelper
 		{
 			if(!plugin.getMysqlHandler().exist(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?", uuid.toString(), savepoints))
 			{
-				sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDontExist")
+				sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDontExist")
 						.replace("%savepoint%", args[1])));
 				return;
 			}
 			plugin.getMysqlHandler().deleteData(Type.SAVEPOINT, "`player_uuid` = ? AND `savepoint_name` = ?", uuid.toString(), savepoints);
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDelete")
+			sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointDelete")
 					.replace("%player%", args[0])
 					.replace("%savepoint%", args[1])));
 			Player player = Bukkit.getPlayer(uuid);
 			if(player != null)
 			{
 				plugin.getUtility().setSavePointsTabCompleter(player);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.YourSavePointDelete")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.YourSavePointDelete")
 						.replace("%savepoint%", args[1])));
 			}
 		} else
 		{
 			final int count = plugin.getMysqlHandler().countWhereID(Type.SAVEPOINT, "`player_uuid` = ?", uuid.toString());
 			plugin.getMysqlHandler().deleteData(Type.SAVEPOINT, "`player_uuid` = ?", uuid.toString());
-			sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointsDelete")
+			sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointsDelete")
 					.replace("%player%", args[0])
 					.replace("%count%", String.valueOf(count))));
 			Player player = Bukkit.getPlayer(uuid);
 			if(player != null)
 			{
 				plugin.getUtility().setSavePointsTabCompleter(player);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.YourSavePointsDelete")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.YourSavePointsDelete")
 						.replace("%count%", String.valueOf(count))));
 			}
 		}
@@ -506,7 +506,7 @@ public class SavePointHelper
 				"`server` = ? AND `world` = ?", serverName, worldName);
 		plugin.getMysqlHandler().deleteData(
 				MysqlHandler.Type.SAVEPOINT, "`server` = ? AND `world` = ?", serverName, worldName);
-		sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointServerWorldDelete")
+		sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.SavePointServerWorldDelete")
 				.replace("%world%", worldName)
 				.replace("%server%", serverName)
 				.replace("%amount%", String.valueOf(count))));

@@ -33,6 +33,14 @@ Future =========================================================================
 - PlaceHolder Api, Home amount, Tpatoggle, etc.
 - xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
 
+Build 6-6-0
+- ~!~ als neuer "Neuer Linie" seperator für alle Nachrichten.
+- /homes, kann mit Configwert Home.Homes.UseServer und .UseWorld nun bestimmen ob der Server und oder Weltennamen des homes angezeigt werden soll.
+  Betrifft auch die Hovers!
+- Silent Pre- & PostMsg for Homes and Warps etc.
+- /entitytransportsetaccess fix.
+- /entitytransportlist gibt nun auch die korrekte Liste aus.
+
 Build 6-5-2
 - /warppostteleportexecutingcommand replacer fix, language Datei neugenerieren lassen!
 - TabCompletion NPE fix 

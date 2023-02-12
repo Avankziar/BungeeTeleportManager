@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import main.java.me.avankziar.general.object.EntityTransport;
+import main.java.me.avankziar.general.object.EntityTransportTicket;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 
@@ -14,11 +14,11 @@ public interface Table09
 {	
 	default boolean createIX(BungeeTeleportManager plugin, Object object) 
 	{
-		if(!(object instanceof EntityTransport))
+		if(!(object instanceof EntityTransportTicket))
 		{
 			return false;
 		}
-		EntityTransport.Ticket h = (EntityTransport.Ticket) object;
+		EntityTransportTicket h = (EntityTransportTicket) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) {
@@ -58,7 +58,7 @@ public interface Table09
 	
 	default boolean updateDataIX(BungeeTeleportManager plugin, Object object, String whereColumn, Object... whereObject) 
 	{
-		if(!(object instanceof EntityTransport))
+		if(!(object instanceof EntityTransportTicket))
 		{
 			return false;
 		}
@@ -66,7 +66,7 @@ public interface Table09
 		{
 			return false;
 		}
-		EntityTransport.Ticket h = (EntityTransport.Ticket) object;
+		EntityTransportTicket h = (EntityTransportTicket) object;
 		PreparedStatement preparedStatement = null;
 		Connection conn = plugin.getMysqlSetup().getConnection();
 		if (conn != null) 
@@ -130,7 +130,7 @@ public interface Table09
 		        while (result.next()) 
 		        {
 		        	
-		        	return new EntityTransport(). new Ticket(
+		        	return new EntityTransportTicket(
 		        			result.getString("player_uuid"),
 		        			result.getInt("actualamount"),
 		        			result.getInt("totalbuyedamount"),
@@ -160,7 +160,7 @@ public interface Table09
 		return null;
 	}
 	
-	default ArrayList<EntityTransport.Ticket> getListIX(BungeeTeleportManager plugin, String orderByColumn,
+	default ArrayList<EntityTransportTicket> getListIX(BungeeTeleportManager plugin, String orderByColumn,
 			int start, int end, String whereColumn, Object...whereObject)
 	{
 		PreparedStatement preparedStatement = null;
@@ -180,10 +180,10 @@ public interface Table09
 		        	i++;
 		        }
 		        result = preparedStatement.executeQuery();
-		        ArrayList<EntityTransport.Ticket> list = new ArrayList<EntityTransport.Ticket>();
+		        ArrayList<EntityTransportTicket> list = new ArrayList<EntityTransportTicket>();
 		        while (result.next()) 
 		        {
-		        	EntityTransport.Ticket ep = new EntityTransport(). new Ticket(
+		        	EntityTransportTicket ep = new EntityTransportTicket(
 		        			result.getString("player_uuid"),
 		        			result.getInt("actualamount"),
 		        			result.getInt("totalbuyedamount"),
@@ -215,7 +215,7 @@ public interface Table09
 		return null;
 	}
 	
-	default ArrayList<EntityTransport.Ticket> getTopIX(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
+	default ArrayList<EntityTransportTicket> getTopIX(BungeeTeleportManager plugin, String orderByColumn, int start, int end)
 	{
 		PreparedStatement preparedStatement = null;
 		ResultSet result = null;
@@ -229,10 +229,10 @@ public interface Table09
 		        preparedStatement = conn.prepareStatement(sql);
 		        
 		        result = preparedStatement.executeQuery();
-		        ArrayList<EntityTransport.Ticket> list = new ArrayList<EntityTransport.Ticket>();
+		        ArrayList<EntityTransportTicket> list = new ArrayList<EntityTransportTicket>();
 		        while (result.next()) 
 		        {
-		        	EntityTransport.Ticket ep = new EntityTransport(). new Ticket(
+		        	EntityTransportTicket ep = new EntityTransportTicket(
 		        			result.getString("player_uuid"),
 		        			result.getInt("actualamount"),
 		        			result.getInt("totalbuyedamount"),
@@ -264,7 +264,7 @@ public interface Table09
 		return null;
 	}
 	
-	default ArrayList<EntityTransport.Ticket> getAllListAtIX(BungeeTeleportManager plugin, String orderByColumn,
+	default ArrayList<EntityTransportTicket> getAllListAtIX(BungeeTeleportManager plugin, String orderByColumn,
 			boolean desc, String whereColumn, Object...whereObject)
 	{
 		PreparedStatement preparedStatement = null;
@@ -292,10 +292,10 @@ public interface Table09
 		        	i++;
 		        }
 		        result = preparedStatement.executeQuery();
-		        ArrayList<EntityTransport.Ticket> list = new ArrayList<EntityTransport.Ticket>();
+		        ArrayList<EntityTransportTicket> list = new ArrayList<EntityTransportTicket>();
 		        while (result.next()) 
 		        {
-		        	EntityTransport.Ticket ep = new EntityTransport(). new Ticket(
+		        	EntityTransportTicket ep = new EntityTransportTicket(
 		        			result.getString("player_uuid"),
 		        			result.getInt("actualamount"),
 		        			result.getInt("totalbuyedamount"),

@@ -55,7 +55,7 @@ public class SafeLocationMessageListener implements PluginMessageListener
             		boolean isSafe = in.readBoolean();
             		if(!isSafe)
             		{
-            			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotSafeLocation")));
+            			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NotSafeLocation")));
             			plugin.getSafeLocationHandler().pending.remove(uuid+"!"+playername);
     					return;
             		}

@@ -47,8 +47,7 @@ public class FirstSpawnMessageListener implements PluginMessageListener
                 	float pitch = in.readFloat();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
-						player.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 										.replace("%world%", worldName)));
 						return;
 					}
@@ -68,8 +67,7 @@ public class FirstSpawnMessageListener implements PluginMessageListener
 										Player player = plugin.getServer().getPlayer(playerName);
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+											player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -85,11 +83,11 @@ public class FirstSpawnMessageListener implements PluginMessageListener
 													player.teleport(loc);
 												} catch(NullPointerException e)
 												{
-													player.sendMessage(ChatApi.tl("Error! See Console!"));
+													player.spigot().sendMessage(ChatApi.tctl("Error! See Console!"));
 												}
 											}
 										}.runTask(plugin);
-										player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnTo")
+										player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.SpawnTo")
 												.replace("%value%", serverName)));
 										cancel();
 										return;

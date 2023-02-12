@@ -41,7 +41,7 @@ public class SavePointHandler
 			{
 				if(!plugin.getSafeLocationHandler().isSafeDestination(sp.getLocation()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotSafeLocation")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NotSafeLocation")));
 					return;
 				}
 			}
@@ -59,11 +59,11 @@ public class SavePointHandler
 					player.teleport(ConvertHandler.getLocation(sp.getLocation()));
 					if(last)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpToLast")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpToLast")
 								.replace("%savepoint%", sp.getSavePointName())));
 					} else
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpTo")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdSavePoint.WarpTo")
 								.replace("%savepoint%", sp.getSavePointName())));
 					}
 				}

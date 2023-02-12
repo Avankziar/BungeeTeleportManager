@@ -71,13 +71,13 @@ public class WarpHelper
 				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.WARP, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.WARP.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenServerUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenServerUse")));
 					return;
 				}
 				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.WARP, player, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.WARP.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenWorldUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenWorldUse")));
 					return;
 				}
 				String warpName = args[0];
@@ -144,13 +144,13 @@ public class WarpHelper
 				}
 				if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
 					return;
 				}
 				Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
 				if(warp.getPortalAccess() == Warp.PortalAccess.ONLY)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.OnlyPortal")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.OnlyPortal")
 							.replace("%warp%", warp.getName())));
 					return;
 				}
@@ -160,7 +160,7 @@ public class WarpHelper
 							&& !warp.getOwner().equals(player.getUniqueId().toString())
 							&& !player.hasPermission(StaticValues.PERM_BYPASS_WARP_BLACKLIST))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouAreOnTheBlacklist")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouAreOnTheBlacklist")
 								.replace("%warpname%", warp.getName())));
 						return;
 					}
@@ -175,7 +175,7 @@ public class WarpHelper
 							cfgh.getServer(), player.getWorld().getName(), warp.getLocation().getServer(), warp.getLocation().getWorldName());
 					if(answer != null)
 					{
-						player.sendMessage(ChatApi.tl(answer));
+						player.spigot().sendMessage(ChatApi.tctl(answer));
 					}
 					return;
 				}
@@ -184,7 +184,7 @@ public class WarpHelper
 				{
 					if(i > 0)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsToUse")
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsToUse")
 								.replace("%amount%", String.valueOf(i))));
 						return;
 					}
@@ -194,7 +194,7 @@ public class WarpHelper
 				{
 					if(rsOne.callBackMessage != null)
 					{
-						player.sendMessage(ChatApi.tl(rsOne.callBackMessage));
+						player.spigot().sendMessage(ChatApi.tctl(rsOne.callBackMessage));
 					}
 					return;
 				}
@@ -217,19 +217,19 @@ public class WarpHelper
 					} 
 					if(warp.isHidden() && !warp.getMember().contains(player.getUniqueId().toString()))
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
 						return;
 					}
 					if(warp.getPassword() != null)
 					{
 						if(password == null && !warp.getMember().contains(player.getUniqueId().toString()))
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.PasswordIsNeeded")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.PasswordIsNeeded")));
 							return;
 						}
 						if(!warp.getPassword().equals(password) && !warp.getMember().contains(player.getUniqueId().toString()))
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.PasswordIsFalse")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.PasswordIsFalse")));
 							return;
 						}
 					}
@@ -294,7 +294,7 @@ public class WarpHelper
 								plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
 						if(main == null || main.getBalance() < warp.getPrice())
 						{
-							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 							return;
 						}
 						Account to = null;
@@ -318,7 +318,7 @@ public class WarpHelper
 						}
 						if(!ea.isSuccess())
 						{
-							player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+							player.spigot().sendMessage(ChatApi.tctl(ea.getDefaultErrorMessage()));
 							return;
 						}
 					}
@@ -327,7 +327,7 @@ public class WarpHelper
 				else cooldown.put(player, System.currentTimeMillis()+1000L*3);
 				if(Bukkit.getPlayer(UUID.fromString(playeruuid)) == null)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 					return;
 				}
 				Player other = Bukkit.getPlayer(UUID.fromString(playeruuid));
@@ -337,7 +337,10 @@ public class WarpHelper
 				{
 					return;
 				}
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.RequestInProgress")));
+				if(plugin.getYamlHandler().getConfig().getBoolean("Warp.UsePreTeleportMessage"))
+				{
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.RequestInProgress")));
+				}
 				plugin.getUtility().givesEffect(other, Mechanics.WARP, true, true);
 				plugin.getWarpHandler().sendPlayerToWarp(other, warp, playername, playeruuid);
 				return;
@@ -365,7 +368,7 @@ public class WarpHelper
 				UUID uuid = Utility.convertNameToUUID(playername);
 				if(uuid == null)
 				{
-					sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+					sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 					return;
 				}
 				Player other = Bukkit.getPlayer(uuid);
@@ -379,7 +382,7 @@ public class WarpHelper
 				
 				if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 				{
-					sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+					sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
 					return;
 				}
 				Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
@@ -416,7 +419,7 @@ public class WarpHelper
 				}
 				if(!ignorePortalAccess && warp.getPortalAccess() == Warp.PortalAccess.ONLY)
 				{
-					sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.OnlyPortal")
+					sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.OnlyPortal")
 							.replace("%warp%", warp.getName())));
 					return;
 				}
@@ -424,7 +427,7 @@ public class WarpHelper
 				{
 					if(warp.getBlacklist().contains(playeruuid))
 					{
-						sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouAreOnTheBlacklist")
+						sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouAreOnTheBlacklist")
 								.replace("%warpname%", warp.getName())));
 						return;
 					}
@@ -435,7 +438,7 @@ public class WarpHelper
 					i = plugin.getWarpHandler().compareWarp(other, false);
 					if(i > 0 && !sender.hasPermission(StaticValues.PERM_BYPASS_WARP_TOOMANY))
 					{
-						sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsToUse")
+						sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsToUse")
 								.replace("%amount%", String.valueOf(i))));
 						return;
 					}
@@ -452,7 +455,7 @@ public class WarpHelper
 					}
 				} else if(!ignoreHidden && warp.isHidden() && !warp.getMember().contains(playeruuid))
 				{
-					sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
+					sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotAMember")));
 					return;
 				}
 				if(!ignoreCost
@@ -464,7 +467,7 @@ public class WarpHelper
 							plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
 					if(main == null || main.getBalance() < warp.getPrice())
 					{
-						sender.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
+						sender.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 						return;
 					}
 					Account to = null;
@@ -488,14 +491,14 @@ public class WarpHelper
 					}
 					if(!ea.isSuccess())
 					{
-						sender.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+						sender.spigot().sendMessage(ChatApi.tctl(ea.getDefaultErrorMessage()));
 						return;
 					}
 				}
 				
 				if(other != null)
 				{
-					other.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.RequestInProgress")));
+					other.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.RequestInProgress")));
 					plugin.getUtility().givesEffect(other, Mechanics.WARP, true, true);
 				}
 				plugin.getWarpHandler().sendPlayerToWarp(other, warp, playername, playeruuid);
@@ -518,18 +521,18 @@ public class WarpHelper
 		if(ForbiddenHandlerSpigot.isForbiddenToCreateServer(plugin, Mechanics.WARP)
 				&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_CREATE+Mechanics.WARP.getLower()))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenServer")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenServer")));
 			return;
 		}
 		if(ForbiddenHandlerSpigot.isForbiddenToCreateWorld(plugin, Mechanics.WARP, player)
 				&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_CREATE+Mechanics.WARP.getLower()))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenWorld")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenWorld")));
 			return;
 		}
 		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNameAlreadyExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNameAlreadyExist")));
 			return;
 		}
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP_TOOMANY))
@@ -551,7 +554,7 @@ public class WarpHelper
 					plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
 			if(main == null || main.getBalance() < warpCreateCost)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 				return;
 			}
 			String category = plugin.getYamlHandler().getLang().getString("Economy.WCategory");
@@ -561,7 +564,7 @@ public class WarpHelper
 					OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
 			if(!ea.isSuccess())
 			{
-				player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+				player.spigot().sendMessage(ChatApi.tctl(ea.getDefaultErrorMessage()));
 				return;
 			}
 		}
@@ -587,7 +590,7 @@ public class WarpHelper
 		String warpName = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
 			return;
 		}
 		Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
@@ -599,11 +602,11 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpDelete")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpDelete")
 				.replace("%name%", warpName)));
 		return;
 	}
@@ -626,14 +629,14 @@ public class WarpHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0])));
 				return;
 			}
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 						.replace("%arg%", args[0])));
 				return;
 			}
@@ -646,7 +649,7 @@ public class WarpHelper
 			UUID uuid = Utility.convertNameToUUID(args[1]);
 			if(uuid == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			playeruuid = uuid.toString();
@@ -673,7 +676,7 @@ public class WarpHelper
 		}
 		if(list.isEmpty())
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouHaveNoWarps")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.YouHaveNoWarps")));
 			return;
 		}
 		String server = new ConfigHandler(plugin).getServer();
@@ -685,14 +688,14 @@ public class WarpHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpsHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpsHeadline")
 				.replace("%amount%", String.valueOf(last))));
 		if(category != null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHelpII")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHelpII")
 					.replace("%category%", category)));
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHelp")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdWarp.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdWarp.ListSameWorld");
@@ -799,14 +802,14 @@ public class WarpHelper
 		{
 			if(!MatchApi.isInteger(args[0]))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 						.replace("%arg%", args[0])));
 				return;
 			}
 			page = Integer.parseInt(args[0]);
 			if(!MatchApi.isPositivNumber(page))
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 						.replace("%arg%", args[0])));
 				return;
 			}
@@ -838,14 +841,14 @@ public class WarpHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHeadline")
 				.replace("%amount%", String.valueOf(last))));
 		if(category != null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHelpII")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHelpII")
 					.replace("%category%", category)));
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHelp")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdWarp.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdWarp.ListSameWorld");
@@ -964,7 +967,7 @@ public class WarpHelper
 		String warpName = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
 			return;
 		}
 		Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
@@ -978,7 +981,7 @@ public class WarpHelper
 		{
 			if(!owner && !admin)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.InfoIsHidden")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.InfoIsHidden")));
 				return;
 			}
 		}
@@ -1131,13 +1134,13 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		String warpNewName = args[1];
 		warp.setName(warpNewName);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetName")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetName")
 				.replace("%warpold%", args[0])
 				.replace("%warpnew%", args[1])));
 		return;
@@ -1156,7 +1159,7 @@ public class WarpHelper
 		String warpName = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
 			return;
 		}
 		Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
@@ -1168,12 +1171,12 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		warp.setLocation(Utility.getLocation(player.getLocation()));
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPosition")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPosition")
 				.replace("%warp%", warp.getName())));
 		return;
 	}
@@ -1193,7 +1196,7 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		String newowner = args[1];
@@ -1206,7 +1209,7 @@ public class WarpHelper
 			UUID uuid = Utility.convertNameToUUID(newowner);
 			if(uuid == null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 				return;
 			}
 			newowneruuid = uuid.toString();
@@ -1215,11 +1218,11 @@ public class WarpHelper
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
 		if(newowneruuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetOwnerNull")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetOwnerNull")
 					.replace("%warp%", warp.getName())));
 		} else
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetOwner")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetOwner")
 					.replace("%warp%", warp.getName())
 					.replace("%player%", newowner)));
 		}
@@ -1247,7 +1250,7 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		String perm = args[1];
@@ -1259,11 +1262,11 @@ public class WarpHelper
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
 		if(perm == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPermissionNull")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPermissionNull")
 					.replace("%warp%", warp.getName())));
 		} else
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPermission")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPermission")
 					.replace("%warp%", warp.getName())
 					.replace("%perm%", perm)));
 		}
@@ -1285,7 +1288,7 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		String password = args[1];
@@ -1297,7 +1300,7 @@ public class WarpHelper
 			UUID uuid = Utility.convertNameToUUID(password);
 			if(uuid != null)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.PasswordCannotBeAPlayer")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.PasswordCannotBeAPlayer")));
 				return;
 			}
 		}
@@ -1305,11 +1308,11 @@ public class WarpHelper
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
 		if(password == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPasswordNull")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPasswordNull")
 					.replace("%warp%", warp.getName())));
 		} else
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPassword")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPassword")
 					.replace("%warp%", warp.getName())
 					.replace("%password%", password)));
 		}
@@ -1325,7 +1328,7 @@ public class WarpHelper
 		}
 		if(plugin.getEco() == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.EcoIsNull")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("Economy.EcoIsNull")));
 			return;
 		}
 		boolean owner = false;
@@ -1335,33 +1338,33 @@ public class WarpHelper
 		}
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP) && !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		double price = 0.0;
 		if(!MatchApi.isDouble(args[1]))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoDouble")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoDouble")
 					.replace("%arg%", args[1])));
 			return;
 		}
 		price = Double.parseDouble(args[1]);
 		if(!MatchApi.isPositivNumber(price))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 					.replace("%arg%", args[1])));
 			return;
 		}
 		double maximum = plugin.getYamlHandler().getConfig().getDouble("CostPer.Use.WarpServerAllowedMaximum", 10000.0);
 		if(price > maximum)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("ToHigh")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("ToHigh")
 					.replace("%format%", plugin.getEco().format(maximum, plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))));
 			return;
 		}
 		warp.setPrice(price);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPrice")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPrice")
 				.replace("%warp%", warp.getName())
 				.replace("%format%", plugin.getEco().format(maximum, plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL)))));
 		return;
@@ -1380,7 +1383,7 @@ public class WarpHelper
 		String warpName = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
 			return;
 		}
 		Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
@@ -1392,18 +1395,18 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		if(warp.isHidden())
 		{
 			warp.setHidden(false);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetHiddenFalse")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetHiddenFalse")
 					.replace("%warp%", warp.getName())));
 		} else
 		{
 			warp.setHidden(true);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetHiddenTrue")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetHiddenTrue")
 					.replace("%warp%", warp.getName())));
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
@@ -1425,13 +1428,13 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String newmember = uuid.toString();
@@ -1445,7 +1448,7 @@ public class WarpHelper
 			warp.getMember().add(newmember);
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.AddMember")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.AddMember")
 				.replace("%warp%", warp.getName())
 				.replace("%member%", args[1])));
 		if(newmember != null)
@@ -1467,7 +1470,7 @@ public class WarpHelper
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String newmember = uuid.toString();
@@ -1481,7 +1484,7 @@ public class WarpHelper
 			warp.getMember().add(newmember);
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.AddMember")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.AddMember")
 				.replace("%warp%", warp.getName())
 				.replace("%member%", args[1])));
 		return;
@@ -1502,19 +1505,19 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String oldmember = uuid.toString();
 		if(oldmember == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		warp.getMember().remove(oldmember);
@@ -1523,7 +1526,7 @@ public class WarpHelper
 			warp.setMember(null);
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.RemoveMember")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.RemoveMember")
 				.replace("%warp%", warp.getName())
 				.replace("%member%", args[1])));
 		if(oldmember != null)
@@ -1545,7 +1548,7 @@ public class WarpHelper
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String oldmember = uuid.toString();
@@ -1555,7 +1558,7 @@ public class WarpHelper
 			warp.setMember(null);
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.RemoveMember")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.RemoveMember")
 				.replace("%warp%", warp.getName())
 				.replace("%member%", args[1])));
 	}
@@ -1575,13 +1578,13 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String newmember = uuid.toString();
@@ -1595,7 +1598,7 @@ public class WarpHelper
 			warp.getBlacklist().add(newmember);
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.AddBlacklist")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.AddBlacklist")
 				.replace("%warp%", warp.getName())
 				.replace("%blacklist%", args[1])));
 		if(newmember != null)
@@ -1622,13 +1625,13 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		UUID uuid = Utility.convertNameToUUID(args[1]);
 		if(uuid == null)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 			return;
 		}
 		String oldmember = uuid.toString();
@@ -1638,7 +1641,7 @@ public class WarpHelper
 			warp.setBlacklist(null);
 		}
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.RemoveBlacklist")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.RemoveBlacklist")
 				.replace("%warp%", warp.getName())
 				.replace("%blacklist%", args[1])));
 		if(oldmember != null)
@@ -1663,7 +1666,7 @@ public class WarpHelper
 		String warpName = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
 			return null;
 		}
 		return (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
@@ -1681,7 +1684,7 @@ public class WarpHelper
 		String warpName = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
 			return null;
 		}
 		return (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
@@ -1702,13 +1705,13 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		String warpNewCategory = args[1];
 		warp.setCategory(warpNewCategory);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetCategory")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetCategory")
 				.replace("%warp%", args[0])
 				.replace("%category%", args[1])));
 		return;
@@ -1729,7 +1732,7 @@ public class WarpHelper
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP,
 				"`server` = ? AND `world` = ?", serverName, worldName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.PortalsNotExist")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.PortalsNotExist")
 					.replace("%world%", worldName)
 					.replace("%server%", serverName)));
 			return;
@@ -1738,7 +1741,7 @@ public class WarpHelper
 				"`server` = ? AND `world` = ?", serverName, worldName);
 		plugin.getMysqlHandler().deleteData(
 				MysqlHandler.Type.PORTAL, "`server` = ? AND `world` = ?", serverName, worldName);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.PortalServerWorldDelete")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.PortalServerWorldDelete")
 				.replace("%world%", worldName)
 				.replace("%server%", serverName)
 				.replace("%amount%", String.valueOf(count))));
@@ -1761,13 +1764,13 @@ public class WarpHelper
 		int page = 0;
 		if(!MatchApi.isInteger(args[0]))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoNumber")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoNumber")
 					.replace("%arg%", args[0])));
 			return;
 		}
 		if(!MatchApi.isPositivNumber(page))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("IsNegativ")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("IsNegativ")
 					.replace("%arg%", args[0])));
 			return;
 		}
@@ -1830,7 +1833,7 @@ public class WarpHelper
 					UUID uuid = Utility.convertNameToUUID(arg[1]);
 					if(uuid == null)
 					{
-						player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
 						return;
 					}
 					whereObjects.add(uuid.toString());
@@ -1848,7 +1851,7 @@ public class WarpHelper
 				s += plugin.getYamlHandler().getLang().getString("CmdWarp.SearchValueInfo.Member").replace("%category%", "&e"+arg[1]+"&f");
 				break;
 			default:
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SearchOptionValues")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SearchOptionValues")));
 				return;
 			}
 			i++;
@@ -1873,10 +1876,10 @@ public class WarpHelper
 		{
 			lastpage = true;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHeadline")
 				.replace("%amount%", String.valueOf(list.size()))));
-		player.sendMessage(ChatApi.tl(s));
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHelp")));
+		player.spigot().sendMessage(ChatApi.tctl(s));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ListHelp")));
 		LinkedHashMap<String, LinkedHashMap<String, ArrayList<BaseComponent>>> map = new LinkedHashMap<>();
 		String sameServer = plugin.getYamlHandler().getLang().getString("CmdWarp.ListSameServer");
 		String sameWorld = plugin.getYamlHandler().getLang().getString("CmdWarp.ListSameWorld");
@@ -1990,7 +1993,7 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.NotOwner")));
 			return;
 		}
 		String pA = args[1];
@@ -2001,7 +2004,7 @@ public class WarpHelper
 			warp.setPortalAccess(portalAccess);
 		} catch(Exception e)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotEnumValue")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NotEnumValue")
 					.replace("%enum%", Warp.PortalAccess.FORBIDDEN.toString()+" "
 					+Warp.PortalAccess.IRRELEVANT.toString()+" "+Warp.PortalAccess.ONLY.toString()+" ")));
 			return;
@@ -2009,15 +2012,15 @@ public class WarpHelper
 		switch(portalAccess)
 		{
 		case FORBIDDEN:
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPortalAccess.Forbidden")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPortalAccess.Forbidden")
 					.replace("%warp%", args[0])));
 			break;
 		case IRRELEVANT:
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPortalAccess.Irrelevant")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPortalAccess.Irrelevant")
 					.replace("%warp%", args[0])));
 			break;
 		case ONLY:
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPortalAccess.Only")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPortalAccess.Only")
 					.replace("%warp%", args[0])));
 			break;
 		}
@@ -2038,7 +2041,7 @@ public class WarpHelper
 		String warpName = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpNotExist")));
 			return;
 		}
 		Warp warp = (Warp) plugin.getMysqlHandler().getData(MysqlHandler.Type.WARP, "`warpname` = ?", warpName);
@@ -2054,7 +2057,7 @@ public class WarpHelper
 		if(!player.hasPermission(StaticValues.PERM_BYPASS_WARP)
 				&& !owner)
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotOwner")));
 			return;
 		}
 		PostTeleportExecuterCommand ptec = PostTeleportExecuterCommand.PLAYER;
@@ -2078,7 +2081,7 @@ public class WarpHelper
 		warp.setPostTeleportExecuterCommand(ptec);
 		warp.setPostTeleportExecutingCommand(msg);
 		plugin.getMysqlHandler().updateData(MysqlHandler.Type.WARP, warp, "`warpname` = ?", warp.getName());
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPostTeleportExecutingCommand")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.SetPostTeleportExecutingCommand")
 				.replace("%warp%", warp.getName())
 				.replace("%type%", ptec.toString())
 				.replace("%cmd%", msg == null ? "N.A." : msg)));

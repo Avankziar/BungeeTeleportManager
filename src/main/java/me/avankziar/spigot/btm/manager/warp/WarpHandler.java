@@ -41,7 +41,7 @@ public class WarpHandler
 			{
 				if(!plugin.getSafeLocationHandler().isSafeDestination(warp.getLocation()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("NotSafeLocation")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NotSafeLocation")));
 					return;
 				}
 			}
@@ -59,8 +59,11 @@ public class WarpHandler
 				public void run()
 				{
 					player.teleport(ConvertHandler.getLocation(warp.getLocation()));
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpTo")
-							.replace("%warp%", warp.getName())));
+					if(plugin.getYamlHandler().getConfig().getBoolean("Warp.UsePostTeleportMessage"))
+					{
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WarpTo")
+								.replace("%warp%", warp.getName())));
+					}					
 					if(warp.getPostTeleportExecutingCommand() != null)
 					{
 						String s = warp.getPostTeleportExecutingCommand().replace("%player%", player.getName());
@@ -218,7 +221,7 @@ public class WarpHandler
 		{
 			if(message)
 			{
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsGlobal")
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsGlobal")
 						.replace("%amount%", String.valueOf(globalLimit))));
 			}
 		}
@@ -294,7 +297,7 @@ public class WarpHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsServerCluster")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsServerCluster")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -336,7 +339,7 @@ public class WarpHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsServer")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsServer")
 							.replace("%amount%", String.valueOf(serverLimit))));
 				}
 			}
@@ -431,7 +434,7 @@ public class WarpHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsWorld")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}
@@ -474,7 +477,7 @@ public class WarpHandler
 			{
 				if(message)
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsWorld")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.TooManyWarpsWorld")
 							.replace("%amount%", String.valueOf(worldLimit))));
 				}
 			}

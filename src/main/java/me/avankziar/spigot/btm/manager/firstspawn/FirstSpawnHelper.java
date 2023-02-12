@@ -52,25 +52,25 @@ public class FirstSpawnHelper
 				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.FIRSTSPAWN, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.FIRSTSPAWN.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.ForbiddenServerUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.ForbiddenServerUse")));
 					return;
 				}
 				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.FIRSTSPAWN, player, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.FIRSTSPAWN.getLower()))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.ForbiddenWorldUse")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.ForbiddenWorldUse")));
 					return;
 				}
 				String fsName = args[0];
 				if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", fsName))
 				{
-					player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.FirstSpawnNotExist")));
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.FirstSpawnNotExist")));
 					return;
 				}
 				FirstSpawn fs = (FirstSpawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", fsName);
 				if(cooldown.containsKey(player)) cooldown.replace(player, System.currentTimeMillis()+1000L*3);
 				else cooldown.put(player, System.currentTimeMillis()+1000L*3);
-				player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.RequestInProgress")));
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.RequestInProgress")));
 				plugin.getUtility().givesEffect(player, Mechanics.FIRSTSPAWN, true, true);
 				new FirstSpawnHandler(plugin).sendPlayerToFirstSpawn(player, fs, false);
 			}
@@ -93,13 +93,13 @@ public class FirstSpawnHelper
 			fs = (FirstSpawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", server);
 			fs.setLocation(Utility.getLocation(player.getLocation()));
 			plugin.getMysqlHandler().updateData(MysqlHandler.Type.FIRSTSPAWN, fs, "`server` = ?", server);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.ReSet")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.ReSet")
 					.replace("%server%", server)));
 		} else
 		{
 			fs = new FirstSpawn(Utility.getLocation(player.getLocation()));
 			plugin.getMysqlHandler().create(MysqlHandler.Type.FIRSTSPAWN, fs);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.Set")
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.Set")
 					.replace("%server%", server)));
 			TabCompletionOne.renewFirstSpawn();
 		}
@@ -118,11 +118,11 @@ public class FirstSpawnHelper
 		String fsName = args[0];
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", fsName))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.FirstSpawnNotExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.FirstSpawnNotExist")));
 			return;
 		}
 		plugin.getMysqlHandler().deleteData(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", fsName);
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.RemoveSpawn")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.RemoveSpawn")
 				.replace("%value%", fsName)));
 		TabCompletionOne.renewFirstSpawn();
 		return;
@@ -141,10 +141,10 @@ public class FirstSpawnHelper
 				MysqlHandler.Type.FIRSTSPAWN,"`id`", false, "1"));
 		if(list.isEmpty())
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.NoOneExist")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.NoOneExist")));
 			return;
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.InfoHeadline")
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdFirstSpawn.InfoHeadline")
 				.replace("%amount%", String.valueOf(list.size()))));
 		for(FirstSpawn fs : list)
 		{
