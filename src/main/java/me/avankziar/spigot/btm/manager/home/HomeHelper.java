@@ -30,6 +30,7 @@ import main.java.me.avankziar.spigot.btm.events.listenable.playertoposition.Home
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.btm.handler.ForbiddenHandlerSpigot;
+import main.java.me.avankziar.spigot.btm.hook.WorldGuardHook;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -67,6 +68,14 @@ public class HomeHelper
 		{
 			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.ForbiddenWorld")));
 			return;
+		}
+		if(BungeeTeleportManager.getWorldGuard())
+		{
+			if(!WorldGuardHook.canCreateHome(player))
+			{
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.WorldGuardCreateDeny")));
+				return;
+			}
 		}
 		boolean exist = false;
 		boolean isPrio = false;
@@ -227,6 +236,14 @@ public class HomeHelper
 				{
 					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.ForbiddenWorldUse")));
 					return;
+				}
+				if(BungeeTeleportManager.getWorldGuard())
+				{
+					if(!WorldGuardHook.canUseHome(player))
+					{
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.WorldGuardUseDeny")));
+						return;
+					}
 				}
 				String homeName = "";
 				String playername = player.getName();

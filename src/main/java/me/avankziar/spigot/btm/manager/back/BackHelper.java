@@ -20,6 +20,7 @@ import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
 import main.java.me.avankziar.spigot.btm.database.MysqlHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.ForbiddenHandlerSpigot;
+import main.java.me.avankziar.spigot.btm.hook.WorldGuardHook;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
 import net.md_5.bungee.api.chat.ClickEvent;
 
@@ -63,6 +64,14 @@ public class BackHelper
 					{
 						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdBack.ForbiddenWorldUse")));
 						return;
+					}
+					if(BungeeTeleportManager.getWorldGuard())
+					{
+						if(!WorldGuardHook.canUseBack(player))
+						{
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdBack.WorldGuardUseDeny")));
+							return;
+						}
 					}
 					if(!player.hasPermission(StaticValues.BYPASS_COST+Mechanics.BACK.getLower()))
 					{
@@ -132,6 +141,14 @@ public class BackHelper
 					{
 						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathback.ForbiddenWorldUse")));
 						return;
+					}
+					if(BungeeTeleportManager.getWorldGuard())
+					{
+						if(!WorldGuardHook.canUseDeathback(player))
+						{
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdDeathBack.WorldGuardUseDeny")));
+							return;
+						}
 					}
 					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdBack.RequestInProgress")));
 					directDeathBackMethode(player, null);

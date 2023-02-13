@@ -124,10 +124,6 @@ public class BackHandler
 			player.sendMessage(ChatApi.tctl("Server is unknow!"));
 			return;
 		}
-		if(!player.getServer().getInfo().getName().equals(oldserver))
-    	{
-    		player.connect(plugin.getProxy().getServerInfo(oldserver));
-    	}
     	taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
     		int i = 0;
@@ -144,6 +140,10 @@ public class BackHandler
 					taskOne.cancel();
 					return;
 				}
+				if(!player.getServer().getInfo().getName().equals(oldserver))
+		    	{
+		    		player.connect(plugin.getProxy().getServerInfo(oldserver));
+		    	}
 				if(player.getServer().getInfo().getName().equals(oldserver))
 	        	{
 					ByteArrayOutputStream streamout = new ByteArrayOutputStream();

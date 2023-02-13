@@ -33,6 +33,7 @@ import main.java.me.avankziar.spigot.btm.events.listenable.playertoposition.Warp
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.btm.handler.ForbiddenHandlerSpigot;
+import main.java.me.avankziar.spigot.btm.hook.WorldGuardHook;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -79,6 +80,14 @@ public class WarpHelper
 				{
 					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenWorldUse")));
 					return;
+				}
+				if(BungeeTeleportManager.getWorldGuard())
+				{
+					if(!WorldGuardHook.canUseWarp(player))
+					{
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WorldGuardUseDeny")));
+						return;
+					}
 				}
 				String warpName = args[0];
 				String password = null;
@@ -529,6 +538,14 @@ public class WarpHelper
 		{
 			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.ForbiddenWorld")));
 			return;
+		}
+		if(BungeeTeleportManager.getWorldGuard())
+		{
+			if(!WorldGuardHook.canCreateWarp(player))
+			{
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdWarp.WorldGuardUseDeny")));
+				return;
+			}
 		}
 		if(plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`warpname` = ?", warpName))
 		{

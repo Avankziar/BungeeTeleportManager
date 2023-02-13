@@ -31,13 +31,20 @@ Future =========================================================================
   Guter Testboden, um eine Mechanik zu entwickeln, um einzelne Entitys mit Spieler zu teleportieren.
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
 - PlaceHolder Api, Home amount, Tpatoggle, etc.
+  Home-, Portal-, Warpsanzahl, Letzter Safepoint
 - xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
 
-Build 6-6-0
+Build 7-0-0
+- WorldGuard Flags hinzugefügt:
+  - btm-home-create, btm-portal-create, btm-warp-create
+  - btm-back-use, btm-deathback-use, btm-home-use, btm-portal-use, btm-tpa-use, btm-tpa-accept-use, btm-warp-use
+  - Nutzen alle die Bypasspermission Forbidden to Create oder to Use + die Mechanik kleingeschrieben.
 - ~!~ als neuer "Neuer Linie" seperator für alle Nachrichten.
 - /homes, kann mit Configwert Home.Homes.UseServer und .UseWorld nun bestimmen ob der Server und oder Weltennamen des homes angezeigt werden soll.
   Betrifft auch die Hovers!
 - Silent Pre- & PostMsg for Homes and Warps etc.
+- Logicfehler beim Delay auf Serverübergreifende Teleporte aller Mechaniken, fix.
+- Portal GlobalCount Syntax fix.
 - /entitytransportsetaccess fix.
 - /entitytransportlist gibt nun auch die korrekte Liste aus.
 

@@ -1606,6 +1606,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Back benutzt werden!",
 						"&cNo back may be used in this world!"}));
+		languageKeys.put(path+"WorldGuardUseDeny", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Region dürfen keine Backs benutzt werden!",
+						"&cNo backs may be used in this region!"}));
 		languageKeys.put(path+"NotifyAfterWithDraw", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Back-Teleport hat &f%format% &egekostet.",
@@ -1619,6 +1623,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Deathback benutzt werden!",
 						"&cNo deathback may be used in this world!"}));
+		languageKeys.put(path+"WorldGuardUseDeny", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Region dürfen keine Deathbacks benutzt werden!",
+						"&cNo deathbacks may be used in this region!"}));
 		path = "CmdImport.";
 		languageKeys.put(path+"InProcess", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
@@ -2054,6 +2062,14 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Homes benutzt werden!",
 						"&cNo homes may be used in this world!"}));
+		languageKeys.put(path+"WorldGuardCreateDeny", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Region dürfen keine Homes erstellt werden!",
+						"&cNo homes may be created in this region!"}));
+		languageKeys.put(path+"WorldGuardUseDeny", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Region dürfen keine Homes benutzt werden!",
+						"&cNo homes may be used in this region!"}));
 		languageKeys.put(path+"NotifyAfterWithDraw", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Home-Teleport hat &f%format% &egekostet.",
@@ -2171,6 +2187,14 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Portale benutzt werden!",
 						"&cNo portals may be used on this world!"}));
+		languageKeys.put(path+"WorldGuardCreateDeny", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Region dürfen keine Portale erstellt werden!",
+						"&cNo portals may be created in this region!"}));
+		languageKeys.put(path+"WorldGuardUseDeny", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Region dürfen keine Portale benutzt werden!",
+						"&cNo portals may be used in this region!"}));
 		languageKeys.put(path+"TooManyPortalWorld", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cDu hast schon das Maximum von &f%amount% &cPortale für diese Welt erstellt! Bitte lösche vorher einen deiner Portale um fortzufahren!",
@@ -2970,6 +2994,10 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt darf kein TPA benutzt werden!",
 						"&cNo tpa may be used in this world!"}));
+		languageKeys.put(path+"WorldGuardUseDeny", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Region dürfen keine Tpas benutzt werden!",
+						"&cNo tpas may be used in this region!"}));
 	}
 	
 	private void langWarp()
@@ -3083,6 +3111,14 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&cAuf dieser Welt dürfen keine Warps benutzt werden!",
 						"&cNo warps may be used on this world!"}));
+		languageKeys.put(path+"WorldGuardCreateDeny", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Region dürfen keine Warps erstellt werden!",
+						"&cNo warps may be created in this region!"}));
+		languageKeys.put(path+"WorldGuardUseDeny", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&cIn dieser Region dürfen keine Warps benutzt werden!",
+						"&cNo warps may be used in this region!"}));
 		languageKeys.put(path+"NotifyAfterWithDraw", 
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Warp-Teleport hat &f%format% &egekostet.",

@@ -96,15 +96,7 @@ public class IFHMessageListener implements Listener
 			player.sendMessage(ChatApi.tctl(errormessage));
 			return;
 		}
-		if(!player.getServer().getInfo().getName().equals(location.getServer()))
-		{
-			if(plugin.getProxy().getServerInfo(location.getServer()) == null)
-			{
-				player.sendMessage(ChatApi.tctl(errormessage));
-				return;
-			}
-			player.connect(plugin.getProxy().getServerInfo(location.getServer()));
-		}
+		
 		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
 			@Override
@@ -119,6 +111,15 @@ public class IFHMessageListener implements Listener
 						player.sendMessage(ChatApi.tctl(errormessage));
 					}
 					return;
+				}
+				if(!player.getServer().getInfo().getName().equals(location.getServer()))
+				{
+					if(plugin.getProxy().getServerInfo(location.getServer()) == null)
+					{
+						player.sendMessage(ChatApi.tctl(errormessage));
+						return;
+					}
+					player.connect(plugin.getProxy().getServerInfo(location.getServer()));
 				}
 				ByteArrayOutputStream streamout = new ByteArrayOutputStream();
 		        DataOutputStream out = new DataOutputStream(streamout);

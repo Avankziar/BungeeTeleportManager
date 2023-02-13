@@ -644,7 +644,7 @@ public class PortalHandler
 	{
 		int globalLimit = 0;
 		int globalHomeCount = plugin.getMysqlHandler().countWhereID(
-				MysqlHandler.Type.PORTAL, "`owner` = ?",
+				MysqlHandler.Type.PORTAL, "`owner_uuid` = ?",
 				player.getUniqueId().toString());
 		if(player.hasPermission(StaticValues.PERM_PORTAL_COUNTPORTALS_GLOBAL+"*"))
 		{

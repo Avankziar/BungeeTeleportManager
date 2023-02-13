@@ -25,6 +25,7 @@ import main.java.me.avankziar.spigot.btm.events.listenable.playertoplayer.TpPreT
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.btm.handler.ForbiddenHandlerSpigot;
+import main.java.me.avankziar.spigot.btm.hook.WorldGuardHook;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
 import net.md_5.bungee.api.chat.ClickEvent;
 
@@ -58,6 +59,14 @@ public class TeleportHelper
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+		}
+		if(BungeeTeleportManager.getWorldGuard())
+		{
+			if(!WorldGuardHook.canUseTPAAccept(player))
+			{
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTPA.WorldGuardUseDeny")));
+				return;
+			}
 		}
 		Teleport tp = new Teleport(null, null,
 				player.getUniqueId(), player.getName(), Teleport.Type.ACCEPT);
@@ -124,6 +133,14 @@ public class TeleportHelper
 					{
 						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTPA.ForbiddenWorldUse")));
 						return;
+					}
+					if(BungeeTeleportManager.getWorldGuard())
+					{
+						if(!WorldGuardHook.canUseTPA(player))
+						{
+							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTPA.WorldGuardUseDeny")));
+							return;
+						}
 					}
 					UUID uuid = Utility.convertNameToUUID(args[0]);
 					if(uuid == null)

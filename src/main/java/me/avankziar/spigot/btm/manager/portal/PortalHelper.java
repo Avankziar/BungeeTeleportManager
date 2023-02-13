@@ -46,6 +46,7 @@ import main.java.me.avankziar.spigot.btm.events.listenable.playertoposition.Port
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.btm.handler.ForbiddenHandlerSpigot;
+import main.java.me.avankziar.spigot.btm.hook.WorldGuardHook;
 import main.java.me.avankziar.spigot.btm.manager.portal.PortalHandler.PortalPosition;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -81,14 +82,25 @@ public class PortalHelper
 				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.PORTAL, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.PORTAL.getLower()))
 				{
+					plugin.getPortalHandler().throwback(portal, player);
 					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ForbiddenServerUse")));
 					return;
 				}
 				if(ForbiddenHandlerSpigot.isForbiddenToUseWorld(plugin, Mechanics.PORTAL, player, null)
 						&& !player.hasPermission(StaticValues.BYPASS_FORBIDDEN_USE+Mechanics.PORTAL.getLower()))
 				{
+					plugin.getPortalHandler().throwback(portal, player);
 					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.ForbiddenWorldUse")));
 					return;
+				}
+				if(BungeeTeleportManager.getWorldGuard())
+				{
+					if(!WorldGuardHook.canUsePortal(player))
+					{
+						plugin.getPortalHandler().throwback(portal, player);
+						player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.WorldGuardUseDeny")));
+						return;
+					}
 				}
 				if(portal.getBlacklist() != null)
 				{
@@ -730,6 +742,14 @@ public class PortalHelper
 		{
 			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NotPositionTwoSet")));
 			return;
+		}
+		if(BungeeTeleportManager.getWorldGuard())
+		{
+			if(!WorldGuardHook.canCreatePortal(player, popos.getLocation1(), popos.getLocation2()))
+			{
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.WorldGuardCreateDeny")));
+				return;
+			}
 		}
 		if(plugin.getPortalHandler().inPortalArea(player.getLocation(), 0)
 				|| plugin.getPortalHandler().inPortalArea(popos.getLocation1(), 0)

@@ -70,10 +70,6 @@ public class TeleportHandler
 		{
 			return;
 		}
-		if(!sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
-		{
-			sender.connect(target.getServer().getInfo());
-		}
 		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
 			@Override
@@ -87,6 +83,10 @@ public class TeleportHandler
 						|| target.getServer() == null || target.getServer().getInfo() == null || target.getServer().getInfo().getName() == null)
 				{
 					return;
+				}
+				if(!sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
+				{
+					sender.connect(target.getServer().getInfo());
 				}
 				ByteArrayOutputStream streamout = new ByteArrayOutputStream();
 		        DataOutputStream out = new DataOutputStream(streamout);
@@ -262,10 +262,6 @@ public class TeleportHandler
 			sender.sendMessage(ChatApi.tctl(errormessage));
 			return;
 		}
-		if(!sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
-		{
-			sender.connect(target.getServer().getInfo());
-		}
 		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
 			@Override
@@ -279,6 +275,10 @@ public class TeleportHandler
 						|| target.getServer() == null || target.getServer().getInfo() == null || target.getServer().getInfo().getName() == null)
 				{
 					return;
+				}
+				if(!sender.getServer().getInfo().getName().equals(target.getServer().getInfo().getName()))
+				{
+					sender.connect(target.getServer().getInfo());
 				}
 				ByteArrayOutputStream streamout = new ByteArrayOutputStream();
 		        DataOutputStream out = new DataOutputStream(streamout);

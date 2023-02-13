@@ -57,6 +57,7 @@ import main.java.me.avankziar.spigot.btm.database.YamlHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.SafeLocationHandler;
 import main.java.me.avankziar.spigot.btm.handler.SafeLocationMessageListener;
+import main.java.me.avankziar.spigot.btm.hook.WorldGuardHook;
 import main.java.me.avankziar.spigot.btm.ifh.LastKnownPositionProvider;
 import main.java.me.avankziar.spigot.btm.ifh.TeleportProvider;
 import main.java.me.avankziar.spigot.btm.listener.PlayerOnCooldownListener;
@@ -121,6 +122,7 @@ public class BungeeTeleportManager extends JavaPlugin
 	private Vanish vanishconsumer;
 	private Economy ecoConsumer;
 	private Administration administrationConsumer;
+	private static boolean worldGuard = false;
 	
 	private SafeLocationHandler safeLocationHandler;
 	private CommandHelper commandHelper;
@@ -158,6 +160,11 @@ public class BungeeTeleportManager extends JavaPlugin
 	private LinkedHashMap<String, ArgumentModule> argumentMap;
 	public static String infoCommandPath = "CmdBtm";
 	public static String infoCommand = "/"; //InfoComamnd
+	
+	public void onLoad() 
+	{
+		setupWordEditGuard();
+	}
 	
 	public void onEnable()
 	{
@@ -237,6 +244,7 @@ public class BungeeTeleportManager extends JavaPlugin
 		plugin.getUtility().setTpaPlayersTabComplete();
 		EntityTransportHandler.initTicketList();
 		AccessPermissionHandler.initBackgroundTask(plugin);
+		setupPlaceholderAPI();
 	}
 	
 	public void onDisable()
@@ -1397,6 +1405,29 @@ public class BungeeTeleportManager extends JavaPlugin
 	{
 		int pluginId = 7692;
         new Metrics(this, pluginId);
+	}
+	
+	private boolean setupPlaceholderAPI()
+	{
+		if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
+		{
+            new main.java.me.avankziar.spigot.btm.hook.PAPIHook(plugin).register();
+            return true;
+		}
+		return false;
+	}
+	
+	private void setupWordEditGuard()
+	{
+		if(Bukkit.getPluginManager().getPlugin("WorldGuard") != null)
+		{
+			worldGuard = WorldGuardHook.init();
+		}
+	}
+	
+	public static boolean getWorldGuard()
+	{
+		return worldGuard;
 	}
 	
 	public boolean existHook(String externPluginName)

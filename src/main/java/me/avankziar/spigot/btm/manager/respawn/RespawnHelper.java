@@ -45,7 +45,7 @@ public class RespawnHelper
 				{
 					return;
 				}
-				if(args.length != 1 && args.length != 2 && args.length != 3 && args.length != 4)
+				if(args.length > 1)
 				{
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
@@ -53,7 +53,11 @@ public class RespawnHelper
 							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 					return;
 				}
-				String respawnname = args[0];
+				String respawnname = null;
+				if(args.length >= 1)
+				{
+					respawnname = args[0];
+				}
 				if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.RESPAWN, "`displayname` = ?", respawnname))
 				{
 					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdRespawn.RespawnNotExist")));

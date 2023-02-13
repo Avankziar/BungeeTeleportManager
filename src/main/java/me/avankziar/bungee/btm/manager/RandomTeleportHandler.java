@@ -43,14 +43,6 @@ private BungeeTeleportManager plugin;
 			player.sendMessage(ChatApi.tctl("Server is unknow!"));
 			return;
 		}
-		if(!player.getServer().getInfo().getName().equals(point1.getServer()))
-		{
-			if(plugin.getProxy().getServerInfo(point1.getServer()) == null)
-			{
-				return;
-			}
-			player.connect(plugin.getProxy().getServerInfo(point1.getServer()));
-		}
 		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
 			@Override
@@ -74,6 +66,14 @@ private BungeeTeleportManager plugin;
 					{
 						return;
 					}
+				}
+				if(!player.getServer().getInfo().getName().equals(point1.getServer()))
+				{
+					if(plugin.getProxy().getServerInfo(point1.getServer()) == null)
+					{
+						return;
+					}
+					player.connect(plugin.getProxy().getServerInfo(point1.getServer()));
 				}
 				ByteArrayOutputStream streamout = new ByteArrayOutputStream();
 		        DataOutputStream out = new DataOutputStream(streamout);
