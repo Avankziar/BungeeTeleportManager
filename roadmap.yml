@@ -30,8 +30,6 @@ Future =========================================================================
 - Mit Minecarts durch Portale fahren können (VehicelMoveEvent), die Problematik mit den Entitys.
   Guter Testboden, um eine Mechanik zu entwickeln, um einzelne Entitys mit Spieler zu teleportieren.
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
-- PlaceHolder Api, Home amount, Tpatoggle, etc.
-  Home-, Portal-, Warpsanzahl, Letzter Safepoint
 - xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
 
 Build 7-0-0
@@ -39,6 +37,26 @@ Build 7-0-0
   - btm-home-create, btm-portal-create, btm-warp-create
   - btm-back-use, btm-deathback-use, btm-home-use, btm-portal-use, btm-tpa-use, btm-tpa-accept-use, btm-warp-use
   - Nutzen alle die Bypasspermission Forbidden to Create oder to Use + die Mechanik kleingeschrieben.
+- PlaceholderAPI hinzugefügt:
+  - btm_home_amount
+  - btm_home_amount_max
+  - btm_home_amount_max_global //Macht nur sinn, wenn das gleichnamige Permissionlevel aktiv ist.
+  - btm_home_amount_max_server //Macht nur sinn, wenn das gleichnamige Permissionlevel aktiv ist.
+  - btm_home_amount_max_world //Macht nur sinn, wenn das gleichnamige Permissionlevel aktiv ist.
+  - btm_portal_amount
+  - btm_portal_amount_max
+  - btm_portal_amount_max_global //Macht nur sinn, wenn das gleichnamige Permissionlevel aktiv ist.
+  - btm_portal_amount_max_server //Macht nur sinn, wenn das gleichnamige Permissionlevel aktiv ist.
+  - btm_portal_amount_max_world //Macht nur sinn, wenn das gleichnamige Permissionlevel aktiv ist.
+  - btm_warp_amount
+  - btm_warp_amount_max
+  - btm_warp_amount_max_global //Macht nur sinn, wenn das gleichnamige Permissionlevel aktiv ist.
+  - btm_warp_amount_max_server //Macht nur sinn, wenn das gleichnamige Permissionlevel aktiv ist.
+  - btm_warp_amount_max_world //Macht nur sinn, wenn das gleichnamige Permissionlevel aktiv ist.
+  - btm_home_priority
+  - btm_tptoggle
+  - btm_tpignore_amount
+  - btm_tpisignore_amount
 - ~!~ als neuer "Neuer Linie" seperator für alle Nachrichten.
 - /homes, kann mit Configwert Home.Homes.UseServer und .UseWorld nun bestimmen ob der Server und oder Weltennamen des homes angezeigt werden soll.
   Betrifft auch die Hovers!
