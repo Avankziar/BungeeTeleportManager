@@ -32,6 +32,9 @@ Future =========================================================================
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
 - xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
 
+Build 7-0-1
+- Back Bungee "You are already connected to the server" Spam fix
+
 Build 7-0-0
 - WorldGuard Flags hinzugefügt:
   - btm-home-create, btm-portal-create, btm-warp-create
