@@ -141,38 +141,36 @@ public class BackHandler
 					return;
 				}
 				if(!player.getServer().getInfo().getName().equals(oldserver))
-		    	{
-		    		player.connect(plugin.getProxy().getServerInfo(oldserver));
-		    	}
-				if(player.getServer().getInfo().getName().equals(oldserver))
-	        	{
-					ByteArrayOutputStream streamout = new ByteArrayOutputStream();
-			        DataOutputStream out = new DataOutputStream(streamout);
-			        try {
-			        	if(!isDeathback)
-			        	{
-			        		out.writeUTF(StaticValues.BACK_SENDPLAYERBACK);
-			        	} else
-			        	{
-			        		out.writeUTF(StaticValues.BACK_SENDPLAYERDEATHBACK);
-			        	}
-						out.writeUTF(name);
-						out.writeUTF(oldworld);
-						out.writeDouble(oldx);
-						out.writeDouble(oldy);
-						out.writeDouble(oldz);
-						out.writeFloat(oldyaw);
-						out.writeFloat(oldpitch);
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				    player.getServer().sendData(StaticValues.BACK_TOSPIGOT, streamout.toByteArray());
-				    if(isDeathback && deleteDeathBack)
-				    {
-				    	BackHandler.getDeathBackLocations().remove(name);
-				    }
-				    taskOne.cancel();
-	        	}
+				{
+					player.connect(plugin.getProxy().getServerInfo(oldserver));
+					return;
+				}
+				ByteArrayOutputStream streamout = new ByteArrayOutputStream();
+		        DataOutputStream out = new DataOutputStream(streamout);
+		        try {
+		        	if(!isDeathback)
+		        	{
+		        		out.writeUTF(StaticValues.BACK_SENDPLAYERBACK);
+		        	} else
+		        	{
+		        		out.writeUTF(StaticValues.BACK_SENDPLAYERDEATHBACK);
+		        	}
+					out.writeUTF(name);
+					out.writeUTF(oldworld);
+					out.writeDouble(oldx);
+					out.writeDouble(oldy);
+					out.writeDouble(oldz);
+					out.writeFloat(oldyaw);
+					out.writeFloat(oldpitch);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			    player.getServer().sendData(StaticValues.BACK_TOSPIGOT, streamout.toByteArray());
+			    if(isDeathback && deleteDeathBack)
+			    {
+			    	BackHandler.getDeathBackLocations().remove(name);
+			    }
+			    taskOne.cancel();
 				i++;
 				if(i >= 100)
 				{
@@ -182,4 +180,88 @@ public class BackHandler
 			}
 		}, delay, 5, TimeUnit.MILLISECONDS);
 	}
+	
+	/*public void teleportBack(String oldserver, String name, String oldworld,
+			double oldx, double oldy, double oldz, float oldyaw, float oldpitch, boolean deleteDeathBack, int delay, boolean isDeathback)
+	{
+		ProxiedPlayer player = plugin.getProxy().getPlayer(name);
+    	if(player == null)
+    	{
+    		return;
+    	}
+    	if(!plugin.getProxy().getServers().containsKey(oldserver))
+		{
+			player.sendMessage(ChatApi.tctl("Server is unknow!"));
+			return;
+		}
+    	plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				if(player == null || oldserver == null)
+				{
+					return;
+				}
+				if(player.getServer() == null || player.getServer().getInfo() == null || player.getServer().getInfo().getName() == null)
+				{
+					return;
+				}
+				if(!player.getServer().getInfo().getName().equals(oldserver))
+				{
+					player.connect(plugin.getProxy().getServerInfo(oldserver));
+				}
+				taskOne = plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
+				{
+		    		int i = 0;
+					@Override
+					public void run()
+					{
+						if(player == null || oldserver == null)
+						{
+							taskOne.cancel();
+							return;
+						}
+						if(player.getServer() == null || player.getServer().getInfo() == null || player.getServer().getInfo().getName() == null)
+						{
+							taskOne.cancel();
+							return;
+						}
+						ByteArrayOutputStream streamout = new ByteArrayOutputStream();
+				        DataOutputStream out = new DataOutputStream(streamout);
+				        try {
+				        	if(!isDeathback)
+				        	{
+				        		out.writeUTF(StaticValues.BACK_SENDPLAYERBACK);
+				        	} else
+				        	{
+				        		out.writeUTF(StaticValues.BACK_SENDPLAYERDEATHBACK);
+				        	}
+							out.writeUTF(name);
+							out.writeUTF(oldworld);
+							out.writeDouble(oldx);
+							out.writeDouble(oldy);
+							out.writeDouble(oldz);
+							out.writeFloat(oldyaw);
+							out.writeFloat(oldpitch);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					    player.getServer().sendData(StaticValues.BACK_TOSPIGOT, streamout.toByteArray());
+					    if(isDeathback && deleteDeathBack)
+					    {
+					    	BackHandler.getDeathBackLocations().remove(name);
+					    }
+					    taskOne.cancel();
+						i++;
+						if(i >= 100)
+						{
+							taskOne.cancel();
+						    return;
+						}
+					}
+				}, 5, 5, TimeUnit.MILLISECONDS);
+			}
+		}, delay, TimeUnit.MILLISECONDS);
+	}*/
 }
