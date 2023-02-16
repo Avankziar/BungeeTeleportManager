@@ -32,6 +32,9 @@ Future =========================================================================
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
 - xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
 
+Build 7-1-0
+- /tpa Befehl, Hardcoded " &f| " wurde in der Sprachdatei als CmdTp.IconsIII aufgenommen.
+
 Build 7-0-1
 - Back Bungee "You are already connected to the server" Spam fix
 

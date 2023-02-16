@@ -433,7 +433,7 @@ public class TeleportHandler
 				plugin.getYamlHandler().getLang().getString("CmdTp.IconsI", "")
 				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.TPACCEPT).trim())
 				.replace("%player%", player.getName())
-				+" &f| "
+				+plugin.getYamlHandler().getLang().getString("CmdTp.IconsIII", "")
 				+plugin.getYamlHandler().getLang().getString("CmdTp.IconsII", "")
 				.replace("%cmd%", BTMSettings.settings.getCommands(KeyHandler.TPDENY).trim())
 				.replace("%player%", player.getName()),
