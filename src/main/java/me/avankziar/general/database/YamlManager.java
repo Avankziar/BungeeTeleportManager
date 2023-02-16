@@ -2856,7 +2856,7 @@ public class YamlManager
 		languageKeys.put(path+"SendAcceptTPA",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&5Der Spieler &f%player% &5möchte sich zu dir teleportieren.",
-						"&5The player &f%player% &5 would like to teleport to you."}));
+						"&5The player &f%player% &5would like to teleport to you."}));
 		languageKeys.put(path+"SendAcceptTPAHere",
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&5Der Spieler &f%player% &5möchte dich zu sich teleportieren.",

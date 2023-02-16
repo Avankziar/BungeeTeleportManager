@@ -242,15 +242,15 @@ public class TeleportHandler
 						player.teleport(targets);
 						if(player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_SILENT))
 						{
-							player.sendMessage(
-									ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
+							player.spigot().sendMessage(
+									ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 									.replace("%playerfrom%", player.getName())
 									.replace("%playerto%", targets.getName())));
 						}										
 						if(targets.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_SILENT))
 						{
-							targets.sendMessage(
-									ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
+							targets.spigot().sendMessage(
+									ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 									.replace("%playerfrom%", player.getName())
 									.replace("%playerto%", targets.getName())));
 						}
@@ -259,15 +259,15 @@ public class TeleportHandler
 						targets.teleport(player);
 						if(player.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_SILENT))
 						{
-							player.sendMessage(
-									ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
+							player.spigot().sendMessage(
+									ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 									.replace("%playerfrom%", targets.getName())
 									.replace("%playerto%", player.getName())));
 						}										
 						if(targets.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_SILENT))
 						{
-							targets.sendMessage(
-									ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
+							targets.spigot().sendMessage(
+									ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 									.replace("%playerfrom%", targets.getName())
 									.replace("%playerto%", player.getName())));
 						}
@@ -349,8 +349,8 @@ public class TeleportHandler
 				public void run()
 				{
 					player.teleport(ConvertHandler.getLocation(sl));
-					player.sendMessage(
-							ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PositionTeleport")
+					player.spigot().sendMessage(
+							ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PositionTeleport")
 							.replace("%server%", sl.getServer())
 							.replace("%world%", sl.getWorldName())
 							.replace("%coords%", sl.getX()+" "+sl.getY()+" "+sl.getZ()+" | "+sl.getYaw()+" "+sl.getPitch())));
@@ -414,7 +414,8 @@ public class TeleportHandler
 	
 	public void tpSendInvite(Player player, Teleport teleport)
 	{
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.SendRequest")
+		player.spigot().sendMessage(
+				ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.SendRequest")
 				.replace("%target%", teleport.getToName())));
 		if(teleport.getType() == Teleport.Type.TPTO)
 		{
@@ -453,7 +454,7 @@ public class TeleportHandler
 				return;
 			}
 		}
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
 		sendAccept(player, teleport,
 				plugin.getYamlHandler().getLang().getString("CmdTp.NoPending"));
 		if(cooldown.containsKey(player))
@@ -489,24 +490,24 @@ public class TeleportHandler
 		{
 			back.setToggle(false);
 			plugin.getBackHandler().sendBackObject(player, back, true);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ToggleOff")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.ToggleOff")));
 		} else
 		{
 			back.setToggle(true);
 			plugin.getBackHandler().sendBackObject(player, back, true);
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ToggleOn")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.ToggleOn")));
 		}
 	}
 	
 	public void tpForce(Player player, Teleport teleport)
 	{
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
 		sendForceObject(player, teleport, plugin.getYamlHandler().getLang().getString("NoPlayerExist", ""));
 	}
 	
 	public void tpsilent(Player player, String playeruuid, String playername)
 	{
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
 		if(Bukkit.getPlayer(UUID.fromString(playeruuid)) != null)
 		{
 			Player targets = Bukkit.getPlayer(UUID.fromString(playeruuid));
@@ -532,8 +533,7 @@ public class TeleportHandler
 						}
 					}
 					player.teleport(targets);
-					player.sendMessage(
-							ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.SilentPlayerTeleport")
+					player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.SilentPlayerTeleport")
 							.replace("%playerto%", targets.getName())));
 				}
 			}.runTaskLater(plugin, 1);
@@ -558,13 +558,13 @@ public class TeleportHandler
 	
 	public void tpAll(Player player, boolean isSpecific, String server, String world)
 	{
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
 		sendTpAll(player, isSpecific, server, world);
 	}
 	
 	public void tpPos(Player player, ServerLocation sl)
 	{
-		player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
+		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.RequestInProgress")));
 		sendTpPos(player, sl);
 	}
 }

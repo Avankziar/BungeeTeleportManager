@@ -46,8 +46,8 @@ public class HomeMessageListener implements PluginMessageListener
                 	float pitch = in.readFloat();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
-						player.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+                		player.spigot().sendMessage(
+								ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 										.replace("%world%", worldName)));
 						return;
 					}
@@ -67,8 +67,8 @@ public class HomeMessageListener implements PluginMessageListener
 										Player player = plugin.getServer().getPlayer(playerName);
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+											player.spigot().sendMessage(
+													ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -84,7 +84,8 @@ public class HomeMessageListener implements PluginMessageListener
 										}.runTask(plugin);
 										if(plugin.getYamlHandler().getConfig().getBoolean("Home.UsePostTeleportMessage"))
 										{
-											player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeTo")
+											player.spigot().sendMessage(
+													ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeTo")
 													.replace("%home%", homeName)));
 										}
 										cancel();

@@ -70,7 +70,7 @@ public class TeleportMessageListener implements PluginMessageListener
 		        								plugin.getEco().getDefaultCurrency(CurrencyType.DIGITAL));
 		        						if(main == null || main.getBalance() < price)
 		        						{
-		        							player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
+		        							player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("Economy.NoEnoughBalance")));
 		        							return;
 		        						}
 		        						String category = plugin.getYamlHandler().getLang().getString("Economy.TCategory");
@@ -90,7 +90,7 @@ public class TeleportMessageListener implements PluginMessageListener
 	        									OrdererType.PLAYER, player.getUniqueId().toString(), category, comment);
 		        						if(!ea.isSuccess())
 		        						{
-		        							player.sendMessage(ChatApi.tl(ea.getDefaultErrorMessage()));
+		        							player.spigot().sendMessage(ChatApi.tctl(ea.getDefaultErrorMessage()));
 		        							return;
 		        						}
 		                    		}
@@ -98,8 +98,8 @@ public class TeleportMessageListener implements PluginMessageListener
 		            		}
 		            		if(isToggled)
 		            		{
-		            			from.sendMessage(
-		                				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerHasToggled")));
+		            			from.spigot().sendMessage(
+		                				ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerHasToggled")));
 		            		}
 		            		if(type == Teleport.Type.TPTO)
 		            		{
@@ -122,8 +122,8 @@ public class TeleportMessageListener implements PluginMessageListener
             	} else if(task.equals(StaticValues.TP_OCCUPIED))
             	{
             		String fromName = in.readUTF();
-            		plugin.getServer().getPlayer(fromName).sendMessage(
-            				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.HasAlreadyRequest")));
+            		plugin.getServer().getPlayer(fromName).spigot().sendMessage(
+            				ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.HasAlreadyRequest")));
             		return;
             	} else if(task.equals(StaticValues.TP_PLAYERTOPLAYER))
             	{
@@ -159,15 +159,15 @@ public class TeleportMessageListener implements PluginMessageListener
 										}
 										if(senders.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_SILENT))
 										{
-											senders.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
+											senders.spigot().sendMessage(
+													ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 													.replace("%playerfrom%", senders.getName())
 													.replace("%playerto%", targets.getName())));
 										}										
 										if(targets.hasPermission(StaticValues.PERM_BYPASS_TELEPORT_SILENT))
 										{
-											targets.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
+											targets.spigot().sendMessage(
+													ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 													.replace("%playerfrom%", senders.getName())
 													.replace("%playerto%", targets.getName())));
 										}
@@ -223,8 +223,8 @@ public class TeleportMessageListener implements PluginMessageListener
 													}
 												}
 												senders.teleport(targets);
-												senders.sendMessage(
-														ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.SilentPlayerTeleport")
+												senders.spigot().sendMessage(
+														ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.SilentPlayerTeleport")
 														.replace("%playerto%", targets.getName())));
 											}
 										}.runTaskLater(plugin, 1);
@@ -246,8 +246,8 @@ public class TeleportMessageListener implements PluginMessageListener
             	{
             		String playerName = in.readUTF();
             		String otherPlayerName = in.readUTF();
-            		plugin.getServer().getPlayer(playerName).sendMessage(
-            				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ServerQuitMessage")
+            		plugin.getServer().getPlayer(playerName).spigot().sendMessage(
+            				ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.ServerQuitMessage")
             				.replace("%player%", otherPlayerName)));
             		return;
             	} else if(task.equals(StaticValues.TP_PLAYERTOPOSITION))
@@ -262,8 +262,7 @@ public class TeleportMessageListener implements PluginMessageListener
                 	float pitch = in.readFloat();
                 	if(Bukkit.getWorld(worldName) == null)
 					{
-						player.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+                		player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 										.replace("%world%", worldName)));
 						return;
 					}
@@ -287,8 +286,8 @@ public class TeleportMessageListener implements PluginMessageListener
 										}
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+											player.spigot().sendMessage(ChatApi.tctl(
+													plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 										}
@@ -302,8 +301,8 @@ public class TeleportMessageListener implements PluginMessageListener
 											}
 										}.runTask(plugin);
 										
-										player.sendMessage(
-												ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PositionTeleport")
+										player.spigot().sendMessage(ChatApi.tctl(
+												plugin.getYamlHandler().getLang().getString("CmdTp.PositionTeleport")
 												.replace("%server%", serverName)
 												.replace("%world%", worldName)
 												.replace("%coords%", x+" "+y+" "+z+" | "+yaw+" "+pitch)));
@@ -324,20 +323,20 @@ public class TeleportMessageListener implements PluginMessageListener
             	} else if(task.equals(StaticValues.TP_FORBIDDENSERVER))
             	{
             		String playerName = in.readUTF();
-            		plugin.getServer().getPlayer(playerName).sendMessage(
-            				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenServer")));
+            		plugin.getServer().getPlayer(playerName).spigot().sendMessage(
+            				ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenServer")));
             		return;
             	} else if(task.equals(StaticValues.TP_FORBIDDENWORLD))
             	{
             		String playerName = in.readUTF();
-            		plugin.getServer().getPlayer(playerName).sendMessage(
-            				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenWorld")));
+            		plugin.getServer().getPlayer(playerName).spigot().sendMessage(
+            				ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.ForbiddenWorld")));
             		return;
             	} else if(task.equals(StaticValues.TP_TOGGLED))
             	{
             		String playerName = in.readUTF();
-            		plugin.getServer().getPlayer(playerName).sendMessage(
-            				ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerIsToggle")));
+            		plugin.getServer().getPlayer(playerName).spigot().sendMessage(
+            				ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerIsToggle")));
             		return;
             	}
             } catch (IOException e) 

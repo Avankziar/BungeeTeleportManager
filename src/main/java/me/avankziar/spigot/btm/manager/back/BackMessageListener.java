@@ -49,8 +49,7 @@ public class BackMessageListener implements PluginMessageListener
             		float pitch = in.readFloat();
             		if(Bukkit.getWorld(worldName) == null)
 					{
-						player.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+            			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 										.replace("%world%", worldName)));
 						return;
 					}
@@ -70,8 +69,8 @@ public class BackMessageListener implements PluginMessageListener
 									{
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+											player.spigot().sendMessage(ChatApi.tctl(
+													plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -135,8 +134,8 @@ public class BackMessageListener implements PluginMessageListener
 									{
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+											player.spigot().sendMessage(ChatApi.tctl
+													(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 											return;
@@ -192,7 +191,7 @@ public class BackMessageListener implements PluginMessageListener
             		Player requester = plugin.getServer().getPlayer(playername);
             		if(requester != null)
             		{
-            			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.NoDeathBack")));
+            			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.NoDeathBack")));
             		}
             	    return;
             	}

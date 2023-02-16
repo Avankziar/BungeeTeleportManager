@@ -26,7 +26,23 @@ public class ChatApi
 	
 	public static TextComponent tctl(String s)
 	{
-		return new TextComponent(TextComponent.fromLegacyText(tl(s)));
+		String sepnewline = "~!~";
+		TextComponent message = new TextComponent(new ComponentBuilder().create());
+		TextComponent newLine = new TextComponent(ComponentSerializer.parse("{text: \"\n\"}"));
+		int i = 0; 
+		for(String h : s.split(sepnewline))
+		{
+			if(i == 0)
+			{
+				message.addExtra(new TextComponent(new ComponentBuilder(tl(h)).create()));
+			} else
+			{
+				message.addExtra(newLine);
+				message.addExtra(new TextComponent(new ComponentBuilder(tl(h)).create()));
+			}
+			i++;
+		}
+		return message;
 	}
 	
 	public static TextComponent TextWithExtra(String s, List<BaseComponent> list)

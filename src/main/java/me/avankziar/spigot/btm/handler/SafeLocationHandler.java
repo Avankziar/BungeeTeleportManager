@@ -55,7 +55,7 @@ public class SafeLocationHandler
 		final String key = uuid+"!"+playername;
 		if(pending.containsKey(key))
 		{
-			player.sendMessage(ChatApi.tl(plugin.getYamlHandler().getLang().getString("AlreadyPendingTeleport")));
+			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("AlreadyPendingTeleport")));
 			return;
 		}
 		if(teleportObject instanceof Home)

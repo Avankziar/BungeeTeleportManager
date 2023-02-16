@@ -63,12 +63,12 @@ public class CustomMessageListener implements PluginMessageListener
 											}
 										}.runTask(plugin);
 										
-										senders.sendMessage(
-												ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
+										senders.spigot().sendMessage(
+												ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 												.replace("%playerfrom%", senders.getName())
 												.replace("%playerto%", targets.getName())));
-										targets.sendMessage(
-												ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
+										senders.spigot().sendMessage(
+												ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PlayerTeleport")
 												.replace("%playerfrom%", senders.getName())
 												.replace("%playerto%", targets.getName())));
 										cancel();
@@ -104,8 +104,8 @@ public class CustomMessageListener implements PluginMessageListener
                 	final String messages = message;
                 	if(Bukkit.getWorld(worldName) == null)
 					{
-						player.sendMessage(
-								ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+						player.spigot().sendMessage(
+								ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 										.replace("%world%", worldName)));
 						return;
 					}
@@ -125,8 +125,8 @@ public class CustomMessageListener implements PluginMessageListener
 										Player player = plugin.getServer().getPlayer(playerName);
 										if(Bukkit.getWorld(worldName) == null)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
+											player.spigot().sendMessage(
+													ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.WorldNotFound")
 															.replace("%world%", worldName)));
 											cancel();
 										}
@@ -142,14 +142,14 @@ public class CustomMessageListener implements PluginMessageListener
 										
 										if(messagenull)
 										{
-											player.sendMessage(
-													ChatApi.tl(plugin.getYamlHandler().getLang().getString("CmdTp.PositionTeleport")
+											player.spigot().sendMessage(
+													ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdTp.PositionTeleport")
 													.replace("%server%", serverName)
 													.replace("%world%", worldName)
 													.replace("%coords%", x+" "+y+" "+z+" | "+yaw+" "+pitch)));
 										} else
 										{
-											player.sendMessage(ChatApi.tl(messages));
+											player.spigot().sendMessage(ChatApi.tctl(messages));
 										}
 										cancel();
 										return;
