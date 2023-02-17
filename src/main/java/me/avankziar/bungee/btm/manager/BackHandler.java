@@ -111,7 +111,7 @@ public class BackHandler
     	return new Back(UUID.fromString(uuid), name, new ServerLocation(serverName, worldName, x, y, z, yaw, pitch), toggle, "");
 	}
 	
-	public void teleportBack(String oldserver, String name, String oldworld,
+	/*public void teleportBack(String oldserver, String name, String oldworld,
 			double oldx, double oldy, double oldz, float oldyaw, float oldpitch, boolean deleteDeathBack, int delay, boolean isDeathback)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(name);
@@ -165,7 +165,7 @@ public class BackHandler
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			    player.getServer().sendData(StaticValues.BACK_TOSPIGOT, streamout.toByteArray());
+		        plugin.getProxy().getServerInfo(oldserver).sendData(StaticValues.BACK_TOSPIGOT, streamout.toByteArray());
 			    if(isDeathback && deleteDeathBack)
 			    {
 			    	BackHandler.getDeathBackLocations().remove(name);
@@ -178,10 +178,10 @@ public class BackHandler
 				    return;
 				}
 			}
-		}, delay, 5, TimeUnit.MILLISECONDS);
-	}
+		}, delay, TimeUnit.MILLISECONDS);
+	}*/
 	
-	/*public void teleportBack(String oldserver, String name, String oldworld,
+	public void teleportBack(String oldserver, String name, String oldworld,
 			double oldx, double oldy, double oldz, float oldyaw, float oldpitch, boolean deleteDeathBack, int delay, boolean isDeathback)
 	{
 		ProxiedPlayer player = plugin.getProxy().getPlayer(name);
@@ -194,6 +194,7 @@ public class BackHandler
 			player.sendMessage(ChatApi.tctl("Server is unknow!"));
 			return;
 		}
+    	int delayHalf = delay/2;
     	plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
 		{
 			@Override
@@ -247,7 +248,7 @@ public class BackHandler
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
-					    player.getServer().sendData(StaticValues.BACK_TOSPIGOT, streamout.toByteArray());
+				        plugin.getProxy().getServerInfo(oldserver).sendData(StaticValues.BACK_TOSPIGOT, streamout.toByteArray());
 					    if(isDeathback && deleteDeathBack)
 					    {
 					    	BackHandler.getDeathBackLocations().remove(name);
@@ -260,8 +261,8 @@ public class BackHandler
 						    return;
 						}
 					}
-				}, 5, 5, TimeUnit.MILLISECONDS);
+				}, delayHalf, 5, TimeUnit.MILLISECONDS);
 			}
-		}, delay, TimeUnit.MILLISECONDS);
-	}*/
+		}, delayHalf, TimeUnit.MILLISECONDS);
+	}
 }

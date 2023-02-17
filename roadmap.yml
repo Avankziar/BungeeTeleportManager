@@ -35,6 +35,7 @@ Future =========================================================================
 Build 7-1-0
 - /tpa Befehl, Hardcoded " &f| " wurde in der Sprachdatei als CmdTp.IconsIII aufgenommen.
 - Zeilenumbruch mit "~!~" fix.
+- /back Laufzeitproblem bei der Kommunikation zwischen Bungee & Spigot fix
 
 Build 7-0-1
 - Back Bungee "You are already connected to the server" Spam fix
