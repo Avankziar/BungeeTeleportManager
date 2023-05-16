@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
+import main.java.me.avankziar.spigot.btm.cmd.tree.BaseConstructor;
 
 public class ConfigHandler
 {
@@ -12,6 +13,11 @@ public class ConfigHandler
 	public ConfigHandler(BungeeTeleportManager plugin)
 	{
 		this.plugin = plugin;
+	}
+	
+	public ConfigHandler()
+	{
+		this.plugin = BungeeTeleportManager.getPlugin();
 	}
 	
 	public String getServer()
@@ -60,6 +66,16 @@ public class ConfigHandler
 	public boolean enableCommands(Mechanics mechanics)
 	{
 		return plugin.getYamlHandler().getConfig().getBoolean("EnableCommands."+mechanics.getKey(), true);
+	}
+	
+	public boolean isMechanicModifierEnabled()
+	{
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("EnableMechanic.Modifier", false);
+	}
+	
+	public boolean isMechanicValueEntryEnabled()
+	{
+		return BaseConstructor.getPlugin().getYamlHandler().getConfig().getBoolean("EnableMechanic.ValueEntry", false);
 	}
 	
 	public long getBackCooldown()

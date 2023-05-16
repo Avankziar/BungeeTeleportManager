@@ -31,6 +31,15 @@ Future =========================================================================
   Guter Testboden, um eine Mechanik zu entwickeln, um einzelne Entitys mit Spieler zu teleportieren.
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
 - xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
+- /homes, bei einem Home das trennzeichen weg machen.
+
+Build 7-2-0
+- Unterstützt IFH Modifer & ValueEntry
+- IFH Modifier hinzugefügt:
+  - MAX_AMOUNT_HOME
+  - MAX_AMOUNT_PORTAL
+  - MAX_AMOUNT_WARP
+- Alle Commands haben zusätzliche Infos in der commands.yml erhalten um IFH Modifier & Valueentry zu unterstützen.
 
 Build 7-1-0
 - /tpa Befehl, Hardcoded " &f| " wurde in der Sprachdatei als CmdTp.IconsIII aufgenommen.

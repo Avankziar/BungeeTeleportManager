@@ -1,7 +1,16 @@
 package main.java.me.avankziar.spigot.btm.cmd.tree;
 
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
+
 public class BaseConstructor
 {
+	public static BungeeTeleportManager getPlugin()
+	{
+		return BungeeTeleportManager.getPlugin();
+	}
+	
 	private String name;
 	private String path;
 	private String permission;
@@ -9,16 +18,22 @@ public class BaseConstructor
 	private String commandString;
 	private String helpInfo;
 	private boolean canConsoleAccess;
+	private boolean putUpCmdPermToValueEntrySystem;
+	private String valueEntryDisplayName;
+	private String valueEntryExplanation;
 	
-	public BaseConstructor(String name, String path, String permission, String suggestion, String commandString, String helpInfo, boolean canConsoleAccess)
+	public BaseConstructor(String name, String path, YamlConfiguration y, boolean canConsoleAccess)
 	{
 		setName(name);
 		setPath(path);
-		setPermission(permission);
-		setSuggestion(suggestion);
-		setCommandString(commandString);
-		setHelpInfo(helpInfo);
+		setPermission(y.getString(path+".Permission"));
+		setSuggestion(y.getString(path+".Suggestion"));
+		setCommandString(y.getString(path+".CommandString"));
+		setHelpInfo(y.getString(path+".HelpInfo"));
 		setCanConsoleAccess(canConsoleAccess);
+		setPutUpCmdPermToValueEntrySystem(y.getBoolean(path+".ValueEntry.PutUpCommandPerm", false));
+		setValueEntryDisplayName(y.getString(path+".ValueEntry.Displayname"));
+		setValueEntryExplanation(y.getString(path+".ValueEntry.Explanation"));
 	}
 
 	public String getName()
@@ -90,5 +105,39 @@ public class BaseConstructor
 	{
 		this.helpInfo = helpInfo;
 	}
+	
+	public boolean isPutUpCmdPermToValueEntrySystem()
+	{
+		return putUpCmdPermToValueEntrySystem;
+	}
 
+	public void setPutUpCmdPermToValueEntrySystem(boolean putUpCmdPermToValueEntrySystem)
+	{
+		this.putUpCmdPermToValueEntrySystem = putUpCmdPermToValueEntrySystem;
+	}
+	
+	public String getValueEntryDisplayName()
+	{
+		return valueEntryDisplayName;
+	}
+
+	public void setValueEntryDisplayName(String valueEntryDisplayName)
+	{
+		this.valueEntryDisplayName = valueEntryDisplayName;
+	}
+
+	public String getValueEntryExplanation()
+	{
+		return valueEntryExplanation;
+	}
+
+	public void setValueEntryExplanation(String valueEntryExplanation)
+	{
+		this.valueEntryExplanation = valueEntryExplanation;
+	}
+	
+	public String getValueEntryPath()
+	{
+		return getPlugin().pluginName.toLowerCase()+"-"+getPath();
+	}
 }

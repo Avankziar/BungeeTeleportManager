@@ -6,7 +6,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -26,6 +28,9 @@ import main.java.me.avankziar.general.database.YamlManager;
 import main.java.me.avankziar.general.object.Mechanics;
 import main.java.me.avankziar.general.objecthandler.KeyHandler;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
+import main.java.me.avankziar.ifh.general.modifier.ModificationType;
+import main.java.me.avankziar.ifh.general.modifier.Modifier;
+import main.java.me.avankziar.ifh.general.valueentry.ValueEntry;
 import main.java.me.avankziar.ifh.spigot.administration.Administration;
 import main.java.me.avankziar.ifh.spigot.economy.Economy;
 import main.java.me.avankziar.ifh.spigot.interfaces.Vanish;
@@ -101,6 +106,7 @@ import main.java.me.avankziar.spigot.btm.manager.warp.WarpHandler;
 import main.java.me.avankziar.spigot.btm.manager.warp.WarpHelper;
 import main.java.me.avankziar.spigot.btm.manager.warp.WarpMessageListener;
 import main.java.me.avankziar.spigot.btm.metric.Metrics;
+import main.java.me.avankziar.spigot.btm.modifiervalueentry.Bypass;
 import main.java.me.avankziar.spigot.btm.object.BTMSettings;
 
 public class BungeeTeleportManager extends JavaPlugin
@@ -122,6 +128,8 @@ public class BungeeTeleportManager extends JavaPlugin
 	private Vanish vanishconsumer;
 	private Economy ecoConsumer;
 	private Administration administrationConsumer;
+	private ValueEntry valueEntryConsumer;
+	private Modifier modifierConsumer;
 	private static boolean worldGuard = false;
 	
 	private SafeLocationHandler safeLocationHandler;
@@ -299,6 +307,12 @@ public class BungeeTeleportManager extends JavaPlugin
 	public CommandHelper getCommandHelper()
 	{
 		return commandHelper;
+	}
+	
+	public String getServername()
+	{
+		return getPlugin().getAdministration() != null ? getPlugin().getAdministration().getSpigotServerName() 
+				: getPlugin().getYamlHandler().getConfig().getString("ServerName");
 	}
 	
 	private void setupCommandTree()
@@ -1327,7 +1341,14 @@ public class BungeeTeleportManager extends JavaPlugin
 	}
 	
 	private void setupIFHConsumer()
-	{ 
+	{
+		setupIFHValueEntry();
+		setupIFHModifier();
+		setupIFHVanish();
+	}
+	
+	private void setupIFHVanish()
+	{
 		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
 	    {
 	    	return;
@@ -1399,6 +1420,144 @@ public class BungeeTeleportManager extends JavaPlugin
 	public Administration getAdministration()
 	{
 		return administrationConsumer;
+	}
+	
+	public void setupIFHValueEntry()
+	{
+		if(!new ConfigHandler().isMechanicValueEntryEnabled())
+		{
+			return;
+		}
+		if(!plugin.getServer().getPluginManager().isPluginEnabled("InterfaceHub")) 
+	    {
+	    	return;
+	    }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+				    	return;
+				    }
+				    RegisteredServiceProvider<main.java.me.avankziar.ifh.general.valueentry.ValueEntry> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 main.java.me.avankziar.ifh.general.valueentry.ValueEntry.class);
+				    if(rsp == null) 
+				    {
+				    	i++;
+				        return;
+				    }
+				    valueEntryConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> ValueEntry.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}
+				if(getValueEntry() != null)
+				{
+					for(BaseConstructor bc : getHelpList())
+					{
+						if(!bc.isPutUpCmdPermToValueEntrySystem())
+						{
+							continue;
+						}
+						if(getValueEntry().isRegistered(bc.getValueEntryPath()))
+						{
+							continue;
+						}
+						getValueEntry().register(
+								bc.getValueEntryPath(),
+								bc.getValueEntryDisplayName(),
+								bc.getValueEntryExplanation());
+					}
+				}
+			}
+        }.runTaskTimer(plugin, 0L, 20*2);
+	}
+	
+	public ValueEntry getValueEntry()
+	{
+		return valueEntryConsumer;
+	}
+	
+	private void setupIFHModifier() 
+	{
+		if(!new ConfigHandler().isMechanicModifierEnabled())
+		{
+			return;
+		}
+        if(Bukkit.getPluginManager().getPlugin("InterfaceHub") == null) 
+        {
+            return;
+        }
+        new BukkitRunnable()
+        {
+        	int i = 0;
+			@Override
+			public void run()
+			{
+				try
+				{
+					if(i == 20)
+				    {
+						cancel();
+						return;
+				    }
+				    RegisteredServiceProvider<main.java.me.avankziar.ifh.general.modifier.Modifier> rsp = 
+		                             getServer().getServicesManager().getRegistration(
+		                            		 main.java.me.avankziar.ifh.general.modifier.Modifier.class);
+				    if(rsp == null) 
+				    {
+				    	//Check up to 20 seconds after the start, to connect with the provider
+				    	i++;
+				        return;
+				    }
+				    modifierConsumer = rsp.getProvider();
+				    log.info(pluginName + " detected InterfaceHub >>> Modifier.class is consumed!");
+				    cancel();
+				} catch(NoClassDefFoundError e)
+				{
+					cancel();
+				}
+				if(getModifier() != null)
+				{				
+					List<Bypass.Counter> list = new ArrayList<Bypass.Counter>(EnumSet.allOf(Bypass.Counter.class));
+					for(Bypass.Counter ept : list)
+					{
+						if(!getModifier().isRegistered(ept.getModification()))
+						{
+							ModificationType modt = null;
+							switch(ept)
+							{
+							case MAX_AMOUNT_HOME:
+							case MAX_AMOUNT_WARP:
+							case MAX_AMOUNT_PORTAL:
+								modt = ModificationType.UP;
+								break;
+							}
+							List<String> lar = plugin.getYamlHandler().getMVELang().getStringList(ept.toString()+".Explanation");
+							getModifier().register(
+									ept.getModification(),
+									plugin.getYamlHandler().getMVELang().getString(ept.toString()+".Displayname", ept.toString()),
+									modt,
+									lar.toArray(new String[lar.size()]));
+						}
+					}
+				}
+			}
+        }.runTaskTimer(plugin, 20L, 20*2);
+	}
+	
+	public Modifier getModifier()
+	{
+		return modifierConsumer;
 	}
 	
 	public void setupBstats()

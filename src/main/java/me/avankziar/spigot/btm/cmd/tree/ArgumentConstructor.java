@@ -21,10 +21,7 @@ public class ArgumentConstructor extends BaseConstructor
     {
     	super(BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Argument"),
     			path,
-    			BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Permission"),
-    			BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Suggestion"),
-    			BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".CommandString"),
-    			BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".HelpInfo"),
+    			BungeeTeleportManager.getPlugin().getYamlHandler().getCom(),
     			canConsoleAccess);
         this.minArgsConstructor = minArgs;
         this.maxArgsConstructor = maxArgs;

@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import main.java.me.avankziar.general.database.Language.ISO639_2B;
+import main.java.me.avankziar.spigot.btm.modifiervalueentry.Bypass;
 
 public class YamlManager
 {
@@ -24,6 +25,8 @@ public class YamlManager
 	private static LinkedHashMap<String, Language> configPermissionLevelKeys = new LinkedHashMap<>();
 	private static LinkedHashMap<String, Language> configRespawnKeys = new LinkedHashMap<>();
 	
+	private static LinkedHashMap<String, Language> mvelanguageKeys = new LinkedHashMap<>();
+	
 	public YamlManager(boolean spigot) //INFO
 	{
 		if(spigot)
@@ -36,6 +39,7 @@ public class YamlManager
 			initForbiddenListSpigot();
 			initConfigRespawn();
 			initCustomLanguage();
+			initModifierValueEntryLanguage();
 		} else
 		{
 			initConfigBungee();
@@ -111,6 +115,11 @@ public class YamlManager
 	public LinkedHashMap<String, Language> getConfigRespawnKey()
 	{
 		return configRespawnKeys;
+	}
+	
+	public LinkedHashMap<String, Language> getModifierValueEntryLanguageKey()
+	{
+		return mvelanguageKeys;
 	}
 	
 	/*
@@ -310,6 +319,15 @@ public class YamlManager
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
 			configSpigotKeys.put("Enable.VanillaEndportal"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					false}));
+			configSpigotKeys.put("EnableMechanic.Modifier"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("EnableMechanic.ValueEntry"
+					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+					true}));
+			configSpigotKeys.put("ValueEntry.OverrulePermission"
 					, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 					false}));
 			configSpigotKeys.put("SilentTp.DoVanish"
@@ -689,24 +707,45 @@ public class YamlManager
 		comBypass();
 		String path = "";
 		commandsInput("btm", "btm", "btm.cmd.btm", 
-				"/btm [pagenumber]", "/btm ",
+				"/btm [pagenumber]", "/btm ", false,
 				"&c/btm &f| Infoseite für alle Befehle.",
-				"&c/btm &f| Info page for all commands.");
-		argumentInput("btm_reload", "reload", "btm.cmd.reload", 
-				"/btm reload", "/btm reload",
+				"&c/btm &f| Info page for all commands.",
+				"&bBefehlsrecht für &f/btm",
+				"&bCommandright for &f/btm",
+				"&eBasisbefehl für das BungeeTeleportManager Plugin.",
+				"&eGroundcommand for the BungeeTeleportManager Plugin.");
+		argumentInput("btm_reload", "reload", "btm.cmd.reload",
+				"/btm reload", "/btm reload", false,
 				"&c/btm reload &f| Neuladen aller Yaml-Dateien.",
-				"&c/btm reload &f| Reload all yaml files.");
+				"&c/btm reload &f| Reload all yaml files.",
+				"&bBefehlsrecht für &f/btm reload",
+				"&bCommandright for &f/btm reload",
+				"&eLädt alle Yaml-Dateien neu.",
+				"&eReloads all yaml files.");
 		commandsInput("btmimport", "btmimport", "btm.cmd.import", 
-				"/btmimport <mechanic> <plugin>", "/btmimport ",
+				"/btmimport <mechanic> <plugin>", "/btmimport ", false,
 				"&c/btmimport <Mechanic> <Plugin> &f| Importiert die Homes/Portale/Warp des angegebenen Plugin.",
-				"&c/btmimport <mechanic> <plugin> &f| Imports the Homes/Portals/Warp of the specified plugin.");
-		commandsInput("back", "back", "btm.cmd.back.back", "/back", "/back ",
+				"&c/btmimport <mechanic> <plugin> &f| Imports the Homes/Portals/Warp of the specified plugin.",
+				"&bBefehlsrecht für &f/btmimport",
+				"&bCommandright for &f/btmimport",
+				"&eImportbefehl um externe Homes/Warps etc. in BTM zu übernehmen.",
+				"&eImport command to import external homes/warps etc. into BTM.");
+		commandsInput("back", "back", "btm.cmd.back.back",
+				"/back", "/back ", false,
 				"&c/back &f| Teleportiert dich zu deinem letzten Rückkehrpunkt.",
-				"&c/back &f| Teleports you to your last return point.");
+				"&c/back &f| Teleports you to your last return point.",
+				"&bBefehlsrecht für &f/back",
+				"&bCommandright for &f/back",
+				"&eTeleport zu einer vorherigen Position.",
+				"&eTeleport to a previous position.");
 		commandsInput("deathback", "deathback", "btm.cmd.back.deathback", 
-				"/deathback", "/deathback ",
+				"/deathback", "/deathback ", false,
 				"&c/deathback &f| Teleportiert dich zu deinem Todespunkt.",
-				"&c/deathback &f| Teleports you to your death point.");
+				"&c/deathback &f| Teleports you to your death point.",
+				"&bBefehlsrecht für &f/back",
+				"&bCommandright for &f/back",
+				"&eTeleport dem Todespunkt.",
+				"&eTeleport to the point of death.");
 		comDeathzone();
 		comETr();
 		comFirstSpawn();
@@ -863,470 +902,896 @@ public class YamlManager
 	private void comDeathzone()
 	{
 		commandsInput("deathzonecreate", "deathzonecreate", "btm.cmd.staff.deathzone.create", 
-				"/deathzonecreate <deathzonename> ", "/deathzonecreate",
+				"/deathzonecreate <deathzonename> ", "/deathzonecreate", false,
 				"&c/deathzonecreate <Deathzonename> &f| Erstellt eine Deathzone.",
-				"&c/deathzonecreate <deathzonename> &f| Create a deathzone.");
+				"&c/deathzonecreate <deathzonename> &f| Create a deathzone.",
+				"&bBefehlsrecht für &f/deathzonecreate",
+				"&bCommandright for &f/deathzonecreate",
+				"&eErstellt eine Todeszone.",
+				"&eCrate a deathzone.");
 		commandsInput("deathzoneremove", "deathzoneremove", "btm.cmd.staff.deathzone.remove", 
-				"/deathzoneremove <deathzonename>", "/deathzoneremove",
+				"/deathzoneremove <deathzonename>", "/deathzoneremove", false,
 				"&c/deathzoneremove <Deathzonename> &f| Löscht die Deathzone.",
-				"&c/deathzoneremove <deathzonename> &f| Delete the deathzone.");
+				"&c/deathzoneremove <deathzonename> &f| Delete the deathzone.",
+				"&bBefehlsrecht für &f/deathzoneremove",
+				"&bCommandright for &f/deathzoneremove",
+				"&eLöscht die Deathzone.",
+				"&eDelete the deathzone.Delete the deathzone.");
 		commandsInput("deathzonesetcategory", "deathzonesetcategory", "btm.cmd.staff.deathzone.setcategory", 
-				"/deathzonesetcategory <deathzonename> <category> <subcategory>", "/deathzonesetcategory",
+				"/deathzonesetcategory <deathzonename> <category> <subcategory>", "/deathzonesetcategory", false,
 				"&c/deathzonesetcategory <Deathzonename> <Kategorie> <Subkategorie> &f| Setzt die Kategorie und Subkategorie.",
-				"&c/deathzonesetcategory <deathzonename> <category> <subcategory> &f| Sets the category and subcategory.");
+				"&c/deathzonesetcategory <deathzonename> <category> <subcategory> &f| Sets the category and subcategory.",
+				"&bBefehlsrecht für &f/deathzonesetcategory",
+				"&bCommandright for &f/deathzonesetcategory",
+				"&eSetzt die Kategorie und Subkategorie.",
+				"&eSets the category and subcategory.");
 		commandsInput("deathzonesetname", "deathzonesetname", "btm.cmd.staff.deathzone.setname", 
-				"/deathzonesetname <deathzonename> <newname>", "/deathzonesetname",
+				"/deathzonesetname <deathzonename> <newname>", "/deathzonesetname", false,
 				"&c/deathzonesetname <Deathzonename> <Neuer Name> &f| Setzt einen neuen Namen für die Deathzone.",
-				"&c/deathzonesetname <deathzonename> <newname> &f| Sets a new name for the deathzone.");
+				"&c/deathzonesetname <deathzonename> <newname> &f| Sets a new name for the deathzone.",
+				"&bBefehlsrecht für &f/deathzonesetname",
+				"&bCommandright for &f/deathzonesetname",
+				"&eSetzt einen neuen Namen für die Deathzone.",
+				"&eSets a new name for the deathzone.");
 		commandsInput("deathzonesetpriority", "deathzonesetpriority", "btm.cmd.staff.deathzone.setpriority", 
-				"/deathzonesetpriority ", "/deathzonesetpriority",
+				"/deathzonesetpriority ", "/deathzonesetpriority", false,
 				"&c/deathzonesetpriority <Deathzonename> <Priorität> &f| Setzt eine Priorität für die Deathzone.",
-				"&c/deathzonesetpriority <deathzonename> <priority> &f| Sets a priority for the deathzone.");
+				"&c/deathzonesetpriority <deathzonename> <priority> &f| Sets a priority for the deathzone.",
+				"&bBefehlsrecht für &f/deathzonesetpriority",
+				"&bCommandright for &f/deathzonesetpriority",
+				"&eSetzt eine Priorität für die Deathzone.",
+				"&eSets a priority for the deathzone.");
 		commandsInput("deathzonesetdeathzonepath", "deathzonesetdeathzonepath", "btm.cmd.staff.deathzone.setdeathzonepath", 
-				"/deathzonesetdeathzonepath <deathzonename> <configpath>", "/deathzonesetdeathzonepath",
+				"/deathzonesetdeathzonepath <deathzonename> <configpath>", "/deathzonesetdeathzonepath", false,
 				"&c/deathzonesetdeathzonepath <Deathzonename> <Configpfad> &f| Setzt den Config-Pfad für das Deathzoneflowchart.",
-				"&c/deathzonesetdeathzonepath <deathzonename> <configpath> &f| Sets the configpath for the deathzoneflowchart.");
+				"&c/deathzonesetdeathzonepath <deathzonename> <configpath> &f| Sets the configpath for the deathzoneflowchart.",
+				"&bBefehlsrecht für &f/deathzonesetdeathzonepath",
+				"&bCommandright for &f/deathzonesetdeathzonepath",
+				"&eSetzt den Config-Pfad für das Deathzoneflowchart.",
+				"&eSets the configpath for the deathzoneflowchart.");
 		commandsInput("deathzoneinfo", "deathzoneinfo", "btm.cmd.staff.deathzone.info", 
-				"/deathzoneinfo <deathzonename>", "/deathzoneinfo",
+				"/deathzoneinfo <deathzonename>", "/deathzoneinfo", false,
 				"&c/deathzoneinfo <Deathzonename> &f| Zeigt alle Infos zu der Deathzone an.",
-				"&c/deathzoneinfo <deathzonename> &f| Shows all infos from the deathzone.");
+				"&c/deathzoneinfo <deathzonename> &f| Shows all infos from the deathzone.",
+				"&bBefehlsrecht für &f/deathzoneinfo",
+				"&bCommandright for &f/deathzoneinfo",
+				"&eZeigt alle Infos zu der Deathzone an.",
+				"&eShows all infos from the deathzone.");
 		commandsInput("deathzonelist", "deathzonelist", "btm.cmd.staff.deathzone.list", 
-				"/deathzonelist [page] [shortcut:value]...", "/deathzonelist",
+				"/deathzonelist [page] [shortcut:value]...", "/deathzonelist", false,
 				"&c/deathzonelist [Seite] [Kürzel:Wert]... &f| Listet alle Deathzone auf. Mögliche Kürzel sind: server|world|category|subcategory",
-				"&c/deathzonelist [page] [shortcut:value]... &f| Lists all deathzones. Possible abbreviations are: server|world|category|subcategory");
+				"&c/deathzonelist [page] [shortcut:value]... &f| Lists all deathzones. Possible abbreviations are: server|world|category|subcategory",
+				"&bBefehlsrecht für &f/deathzonelist",
+				"&bCommandright for &f/deathzonelist",
+				"&eListet alle Deathzone auf. Mögliche Kürzel sind: server|world|category|subcategory",
+				"&eLists all deathzones. Possible abbreviations are: server|world|category|subcategory");
 		commandsInput("deathzonesimulatedeath", "deathzonesimulatedeath", "btm.cmd.staff.deathzone.simulatedeath", 
-				"/deathzonesimulatedeath ", "/deathzonesimulatedeath",
+				"/deathzonesimulatedeath ", "/deathzonesimulatedeath", false,
 				"&c/deathzonesimulatedeath &f| Simuliert den Tod des Spielers mit Logeinträge, was genau gemacht wird.",
-				"&c/deathzonesimulatedeath &f| Simulates the death of the player with log entries, what exactly is done.");
+				"&c/deathzonesimulatedeath &f| Simulates the death of the player with log entries, what exactly is done.",
+				"&bBefehlsrecht für &f/deathzonesimulatedeath",
+				"&bCommandright for &f/deathzonesimulatedeath",
+				"&eSimuliert den Tod des Spielers mit Logeinträge, was genau gemacht wird.",
+				"&eSimulates the death of the player with log entries, what exactly is done.");
 		commandsInput("deathzonemode", "deathzonemode", "btm.cmd.staff.deathzone.mode", 
-				"/deathzonemode ", "/deathzonemode",
+				"/deathzonemode ", "/deathzonemode", false,
 				"&c/deathzonemode &f| Toggelt den Modus um die Eckpunkte der Deathzone zu setzten.",
-				"&c/deathzonemode &f| Toggles the mode to set the corner points of the deathzone.");
+				"&c/deathzonemode &f| Toggles the mode to set the corner points of the deathzone.",
+				"&bBefehlsrecht für &f/deathzonemode",
+				"&bCommandright for &f/deathzonemode",
+				"&eToggelt den Modus um die Eckpunkte der Deathzone zu setzten.",
+				"&eToggles the mode to set the corner points of the deathzone.");
 	}
 	
 	private void comETr()
 	{
 		commandsInput("entitytransport", "entitytransport", "btm.cmd.user.entitytransport.entitytransport", 
-				"/entitytransport [shortcut:target]", "/entitytransport ",
+				"/entitytransport [shortcut:target]", "/entitytransport ", false,
 				"&c/entitytransport [Kürzel:Ziel] &f| Teleportiert das angeleihnte oder angeschaute Entity zum Home, Spieler oder Warp (h/pl/w)",
-				"&c/entitytransport [shortcut:target] &f| Teleports the leashed or viewed entity to the home, player or warp (h/pl/w).");
+				"&c/entitytransport [shortcut:target] &f| Teleports the leashed or viewed entity to the home, player or warp (h/pl/w).",
+				"&bBefehlsrecht für &f/entitytransport",
+				"&bCommandright for &f/entitytransport",
+				"&eTeleportiert das angeleihnte oder angeschaute Entity zum Home, Spieler oder Warp (h/pl/w)",
+				"&eTeleports the leashed or viewed entity to the home, player or warp (h/pl/w).");
 		commandsInput("entitytransportsetaccess", "entitytransportsetaccess", "btm.cmd.user.entitytransport.setaccess", 
-				"/entitytransportsetaccess <playername>", "/entitytransportsetaccess ",
+				"/entitytransportsetaccess <playername>", "/entitytransportsetaccess ", false,
 				"&c/entitytransportsetaccess <Spielername> &f| Gibt oder nimmt dem Spieler die Erlaubnis, Entitys zu seinem Aufenthaltsort zu schicken.",
-				"&c/entitytransportsetaccess <playername> &f| Gives or takes away the player's permission to send entities to their location.");
+				"&c/entitytransportsetaccess <playername> &f| Gives or takes away the player's permission to send entities to their location.",
+				"&bBefehlsrecht für &f/entitytransportsetaccess",
+				"&bCommandright for &f/entitytransportsetaccess",
+				"&eGibt oder nimmt dem Spieler die Erlaubnis, Entitys zu seinem Aufenthaltsort zu schicken.",
+				"&eGives or takes away the player's permission to send entities to their location.");
 		commandsInput("entitytransportaccesslist", "entitytransportaccesslist", "btm.cmd.user.entitytransport.accesslist", 
-				"/entitytransportaccesslist [playername]", "/entitytransportaccesslist ",
+				"/entitytransportaccesslist [playername]", "/entitytransportaccesslist ", false,
 				"&c/entitytransportaccesslist [Spielername] &f| Zeigt alle Spieler mit einer Entitytransport Erlaubnis bei diesem Spieler auf.",
-				"&c/entitytransportaccesslist [playername] &f| Shows all players with an entity transport permission with this player.");
+				"&c/entitytransportaccesslist [playername] &f| Shows all players with an entity transport permission with this player.",
+				"&bBefehlsrecht für &f/entitytransportaccesslist",
+				"&bCommandright for &f/entitytransportaccesslist",
+				"&eZeigt alle Spieler mit einer Entitytransport Erlaubnis bei diesem Spieler auf.",
+				"&eShows all players with an entity transport permission with this player.");
 		commandsInput("entitytransportsetowner", "entitytransportsetowner", "btm.cmd.user.entitytransport.setowner", 
-				"/entitytransportsetowner <playername>", "/entitytransportsetowner ",
+				"/entitytransportsetowner <playername>", "/entitytransportsetowner ", false,
 				"&c/entitytransportsetowner <Spielername> &f| Überträgt die Eigentümerrechte des Entity auf den angegebenen Spieler.",
-				"&c/entitytransportsetowner <playername> &f| Transfers the ownership rights of the entity to the specified player.");
+				"&c/entitytransportsetowner <playername> &f| Transfers the ownership rights of the entity to the specified player.",
+				"&bBefehlsrecht für &f/entitytransportsetowner",
+				"&bCommandright for &f/entitytransportsetowner",
+				"&eÜberträgt die Eigentümerrechte des Entity auf den angegebenen Spieler.",
+				"&eTransfers the ownership rights of the entity to the specified player.");
 		commandsInput("entitytransportbuytickets", "entitytransportbuytickets", "btm.cmd.user.entitytransport.setowner", 
-				"/entitytransportbuytickets <amount> [playername]", "/entitytransportbuytickets ",
+				"/entitytransportbuytickets <amount> [playername]", "/entitytransportbuytickets ", false,
 				"&c/entitytransportbuytickets <Anzahl> [Spielername] &f| Kauft Entitytransporttickets für einen Preis x an.",
-				"&c/entitytransportbuytickets <amount> [playername] &f| Purchases entity transport tickets for a price x.");
+				"&c/entitytransportbuytickets <amount> [playername] &f| Purchases entity transport tickets for a price x.",
+				"&bBefehlsrecht für &f/entitytransportbuytickets",
+				"&bCommandright for &f/entitytransportbuytickets",
+				"&eKauft Entitytransporttickets für einen Preis x an.",
+				"&ePurchases entity transport tickets for a price x.");
 	}
 	
 	private void comFirstSpawn()
 	{
 		commandsInput("firstspawn", "firstspawn", "btm.cmd.user.firstspawn.firstspawn",
-				"/firstspawn <servername>", "/firstspawn ",
+				"/firstspawn <servername>", "/firstspawn ", false,
 				"&c/firstspawn <Servername> &f| Teleportiert zum FirstSpawn des angegebenen Servers.",
-				"&c/firstspawn <servernname> &f| Teleport to the FirstSpawn of the specified server.");
+				"&c/firstspawn <servernname> &f| Teleport to the FirstSpawn of the specified server.",
+				"&bBefehlsrecht für &f/firstspawn",
+				"&bCommandright for &f/firstspawn",
+				"&eTeleportiert zum FirstSpawn des angegebenen Servers.",
+				"&eTeleport to the FirstSpawn of the specified server.");
 		commandsInput("firstspawnset", "firstspawnset", "btm.cmd.user.firstspawn.set",
-				"/firstspawnset", "/firstspawnset ",
+				"/firstspawnset", "/firstspawnset ", false,
 				"&c/firstspawnset &f| Erstellt einen FirstSpawn auf dem Server, wo man sich befindet.",
-				"&c/firstspawnset &f| Creates a FirstSpawn on the server where you are located.");
+				"&c/firstspawnset &f| Creates a FirstSpawn on the server where you are located.",
+				"&bBefehlsrecht für &f/firstspawnset",
+				"&bCommandright for &f/firstspawnset",
+				"&eErstellt einen FirstSpawn auf dem Server, wo man sich befindet.",
+				"&eCreates a FirstSpawn on the server where you are located.");
 		commandsInput("firstspawnremove", "firstspawnremove", "btm.cmd.user.firstspawn.remove",
-				"/firstspawnremove <servername>", "/firstspawnremove ",
+				"/firstspawnremove <servername>", "/firstspawnremove ", false,
 				"&c/firstspawnremove <Servername> &f| Löscht den FirstSpawn des Servers.",
-				"&c/firstspawnremove <servernname> &f| Deletes the FirstSpawn of the server.");
+				"&c/firstspawnremove <servernname> &f| Deletes the FirstSpawn of the server.",
+				"&bBefehlsrecht für &f/firstspawnremove",
+				"&bCommandright for &f/firstspawnremove",
+				"&eLöscht den FirstSpawn des Servers.",
+				"&eDeletes the FirstSpawn of the server.");
 		commandsInput("firstspawninfo", "firstspawninfo", "btm.cmd.user.firstspawn.info",
-				"/firstspawninfo", "/firstspawninfo ",
+				"/firstspawninfo", "/firstspawninfo ", false,
 				"&c/firstspawninfo &f| Zeigt alle FirstSpawn aller Server an.",
-				"&c/firstspawninfo &f| Displays all FirstSpawn of all servers.");
+				"&c/firstspawninfo &f| Displays all FirstSpawn of all servers.",
+				"&bBefehlsrecht für &f/firstspawninfo",
+				"&bCommandright for &f/firstspawninfo",
+				"&eZeigt alle FirstSpawn aller Server an.",
+				"&eDisplays all FirstSpawn of all servers.");
 	}
 	
 	private void comHome()
 	{
 		commandsInput("sethome", "sethome", "btm.cmd.user.home.create",
-				"/sethome <homename> [isPrio/True]", "/sethome ",
+				"/sethome <homename> [isPrio/True]", "/sethome ", false,
 				"&c/sethome <Homename> [istPrio/True] &f| Erstellt einen Homepunkt.",
-				"&c/sethome <Homename> [isPrio/True] &f| Creates a home point.");
+				"&c/sethome <Homename> [isPrio/True] &f| Creates a home point.",
+				"&bBefehlsrecht für &f/sethome",
+				"&bCommandright for &f/sethome",
+				"&eErstellt einen Homepunkt.",
+				"&eCreates a home point.");
 		commandsInput("delhome", "delhome", "btm.cmd.user.home.remove", 
-				"/delhome <homename>", "/delhome ",
+				"/delhome <homename>", "/delhome ", false,
 				"&c/delhome <Homename> &f| Löscht den Homepunkt.",
-				"&c/delhome <Homename> &f| Deletes the home point.");
+				"&c/delhome <Homename> &f| Deletes the home point.",
+				"&bBefehlsrecht für &f/delhome",
+				"&bCommandright for &f/delhome",
+				"&eLöscht den Homepunkt.",
+				"&eDeletes the home point.");
 		commandsInput("homecreate", "homecreate", "btm.cmd.user.home.create",
-				"/homecreate <homename> [isPrio/True]", "/homecreate ",
+				"/homecreate <homename> [isPrio/True]", "/homecreate ", false,
 				"&c/homecreate <Homename> [istPrio/True] &f| Erstellt einen Homepunkt.",
-				"&c/homecreate <Homename> [isPrio/True] &f| Creates a home point.");
+				"&c/homecreate <Homename> [isPrio/True] &f| Creates a home point.",
+				"&bBefehlsrecht für &f/homecreate",
+				"&bCommandright for &f/homecreate",
+				"&eErstellt einen Homepunkt.",
+				"&eCreates a home point.");
 		commandsInput("homeremove", "homeremove", "btm.cmd.user.home.remove",
-				"/homeremove <homename>", "/homeremove ",
+				"/homeremove <homename>", "/homeremove ", false,
 				"&c/homeremove <Homename> &f| Löscht den Homepunkt.",
-				"&c/homeremove <Homename> &f| Deletes the home point.");
-		commandsInput("homesdeleteserverworld", "homesdeleteserverworld",
-				"btm.cmd.admin.home.deleteserverworld", "/homesdeleteserverworld <server> <worldname>", "/homesdeleteserverworld",
+				"&c/homeremove <Homename> &f| Deletes the home point.",
+				"&bBefehlsrecht für &f/homeremove",
+				"&bCommandright for &f/homeremove",
+				"&eLöscht den Homepunkt.",
+				"&eDeletes the home point.");
+		commandsInput("homesdeleteserverworld", "homesdeleteserverworld", "btm.cmd.admin.home.deleteserverworld",
+				"/homesdeleteserverworld <server> <worldname>", "/homesdeleteserverworld", false,
 				"&c/homesdeleteserverworld <Server> <Weltname> &f| Löscht alle Homes auf den angegebenen Server/Welt.",
-				"&c/homesdeleteserverworld <Server> <Weltname> &f| Deletes all homes on the specified server/world.");
+				"&c/homesdeleteserverworld <Server> <Weltname> &f| Deletes all homes on the specified server/world.",
+				"&bBefehlsrecht für &f/homesdeleteserverworld",
+				"&bCommandright for &f/homesdeleteserverworld",
+				"&eLöscht alle Homes auf den angegebenen Server/Welt.",
+				"&eDeletes all homes on the specified server/world.");
 		commandsInput("homes", "homes", "btm.cmd.user.home.homes", 
-				"/homes [page] [playername]", "/homes ",
+				"/homes [page] [playername]", "/homes ", false,
 				"&c/homes &f| Listet alle eigenen Homepunkte auf.",
-				"&c/homes &f| Lists all own home points.");
+				"&c/homes &f| Lists all own home points.",
+				"&bBefehlsrecht für &f/homes",
+				"&bCommandright for &f/homes",
+				"&eListet alle eigenen Homepunkte auf.",
+				"&eLists all own home points.");
 		commandsInput("home", "home", "btm.cmd.user.home.home", 
-				"/home <homename>", "/home ",
+				"/home <homename>", "/home ", false,
 				"&c/home <Homename> &f| Teleportiert dich zu deinem Homepunkt.",
-				"&c/home <Homename> &f| Teleports you to your home point.");
+				"&c/home <Homename> &f| Teleports you to your home point.",
+				"&bBefehlsrecht für &f/home",
+				"&bCommandright for &f/home",
+				"&eTeleportiert dich zu deinem Homepunkt.",
+				"&eTeleports you to your home point.");
 		commandsInput("homelist", "homelist", "btm.cmd.staff.home.list", 
-				"/homelist [page]", "/homelist ",
+				"/homelist [page]", "/homelist ", false,
 				"&c/homelist [Seitenzahl] &f| Listet alle Homepunkte aller Spieler auf.",
-				"&c/homelist [Seitenzahl] &f| Lists all home points of all players.");
+				"&c/homelist [Seitenzahl] &f| Lists all home points of all players.",
+				"&bBefehlsrecht für &f/homelist",
+				"&bCommandright for &f/homelist",
+				"&eListet alle Homepunkte aller Spieler auf.",
+				"&eLists all home points of all players.");
 		commandsInput("homesetpriority", "homesetpriority", "btm.cmd.user.home.setpriority", 
-				"/homesetpriority <homename>", "/homesetpriority ",
+				"/homesetpriority <homename>", "/homesetpriority ", false,
 				"&c/homesetpriority <Homename> &f| Setzt das angegebene Home als Priorität. /home führt nun direkt zu diesem Home.",
-				"&c/homesetpriority <homename> &f| Sets the specified home as priority. /home now leads directly to this home.");
+				"&c/homesetpriority <homename> &f| Sets the specified home as priority. /home now leads directly to this home.",
+				"&bBefehlsrecht für &f/homesetpriority",
+				"&bCommandright for &f/homesetpriority",
+				"&eSetzt das angegebene Home als Priorität. /home führt nun direkt zu diesem Home.",
+				"&eSets the specified home as priority. /home now leads directly to this home.");
 	}
 	
 	private void comPortal()
 	{
 		commandsInput("portalcreate", "portalcreate", "btm.cmd.user.portal.create",
-				"/portalcreate <portalname>", "/portalcreate ",
+				"/portalcreate <portalname>", "/portalcreate ", false,
 				"&c/portalcreate <Portalname> &f| Erstellt einen Portal.",
-				"&c/portalcreate <portalname> &f| Creates a portal.");
+				"&c/portalcreate <portalname> &f| Creates a portal.",
+				"&bBefehlsrecht für &f/portalcreate",
+				"&bCommandright for &f/portalcreate",
+				"&eErstellt einen Portal.",
+				"&eCreates a portal.");
 		commandsInput("portalremove", "portalremove", "btm.cmd.user.portal.remove",
-				"/portalremove <portalname>", "/portalremove ",
+				"/portalremove <portalname>", "/portalremove ", false,
 				"&c/portalremove <Portalname> &f| Löscht das Portal.",
-				"&c/portalremove <portalname> &f| Clear the portal.");
+				"&c/portalremove <portalname> &f| Clear the portal.",
+				"&bBefehlsrecht für &f/portalremove",
+				"&bCommandright for &f/portalremove",
+				"&eLöscht das Portal.",
+				"&eClear the portal.");
 		commandsInput("portals", "portals", "btm.cmd.user.portal.portals",
-				"/portals [page] [playername] [category]", "/portals ",
+				"/portals [page] [playername] [category]", "/portals ", false,
 				"&c/portals [Seitenzahl] [Spielername] [Kategorie] &f| Zeigt seitenbasiert deine Portale an.",
-				"&c/portals [pagenumber] [playername] [category] &f| Displays your portals based on pages.");
+				"&c/portals [pagenumber] [playername] [category] &f| Displays your portals based on pages.",
+				"&bBefehlsrecht für &f/portals",
+				"&bCommandright for &f/portals",
+				"&eZeigt seitenbasiert deine Portale an.",
+				"&eDisplays your portals based on pages.");
 		commandsInput("portallist", "portallist", "btm.cmd.user.portal.portallist",
-				"/portallist [page] [category]", "/portallist ",
+				"/portallist [page] [category]", "/portallist ", false,
 				"&c/portallist [Seitenzahl] [Kategorie] &f| Zeigt seitenbasiert alle Portale an.",
-				"&c/portallist [pagenumber] [category] &f| Displays all portals based on pages.");
+				"&c/portallist [pagenumber] [category] &f| Displays all portals based on pages.",
+				"&bBefehlsrecht für &f/portallist",
+				"&bCommandright for &f/portallist",
+				"&eZeigt seitenbasiert alle Portale an.",
+				"&eDisplays all portals based on pages.");
 		commandsInput("portalinfo", "portalinfo", "btm.cmd.user.portal.info",
-				"/portalinfo <portalname>", "/portalinfo ",
+				"/portalinfo <portalname>", "/portalinfo ", false,
 				"&c/portalinfo <Portalname> &f| Zeigt alle Portal Informationen an.",
-				"&c/portalinfo <portalname> &f| Displays all portal information.");
+				"&c/portalinfo <portalname> &f| Displays all portal information.",
+				"&bBefehlsrecht für &f/portalinfo",
+				"&bCommandright for &f/portalinfo",
+				"&eZeigt alle Portal Informationen an.",
+				"&eDisplays all portal information.");
 		commandsInput("portaldeleteserverworld", "portaldeleteserverworld", "btm.cmd.user.portal.deleteserverworld",
-				"/portaldeleteserverworld <server> <world>", "/portaldeleteserverworld ",
+				"/portaldeleteserverworld <server> <world>", "/portaldeleteserverworld ", false,
 				"&c/portaldeleteserverworld <Server> <Welt> &f| Löscht alle Portal auf einem bestimmten Server und Welt.",
-				"&c/portaldeleteserverworld <server> <world> &f| Deletes all portal on a given server and world.");
+				"&c/portaldeleteserverworld <server> <world> &f| Deletes all portal on a given server and world.",
+				"&bBefehlsrecht für &f/portaldeleteserverworld",
+				"&bCommandright for &f/portaldeleteserverworld",
+				"&eLöscht alle Portal auf einem bestimmten Server und Welt.",
+				"&eDeletes all portal on a given server and world.");
 		commandsInput("portalsearch", "portalsearch", "btm.cmd.user.portal.search",
-				"/portalsearch <page> <xxxx:value>", "/portalsearch ",
+				"/portalsearch <page> <xxxx:value>", "/portalsearch ", false,
 				"&c/portalsearch <Seitenzahl> <xxxx:Wert> &f| Sucht mit den angegeben Argumenten eine Liste aus Portalen.",
-				"&c/portalsearch <page> <xxxx:value> &f| Searches a list of portals with the given arguments.");
+				"&c/portalsearch <page> <xxxx:value> &f| Searches a list of portals with the given arguments.",
+				"&bBefehlsrecht für &f/portalsearch",
+				"&bCommandright for &f/portalsearch",
+				"&eSucht mit den angegeben Argumenten eine Liste aus Portalen.",
+				"&eSearches a list of portals with the given arguments.");
 		commandsInput("portalsetname", "portalsetname", "btm.cmd.user.portal.setname",
-				"/portalsetname <portalname> <new name>", "/portal ",
+				"/portalsetname <portalname> <new name>", "/portal ", false,
 				"&c/portalsetname <Portalname> <neuer Name> &f| Setzt den Namen des Portals.",
-				"&c/portalsetname <portalname> <new name> &f| Sets the name of the portal.");
+				"&c/portalsetname <portalname> <new name> &f| Sets the name of the portal.",
+				"&bBefehlsrecht für &f/portalsetname",
+				"&bCommandright for &f/portalsetname",
+				"&eSetzt den Namen des Portals.",
+				"&eSets the name of the portal.");
 		commandsInput("portalsetowner", "portalsetowner", "btm.cmd.user.portal.setowner",
-				"/portalsetowner <portalname> <playername|null>", "/portalsetowner ",
+				"/portalsetowner <portalname> <playername|null>", "/portalsetowner ", false,
 				"&c/portalsetowner <Portalname> <Spielername|null> &f| Setzt den Eigentümer des Portals.",
-				"&c/portalsetowner <portalname> <playername|null> &f| Sets the owner of the portal.");
+				"&c/portalsetowner <portalname> <playername|null> &f| Sets the owner of the portal.",
+				"&bBefehlsrecht für &f/portalsetowner",
+				"&bCommandright for &f/portalsetowner",
+				"&eSetzt den Eigentümer des Portals.",
+				"&eSets the owner of the portal.");
 		commandsInput("portalsetpermission", "portalsetpermission", "btm.cmd.admin.portal.setpermission",
-				"/portalsetpermission <portalname> <permission>", "/portalsetpermission ",
+				"/portalsetpermission <portalname> <permission>", "/portalsetpermission ", false,
 				"&c/portalsetpermission <Portalname> <Permission> &f| Setzt die Permission des Portals.",
-				"&c/portalsetpermission <portalname> <permission> &f| Sets the permission of the portal.");
+				"&c/portalsetpermission <portalname> <permission> &f| Sets the permission of the portal.",
+				"&bBefehlsrecht für &f/portalsetpermission",
+				"&bCommandright for &f/portalsetpermission",
+				"&eSetzt die Permission des Portals.",
+				"&eSets the permission of the portal.");
 		commandsInput("portalsetprice", "portalsetprice", "btm.cmd.user.portal.setprice",
-				"/portalsetprice <portalname> <price>", "/portalsetprice ",
+				"/portalsetprice <portalname> <price>", "/portalsetprice ", false,
 				"&c/portalsetprice <Portalname> <Preis> &f| Setzt den Benutzungspreis des Portals.",
-				"&c/portalsetprice <portalname> <price> &f| Sets the usage price of the portal.");
+				"&c/portalsetprice <portalname> <price> &f| Sets the usage price of the portal.",
+				"&bBefehlsrecht für &f/portalsetprice",
+				"&bCommandright for &f/portalsetprice",
+				"&eSetzt den Benutzungspreis des Portals.",
+				"&eSets the usage price of the portal.");
 		commandsInput("portaladdmember", "portaladdmember", "btm.cmd.user.portal.addmember",
-				"/portaladdmember <portalname> <playername>", "/portaladdmember ",
+				"/portaladdmember <portalname> <playername>", "/portaladdmember ", false,
 				"&c/portaladdmember <Portalname> <Spielername> &f| Fügt einen Spieler dem Portal als Mitglied hinzu.",
-				"&c/portaladdmember <portalname> <playername> &f| Adds a player to the portal as a member.");
+				"&c/portaladdmember <portalname> <playername> &f| Adds a player to the portal as a member.",
+				"&bBefehlsrecht für &f/portaladdmember",
+				"&bCommandright for &f/portaladdmember",
+				"&eFügt einen Spieler dem Portal als Mitglied hinzu.",
+				"&eAdds a player to the portal as a member.");
 		commandsInput("portalremovemember", "portalremovemember", "user.portal.removemember",
-				"/portalremovemember <portalname> <playername>", "/portalremovemember ",
+				"/portalremovemember <portalname> <playername>", "/portalremovemember ", false,
 				"&c/portalremovemember <Portalname> <Spielername> &f| Entfernt einen Spieler als Mitglied vom Portal.",
-				"&c/portalremovemember <portalname> <playername> &f| Removes a player as a member from the portal.");
+				"&c/portalremovemember <portalname> <playername> &f| Removes a player as a member from the portal.",
+				"&bBefehlsrecht für &f/portalremovemember",
+				"&bCommandright for &f/portalremovemember",
+				"&eEntfernt einen Spieler als Mitglied vom Portal.",
+				"&eRemoves a player as a member from the portal.");
 		commandsInput("portaladdblacklist", "portaladdblacklist", "btm.cmd.user.portal.addblacklist",
-				"/portaladdblacklist <portalname> <playername>", "/portaladdblacklist ",
+				"/portaladdblacklist <portalname> <playername>", "/portaladdblacklist ", false,
 				"&c/portaladdblacklist <Portalname> <Spielername> &f| Setzt einen Spieler auf die Blacklist des Portals.",
-				"&c/portaladdblacklist <portalname> <playername> &f| Places a player on the portal's blacklist.");
+				"&c/portaladdblacklist <portalname> <playername> &f| Places a player on the portal's blacklist.",
+				"&bBefehlsrecht für &f/portaladdblacklist",
+				"&bCommandright for &f/portaladdblacklist",
+				"&eSetzt einen Spieler auf die Blacklist des Portals.",
+				"&ePlaces a player on the portal's blacklist.");
 		commandsInput("portalremoveblacklist", "portalremoveblacklist", "btm.cmd.user.portal.removeblacklist",
-				"/portalremoveblacklist <portalname> <playername>", "/portalremoveblacklist ",
+				"/portalremoveblacklist <portalname> <playername>", "/portalremoveblacklist ", false,
 				"&c/portalremoveblacklist <Portalname> <Spielername> &f| Entfernt einen Spieler von der Blacklist des Portals.",
-				"&c/portalremoveblacklist <portalname> <playername> &f| Removes a player from the portal blacklist.");
+				"&c/portalremoveblacklist <portalname> <playername> &f| Removes a player from the portal blacklist.",
+				"&bBefehlsrecht für &f/portalremoveblacklist",
+				"&bCommandright for &f/portalremoveblacklist",
+				"&eEntfernt einen Spieler von der Blacklist des Portals.",
+				"&eRemoves a player from the portal blacklist.");
 		commandsInput("portalsetcategory", "portalsetcategory", "btm.cmd.user.portal.setcategory",
-				"/portalsetcategory <portalname> <category>", "/portalsetcategory ",
+				"/portalsetcategory <portalname> <category>", "/portalsetcategory ", false,
 				"&c/portalsetcategory <Portalname> <Kategorie> &f| Setzt eine Kategory für das Portal.",
-				"&c/portalsetcategory <portalname> <category> &f| Sets a category for the portal.");
+				"&c/portalsetcategory <portalname> <category> &f| Sets a category for the portal.",
+				"&bBefehlsrecht für &f/portalsetcategory",
+				"&bCommandright for &f/portalsetcategory",
+				"&eSetzt eine Kategory für das Portal.",
+				"&eSets a category for the portal.");
 		commandsInput("portalsetownexitpoint", "portalsetownexitpoint", "btm.cmd.user.portal.setownexitpoint",
-				"/portalsetownexitpoint <portalname>", "/portalsetownexitpoint ",
+				"/portalsetownexitpoint <portalname>", "/portalsetownexitpoint ", false,
 				"&c/portalsetownexitpoint <Portalname> &f| Setzt den Teleportausgangspunkt des Portals.",
-				"&c/portalsetownexitpoint <portalname> &f| Sets the teleport exit point of the portal.");
+				"&c/portalsetownexitpoint <portalname> &f| Sets the teleport exit point of the portal.",
+				"&bBefehlsrecht für &f/portalsetownexitpoint",
+				"&bCommandright for &f/portalsetownexitpoint",
+				"&eSetzt den Teleportausgangspunkt des Portals.",
+				"&eSets the teleport exit point of the portal.");
 		commandsInput("portalsetposition", "portalsetposition", "btm.cmd.user.portal.setposition",
-				"/portalsetposition <portalname>", "/portalsetposition ",
+				"/portalsetposition <portalname>", "/portalsetposition ", false,
 				"&c/portalsetposition <Portalname> &f| Setzt die Eckpunkt des Portal neu.",
-				"&c/portalsetposition <portalname> &f| Resets the corner points of the portal.");
+				"&c/portalsetposition <portalname> &f| Resets the corner points of the portal.",
+				"&bBefehlsrecht für &f/portalsetposition",
+				"&bCommandright for &f/portalsetposition",
+				"&eSetzt die Eckpunkt des Portal neu.",
+				"&eResets the corner points of the portal.");
 		commandsInput("portalsetdefaultcooldown", "portalsetdefaultcooldown", "btm.cmd.user.portal.setdefaultcooldown",
-				"/portalsetdefaultcooldown <portalname> <timeshortcut:value>", "/portalsetdefaultcooldown ",
+				"/portalsetdefaultcooldown <portalname> <timeshortcut:value>", "/portalsetdefaultcooldown ", false,
 				"&c/portalsetdefaultcooldown <Portalname> <Zeitkürzel:value> &f| Setzt den Default Cooldown des Portal. (Config Cooldown ist priorisiert)",
-				"&c/portalsetdefaultcooldown <portalname> <timeshortcut:value> &f| Sets the default cooldown of the portal. (Config Cooldown is prioritized)");
+				"&c/portalsetdefaultcooldown <portalname> <timeshortcut:value> &f| Sets the default cooldown of the portal. (Config Cooldown is prioritized)",
+				"&bBefehlsrecht für &f/portalsetdefaultcooldown",
+				"&bCommandright for &f/portalsetdefaultcooldown",
+				"&eSetzt den Default Cooldown des Portal.",
+				"&eSets the default cooldown of the portal.");
 		commandsInput("portalsettarget", "portalsettarget", "btm.cmd.user.portal.settarget",
-				"/portalsettarget <portalname> <TargetType> [Additionalinfo]", "/portalsettarget ",
+				"/portalsettarget <portalname> <TargetType> [Additionalinfo]", "/portalsettarget ", false,
 				"&c/portalsettarget <Portalname> <TargetType> [Zusatzinfo] &f| Setzt das Ziel des Portal mit Zusatztinfo. Beispiel: <BACK>; <HOME>; <HOME> [Lager] etc.",
-				"&c/portalsettarget <portalname> <TargetType> [Additionalinfo] &f| Sets the destination of the portal with additional info. Example: <BACK>; <HOME>; <HOME> [warehouse] etc.");
+				"&c/portalsettarget <portalname> <TargetType> [Additionalinfo] &f| Sets the destination of the portal with additional info. Example: <BACK>; <HOME>; <HOME> [warehouse] etc.",
+				"&bBefehlsrecht für &f/portalsettarget",
+				"&bCommandright for &f/portalsettarget",
+				"&eSetzt das Ziel des Portal mit Zusatztinfo.",
+				"&eSets the destination of the portal with additional info.");
 		commandsInput("portalsetpostteleportmessage", "portalsetpostteleportmessage", "btm.cmd.user.portal.setpostteleportmessage",
-				"/portalsetpostteleportmessage <portalname> <message>", "/portalsetpostteleportmessage ",
+				"/portalsetpostteleportmessage <portalname> <message>", "/portalsetpostteleportmessage ", false,
 				"&c/portalsetpostteleportmessage <Portalname> <Nachricht> &f| Setzt die Nachricht, welche nach dem Teleport gesendet wird.",
-				"&c/portalsetpostteleportmessage <portalname> <message> &f| Sets the message that will be sent after the teleport.");
+				"&c/portalsetpostteleportmessage <portalname> <message> &f| Sets the message that will be sent after the teleport.",
+				"&bBefehlsrecht für &f/portalsetpostteleportmessage",
+				"&bCommandright for &f/portalsetpostteleportmessage",
+				"&eSetzt die Nachricht, welche nach dem Teleport gesendet wird.",
+				"&eSets the message that will be sent after the teleport.");
 		commandsInput("portalsetaccessdenialmessage", "portalsetaccessdenialmessage", "btm.cmd.user.portal.setaccessdenialmessage",
-				"/portalsetaccessdenialmessage <portalname> <message>", "/portalsetaccessdenialmessage ",
+				"/portalsetaccessdenialmessage <portalname> <message>", "/portalsetaccessdenialmessage ", false,
 				"&c/portalsetaccessdenialmessage <Portalname> <Nachricht> &f| Setzt die Nachricht, welche gesendet wird, falls man das Portal nicht benutzten darf.",
-				"&c/portalsetaccessdenialmessage <portalname> <message> &f| Sets the message that will be sent if you are not allowed to use the portal.");
+				"&c/portalsetaccessdenialmessage <portalname> <message> &f| Sets the message that will be sent if you are not allowed to use the portal.",
+				"&bBefehlsrecht für &f/portalsetaccessdenialmessage",
+				"&bCommandright for &f/portalsetaccessdenialmessage",
+				"&eSetzt die Nachricht, welche gesendet wird, falls man das Portal nicht benutzten darf.",
+				"&eSets the message that will be sent if you are not allowed to use the portal.");
 		commandsInput("portalsetpostteleportexecutingcommand", "portalsetpostteleportexecutingcommand", "btm.cmd.user.portal.setpostteleportexecutingcommand",
-				"/portalsetpostteleportexecutingcommand <portalname> <PLAYER/CONSOLE> <cmd...>", "/portalsetpostteleportexecutingcommand ",
+				"/portalsetpostteleportexecutingcommand <portalname> <PLAYER/CONSOLE> <cmd...>", "/portalsetpostteleportexecutingcommand ", false,
 				"&c/portalsetpostteleportexecutingcommand <Portalname> <PLAYER/CONSOLE> <Befehl...> &f| Setzt den Befehl und von wem er ausgeführt werden soll, welche nach dem Teleport ausgeführt wird.",
-				"&c/portalsetpostteleportexecutingcommand <portalname> <PLAYER/CONSOLE> <cmd...> &f| Sets the command and by whom it should be executed, which will be executed after the teleport.");
+				"&c/portalsetpostteleportexecutingcommand <portalname> <PLAYER/CONSOLE> <cmd...> &f| Sets the command and by whom it should be executed, which will be executed after the teleport.",
+				"&bBefehlsrecht für &f/portalsetpostteleportexecutingcommand",
+				"&bCommandright for &f/portalsetpostteleportexecutingcommand",
+				"&eSetzt den Befehl und von wem er ausgeführt werden soll, welche nach dem Teleport ausgeführt wird.",
+				"&eSets the command and by whom it should be executed, which will be executed after the teleport.");
 		commandsInput("portalsettriggerblock", "portalsettriggerblock", "btm.cmd.user.portal.settriggerblock",
-				"/portalsettriggerblock <portalname> <material>", "/portalsettriggerblock ",
+				"/portalsettriggerblock <portalname> <material>", "/portalsettriggerblock ", false,
 				"&c/portalsettriggerblock <Portalname> <Material> &f| Setzt das Material welches als Portaltrigger dient. Dieser muss ein transparenter Block sein.",
-				"&c/portalsettriggerblock <portalname> <material> &f| Sets the material that serves as the portal trigger. This must be a transparent block.");
+				"&c/portalsettriggerblock <portalname> <material> &f| Sets the material that serves as the portal trigger. This must be a transparent block.",
+				"&bBefehlsrecht für &f/portalsettriggerblock",
+				"&bCommandright for &f/portalsettriggerblock",
+				"&eSetzt das Material welches als Portaltrigger dient. Dieser muss ein transparenter Block sein.",
+				"&eSets the material that serves as the portal trigger. This must be a transparent block.");
 		commandsInput("portalsetthrowback", "portalsetthrowback", "btm.cmd.user.portal.setthrowback",
-				"/portalsetthrowback <portalname> <x.x number>", "/portalsetthrowback ",
+				"/portalsetthrowback <portalname> <x.x number>", "/portalsetthrowback ", false,
 				"&c/portalsetthrowback <Portalname> <x.x Nummer> &f| Setzt den Throwback Wert als Dezimalzahl. Default ist gleich 0.7",
-				"&c/portalsetthrowback <portalname> <x.x number> &f| Sets the throwback value as a decimal number. Default is equal 0.7");
+				"&c/portalsetthrowback <portalname> <x.x number> &f| Sets the throwback value as a decimal number. Default is equal 0.7",
+				"&bBefehlsrecht für &f/portalsetthrowback",
+				"&bCommandright for &f/portalsetthrowback",
+				"&eSetzt den Throwback Wert als Dezimalzahl.",
+				"&eSets the throwback value as a decimal number.");
 		commandsInput("portalsetprotectionradius", "portalsetprotectionradius", "btm.cmd.staff.portal.setprotectionradius",
-				"/portalsetprotectionradius <portalname>", "/portalsetprotectionradius ",
+				"/portalsetprotectionradius <portalname>", "/portalsetprotectionradius ", false,
 				"&c/portalsetprotectionradius <Portalname> &f| Setzt den Radius an Blöcken, wo sich kein Block durch Wasser, Lava oder eine Creeperexplosion verändern kann.",
-				"&c/portalsetprotectionradius <portalname> &f| Sets the radius at blocks where no block can be changed by water, lava or a creeper explosion.");
+				"&c/portalsetprotectionradius <portalname> &f| Sets the radius at blocks where no block can be changed by water, lava or a creeper explosion.",
+				"&bBefehlsrecht für &f/portalsetprotectionradius",
+				"&bCommandright for &f/portalsetprotectionradius",
+				"&eSetzt den Radius an Blöcken, wo sich kein Block durch Wasser, Lava oder eine Creeperexplosion verändern kann.",
+				"&eSets the radius at blocks where no block can be changed by water, lava or a creeper explosion.");;
 		commandsInput("portalsetsound", "portalsetsound", "btm.cmd.user.portal.setsound",
-				"/portalsetsound <portalname> <sound> <soundcategory>", "/portalsetsound ",
+				"/portalsetsound <portalname> <sound> <soundcategory>", "/portalsetsound ", false,
 				"&c/portalsetsound <Portalname> <Sound> <SoundCategory> &f| Setzt den Sound der abgespielt wird, wenn man erfolgreich durch ein Portal teleportiert wird.",
-				"&c/portalsetsound <portalname> <sound> <soundcategory> &f| Sets the sound that is played when you are successfully teleported through a portal.");
+				"&c/portalsetsound <portalname> <sound> <soundcategory> &f| Sets the sound that is played when you are successfully teleported through a portal.",
+				"&bBefehlsrecht für &f/portalsetsound",
+				"&bCommandright for &f/portalsetsound",
+				"&eSetzt den Sound der abgespielt wird, wenn man erfolgreich durch ein Portal teleportiert wird.",
+				"&eSets the sound that is played when you are successfully teleported through a portal.");
 		commandsInput("portalsetaccesstype", "portalsetaccesstype", "btm.cmd.user.portal.setaccesstype",
-				"/portalsetaccesstype <portalname>", "/portalsetaccesstype ",
+				"/portalsetaccesstype <portalname>", "/portalsetaccesstype ", false,
 				"&c/portalsetaccesstype <Portalname> &f| Toggelt ob ein Portal öffentlich oder privat ist. (Privat dürfen nur der Eigentümer und Mitglieder das Portal benutzten)",
-				"&c/portalsetaccesstype <portalname> &f| Toggles whether a portal is public or private. (Private only the owner and members may use the portal).");
+				"&c/portalsetaccesstype <portalname> &f| Toggles whether a portal is public or private. (Private only the owner and members may use the portal).",
+				"&bBefehlsrecht für &f/portalsetaccesstype",
+				"&bCommandright for &f/portalsetaccesstype",
+				"&eToggelt ob ein Portal öffentlich oder privat ist.",
+				"&eToggles whether a portal is public or private.");
 		commandsInput("portalupdate", "portalupdate", "btm.cmd.user.portal.update",
-				"/portalupdate <portalname>", "/portalupdate ",
+				"/portalupdate <portalname>", "/portalupdate ", false,
 				"&c/portalupdate <Portalname> &f| Aktualisiert das Portal auf dem Server, wo der Spieler gerade ist.",
-				"&c/portalupdate <portalname> &f| Updates the portal on the server where the player is at the moment.");
+				"&c/portalupdate <portalname> &f| Updates the portal on the server where the player is at the moment.",
+				"&bBefehlsrecht für &f/portalupdate",
+				"&bCommandright for &f/portalupdate",
+				"&eAktualisiert das Portal auf dem Server, wo der Spieler gerade ist.",
+				"&eUpdates the portal on the server where the player is at the moment.");
 		commandsInput("portalmode", "portalmode", "btm.cmd.user.portal.mode",
-				"/portalmode <portalname>", "/portalmode ",
+				"/portalmode <portalname>", "/portalmode ", false,
 				"&c/portalmode <Portalname> &f| Versetzt den Spieler in den Modus um die Eckpunkte eines Portal zu bestimmen.",
-				"&c/portalmode <portalname> &f| Puts the player in mode to determine the corner points of a portal.");
+				"&c/portalmode <portalname> &f| Puts the player in mode to determine the corner points of a portal.",
+				"&bBefehlsrecht für &f/portalmode",
+				"&bCommandright for &f/portalmode",
+				"&eVersetzt den Spieler in den Modus um die Eckpunkte eines Portal zu bestimmen.",
+				"&ePuts the player in mode to determine the corner points of a portal.");
 		commandsInput("portalitem", "portalitem", "btm.cmd.staff.portal.item",
-				"/portalitem ", "/portalitem ",
+				"/portalitem ", "/portalitem ", false,
 				"&c/portalitem &f| Gibt ein Item, welches einen Netherportalblock rotieren lässt. Sowie Nether-, End- und Gateway Blockreplacer.",
-				"&c/portalitem &f| Gives an item that rotates a Nether Portal block. As well as Nether, End and Gateway block repeaters.");
+				"&c/portalitem &f| Gives an item that rotates a Nether Portal block. As well as Nether, End and Gateway block repeaters.",
+				"&bBefehlsrecht für &f/portalitem",
+				"&bCommandright for &f/portalitem",
+				"&eGibt ein Item, welches einen Netherportalblock rotieren lässt. Sowie Nether-, End- und Gateway Blockreplacer.",
+				"&eGives an item that rotates a Nether Portal block. As well as Nether, End and Gateway block repeaters.");
 	}
 	
 	private void comRT()
 	{
 		commandsInput("randomteleport", "randomteleport", "btm.cmd.user.randomteleport.randomteleport",
-				"/randomteleport [rtp]", "/randomteleport",
+				"/randomteleport [rtp]", "/randomteleport", false,
 				"&c/randomteleport [rtp] &f| Teleportiert euch zu einem zufälligen Ort.",
-				"&c/randomteleport [rtp] &f| Teleport to a random location.");
+				"&c/randomteleport [rtp] &f| Teleport to a random location.",
+				"&bBefehlsrecht für &f/randomteleport",
+				"&bCommandright for &f/randomteleport",
+				"&eTeleportiert euch zu einem zufälligen Ort.",
+				"&eTeleport to a random location.");
 	}
 	
 	private void comRespawn()
 	{
 		commandsInput("respawn", "respawn", "btm.cmd.staff.respawn.respawn",
-				"/respawn <respawnname>", "/respawn",
+				"/respawn <respawnname>", "/respawn", false,
 				"&c/respawn <Respawnname> &f| Teleportiert dich zu dem Respawn.",
-				"&c/respawn <respawnname> &f| Cannot teleport you to the respawn.");
+				"&c/respawn <respawnname> &f| Cannot teleport you to the respawn.",
+				"&bBefehlsrecht für &f/respawn",
+				"&bCommandright for &f/respawn",
+				"&eTeleportiert dich zu dem Respawn.",
+				"&eCannot teleport you to the respawn.");
 		commandsInput("respawncreate", "respawncreate", "btm.cmd.staff.respawn.create",
-				"/respawncreate <respawnname>", "/respawncreate",
+				"/respawncreate <respawnname>", "/respawncreate", false,
 				"&c/respawncreate <Respawnname> &f| Erstellt oder setzt einen Respawn neu.",
-				"&c/respawncreate <respawnname> &f| Creates or resets a respawn.");
+				"&c/respawncreate <respawnname> &f| Creates or resets a respawn.",
+				"&bBefehlsrecht für &f/respawncreate",
+				"&bCommandright for &f/respawncreate",
+				"&eErstellt oder setzt einen Respawn neu.",
+				"&eCreates or resets a respawn.");
 		commandsInput("respawnremove", "respawnremove", "btm.cmd.staff.respawn.remove",
-				"/respawnremove <respawnname>", "/respawnremove",
+				"/respawnremove <respawnname>", "/respawnremove", false,
 				"&c/respawnremove <Respawnname> &f| Löscht den Respawn.",
-				"&c/respawnremove <respawnname> &f| Deletes the respawn.");
+				"&c/respawnremove <respawnname> &f| Deletes the respawn.",
+				"&bBefehlsrecht für &f/respawnremove",
+				"&bCommandright for &f/respawnremove",
+				"&eLöscht den Respawn.",
+				"&eDeletes the respawn.");
 		commandsInput("respawnlist", "respawnlist", "btm.cmd.staff.respawn.list",
-				"/respawnlist [page]", "/respawnlist",
+				"/respawnlist [page]", "/respawnlist", false,
 				"&c/respawnlist [Seitenzahl] &f| Zeigt alle Respawn seitenbasiert an.",
-				"&c/respawnlist [page] &f| Displays all respawns based on page.");
+				"&c/respawnlist [page] &f| Displays all respawns based on page.",
+				"&bBefehlsrecht für &f/respawnlist",
+				"&bCommandright for &f/respawnlist",
+				"&eZeigt alle Respawn seitenbasiert an.",
+				"&eDisplays all respawns based on page.");
 	}
 	
 	private void comSavepoint()
 	{
 		commandsInput("savepoint", "savepoint", "btm.cmd.user.savepoint.savepoint", 
-				"/savepoint [savepoint] [playername]", "/savepoint ",
+				"/savepoint [savepoint] [playername]", "/savepoint ", false,
 				"&c/savepoint [savepoint] [SpielerName] &f| Teleportiert dich zu deinen Speicherpunkt.",
-				"&c/savepoint [savepoint] [playername] &f| Teleports you to your save point.");
+				"&c/savepoint [savepoint] [playername] &f| Teleports you to your save point.",
+				"&bBefehlsrecht für &f/savepoint",
+				"&bCommandright for &f/savepoint",
+				"&eTeleportiert dich zu deinen Speicherpunkt.",
+				"&eTeleports you to your save point.");
 		commandsInput("savepoints", "savepoints", "btm.cmd.user.savepoint.savepoints", 
-				"/savepoints [page] [playername]", "/savepoints ",
-				"&c/savepoints [Seite] [SpielerName] &f| Shows your Savepoints.",
-				"&c/savepoints [page] [playername] &f| Shows your Savepoints.");
+				"/savepoints [page] [playername]", "/savepoints ", false,
+				"&c/savepoints [Seite] [SpielerName] &f| Zeigt deine Savepoints.",
+				"&c/savepoints [page] [playername] &f| Shows your Savepoints.",
+				"&bBefehlsrecht für &f/savepoints",
+				"&bCommandright for &f/savepoints",
+				"&eZeigt deine Savepoints.",
+				"&eShows your Savepoints.");
 		commandsInput("savepointlist", "savepointlist", "btm.cmd.admin.savepoint.savepointlist", 
-				"/savepointlist [page]", "/savepointlist ",
+				"/savepointlist [page]", "/savepointlist ", false,
+				"&c/savepointlist [page] &f| Zeigt alle Savepoints",
 				"&c/savepointlist [page] &f| Shows all Savepoints",
-				"&c/savepointlist [page] &f| Shows all Savepoints");
+				"&bBefehlsrecht für &f/savepointlist",
+				"&bCommandright for &f/savepointlist",
+				"&eZeigt alle Savepoints",
+				"&eShows all Savepoints");
 		commandsInput("savepointcreate", "savepointcreate", "btm.cmd.user.savepoint.create", 
-				"/savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>]", "/savepoint ",
+				"/savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>]", "/savepoint ", false,
 				"&c/savepointcreate <Spieler> <SavePointName> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Erstellt einen Speicherpunkt für den Spieler.",
-				"&c/savepointcreate <player> <savepointname> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Create a save point for the player.");
+				"&c/savepointcreate <player> <savepointname> [<Server> <Welt> <x> <y> <z> <yaw> <pitch>] &f| Create a save point for the player.",
+				"&bBefehlsrecht für &f/savepointcreate",
+				"&bCommandright for &f/savepointcreate",
+				"&eErstellt einen Speicherpunkt für den Spieler.",
+				"&eCreate a save point for the player.");
 		commandsInput("savepointdelete", "savepointdelete", "btm.cmd.user.savepoint.delete", 
-				"/savepointdelete <Spieler> [SavePointName]", "/savepointdelete ",
+				"/savepointdelete <Spieler> [SavePointName]", "/savepointdelete ", false,
 				"&c/savepointdelete <Spieler> [SavePointName] &f| Löscht alle oder einen spezifischen Speicherpunkt von einem Spieler.",
-				"&c/savepointdelete <player> [savepointname] &f| Deletes all or a specific save point from a player.");
+				"&c/savepointdelete <player> [savepointname] &f| Deletes all or a specific save point from a player.",
+				"&bBefehlsrecht für &f/savepointdelete",
+				"&bCommandright for &f/savepointdelete",
+				"&eLöscht alle oder einen spezifischen Speicherpunkt von einem Spieler.",
+				"&eDeletes all or a specific save point from a player.");
 		commandsInput("savepointdeleteall", "savepointdeleteall", "btm.cmd.user.savepoint.deleteall", 
-				"/savepointdeleteall <Server> <Welt>", "/savepointdeleteall ",
+				"/savepointdeleteall <Server> <Welt>", "/savepointdeleteall ", false,
 				"&c/savepointdeleteall <Server> <Welt> &f| Löscht alle Speicherpunkte in der Welt vom Server.",
-				"&c/savepointdeleteall <server> <world> &f| Deletes all save points in the world from the server.");
+				"&c/savepointdeleteall <server> <world> &f| Deletes all save points in the world from the server.",
+				"&bBefehlsrecht für &f/savepointdeleteall",
+				"&bCommandright for &f/savepointdeleteall",
+				"&eLöscht alle Speicherpunkte in der Welt vom Server.",
+				"&eDeletes all save points in the world from the server.");
 	}
 	
 	private void comTp()
 	{
 		commandsInput("tpa", "tpa", "btm.cmd.user.tp.tpa",
-				"/tpa <playername>", "/tpa ",
+				"/tpa <playername>", "/tpa ", false,
 				"&c/tpa <Spielername> &f| Sendet eine Teleportanfrage an den Spieler. (Du zu ihm/ihr)",
-				"&c/tpa <Spielername> &f| Sends a teleport request to the player. (You to him/her)");
+				"&c/tpa <Spielername> &f| Sends a teleport request to the player. (You to him/her)",
+				"&bBefehlsrecht für &f/tpa",
+				"&bCommandright for &f/tpa",
+				"&eSendet eine Teleportanfrage an den Spieler. (Du zu ihm/ihr)",
+				"&eSends a teleport request to the player. (You to him/her)");
 		commandsInput("tpahere", "tpahere", "btm.cmd.user.tp.tpahere",
-				"/tpahere <playername>", "/tpahere",
+				"/tpahere <playername>", "/tpahere", false,
 				"&c/tpahere <Spielername> &f| Sendet eine Teleportanfrage an den Spieler. (Er/Sie zu dir)",
-				"&c/tpahere <Spielername> &f| Sends a teleport request to the player. (He/She to you)");
+				"&c/tpahere <Spielername> &f| Sends a teleport request to the player. (He/She to you)",
+				"&bBefehlsrecht für &f/tpahere",
+				"&bCommandright for &f/tpahere",
+				"&eSendet eine Teleportanfrage an den Spieler. (Er/Sie zu dir)",
+				"&eSends a teleport request to the player. (He/She to you)");
 		commandsInput("tpaccept", "tpaccept", "btm.cmd.user.tp.tpaccept", 
-				"/tpaccept <playername>", "/tpaccept ",
+				"/tpaccept <playername>", "/tpaccept ", false,
 				"&c/tpaccept <Spielername> &f| Akzeptiert die TPA vom Spieler. (Klickbar im Chat)",
-				"&c/tpaccept <Spielername> &f| Accepts the TPA from the player. (Clickable in chat)");
+				"&c/tpaccept <Spielername> &f| Accepts the TPA from the player. (Clickable in chat)",
+				"&bBefehlsrecht für &f/tpaccept",
+				"&bCommandright for &f/tpaccept",
+				"&eAkzeptiert die TPA vom Spieler.",
+				"&eAccepts the TPA from the player.");
 		commandsInput("tpdeny", "tpdeny", "btm.cmd.user.tp.tpdeny",
-				"/tpdeny <playername>", "/tpdeny ",
+				"/tpdeny <playername>", "/tpdeny ", false,
 				"&c/tpadeny <Spielername> &f| Lehnt die TPA vom Spieler ab. (Klickbar im Chat)",
-				"&c/tpadeny <Spielername> &f| Rejects the TPA from the player. (Clickable in chat)");
+				"&c/tpadeny <Spielername> &f| Rejects the TPA from the player. (Clickable in chat)",
+				"&bBefehlsrecht für &f/tpdeny",
+				"&bCommandright for &f/tpdeny",
+				"&eLehnt die TPA vom Spieler ab.",
+				"&eRejects the TPA from the player.");
 		commandsInput("tpaquit", "tpaquit", "btm.cmd.user.tp.tpaquit", 
-				"/tpaquit", "/tpaquit",
+				"/tpaquit", "/tpaquit", false,
 				"&c/tpaquit &f| Bricht alle TPA ab.",
-				"&c/tpaquit &f| Cancel all TPA.");
+				"&c/tpaquit &f| Cancel all TPA.",
+				"&bBefehlsrecht für &f/tpaquit",
+				"&bCommandright for &f/tpaquit",
+				"&eBricht alle TPA ab.",
+				"&eCancel all TPA.");
 		commandsInput("tpatoggle", "tpatoggle", "btm.cmd.user.tp.tpatoggle", 
-				"/tpatoggle", "/tpatoggle",
+				"/tpatoggle", "/tpatoggle", false,
 				"&c/tpatoggle &f| Wechselt die automatische Ablehnung aller TPAs.",
-				"&c/tpatoggle &f| Switches the automatic rejection of all TPAs.");
+				"&c/tpatoggle &f| Switches the automatic rejection of all TPAs.",
+				"&bBefehlsrecht für &f/tpatoggle",
+				"&bCommandright for &f/tpatoggle",
+				"&eWechselt die automatische Ablehnung aller TPAs.",
+				"&eSwitches the automatic rejection of all TPAs.");
 		commandsInput("tpaignore", "tpaignore", "btm.cmd.user.tp.tpaignore",
-				"/tpaignore <playername>", "/tpaignore",
+				"/tpaignore <playername>", "/tpaignore", false,
 				"&c/tpaignore <Spielername> &f| Toggelt ob man die Tpas vom angegebenen Spieler sofort ablehnt oder nicht.",
-				"&c/tpaignore <playername> &f| Toggles whether the tpas are immediately rejected by the specified player or not.");
+				"&c/tpaignore <playername> &f| Toggles whether the tpas are immediately rejected by the specified player or not.",
+				"&bBefehlsrecht für &f/tpaignore",
+				"&bCommandright for &f/tpaignore",
+				"&eToggelt ob man die Tpas vom angegebenen Spieler sofort ablehnt oder nicht.",
+				"&eToggles whether the tpas are immediately rejected by the specified player or not.");
 		commandsInput("tpaignorelist", "tpaignorelist", "btm.cmd.user.tp.tpaignorelist", 
-				"/tpaignorelist", "/tpaignorelist",
+				"/tpaignorelist", "/tpaignorelist", false,
 				"&c/tpaignorelist &f| Zeigt alle ignorierten Spieler an.",
-				"&c/tpaignorelist &f| Shows all ignored players.");
+				"&c/tpaignorelist &f| Shows all ignored players.",
+				"&bBefehlsrecht für &f/tpaignorelist",
+				"&bCommandright for &f/tpaignorelist",
+				"&eZeigt alle ignorierten Spieler an.",
+				"&eShows all ignored players.");
 		commandsInput("tp", "tp", "btm.cmd.staff.tp.tp", 
-				"/tp <playername>", "/tp ",
+				"/tp <playername>", "/tp ", false,
 				"&c/tp <Spielername> &f| Teleportiert dich ohne Anfrage zu dem Spieler.",
-				"&c/tp <Spielername> &f| Teleports you to the player without request.");
+				"&c/tp <Spielername> &f| Teleports you to the player without request.",
+				"&bBefehlsrecht für &f/tp",
+				"&bCommandright for &f/tp",
+				"&eTeleportiert dich ohne Anfrage zu dem Spieler.",
+				"&eTeleports you to the player without request.");
 		commandsInput("tphere", "tphere", "btm.cmd.staff.tp.tphere", 
-				"/tphere <playername>", "/tphere ",
+				"/tphere <playername>", "/tphere ", false,
 				"&c/tphere <Spielername> &f| Teleportiert den Spieler ohne Anfrage zu dir.",
-				"&c/tphere <Spielername> &f| Teleports the player to you without request.");
+				"&c/tphere <Spielername> &f| Teleports the player to you without request.",
+				"&bBefehlsrecht für &f/tphere",
+				"&bCommandright for &f/tphere",
+				"&eTeleportiert den Spieler ohne Anfrage zu dir.",
+				"&eTeleports the player to you without request.");
 		commandsInput("tpsilent", "tpsilent", "btm.cmd.staff.tp.tpsilent", 
-				"/tpsilent <playername>", "/tpsilent ",
+				"/tpsilent <playername>", "/tpsilent ", false,
 				"&c/tpsilent <Spielername> &f| Teleportiert dich leise ohne Anfrage zu dem Spieler. Du wirst dabei in den GameMode Beobachter und ins Vanish gesetzt.",
-				"&c/tpsilent <Spielername> &f| Teleportiert dich leise ohne Anfrage zu dem Spieler. Du wirst dabei in den GameMode Beobachter und ins Vanish gesetzt.");
+				"&c/tpsilent <Spielername> &f| Teleports you silently to the player without a request. You will be set to GameMode Observer and Vanish.",
+				"&bBefehlsrecht für &f/tpsilent",
+				"&bCommandright for &f/tpsilent",
+				"&eTeleportiert dich leise ohne Anfrage zu dem Spieler. Du wirst dabei in den GameMode Beobachter und ins Vanish gesetzt.",
+				"&eTeleports you silently to the player without a request. You will be set to GameMode Observer and Vanish.");
 		commandsInput("tpall", "tpall", "btm.cmd.admin.tp.tpall",
-				"/tpall", "/tpall",
+				"/tpall", "/tpall", false,
 				"&c/tpall &f| Teleportiert alle Spieler auf allen Servern ohne Anfrage zu dir.",
-				"&c/tpall &f| Teleports all players on all servers to you without request.");
+				"&c/tpall &f| Teleports all players on all servers to you without request.",
+				"&bBefehlsrecht für &f/tpall",
+				"&bCommandright for &f/tpall",
+				"&eTeleportiert alle Spieler auf allen Servern ohne Anfrage zu dir.",
+				"&eTeleports all players on all servers to you without request.");
 		commandsInput("tppos", "tppos", "btm.cmd.staff.tp.tppos",
-				"/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch]", "/tppos ",
+				"/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch]", "/tppos ", false,
 				"&c/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch] &f| Teleportiert dich zu den angegebenen Koordinaten.",
-				"&c/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch] &f| Teleports you to the specified coordinates.");
+				"&c/tppos [Server] [Welt] <x> <y> <z> [Yaw] [Pitch] &f| Teleports you to the specified coordinates.",
+				"&bBefehlsrecht für &f/tppos",
+				"&bCommandright for &f/tppos",
+				"&eTeleportiert dich zu den angegebenen Koordinaten.",
+				"&eTeleports you to the specified coordinates.");
 	}
 	
 	private void comWarp()
 	{
 		commandsInput("warpcreate", "warpcreate", "btm.cmd.user.warp.create",
-				"/warpcreate <warpname>", "/warpcreate ",
+				"/warpcreate <warpname>", "/warpcreate ", false,
 				"&c/warpcreate <Warpname> &f| Erstellt einen Warppunkt.",
-				"&c/warpcreate <Warpname> &f| Creates a warp point.");
+				"&c/warpcreate <Warpname> &f| Creates a warp point.",
+				"&bBefehlsrecht für &f/warpcreate",
+				"&bCommandright for &f/warpcreate",
+				"&eErstellt einen Warppunkt.",
+				"&eCreates a warp point.");
 		commandsInput("warpremove", "warpremove", "btm.cmd.user.warp.remove",
-				"/warpremove <warpname>", "/warpremove ",
+				"/warpremove <warpname>", "/warpremove ", false,
 				"&c/warpremove <Warpname> &f| Löscht den Warppunkt.",
-				"&c/warpremove <Warpname> &f| Clear the warp point.");
+				"&c/warpremove <Warpname> &f| Clear the warp point.",
+				"&bBefehlsrecht für &f/warpremove",
+				"&bCommandright for &f/warpremove",
+				"&eLöscht den Warppunkt.",
+				"&eClear the warp point.");
 		commandsInput("warplist", "warplist", "btm.cmd.user.warp.list",
-				"/warplist [page]", "/warplist ",
+				"/warplist [page]", "/warplist ", false,
 				"&c/warplist [Seitenzahl] &f| Listet alle für dich sichtbaren Warps auf.",
-				"&c/warplist [Seitenzahl] &f| Lists all warps visible to you.");
+				"&c/warplist [Seitenzahl] &f| Lists all warps visible to you.",
+				"&bBefehlsrecht für &f/warplist",
+				"&bCommandright for &f/warplist",
+				"&eListet alle für dich sichtbaren Warps auf.",
+				"&eLists all warps visible to you.");
 		commandsInput("warp", "warp", "btm.cmd.user.warp.warp",
-				"/warp <warpname> [confirm]", "/warp ",
+				"/warp <warpname> [confirm]", "/warp ", false,
 				"&c/warp <Warpname> &f| Teleportiert dich zu dem Warppunkt.",
-				"&c/warp <Warpname> &f| Teleports you to the warppoint.");
+				"&c/warp <Warpname> &f| Teleports you to the warppoint.",
+				"&bBefehlsrecht für &f/warp",
+				"&bCommandright for &f/warp",
+				"&eTeleportiert dich zu dem Warppunkt.",
+				"&eTeleports you to the warppoint.");
 		commandsInput("warping", "warping", "btm.cmd.staff.warp.warping",
-				"/warping <warpname> <playername> [Values...]", "/warping ",
+				"/warping <warpname> <playername> [Values...]", "/warping ", false,
 				"&c/warping <Warpname> <Spielername> [Werte...] &f| Teleportiert den Spieler zu dem Warppunkt.",
-				"&c/warping <warpname> <playername> [values...] &f| Teleports the player to the warppoint.");
+				"&c/warping <warpname> <playername> [values...] &f| Teleports the player to the warppoint.",
+				"&bBefehlsrecht für &f/warping",
+				"&bCommandright for &f/warping",
+				"&eTeleportiert den Spieler zu dem Warppunkt.",
+				"&eTeleports the player to the warppoint.");
 		commandsInput("warps", "warps", "btm.cmd.user.warp.warps",
-				"/warps [page] [playername] [category]", "/warps ",
+				"/warps [page] [playername] [category]", "/warps ", false,
 				"&c/warps [Seitenzahl] [Spielername] [Kategorie] &f| Zeigt seitenbasiert deine Warppunkte an.",
-				"&c/warps [pagenumber] [playername] [category] &f| Displays your warp points based on pages.");
-		commandsInput("warpinfo", "warpinfo", "btm.cmd.user.warp.info", "/warpinfo <warpname>",
-				"/warpinfo ",
+				"&c/warps [pagenumber] [playername] [category] &f| Displays your warp points based on pages.",
+				"&bBefehlsrecht für &f/warps",
+				"&bCommandright for &f/warps",
+				"&eZeigt seitenbasiert deine Warppunkte an.",
+				"&eDisplays your warp points based on pages.");
+		commandsInput("warpinfo", "warpinfo", "btm.cmd.user.warp.info",
+				"/warpinfo <warpname>", "/warpinfo ", false,
 				"&c/warpinfo <Warpname> &f| Zeigt alle für dich einsehbaren Infos zum Warp an.",
-				"&c/warpinfo <Warpname> &f| Shows all the information you can see about Warp.");
+				"&c/warpinfo <Warpname> &f| Shows all the information you can see about Warp.",
+				"&bBefehlsrecht für &f/warpinfo",
+				"&bCommandright for &f/warpinfo",
+				"&eZeigt alle für dich einsehbaren Infos zum Warp an.",
+				"&eShows all the information you can see about Warp.");
 		commandsInput("warpsetname", "warpsetname", "btm.cmd.user.warp.setname", 
-				"/warpsetname <warpname> <newwarpname>", "/warpsetname ",
+				"/warpsetname <warpname> <newwarpname>", "/warpsetname ", false,
 				"&c/warpsetname <Warpname> <NeuerWarpname> &f| Ändert den Namen vom Warp.",
-				"&c/warpsetname <Warpname> <NeuerWarpname> &f| Changes the name of the warp.");
+				"&c/warpsetname <Warpname> <NeuerWarpname> &f| Changes the name of the warp.",
+				"&bBefehlsrecht für &f/warpsetname",
+				"&bCommandright for &f/warpsetname",
+				"&eÄndert den Namen vom Warp.",
+				"&eChanges the name of the warp.");
 		commandsInput("warpsetposition", "warpsetposition", "btm.cmd.user.warp.setposition", 
-				"/warpsetposition <warpname>", "/warpsetposition ",
+				"/warpsetposition <warpname>", "/warpsetposition ", false,
 				"&c/warpsetposition <Warpname> &f| Repositioniert den Warp.",
-				"&c/warpsetposition <Warpname> &f| Reposition warp.");
+				"&c/warpsetposition <Warpname> &f| Reposition warp.",
+				"&bBefehlsrecht für &f/warpsetposition",
+				"&bCommandright for &f/warpsetposition",
+				"&eRepositioniert den Warp.",
+				"&eReposition warp.");
 		commandsInput("warpsetowner", "warpsetowner", "btm.cmd.user.warp.setowner",
-				"/warpsetowner <warpname> <playername|null>", "/warpsetowner ",
+				"/warpsetowner <warpname> <playername|null>", "/warpsetowner ", false,
 				"&c/warpsetowner <Warpname> <Spielername> &f| Überträgt den Eigentümerstatus zu einem anderem Spieler.",
-				"&c/warpsetowner <Warpname> <Spielername> &f| Transfers the ownership status to another player.");
+				"&c/warpsetowner <Warpname> <Spielername> &f| Transfers the ownership status to another player.",
+				"&bBefehlsrecht für &f/warpsetowner",
+				"&bCommandright for &f/warpsetowner",
+				"&eÜberträgt den Eigentümerstatus zu einem anderem Spieler.",
+				"&eTransfers the ownership status to another player.");
 		commandsInput("warpsetpermission", "warpsetpermission", "btm.cmd.admin.warp.setpermission",
-				"/warpsetpermission <warpname> <permission>", "/warpsetpermission ",
+				"/warpsetpermission <warpname> <permission>", "/warpsetpermission ", false,
 				"&c/warpsetpermission <Warpname> <Permission> &f| Ändert die Zugriffspermission des Warps.",
-				"&c/warpsetpermission <Warpname> <Permission> &f| Changes the access permission of the warp.");
+				"&c/warpsetpermission <Warpname> <Permission> &f| Changes the access permission of the warp.",
+				"&bBefehlsrecht für &f/warpsetpermission",
+				"&bCommandright for &f/warpsetpermission",
+				"&eÄndert die Zugriffspermission des Warps.",
+				"&eChanges the access permission of the warp.");
 		commandsInput("warpsetpassword", "warpsetpassword", "btm.cmd.user.warp.setpassword",
-				"/warpsetpassword <warpname> <password>", "/warpsetpassword ",
+				"/warpsetpassword <warpname> <password>", "/warpsetpassword ", false,
 				"&c/warpsetpassword <Warpname> <Passwort> &f| Ändert das Zugriffspassword des Warps.",
-				"&c/warpsetpassword <Warpname> <Passwort> &f| Changes the access password of the warp.");
+				"&c/warpsetpassword <Warpname> <Passwort> &f| Changes the access password of the warp.",
+				"&bBefehlsrecht für &f/warpsetpassword",
+				"&bCommandright for &f/warpsetpassword",
+				"&eÄndert das Zugriffspassword des Warps.",
+				"&eChanges the access password of the warp.");
 		commandsInput("warpsetprice", "warpsetprice", "btm.cmd.user.warp.setprice",
-				"/warpsetprice <warpname> <price>", "/warpsetprice ",
+				"/warpsetprice <warpname> <price>", "/warpsetprice ", false,
 				"&c/warpsetprice <Warpname> <Preis> &f| Ändert den Preis für den Teleport zu diesem Warp.",
-				"&c/warpsetprice <Warpname> <Preis> &f| Changes the price for the teleport to this warp.");
+				"&c/warpsetprice <Warpname> <Preis> &f| Changes the price for the teleport to this warp.",
+				"&bBefehlsrecht für &f/warpsetprice",
+				"&bCommandright for &f/warpsetprice",
+				"&eÄndert den Preis für den Teleport zu diesem Warp.",
+				"&eChanges the price for the teleport to this warp.");
 		commandsInput("warphidden", "warphidden", "btm.cmd.user.warp.hidden",
-				"/warphidden <warpname>", "/warphidden ",
+				"/warphidden <warpname>", "/warphidden ", false,
 				"&c/warphidden <Warpname> &f| Wechselt den Warp zwischen Privat und Öffentlich.",
-				"&c/warphidden <Warpname> &f| Switches the warp between private and public.");
+				"&c/warphidden <Warpname> &f| Switches the warp between private and public.",
+				"&bBefehlsrecht für &f/warphidden",
+				"&bCommandright for &f/warphidden",
+				"&eWechselt den Warp zwischen Privat und Öffentlich.",
+				"&eSwitches the warp between private and public.");
 		commandsInput("warpaddmember", "warpaddmember", "btm.cmd.user.warp.addmember",
-				"/warpaddmember <warpname> <playername>", "/warpaddmember",
+				"/warpaddmember <warpname> <playername>", "/warpaddmember", false,
 				"&c/warpaddmember <Warpname> <Spielername> &f| Fügt einen Spieler als Mitglied zum Warp hinzu.",
-				"&c/warpaddmember <Warpname> <Spielername> &f| Adds a player to Warp as a member.");
+				"&c/warpaddmember <Warpname> <Spielername> &f| Adds a player to Warp as a member.",
+				"&bBefehlsrecht für &f/warpaddmember",
+				"&bCommandright for &f/warpaddmember",
+				"&eFügt einen Spieler als Mitglied zum Warp hinzu.",
+				"&eAdds a player to Warp as a member.");
 		commandsInput("warpremovemember", "warpremovemember", "btm.cmd.user.warp.removemember",
-				"/warpremovemember <warpname> <playername>", "/warpremovemember ",
+				"/warpremovemember <warpname> <playername>", "/warpremovemember ", false,
 				"&c/warpremovemember <Warpname> <Spielername> &f| Entfernt einen Spieler als Mitglied vom Warp.",
-				"&c/warpremovemember <Warpname> <Spielername> &f| Removes a player from warp as a member.");
+				"&c/warpremovemember <Warpname> <Spielername> &f| Removes a player from warp as a member.",
+				"&bBefehlsrecht für &f/warpremovemember",
+				"&bCommandright for &f/warpremovemember",
+				"&eEntfernt einen Spieler als Mitglied vom Warp.",
+				"&eRemoves a player from warp as a member.");
 		commandsInput("warpaddblacklist", "warpaddblacklist", "btm.cmd.user.warp.addblacklist",
-				"/warpaddblacklist <warpname> <playername>", "/warpaddblacklist ",
+				"/warpaddblacklist <warpname> <playername>", "/warpaddblacklist ", false,
 				"&c/warpaddblacklist <Warpname> <Spielername> &f| Fügt einen Spieler der Blackliste des Warps hinzu.",
-				"&c/warpaddblacklist <Warpname> <Spielername> &f| Adds a player to the warp blacklist.");
+				"&c/warpaddblacklist <Warpname> <Spielername> &f| Adds a player to the warp blacklist.",
+				"&bBefehlsrecht für &f/warpaddblacklist",
+				"&bCommandright for &f/warpaddblacklist",
+				"&eFügt einen Spieler der Blackliste des Warps hinzu.",
+				"&eAdds a player to the warp blacklist.");
 		commandsInput("warpremoveblacklist", "warpremoveblacklist", "btm.cmd.user.warp.removeblacklist",
-				"/warpremoveblacklist <warpname> <playername>", "/warpremoveblacklist",
+				"/warpremoveblacklist <warpname> <playername>", "/warpremoveblacklist", false,
 				"&c/warpremoveblacklist <Warpname> <Spielername> &f| Entfernt einen Spieler von der Blackliste des Warps.",
-				"&c/warpremoveblacklist <Warpname> <Spielername> &f| Removes a player from the warp blacklist.");
+				"&c/warpremoveblacklist <Warpname> <Spielername> &f| Removes a player from the warp blacklist.",
+				"&bBefehlsrecht für &f/warpremoveblacklist",
+				"&bCommandright for &f/warpremoveblacklist",
+				"&eEntfernt einen Spieler von der Blackliste des Warps.",
+				"&eRemoves a player from the warp blacklist.");
 		commandsInput("warpsetcategory", "warpsetcategory", "btm.cmd.user.warp.setcategory",
-				"/warpsetcategory <warpname> <category>", "/warpsetcategory ",
+				"/warpsetcategory <warpname> <category>", "/warpsetcategory ", false,
 				"&c/warpsetkategorie <warpname> <kategorie> &f| Setzt die Kategorie des Warps.",
-				"&c/warpsetcategory <warpname> <category> &f| Set the category of the warp.");
+				"&c/warpsetcategory <warpname> <category> &f| Set the category of the warp.",
+				"&bBefehlsrecht für &f/warpsetcategory",
+				"&bCommandright for &f/warpsetcategory",
+				"&eSetzt die Kategorie des Warps.",
+				"&eSet the category of the warp.");
 		commandsInput("warpsdeleteserverworld", "warpsdeleteserverworld", "btm.cmd.user.warp.deleteserverworld",
-				"/warpsdeleteserverworld <server> <world>", "/warpsdeleteserverworld ",
+				"/warpsdeleteserverworld <server> <world>", "/warpsdeleteserverworld ", false,
 				"&c/warpsdeleteserverworld <server> <welt> &f| Löscht alle Warps auf den angegebenen Server/Welt.",
-				"&c/warpsdeleteserverworld <server> <world> &f| Deletes all warps on the specified server/world");
+				"&c/warpsdeleteserverworld <server> <world> &f| Deletes all warps on the specified server/world",
+				"&bBefehlsrecht für &f/warpsdeleteserverworld",
+				"&bCommandright for &f/warpsdeleteserverworld",
+				"&eLöscht alle Warps auf den angegebenen Server/Welt.",
+				"&eDeletes all warps on the specified server/world");
 		commandsInput("warpsearch", "warpsearch", "btm.cmd.user.warp.warpsearch",
-				"/warpsearch <page> <xxxx:value>", "/warpsearch ",
+				"/warpsearch <page> <xxxx:value>", "/warpsearch ", false,
 				"&c/warpsearch <Seitenzahl> <xxxx:Wert> &f| Sucht mit den angegeben Argumenten eine Liste aus Warps.",
-				"&c/warpsearch <page> <xxxx:value> &f| Searches a list of warps with the given arguments.");
+				"&c/warpsearch <page> <xxxx:value> &f| Searches a list of warps with the given arguments.",
+				"&bBefehlsrecht für &f/warpsearch",
+				"&bCommandright for &f/warpsearch",
+				"&eSucht mit den angegeben Argumenten eine Liste aus Warps.",
+				"&eSearches a list of warps with the given arguments.");
 		commandsInput("warpsetportalaccess", "warpsetportalaccess", "btm.cmd.user.warp.setportalaccess",
-				"/warpsetportalaccess <warpname> <value>", "/warpsetportalaccess ",
+				"/warpsetportalaccess <warpname> <value>", "/warpsetportalaccess ", false,
 				"&c/warpsetportalaccess <Warpname> <Wert> &f| Gibt den Zugang eines Portals zu diesem Warp an. Möglich sind: ONLY, IRRELEVANT, FORBIDDEN",
-				"&c/warpsetportalaccess <warpname> <value> &f| Specifies the access of a portal to this warp. Possible are: ONLY, IRRELEVANT, FORBIDDEN");
+				"&c/warpsetportalaccess <warpname> <value> &f| Specifies the access of a portal to this warp. Possible are: ONLY, IRRELEVANT, FORBIDDEN",
+				"&bBefehlsrecht für &f/warpsetportalaccess",
+				"&bCommandright for &f/warpsetportalaccess",
+				"&eGibt den Zugang eines Portals zu diesem Warp an. Möglich sind: ONLY, IRRELEVANT, FORBIDDEN",
+				"&eSpecifies the access of a portal to this warp. Possible are: ONLY, IRRELEVANT, FORBIDDEN");
 		commandsInput("warpsetpostteleportexecutingcommand", "warpsetpostteleportexecutingcommand", "btm.cmd.user.warp.setpostteleportexecutingcommand",
-				"/warpsetpostteleportexecutingcommand <warpname> <PLAYER/CONSOLE> <cmd...>", "/warpsetpostteleportexecutingcommand ",
+				"/warpsetpostteleportexecutingcommand <warpname> <PLAYER/CONSOLE> <cmd...>", "/warpsetpostteleportexecutingcommand ", false,
 				"&c/warpsetpostteleportexecutingcommand <Warpname> <PLAYER/CONSOLE> <Befehl...> &f| Setzt den Befehl und von wem er ausgeführt werden soll, welche nach dem Teleport ausgeführt wird.",
-				"&c/warpsetpostteleportexecutingcommand <warpname> <PLAYER/CONSOLE> <cmd...> &f| Sets the command and by whom it should be executed, which will be executed after the teleport.");
+				"&c/warpsetpostteleportexecutingcommand <warpname> <PLAYER/CONSOLE> <cmd...> &f| Sets the command and by whom it should be executed, which will be executed after the teleport.",
+				"&bBefehlsrecht für &f/warpsetpostteleportexecutingcommand",
+				"&bCommandright for &f/warpsetpostteleportexecutingcommand",
+				"&eSetzt den Befehl und von wem er ausgeführt werden soll, welche nach dem Teleport ausgeführt wird.",
+				"&eSets the command and by whom it should be executed, which will be executed after the teleport.");
 	}
 	
 	private void commandsInput(String path, String name, String basePermission, 
-			String suggestion, String commandString,
-			String helpInfoGerman, String helpInfoEnglish)
+			String suggestion, String commandString, boolean putUpCmdPermToValueEntrySystem,
+			String helpInfoGerman, String helpInfoEnglish,
+			String dnGerman, String dnEnglish,
+			String exGerman, String exEnglish)
 	{
 		commandsKeys.put(path+".Name"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -1344,11 +1809,24 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				helpInfoGerman,
 				helpInfoEnglish}));
+		commandsKeys.put(path+".ValueEntry.PutUpCommandPerm"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				putUpCmdPermToValueEntrySystem}));
+		commandsKeys.put(path+".ValueEntry.Displayname"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				dnGerman,
+				dnEnglish}));
+		commandsKeys.put(path+".ValueEntry.Explanation"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				exGerman,
+				exEnglish}));
 	}
 	
 	private void argumentInput(String path, String argument, String basePermission, 
-			String suggestion, String commandString,
-			String helpInfoGerman, String helpInfoEnglish)
+			String suggestion, String commandString, boolean putUpCmdPermToValueEntrySystem,
+			String helpInfoGerman, String helpInfoEnglish,
+			String dnGerman, String dnEnglish,
+			String exGerman, String exEnglish)
 	{
 		commandsKeys.put(path+".Argument"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
@@ -1366,6 +1844,17 @@ public class YamlManager
 				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 				helpInfoGerman,
 				helpInfoEnglish}));
+		commandsKeys.put(path+".ValueEntry.PutUpCommandPerm"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				putUpCmdPermToValueEntrySystem}));
+		commandsKeys.put(path+".ValueEntry.Displayname"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				dnGerman,
+				dnEnglish}));
+		commandsKeys.put(path+".ValueEntry.Explanation"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+				exGerman,
+				exEnglish}));
 	}
 	
 	public void initLanguage() //INFO:Languages
@@ -3705,5 +4194,39 @@ public class YamlManager
 		forbiddenListSpigotKeys.put("ForbiddenToUse.Custom.World",
 				new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 						"spawnworld","city1", "Explanation: With a :, all Custom Teleports are forbidden, which contains the keyword for the custom Teleport. For example hub:plot etc. The >plot< word must be in use in the plugin plots or whatever."}));
+	}
+	
+	public void initModifierValueEntryLanguage() //INFO:ModiferValueEntryLanguages
+	{
+		mvelanguageKeys.put(Bypass.Counter.MAX_AMOUNT_HOME.toString()+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eMenge an Homes, welche man maximal haben kann",
+						"&eAmount of homes, which you can have maximum"}));
+		mvelanguageKeys.put(Bypass.Counter.MAX_AMOUNT_HOME.toString()+".Explanation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDefiniert, wieviel Homes",
+						"&eman haben kann.",
+						"&eDefines how much homes",
+						"&eyou can have."}));
+		mvelanguageKeys.put(Bypass.Counter.MAX_AMOUNT_PORTAL.toString()+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eMenge an Portale, welche man maximal haben kann",
+						"&eAmount of portals, which you can have maximum"}));
+		mvelanguageKeys.put(Bypass.Counter.MAX_AMOUNT_PORTAL.toString()+".Explanation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDefiniert, wieviel Portale",
+						"&eman haben kann.",
+						"&eDefines how much portals",
+						"&eyou can have."}));
+		mvelanguageKeys.put(Bypass.Counter.MAX_AMOUNT_WARP.toString()+".Displayname",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eMenge an Warps, welche man maximal haben kann",
+						"&eAmount of warps, which you can have maximum"}));
+		mvelanguageKeys.put(Bypass.Counter.MAX_AMOUNT_WARP.toString()+".Explanation",
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDefiniert, wieviel Warps",
+						"&eman haben kann.",
+						"&eDefines how much warps",
+						"&eyou can have."}));
 	}
 }

@@ -14,10 +14,7 @@ public class CommandConstructor extends BaseConstructor
     {
 		super(BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Name"),
 				path,
-				BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Permission"),
-				BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".Suggestion"),
-				BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".CommandString"),
-				BungeeTeleportManager.getPlugin().getYamlHandler().getCom().getString(path+".HelpInfo"),
+				BungeeTeleportManager.getPlugin().getYamlHandler().getCom(),
 				canConsoleAccess);
         this.subcommands = new ArrayList<>();
         this.tablist = new ArrayList<>();

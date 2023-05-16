@@ -31,7 +31,7 @@ public class WarpHandler
 		teleportPlayer(player, delayed, warpName, location, pterc, ptegc); //Back wurde schon gemacht
 	}
 	
-	public void teleportPlayer(ProxiedPlayer player, int delay, String warpName, ServerLocation location, String pterc, String ptegc)
+	public void teleportPlayer(ProxiedPlayer player, int delay, String warpName, final ServerLocation location, String pterc, String ptegc)
 	{
 		if(player == null || location == null)
 		{

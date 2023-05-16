@@ -10,11 +10,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import main.java.me.avankziar.general.object.Mechanics;
+import main.java.me.avankziar.general.object.Warp.PostTeleportExecuterCommand;
 import main.java.me.avankziar.general.objecthandler.StaticValues;
 import main.java.me.avankziar.spigot.btm.BungeeTeleportManager;
 import main.java.me.avankziar.spigot.btm.assistance.ChatApi;
-import main.java.me.avankziar.general.object.Mechanics;
-import main.java.me.avankziar.general.object.Warp.PostTeleportExecuterCommand;
 
 public class WarpMessageListener implements PluginMessageListener
 {
@@ -58,7 +58,7 @@ public class WarpMessageListener implements PluginMessageListener
                 	new BukkitRunnable()
 					{
             			int i = 0;
-            			Location loc = new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
+            			final Location loc = new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
 						@Override
 						public void run()
 						{
@@ -76,7 +76,6 @@ public class WarpMessageListener implements PluginMessageListener
 											cancel();
 											return;
 										}
-										
 										new BukkitRunnable()
 										{
 											@Override
@@ -104,6 +103,7 @@ public class WarpMessageListener implements PluginMessageListener
 												} catch(NullPointerException e)
 												{
 													player.spigot().sendMessage(ChatApi.tctl("Error! See Console!"));
+													e.printStackTrace();
 												}
 											}
 										}.runTask(plugin);

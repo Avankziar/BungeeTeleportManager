@@ -35,6 +35,8 @@ import main.java.me.avankziar.spigot.btm.handler.ConfigHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConvertHandler;
 import main.java.me.avankziar.spigot.btm.handler.ConfigHandler.CountType;
 import main.java.me.avankziar.spigot.btm.manager.back.BackHandler;
+import main.java.me.avankziar.spigot.btm.modifiervalueentry.ModifierValueEntry;
+import main.java.me.avankziar.spigot.btm.modifiervalueentry.Bypass.Counter;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 public class PortalHandler
@@ -673,6 +675,7 @@ public class PortalHandler
 			}
 			break;
 		}
+		globalLimit = (int) ModifierValueEntry.getResult(player.getUniqueId(), globalLimit, Counter.MAX_AMOUNT_PORTAL);
 		int i = globalHomeCount-globalLimit;
 		if(i >= 0 || globalLimit == 0)
 		{
@@ -749,6 +752,7 @@ public class PortalHandler
 				}
 				break;
 			}
+			serverLimit = (int) ModifierValueEntry.getResult(player.getUniqueId(), serverLimit, Counter.MAX_AMOUNT_PORTAL);
 			int i = serverHomeCount-serverLimit;
 			if(i >= 0 || serverLimit == 0)
 			{
@@ -791,6 +795,7 @@ public class PortalHandler
 				}
 				break;
 			}
+			serverLimit = (int) ModifierValueEntry.getResult(player.getUniqueId(), serverLimit, Counter.MAX_AMOUNT_PORTAL);
 			int i = serverHomeCount-serverLimit;
 			if(i >= 0 || serverLimit == 0)
 			{
@@ -886,6 +891,7 @@ public class PortalHandler
 				}
 				break;
 			}
+			worldLimit = (int) ModifierValueEntry.getResult(player.getUniqueId(), worldLimit, Counter.MAX_AMOUNT_PORTAL);
 			int i = worldHomeCount-worldLimit;
 			if(i >= 0 || worldLimit == 0)
 			{
@@ -929,6 +935,7 @@ public class PortalHandler
 				}
 				break;
 			}
+			worldLimit = (int) ModifierValueEntry.getResult(player.getUniqueId(), worldLimit, Counter.MAX_AMOUNT_PORTAL);
 			int i = worldHomeCount-worldLimit;
 			if(i >= 0 || worldLimit == 0)
 			{
