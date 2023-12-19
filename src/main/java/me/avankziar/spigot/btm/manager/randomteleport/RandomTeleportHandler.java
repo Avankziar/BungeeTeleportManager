@@ -440,7 +440,9 @@ public class RandomTeleportHandler
 				return true;
 			case FIRE_CORAL_FAN:
 				return true;
-			case GRASS:
+			case SHORT_GRASS:
+				return true;
+			case MOSS_CARPET:
 				return true;
 			
 			case HORN_CORAL:

@@ -39,7 +39,7 @@ public class WarpHandler
 		}
 		if(!plugin.getProxy().getServers().containsKey(location.getServer()))
 		{
-			player.sendMessage(ChatApi.tctl("Server is unknown!"));
+			player.sendMessage(ChatApi.tctl("Server %server% is unknown!".replace("%server%", location.getServer())));
 			return;
 		}
 		plugin.getProxy().getScheduler().schedule(plugin, new Runnable()
