@@ -31,12 +31,12 @@ Future =========================================================================
   Guter Testboden, um eine Mechanik zu entwickeln, um einzelne Entitys mit Spieler zu teleportieren.
 
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
-- xCommandAliase für bspw. /p h per Config. Eine Art Kettencommands, /server plots, und dann /p h.
 - /homes, bei einem Home das trennzeichen weg machen.
 - Bei den Mechaniken wie /tpa für jede Welt eines jeden Server eine Zugangspermission hinterlegen können.
 
 Build 7-4-0
 - Spigot 1.20.4 support
+- Bei /homeremove <Homename>, ein weiteres Argument [Spielername] hinzufügen. Um von anderen Spieler Homes zu löschen.
 
 Build 7-3-0
 - Spigot 1.20.1 support

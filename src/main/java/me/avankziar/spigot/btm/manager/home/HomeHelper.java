@@ -152,7 +152,7 @@ public class HomeHelper
 	
 	public void homeRemove(Player player, String[] args)
 	{
-		if(args.length != 1)
+		if(args.length > 2)
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
@@ -160,9 +160,21 @@ public class HomeHelper
 					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
 			return;
 		}
+		String playeruuid = player.getUniqueId().toString();
 		String homeName = args[0];
+		if(args.length == 2 
+				&& (player.hasPermission(StaticValues.PERM_HOME_OTHER) || args[1].equals(player.getName())))
+		{
+			UUID uuid = Utility.convertNameToUUID(args[1]);
+			if(uuid == null)
+			{
+				player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("NoPlayerExist")));
+				return;
+			}
+			playeruuid = uuid.toString();
+		}
 		if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.HOME,
-				"`player_uuid` = ? AND `home_name` = ?", player.getUniqueId().toString(), homeName))
+				"`player_uuid` = ? AND `home_name` = ?", playeruuid, homeName))
 		{
 			player.spigot().sendMessage(ChatApi.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeNotExist")));
 			return;
