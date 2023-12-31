@@ -51,7 +51,7 @@ public class EntityTransportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 			return;
 		}
 		if(args[0].equalsIgnoreCase("debug"))
@@ -218,7 +218,7 @@ public class EntityTransportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 			return;
 		}
 		String otherplayername = args[0];
@@ -254,7 +254,7 @@ public class EntityTransportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 			return;
 		}
 		int page = 0;
@@ -326,7 +326,7 @@ public class EntityTransportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 			return;
 		}
 		String playername = args[0];
@@ -379,7 +379,7 @@ public class EntityTransportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			sender.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 			return;
 		}
 		int amount = 0;

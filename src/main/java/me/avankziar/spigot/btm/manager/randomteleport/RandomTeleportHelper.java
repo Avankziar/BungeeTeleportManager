@@ -53,7 +53,7 @@ public class RandomTeleportHelper
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
 							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 					return;
 				}
 				String playername = player.getName();

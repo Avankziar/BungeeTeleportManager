@@ -10,7 +10,7 @@ public class BTMSettings
 	private boolean isBungee;
 	private boolean isMysql;
 	
-	private LinkedHashMap<String, String> commands = new LinkedHashMap<>(); //To save commandstrings
+	private static LinkedHashMap<String, String> commands = new LinkedHashMap<>(); //To save commandstrings
 	
 	public static BTMSettings settings;
 	
@@ -55,18 +55,11 @@ public class BTMSettings
 
 	public void setCommands(LinkedHashMap<String, String> commands)
 	{
-		this.commands = commands;
+		BTMSettings.commands = commands;
 	}
 	
 	public void addCommands(String key, String commandString)
 	{
-		//BungeeTeleportManager.log.info("Register Command "+commandString+" with Key "+key);
-		if(commands.containsKey(key))
-		{
-			commands.replace(key, commandString);
-		} else
-		{
-			commands.put(key, commandString);
-		}
+		BTMSettings.commands.put(key, commandString);
 	}
 }

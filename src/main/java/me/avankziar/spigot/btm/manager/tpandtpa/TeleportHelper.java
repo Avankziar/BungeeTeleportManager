@@ -48,7 +48,7 @@ public class TeleportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 		}
 	}
 	
@@ -58,7 +58,7 @@ public class TeleportHelper
 		{
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 		}
 		if(BungeeTeleportManager.getWorldGuard())
 		{
@@ -90,7 +90,7 @@ public class TeleportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 		}
 	}
 	
@@ -104,7 +104,7 @@ public class TeleportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 		}
 	}
 	
@@ -205,7 +205,7 @@ public class TeleportHelper
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
 							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -288,7 +288,7 @@ public class TeleportHelper
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
 							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -321,7 +321,7 @@ public class TeleportHelper
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
 							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -358,7 +358,7 @@ public class TeleportHelper
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
 							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -392,7 +392,7 @@ public class TeleportHelper
 					{
 						player.spigot().sendMessage(ChatApi.clickEvent(
 								plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 						return;
 					}
 					sl = new ServerLocation(
@@ -408,7 +408,7 @@ public class TeleportHelper
 					{
 						player.spigot().sendMessage(ChatApi.clickEvent(
 								plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 						return;
 					}
 					sl = new ServerLocation(
@@ -424,7 +424,7 @@ public class TeleportHelper
 					{
 						player.spigot().sendMessage(ChatApi.clickEvent(
 								plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 						return;
 					}
 					sl = new ServerLocation(
@@ -441,7 +441,7 @@ public class TeleportHelper
 					{
 						player.spigot().sendMessage(ChatApi.clickEvent(
 								plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+								ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 						return;
 					}
 					sl = new ServerLocation(
@@ -457,7 +457,7 @@ public class TeleportHelper
 					///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 					player.spigot().sendMessage(ChatApi.clickEvent(
 							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -470,7 +470,7 @@ public class TeleportHelper
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 			return;
 		}
 		TeleportIgnore tpi = new TeleportIgnore(player.getUniqueId(), Utility.convertNameToUUID(args[0]));

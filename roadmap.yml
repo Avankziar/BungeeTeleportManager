@@ -37,6 +37,7 @@ Future =========================================================================
 Build 7-4-0
 - Spigot 1.20.4 support
 - Bei /homeremove <Homename>, ein weiteres Argument [Spielername] hinzufügen. Um von anderen Spieler Homes zu löschen.
+- Fehler bei der Ausgabe des Hilfsbefehls.
 
 Build 7-3-0
 - Spigot 1.20.1 support

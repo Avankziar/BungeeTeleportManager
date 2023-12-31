@@ -46,7 +46,7 @@ public class FirstSpawnHelper
 				{
 					player.spigot().sendMessage(ChatApi.clickEvent(
 							plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+							ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 					return;
 				}
 				if(ForbiddenHandlerSpigot.isForbiddenToUseServer(plugin, Mechanics.FIRSTSPAWN, null)
@@ -83,7 +83,7 @@ public class FirstSpawnHelper
 		{
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 			return;
 		}
 		FirstSpawn fs = null;
@@ -112,7 +112,7 @@ public class FirstSpawnHelper
 		{
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 			return;
 		}
 		String fsName = args[0];
@@ -134,7 +134,7 @@ public class FirstSpawnHelper
 		{
 			player.spigot().sendMessage(ChatApi.clickEvent(
 					plugin.getYamlHandler().getLang().getString("InputIsWrong"),
-					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM)));
+					ClickEvent.Action.RUN_COMMAND, BTMSettings.settings.getCommands(KeyHandler.BTM).trim()));
 			return;
 		}
 		ArrayList<FirstSpawn> list = ConvertHandler.convertListXII(plugin.getMysqlHandler().getAllListAt(
