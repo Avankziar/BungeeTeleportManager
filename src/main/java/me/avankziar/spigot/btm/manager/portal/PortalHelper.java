@@ -225,6 +225,7 @@ public class PortalHelper
 						return;
 					}
 					player.playSound(player.getLocation(), portal.getPortalSound(), portal.getPortalSoundCategory(), 3.0F, 0.5F);
+					plugin.getUtility().givesEffect(player, Mechanics.PORTAL, true, true);
 					plugin.getBackHelper().directBackMethode(player, portal.getOwnExitPosition());
 					plugin.getPortalHandler().throwback(portal, player);
 					return;
@@ -235,6 +236,7 @@ public class PortalHelper
 						return;
 					}
 					player.playSound(player.getLocation(), portal.getPortalSound(), portal.getPortalSoundCategory(), 3.0F, 0.5F);
+					plugin.getUtility().givesEffect(player, Mechanics.PORTAL, true, true);
 					plugin.getBackHelper().directDeathBackMethode(player, portal.getOwnExitPosition());
 					plugin.getPortalHandler().throwback(portal, player);
 					return;
@@ -246,6 +248,7 @@ public class PortalHelper
 					}
 					player.playSound(player.getLocation(), portal.getPortalSound(), portal.getPortalSoundCategory(), 3.0F, 0.5F);
 					plugin.getPortalHandler().sendPortalExistPointAsBack(player, portal.getOwnExitPosition()); //FIXME irgendwie wird yam und pitch nicht genommen
+					plugin.getUtility().givesEffect(player, Mechanics.PORTAL, true, true);
 					new BukkitRunnable()
 					{
 						@Override
@@ -265,6 +268,7 @@ public class PortalHelper
 							return;
 						}
 						FirstSpawn fs = (FirstSpawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.FIRSTSPAWN, "`server` = ?", portal.getTargetInformation());
+						plugin.getUtility().givesEffect(player, Mechanics.PORTAL, true, true);
 						plugin.getPortalHandler().sendPlayerToDestination(player, fs.getLocation(), portal);
 					}
 					break;
@@ -277,6 +281,7 @@ public class PortalHelper
 							return;
 						}
 						Respawn r = (Respawn) plugin.getMysqlHandler().getData(MysqlHandler.Type.RESPAWN, "`displayname` = ?", portal.getTargetInformation());
+						plugin.getUtility().givesEffect(player, Mechanics.PORTAL, true, true);
 						plugin.getPortalHandler().sendPlayerToDestination(player, r.getLocation(), portal);
 					}
 					break;
@@ -344,6 +349,7 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
+					plugin.getUtility().givesEffect(player, Mechanics.PORTAL, true, true);
 					plugin.getPortalHandler().sendPlayerToDestination(player, home.getLocation(), portal);
 					return;
 				case LOCATION:
@@ -355,6 +361,7 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							return;
 						}
+						plugin.getUtility().givesEffect(player, Mechanics.PORTAL, true, true);
 						plugin.getPortalHandler().sendPlayerToDestination(player, loc, portal);
 						return;
 					}
@@ -430,6 +437,7 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
+					plugin.getUtility().givesEffect(player, Mechanics.PORTAL, true, true);
 					plugin.getPortalHandler().sendPlayerToDestination(player, desti.getOwnExitPosition(), portal);
 					return;
 				case PORTAL:
@@ -499,6 +507,7 @@ public class PortalHelper
 							plugin.getPortalHandler().throwback(portal, player);
 							return;
 						}
+						plugin.getUtility().givesEffect(player, Mechanics.PORTAL, true, true);
 						plugin.getPortalHandler().sendPlayerToDestination(player, dest.getOwnExitPosition(), portal);
 						return;
 					} else
@@ -601,6 +610,7 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
+					plugin.getUtility().givesEffect(player, Mechanics.PORTAL, true, true);
 					plugin.getPortalHandler().sendPlayerToDestination(player, sp.getLocation(), portal);
 					return;
 				case WARP:
@@ -676,6 +686,7 @@ public class PortalHelper
 						plugin.getPortalHandler().throwback(portal, player);
 						return;
 					}
+					plugin.getUtility().givesEffect(player, Mechanics.PORTAL, true, true);
 					plugin.getPortalHandler().sendPlayerToDestination(player, loc, portal);
 					return;
 				}

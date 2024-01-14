@@ -33,6 +33,11 @@ Future =========================================================================
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
 - /homes, bei einem Home das trennzeichen weg machen.
 - Bei den Mechaniken wie /tpa für jede Welt eines jeden Server eine Zugangspermission hinterlegen können.
+- Der RespawnPoint Ausführung soll harken. Zwar wird man zum Server hinteleportiert, aber nicht zum eigentlichen punkt
+- API Interface um die Daten von Homes abzugreifen.
+
+Build 7-4-1
+- Effektvergabe im Portal nun hinzugefügt. (Wurde vergessen)
 
 Build 7-4-0
 - Spigot 1.20.4 support
