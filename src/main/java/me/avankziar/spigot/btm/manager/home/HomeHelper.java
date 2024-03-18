@@ -152,7 +152,7 @@ public class HomeHelper
 	
 	public void homeRemove(Player player, String[] args)
 	{
-		if(args.length > 2)
+		if(args.length != 1 && args.length != 2)
 		{
 			///Deine Eingabe ist fehlerhaft, klicke hier auf den Text um &cweitere Infos zu bekommen!
 			player.spigot().sendMessage(ChatApi.clickEvent(

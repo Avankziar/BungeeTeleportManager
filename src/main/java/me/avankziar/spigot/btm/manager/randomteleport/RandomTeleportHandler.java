@@ -116,18 +116,16 @@ public class RandomTeleportHandler
 			}
 			if(rt.isArea())
 			{
-				double x = Math.min(rt.getPoint1().getX(), rt.getPoint2().getX()) + 
-						getRandom(new Random(), 0,
-							(int) Math.max(getPositiveInt(rt.getPoint1().getX()), getPositiveInt(rt.getPoint2().getX())) -
-							(int) Math.min(getPositiveInt(rt.getPoint1().getX()), getPositiveInt(rt.getPoint2().getX())));
-				double y = getRandom(new Random(),
-						(int) Math.min(rt.getPoint1().getY(), rt.getPoint2().getY()),
-						(int) Math.max(rt.getPoint1().getY(), rt.getPoint2().getY()));
-				double minY = Math.min(rt.getPoint1().getY(), rt.getPoint2().getY());
-				double z = Math.min(rt.getPoint1().getZ(), rt.getPoint2().getZ()) + 
-						getRandom(new Random(), 0,
-							(int) Math.max(getPositiveInt(rt.getPoint1().getZ()), getPositiveInt(rt.getPoint2().getZ())) -
-							(int) Math.min(getPositiveInt(rt.getPoint1().getZ()), getPositiveInt(rt.getPoint2().getZ())));
+				double x1 = rt.getPoint1().getX();
+				double x2 = rt.getPoint2().getX();
+				double x = Math.min(x1, x2) + getRandom(new Random(), 0, (int) getPositiveInt(Math.max(x1, x2) - Math.min(x1, x2)));
+				double y1 = rt.getPoint1().getY();
+				double y2 = rt.getPoint2().getY();
+				double y = getRandom(new Random(), 0, (int) getPositiveInt(Math.max(y1, y2) - Math.min(y1, y2)));
+				double minY = Math.min(y1, y2);
+				double z1 = rt.getPoint1().getZ();
+				double z2 = rt.getPoint2().getZ();
+				double z = Math.min(z1, z2) + getRandom(new Random(), 0, (int) getPositiveInt(Math.max(z1, z2) - Math.min(z1, z2)));
 				loc = isSafe(rtpPath, new Location(Bukkit.getWorld(rt.getPoint1().getWorldName()), x, y, z), minY);
 			} else
 			{
@@ -143,6 +141,29 @@ public class RandomTeleportHandler
 		//BungeeTeleportManager.log.info("l: | "+loc.getX()+" | "+loc.getY()+" | "+loc.getZ());
 		return loc;
 	}
+	
+	/*public static void main(String...args)
+	{
+		double x1 = 100;
+		double x2 = -100;
+		for(int i = 0; i < 100; i++)
+		{
+			System.out.println(i+" ======"); //REMOVEME
+			int xmin = (int) Math.min(x1, x2);
+			int rmax = (int) getPositiveInt(Math.max(x1, x2));
+			int rmin = (int) getPositiveInt(Math.min(x1, x2));
+			int rm = ((int) getPositiveInt(Math.max(x1, x2)-Math.min(x1, x2)));
+			int r = getRandom(new Random(), 0, (int) getPositiveInt(Math.max(x1, x2) - Math.min(x1, x2)));
+			int xout = xmin + r;
+			System.out.println("xmin: "+xmin); //REMOVEME
+			System.out.println("rmax: "+rmax); //REMOVEME
+			System.out.println("rmin: "+rmin); //REMOVEME
+			System.out.println("r-: "+rm); //REMOVEME
+			System.out.println("r: "+r); //REMOVEME
+			System.out.println("xout: "+xout); //REMOVEME
+			System.out.println("OutOfBorder: "+(xout > x1 || xout < x2)); //REMOVEME
+		}
+	}*/
 	
 	private Location isSafe(String rtpPath, Location loc, double minY)
 	{

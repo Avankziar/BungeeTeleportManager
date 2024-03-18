@@ -36,6 +36,10 @@ Future =========================================================================
 - Der RespawnPoint Ausführung soll harken. Zwar wird man zum Server hinteleportiert, aber nicht zum eigentlichen punkt
 - API Interface um die Daten von Homes abzugreifen.
 
+Build 7-4-2
+- ArrayIndexOutOfBoundsException fix bei /homeremove
+- randomteleport, Area [] Math fix
+
 Build 7-4-1
 - Effektvergabe im Portal nun hinzugefügt. (Wurde vergessen)
 
