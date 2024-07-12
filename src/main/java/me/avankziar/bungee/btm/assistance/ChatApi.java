@@ -19,6 +19,7 @@ public class ChatApi
 		return parseHex(ChatColor.translateAlternateColorCodes('&', s));
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static TextComponent tc(String s)
 	{
 		return new TextComponent(TextComponent.fromLegacyText(s));

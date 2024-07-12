@@ -36,6 +36,9 @@ Future =========================================================================
 - Der RespawnPoint Ausführung soll harken. Zwar wird man zum Server hinteleportiert, aber nicht zum eigentlichen punkt
 - API Interface um die Daten von Homes abzugreifen.
 
+Build 7-5-0
+- Java 21 Dependency
+
 Build 7-4-2
 - ArrayIndexOutOfBoundsException fix bei /homeremove
 - randomteleport, Area [] Math fix
