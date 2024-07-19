@@ -45,12 +45,6 @@ public class YamlHandler
 		return config;
 	}
 	
-	private YamlDocument config_forbiddenlist;
-	public YamlDocument getForbiddenConfig()
-	{
-		return config_forbiddenlist;
-	}
-	
 	private YamlDocument commands;
 	public YamlDocument getCommands()
 	{
@@ -146,9 +140,9 @@ public class YamlHandler
 				return false;
 			}
 			f = "config_forbiddenlist";
-			config_forbiddenlist = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
+			forbiddenconfig = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
 					getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
-			if(!setupStaticFile(f, config_forbiddenlist, yamlManager.getForbiddenListKey()))
+			if(!setupStaticFile(f, forbiddenconfig, yamlManager.getForbiddenListKey()))
 			{
 				return false;
 			}

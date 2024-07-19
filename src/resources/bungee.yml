@@ -1,4 +1,4 @@
 name: BungeeTeleportManager
-main: me.avankziar.bungee.btm.BTM
+main: me.avankziar.btm.bungee.BTM
 version: 7
 author: Avankziar

@@ -21,9 +21,10 @@ You can integrate BTM with the jar file and BTM.getPlugin() or you can call mave
 <dependency>
   <groupId>me.avankziar</groupId>
   <artifactId>bungeeteleportmanager</artifactId>
-  <version>7-5-0</version>
+  <version>VERSION</version>
 </dependency>
 ```
+Version can be found <b>[here](https://github.com/Avankziar/BungeeTeleportManager/packages/2208362)</b>!
 
 ## Usage
 For Devs you can access BTM on serval options:

@@ -14,21 +14,21 @@ public class ForbiddenHandlerBungee
 	
 	public static void init(BTM plugin)
 	{		
-		ArrayList<String> backFBS = (ArrayList<String>) plugin.getYamlHandler().getForbiddenConfig()
+		ArrayList<String> backFBS = (ArrayList<String>) plugin.getYamlHandler().getForbidden()
 																		.getStringList("ForbiddenToCreate.Back.Server");
-		ArrayList<String> backFBW = (ArrayList<String>) plugin.getYamlHandler().getForbiddenConfig()
+		ArrayList<String> backFBW = (ArrayList<String>) plugin.getYamlHandler().getForbidden()
 																		.getStringList("ForbiddenToCreate.Back.World");
 		add(Mechanics.BACK, backFBS, backFBW);
 		
-		ArrayList<String> deathbackFBS = (ArrayList<String>) plugin.getYamlHandler().getForbiddenConfig()
+		ArrayList<String> deathbackFBS = (ArrayList<String>) plugin.getYamlHandler().getForbidden()
 																		.getStringList("ForbiddenToCreate.Deathback.Server");
-		ArrayList<String> deathbackFBW = (ArrayList<String>) plugin.getYamlHandler().getForbiddenConfig()
+		ArrayList<String> deathbackFBW = (ArrayList<String>) plugin.getYamlHandler().getForbidden()
 																		.getStringList("ForbiddenToCreate.Deathback.World");
 		add(Mechanics.DEATHBACK, deathbackFBS, deathbackFBW);
 		
-		ArrayList<String> tpaFBS = (ArrayList<String>) plugin.getYamlHandler().getForbiddenConfig()
+		ArrayList<String> tpaFBS = (ArrayList<String>) plugin.getYamlHandler().getForbidden()
 																		.getStringList("ForbiddenToUse.TPA.Server");
-		ArrayList<String> tpaFBW = (ArrayList<String>) plugin.getYamlHandler().getForbiddenConfig()
+		ArrayList<String> tpaFBW = (ArrayList<String>) plugin.getYamlHandler().getForbidden()
 																		.getStringList("ForbiddenToUse.TPA.World");
 		add(Mechanics.TPA_ONLY, tpaFBS, tpaFBW);
 	}

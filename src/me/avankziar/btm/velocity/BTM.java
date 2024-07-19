@@ -21,12 +21,14 @@ import me.avankziar.btm.general.objecthandler.StaticValues;
 import me.avankziar.btm.velocity.listener.PluginMessageListener;
 
 @Plugin(id = "bungeeteleportmanager", name = "BungeeTeleportManager", version = "7-5-0",
-		url = "https://example.org", description = "Teleportsystem for Velocity and maybe more...", authors = {"Avankziar"})
+		url = "https://www.spigotmc.org/resources/bungeeteleportmanager.80677/",
+		description = "A Teleport plugin with Back, Deathback, EntityTransport, Homes, SavePoints, RTP, TPA, TP and Warps",
+		authors = {"Avankziar"})
 public class BTM
 {
 	private static BTM plugin;
     private final ProxyServer server;
-    public String pluginName = "SimpleChatChannels";
+    public String pluginName = "BungeeTeleportManager";
     public Logger logger = null;
     private Path dataDirectory;
     private YamlHandler yamlHandler;
@@ -44,17 +46,17 @@ public class BTM
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) 
     {
-    	logger = Logger.getLogger("PTM");
-    	PluginDescription pd = server.getPluginManager().getPlugin("avankziar-proxyteleportmanager").get().getDescription();
+    	logger = Logger.getLogger("BTM");
+    	PluginDescription pd = server.getPluginManager().getPlugin(pluginName.toLowerCase()).get().getDescription();
         List<String> dependencies = new ArrayList<>();
         pd.getDependencies().stream().allMatch(x -> dependencies.add(x.toString()));
-        //https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=PTM
+        //https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=BTM
 		logger.info(" ██████╗ ████████╗███╗   ███╗ | Id: "+pd.getId());
 		logger.info(" ██╔══██╗╚══██╔══╝████╗ ████║ | Version: "+pd.getVersion().get());
 		logger.info(" ██████╔╝   ██║   ██╔████╔██║ | Author: ["+String.join(", ", pd.getAuthors())+"]");
-		logger.info(" ██╔═══╝    ██║   ██║╚██╔╝██║ | Dependencies Plugins: ["+String.join(", ", dependencies)+"]");
-		logger.info(" ██║        ██║   ██║ ╚═╝ ██║ | Plugin Website:"+pd.getUrl().toString());
-		logger.info(" ╚═╝        ╚═╝   ╚═╝     ╚═╝ | Have Fun^^");
+		logger.info(" ██╔══██╗   ██║   ██║╚██╔╝██║ | Dependencies Plugins: ["+String.join(", ", dependencies)+"]");
+		logger.info(" ██████╔╝   ██║   ██║ ╚═╝ ██║ | Plugin Website:"+pd.getUrl().toString());
+		logger.info(" ╚═════╝    ╚═╝   ╚═╝     ╚═╝ | Have Fun^^");
         
 		registerChannels();
 		yamlHandler = new YamlHandler(YamlManager.Type.VELO, pluginName, logger, dataDirectory, "ENG");
