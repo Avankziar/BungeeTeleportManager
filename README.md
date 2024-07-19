@@ -17,7 +17,13 @@ To install BungeeTeleportManager (BTM), proceed as follows:
 ## Integration
 You can integrate BTM with the jar file and BTM.getPlugin() or you can call maven dependency:
 
-
+```
+<dependency>
+  <groupId>me.avankziar</groupId>
+  <artifactId>bungeeteleportmanager</artifactId>
+  <version>7-5-0</version>
+</dependency>
+```
 
 ## Usage
 For Devs you can access BTM on serval options:
