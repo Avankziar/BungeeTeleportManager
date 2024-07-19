@@ -1,0 +1,7 @@
+c{"id":"bungeeteleportmanager",
+"name":"BungeeTeleportManager",
+"version":"${version}",
+"description":"Teleportsystem for Bungee/Velocity & Spigot with Back/Deathback/Home/Warp/Portal/Tp/Tpa and more!",
+"authors":["Avankziar"],
+"dependencies":[],
+"main":"me.avankziar.velocity.btm.BTM"}

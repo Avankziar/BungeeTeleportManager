@@ -38,6 +38,13 @@ Future =========================================================================
 
 Build 7-5-0
 - Java 21 Dependency
+- Mc 1.21 Support
+- Velocity Support
+- main.java.me.avankziar.spigot.bungeeteleportmanager.events.PlayerTeleportToPlayerEvent wurde entfernt.
+  Bitte nutzt me.avankziar.btm.spigot.events.callable.PlayerTeleportToPlayerEvent
+- main.java.me.avankziar.spigot.bungeeteleportmanager.events.PlayerTeleportToPositionEvent wurde entfernt.
+  Bitte nutzt me.avankziar.btm.spigot.events.callable.PlayerTeleportToPositionEvent
+- Packages umbenannt und restruckturiert.
 
 Build 7-4-2
 - ArrayIndexOutOfBoundsException fix bei /homeremove

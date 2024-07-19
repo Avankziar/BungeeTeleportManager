@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>me.avankziar</groupId>
+	<artifactId>bungeeteleportmanager</artifactId>
+	<version>7-5-0</version>
+	<name>BungeeTeleportManager</name>
+	<description>TeleportSystem, welcher Teleports über das Proxysystem ermöglicht mit Back/DeathBack/Homes/Warp/Tp/Tpa und viels mehr!</description>
+	<url>https://github.com/${repository-owner}/${repository-name}.git</url>
+    <scm>
+        <url>https://github.com/${repository-owner}/${repository-name}.git</url>
+        <connection>scm:git:git@github.com:${repository-owner}/${repository-name}.git</connection>
+        <developerConnection>scm:git:git@github.com:${repository-owner}/${repository-name}.git</developerConnection>
+    </scm>
+    <properties>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	</properties>
+	<distributionManagement>
+		<repository>
+			<id>github</id>
+			<name>GitHub Avankziar Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/Avankziar/BungeeTeleportManager</url>
+		</repository>
+	</distributionManagement>
+	<build>
+		<defaultGoal>clean package</defaultGoal>
+		<finalName>${project.artifactId}-${project.version}</finalName>
+		<sourceDirectory>${basedir}/src/</sourceDirectory>
+		<resources>
+			<resource>
+				<targetPath>.</targetPath>
+				<directory>${basedir}/src/resources/</directory>
+				<filtering>true</filtering>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.13.0</version>
+				<configuration>
+					<source>21</source>
+					<target>21</target>
+				</configuration>
+			</plugin>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+      			<artifactId>maven-shade-plugin</artifactId>
+      			<version>3.6.0</version>
+      			<configuration>
+      				<filters>
+      					<filter>
+      						<artifact>*:*</artifact>
+      						<excludes>
+      							<exclude>META-INF/*.MF</exclude>
+      						</excludes>
+      					</filter>
+      				</filters>
+      				<relocations>
+				     <relocation>
+				       <pattern>de.tr7zw.changeme.nbtapi</pattern>
+				       <shadedPattern>main.java.nbtapi</shadedPattern>
+				     </relocation>
+				   </relocations>
+      			</configuration>
+      				<executions>
+		        		<execution>
+			          		<phase>package</phase>
+				          		<goals>
+				            		<goal>shade</goal>
+				          		</goals>
+		        		</execution>
+	      			</executions>
+			</plugin>
+			<plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-jar-plugin</artifactId>
+			    <version>2.4</version>
+			    <configuration>
+			      <outputDirectory>F:\Datein\Dev\Dev Server 1.21</outputDirectory>
+			      <finalName>${project.artifactId}-${project.version}</finalName>
+			    </configuration>
+			    <executions>
+	                <execution>
+	                    <id>attach-sources</id>
+	                    <goals>
+	                        <goal>jar</goal>
+	                    </goals>
+	                </execution>
+			    </executions>
+      		</plugin>
+		</plugins>
+	</build>
+	<repositories>
+		<repository>
+	        <id>github</id>
+      		<name>GitHub Avankziar Apache Maven Packages</name>
+	        <url>https://maven.pkg.github.com/Avankziar/BungeeTeleportManager</url>
+	    </repository>
+		<!--Minecraft-->
+		<repository>
+            <id>minecraft-repo</id>
+            <url>https://libraries.minecraft.net/</url>
+        </repository>
+		<!-- Spigot -->
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
+		</repository>
+		<!-- Bungeecord -->
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+		<!-- Velocity & PaperMc -->
+		<repository>
+			<id>papermc</id>
+        	<url>https://repo.papermc.io/repository/maven-public/</url>
+		</repository>
+		<!--PlacerHolder-->
+		<repository>
+            <id>placeholderapi</id>
+            <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
+        </repository>
+        <!-- WorldGuard -->
+        <repository>
+	        <id>sk89q-repo</id>
+	        <url>https://maven.enginehub.org/repo/</url>
+	    </repository>
+	    <!-- SuperVanish -->
+	    <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+	</repositories>
+	<dependencies>
+		<!--Spigot API -->
+		<dependency>
+			<groupId>org.spigotmc</groupId>
+			<artifactId>spigot-api</artifactId>
+			<version>1.21-R0.1-SNAPSHOT</version>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Bungeecord -->
+		<dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.21-R0.1-SNAPSHOT</version>
+            <type>jar</type>
+            <scope>provided</scope>
+        </dependency>
+		<!-- Velocity -->
+  		<dependency>
+        	<groupId>com.velocitypowered</groupId>
+        	<artifactId>velocity-api</artifactId>
+        	<version>3.3.0-SNAPSHOT</version>
+        	<scope>provided</scope>
+		</dependency>
+		<!-- MysqlConnector -->
+		<dependency>
+		    <groupId>com.mysql</groupId>
+		    <artifactId>mysql-connector-j</artifactId>
+		    <version>8.4.0</version>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- Minimessage -->
+		<dependency>
+			<groupId>net.kyori</groupId>
+			<artifactId>adventure-platform-bukkit</artifactId>
+			<version>4.3.2</version>
+			<scope>provided</scope>
+		</dependency>
+		<!--  https://repo1.maven.org/maven2/dev/dejvokep/boosted-yaml/ -->
+		<dependency>
+ 			<groupId>dev.dejvokep</groupId>
+  			<artifactId>boosted-yaml</artifactId>
+  			<version>1.3.5</version>
+  			<scope>provided</scope>
+		</dependency>
+		<!-- PlacerHolderApi-->
+		<dependency>
+	        <groupId>me.clip</groupId>
+	        <artifactId>placeholderapi</artifactId>
+	        <version>2.11.6</version>
+	        <scope>provided</scope>
+        </dependency>
+        <!-- WorldGuard -->
+        <dependency>
+		    <groupId>com.sk89q.worldguard</groupId>
+		    <artifactId>worldguard-bukkit</artifactId>
+		    <version>7.0.10</version>
+		    <scope>provided</scope>
+		</dependency>
+	    <!-- WorldEdit -->
+        <dependency>
+		    <groupId>com.sk89q.worldedit</groupId>
+		    <artifactId>worldedit-bukkit</artifactId>
+		    <version>7.3.3</version>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- InterfaceHub -->
+		<dependency>
+		  <groupId>me.avankziar</groupId>
+		  <artifactId>interfacehub</artifactId>
+		  <version>2-0-0</version>
+		  <scope>provided</scope>
+		</dependency>
+		<!-- SuperVanish -->
+		<dependency>
+            <groupId>com.github.LeonMangler</groupId>
+            <artifactId>SuperVanish</artifactId>
+            <version>6.2.18-3</version>
+            <scope>provided</scope>
+        </dependency>
+	</dependencies>
+</project>
