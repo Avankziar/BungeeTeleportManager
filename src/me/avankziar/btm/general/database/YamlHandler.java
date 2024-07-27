@@ -16,6 +16,7 @@ import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
 import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.avankziar.btm.general.database.Language.ISO639_2B;
+import me.avankziar.btm.general.database.YamlManager.Type;
 
 public class YamlHandler
 {	
@@ -132,40 +133,43 @@ public class YamlHandler
 			{
 				return false;
 			}
-			f = "commands";
-			commands = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
-					getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
-			if(!setupStaticFile(f, commands, yamlManager.getCommandsKey()))
+			if(type == Type.SPIGOT)
 			{
-				return false;
-			}
-			f = "config_forbiddenlist";
-			forbiddenconfig = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
-					getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
-			if(!setupStaticFile(f, forbiddenconfig, yamlManager.getForbiddenListKey()))
-			{
-				return false;
-			}
-			f = "config_permissionlevel";
-			permissionlevelconfig = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
-					getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
-			if(!setupStaticFile(f, permissionlevelconfig, yamlManager.getConfigPermissionLevelKey()))
-			{
-				return false;
-			}
-			f = "config_respawn";
-			respawnconfig = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
-					getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
-			if(!setupStaticFile(f, respawnconfig, yamlManager.getConfigRespawnKey()))
-			{
-				return false;
-			}
-			f = "randomteleports";
-			randomteleportconfig = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
-					getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
-			if(!setupStaticFile(f, randomteleportconfig, yamlManager.getRTPKey()))
-			{
-				return false;
+				f = "commands";
+				commands = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
+						getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
+				if(!setupStaticFile(f, commands, yamlManager.getCommandsKey()))
+				{
+					return false;
+				}
+				f = "config_forbiddenlist";
+				forbiddenconfig = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
+						getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
+				if(!setupStaticFile(f, forbiddenconfig, yamlManager.getForbiddenListKey()))
+				{
+					return false;
+				}
+				f = "config_permissionlevel";
+				permissionlevelconfig = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
+						getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
+				if(!setupStaticFile(f, permissionlevelconfig, yamlManager.getConfigPermissionLevelKey()))
+				{
+					return false;
+				}
+				f = "config_respawn";
+				respawnconfig = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
+						getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
+				if(!setupStaticFile(f, respawnconfig, yamlManager.getConfigRespawnKey()))
+				{
+					return false;
+				}
+				f = "randomteleports";
+				randomteleportconfig = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
+						getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
+				if(!setupStaticFile(f, randomteleportconfig, yamlManager.getRTPKey()))
+				{
+					return false;
+				}
 			}
 	    } catch (IOException e)
 	    {
@@ -227,6 +231,10 @@ public class YamlHandler
 	
 	private boolean mkdirDynamicFiles(YamlManager.Type type)
 	{
+		if(type != Type.SPIGOT)
+		{
+			return true;
+		}
 		if(!mkdirLanguage(type))
 		{
 			return false;
