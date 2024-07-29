@@ -36,8 +36,12 @@ Future =========================================================================
 - Der RespawnPoint Ausführung soll harken. Zwar wird man zum Server hinteleportiert, aber nicht zum eigentlichen punkt
 - API Interface um die Daten von Homes abzugreifen.
 
+Build 7-5-1
+- config_forbiddenlist.yml auf Proxy wieder hinzugefügt (Wurde vergessen)
+
 Build 7-5-0
 - Java 21 Dependency
+- InterfaceHub ist nun Depend!
 - Mc 1.21 Support
 - Velocity Support
 - main.java.me.avankziar.spigot.bungeeteleportmanager.events.PlayerTeleportToPlayerEvent wurde entfernt.

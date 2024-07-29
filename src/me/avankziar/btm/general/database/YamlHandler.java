@@ -133,19 +133,19 @@ public class YamlHandler
 			{
 				return false;
 			}
+			f = "config_forbiddenlist";
+			forbiddenconfig = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
+					getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
+			if(!setupStaticFile(f, forbiddenconfig, yamlManager.getForbiddenListKey()))
+			{
+				return false;
+			}
 			if(type == Type.SPIGOT)
 			{
 				f = "commands";
 				commands = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
 						getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
 				if(!setupStaticFile(f, commands, yamlManager.getCommandsKey()))
-				{
-					return false;
-				}
-				f = "config_forbiddenlist";
-				forbiddenconfig = YamlDocument.create(new File(directory,"%f%.yml".replace("%f%", f)),
-						getClass().getResourceAsStream("/default.yml"),gsd,lsd,dsd,usd);
-				if(!setupStaticFile(f, forbiddenconfig, yamlManager.getForbiddenListKey()))
 				{
 					return false;
 				}
