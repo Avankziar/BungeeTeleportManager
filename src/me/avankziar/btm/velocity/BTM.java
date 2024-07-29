@@ -49,7 +49,7 @@ public class BTM
     	logger = Logger.getLogger("BTM");
     	PluginDescription pd = server.getPluginManager().getPlugin(pluginName.toLowerCase()).get().getDescription();
         List<String> dependencies = new ArrayList<>();
-        pd.getDependencies().stream().allMatch(x -> dependencies.add(x.toString()));
+        pd.getDependencies().stream().allMatch(x -> dependencies.add(x.getId()));
         //https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=BTM
 		logger.info(" ██████╗ ████████╗███╗   ███╗ | Id: "+pd.getId());
 		logger.info(" ██╔══██╗╚══██╔══╝████╗ ████║ | Version: "+pd.getVersion().get());
