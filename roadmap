@@ -38,6 +38,7 @@ Future =========================================================================
 
 Build 7-5-1
 - config_forbiddenlist.yml auf Proxy wieder hinzugefügt (Wurde vergessen)
+- Config file not correct loaded on Spigot
 
 Build 7-5-0
 - Java 21 Dependency
