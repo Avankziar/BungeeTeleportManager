@@ -34,6 +34,7 @@ public class YamlManager
 	
 	public YamlManager(Type type) //INFO
 	{
+		this.type = type;
 		initConfig();
 		if(type == Type.SPIGOT)
 		{
