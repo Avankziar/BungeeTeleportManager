@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
@@ -20,8 +21,13 @@ import me.avankziar.btm.general.database.YamlManager;
 import me.avankziar.btm.general.objecthandler.StaticValues;
 import me.avankziar.btm.velocity.listener.PluginMessageListener;
 
-@Plugin(id = "bungeeteleportmanager", name = "BungeeTeleportManager", version = "7-5-0",
+@Plugin(id = "bungeeteleportmanager",
+		name = "BungeeTeleportManager", 
+		version = "7-5-2",
 		url = "https://www.spigotmc.org/resources/bungeeteleportmanager.80677/",
+		dependencies = {
+				@Dependency(id = "interfacehub", optional = false)
+		},
 		description = "A Teleport plugin with Back, Deathback, EntityTransport, Homes, SavePoints, RTP, TPA, TP and Warps",
 		authors = {"Avankziar"})
 public class BTM
