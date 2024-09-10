@@ -593,11 +593,11 @@ public class TeleportHandler
 	{
 		Optional<Player> ofrom = plugin.getServer().getPlayer(teleport.getFromName());
 		Optional<Player> oto = plugin.getServer().getPlayer(teleport.getToName());
-		if(ofrom == null)
+		if(ofrom.isEmpty())
 		{
 			return;
 		}
-		if(oto == null)
+		if(oto.isEmpty())
 		{
 			ofrom.ifPresent(y -> y.sendMessage(ChatApi.tl(errormessage)));
 			return;

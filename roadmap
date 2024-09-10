@@ -31,24 +31,15 @@ Future =========================================================================
   Guter Testboden, um eine Mechanik zu entwickeln, um einzelne Entitys mit Spieler zu teleportieren.
 
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
-- /homes, bei einem Home das trennzeichen weg machen.
+X /homes, bei einem Home das trennzeichen weg machen. (Code müsste dafür komplett erneuert werden)
 - Bei den Mechaniken wie /tpa für jede Welt eines jeden Server eine Zugangspermission hinterlegen können.
-- Der RespawnPoint Ausführung soll harken. Zwar wird man zum Server hinteleportiert, aber nicht zum eigentlichen punkt
-- API Interface um die Daten von Homes abzugreifen.
+- Der RespawnPoint Ausführung soll harken. Zwar wird man zum Server hinteleportiert, aber nicht zum eigentlichen punkt.
 
-[18:19:20 ERROR]: Couldn't pass PluginMessageEvent to bungeeteleportmanager 7-5-1
-java.util.NoSuchElementException: No value present
-        at java.util.Optional.get(Optional.java:143) ~[?:?]
-        at me.avankziar.btm.velocity.manager.TeleportHandler.preTeleportPlayerToPlayerForceUse(TeleportHandler.java:606) ~[?:?]
-        at me.avankziar.btm.velocity.manager.TeleportHandler.pluginMessage(TeleportHandler.java:303) ~[?:?]
-        at me.avankziar.btm.velocity.listener.PluginMessageListener.onPluginMessageFromBackend(PluginMessageListener.java:71) ~[?:?]
-        at me.avankziar.btm.velocity.listener.Lmbda$18.execute(Unknown Source) ~[?:?]
-        at com.velocitypowered.proxy.event.UntargetedEventHandler$VoidHandler.lambda$buildHandler$0(UntargetedEventHandler.java:56) ~[velocity-3.3.0-SNAPSHOT-415.jar:3.3.0-SNAPSHOT (git-00ed2284-b415)]
-        at com.velocitypowered.proxy.event.VelocityEventManager.fire(VelocityEventManager.java:598) ~[velocity-3.3.0-SNAPSHOT-415.jar:3.3.0-SNAPSHOT (git-00ed2284-b415)]
-        at com.velocitypowered.proxy.event.VelocityEventManager.lambda$fire$5(VelocityEventManager.java:479) ~[velocity-3.3.0-SNAPSHOT-415.jar:3.3.0-SNAPSHOT (git-00ed2284-b415)]
-        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144) ~[?:?]
-        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642) ~[?:?]
-        at java.lang.Thread.run(Thread.java:1583) [?:?]
+Build 7-6-0
+- Velocity TeleportManager java.util.NoSuchElementException fix
+- File Version von 1 auf 2 geändert.
+- IFH Anbindung an das Interface spigot.teleport.Home
+- IFH Anbindung an das Interface spigot.teleport.Warp
 
 Build 7-5-1
 - config_forbiddenlist.yml auf Proxy wieder hinzugefügt (Wurde vergessen)

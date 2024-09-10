@@ -420,7 +420,7 @@ public class HomeHelper
 		boolean noServer = !plugin.getYamlHandler().getConfig().getBoolean("Home.Homes.UseServer");
 		boolean noWorld = !plugin.getYamlHandler().getConfig().getBoolean("Home.Homes.UseWorld");
 		for(Home home : list)
-		{			
+		{
 			if(home.getLocation().getWorldName().equals(world))
 			{
 				map = hh.mapping(home, map, ChatApiOld.apiChat(

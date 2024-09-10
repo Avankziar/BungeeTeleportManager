@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.avankziar</groupId>
 	<artifactId>bungeeteleportmanager</artifactId>
-	<version>7-5-2</version>
+	<version>7-6-0</version>
 	<name>BungeeTeleportManager</name>
 	<description>TeleportSystem, welcher Teleports über das Proxysystem ermöglicht mit Back/DeathBack/Homes/Warp/Tp/Tpa und viels mehr!</description>
 	<url>https://github.com/${repository-owner}/${repository-name}.git</url>
@@ -83,7 +83,7 @@
 			    <artifactId>maven-jar-plugin</artifactId>
 			    <version>2.4</version>
 			    <configuration>
-			      <outputDirectory>F:\Datein\Dev\Dev Server 1.21</outputDirectory>
+			      <outputDirectory>F:\Datein\Dev\Dev Server 1.21.1</outputDirectory>
 			      <finalName>${project.artifactId}-${project.version}</finalName>
 			    </configuration>
 			    <executions>
@@ -144,7 +144,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.21-R0.1-SNAPSHOT</version>
+			<version>1.21.1-R0.1-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Bungeecord -->
@@ -208,7 +208,7 @@
 		<dependency>
 		  <groupId>me.avankziar</groupId>
 		  <artifactId>interfacehub</artifactId>
-		  <version>2-0-0</version>
+		  <version>2-2-0-Pre1</version>
 		  <scope>provided</scope>
 		</dependency>
 		<!-- SuperVanish -->

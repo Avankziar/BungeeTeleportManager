@@ -503,6 +503,12 @@ public class YamlManager
 		configKeys.put("Enable.InterfaceHub.Providing.Teleport"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
+		configKeys.put("Enable.InterfaceHub.Providing.Home"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				true}));
+		configKeys.put("Enable.InterfaceHub.Providing.Warp"
+				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
+				true}));
 		configKeys.put("Enable.InterfaceHub.Consuming.Vanish"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));

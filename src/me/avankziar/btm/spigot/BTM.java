@@ -57,8 +57,10 @@ import me.avankziar.btm.spigot.handler.ConfigHandler;
 import me.avankziar.btm.spigot.handler.SafeLocationHandler;
 import me.avankziar.btm.spigot.handler.SafeLocationMessageListener;
 import me.avankziar.btm.spigot.hook.WorldGuardHook;
+import me.avankziar.btm.spigot.ifh.HomeProvider;
 import me.avankziar.btm.spigot.ifh.LastKnownPositionProvider;
 import me.avankziar.btm.spigot.ifh.TeleportProvider;
+import me.avankziar.btm.spigot.ifh.WarpProvider;
 import me.avankziar.btm.spigot.listener.PlayerOnCooldownListener;
 import me.avankziar.btm.spigot.listener.ServerAndWordListener;
 import me.avankziar.btm.spigot.listener.back.BackListener;
@@ -1323,7 +1325,32 @@ public class BTM extends JavaPlugin
 		        ServicePriority.Normal);
 		    	logger.info(pluginName + " detected InterfaceHub >>> Teleport.class is provided!");
 	    	} catch (Exception e){}
-	    	
+		}
+	    if(yamlHandler.getConfig().getBoolean("Enable.InterfaceHub.Providing.Home", false))
+		{
+	    	try
+	    	{
+	    		HomeProvider homeprovider = new HomeProvider(plugin);
+		    	plugin.getServer().getServicesManager().register(
+		        me.avankziar.ifh.spigot.teleport.Home.class,
+		        homeprovider,
+		        this,
+		        ServicePriority.Normal);
+		    	logger.info(pluginName + " detected InterfaceHub >>> Home.class is provided!");
+	    	} catch (Exception e){}
+		}
+	    if(yamlHandler.getConfig().getBoolean("Enable.InterfaceHub.Providing.Warp", false))
+		{
+	    	try
+	    	{
+	    		WarpProvider warpprovider = new WarpProvider(plugin);
+		    	plugin.getServer().getServicesManager().register(
+		        me.avankziar.ifh.spigot.teleport.Warp.class,
+		        warpprovider,
+		        this,
+		        ServicePriority.Normal);
+		    	logger.info(pluginName + " detected InterfaceHub >>> Warp.class is provided!");
+	    	} catch (Exception e){}
 		}
 	    try
     	{
