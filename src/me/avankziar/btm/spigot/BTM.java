@@ -1324,7 +1324,7 @@ public class BTM extends JavaPlugin
 		        this,
 		        ServicePriority.Normal);
 		    	logger.info(pluginName + " detected InterfaceHub >>> Teleport.class is provided!");
-	    	} catch (Exception e){}
+	    	} catch (Error e){}
 		}
 	    if(yamlHandler.getConfig().getBoolean("Enable.InterfaceHub.Providing.Home", false))
 		{
@@ -1337,7 +1337,7 @@ public class BTM extends JavaPlugin
 		        this,
 		        ServicePriority.Normal);
 		    	logger.info(pluginName + " detected InterfaceHub >>> Home.class is provided!");
-	    	} catch (Exception e){}
+	    	} catch (Error e){}
 		}
 	    if(yamlHandler.getConfig().getBoolean("Enable.InterfaceHub.Providing.Warp", false))
 		{
@@ -1350,7 +1350,7 @@ public class BTM extends JavaPlugin
 		        this,
 		        ServicePriority.Normal);
 		    	logger.info(pluginName + " detected InterfaceHub >>> Warp.class is provided!");
-	    	} catch (Exception e){}
+	    	} catch (Error e){}
 		}
 	    try
     	{
@@ -1361,7 +1361,7 @@ public class BTM extends JavaPlugin
 	        this,
 	        ServicePriority.Normal);
 	    	logger.info(pluginName + " detected InterfaceHub >>> LastKnownPosition.class is provided!");
-    	} catch (Exception e){}
+    	} catch (Error e){}
 	}
 	
 	private void setupIFHConsumer()
