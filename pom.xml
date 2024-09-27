@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>me.avankziar</groupId>
 	<artifactId>bungeeteleportmanager</artifactId>
-	<version>7-6-0</version>
+	<version>7-7-0</version>
 	<name>BungeeTeleportManager</name>
 	<description>TeleportSystem, welcher Teleports über das Proxysystem ermöglicht mit Back/DeathBack/Homes/Warp/Tp/Tpa und viels mehr!</description>
 	<url>https://github.com/${repository-owner}/${repository-name}.git</url>
@@ -18,13 +18,14 @@
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
-	<distributionManagement>
+	
+	<!--<distributionManagement>
 		<repository>
-			<id>github</id>
+			<id>github-repo1</id>
 			<name>GitHub Avankziar Apache Maven Packages</name>
 			<url>https://maven.pkg.github.com/Avankziar/BungeeTeleportManager</url>
 		</repository>
-	</distributionManagement>
+	</distributionManagement>-->
 	<build>
 		<defaultGoal>clean package</defaultGoal>
 		<finalName>${project.artifactId}-${project.version}</finalName>
@@ -98,11 +99,16 @@
 		</plugins>
 	</build>
 	<repositories>
-		<repository>
-	        <id>github</id>
-      		<name>GitHub Avankziar Apache Maven Packages</name>
-	        <url>https://maven.pkg.github.com/Avankziar/BungeeTeleportManager</url>
+		<!-- FarmingWorld -->
+        <repository>
+	        <id>github-repo2</id>
+	        <url>https://maven.pkg.github.com/SrSyntaxAT/FarmingWorld</url>
 	    </repository>
+	    <!-- BTM 
+		<repository>
+	        <id>github-repo1</id>
+	        <url>https://maven.pkg.github.com/Avankziar/BungeeTeleportManager</url>
+	    </repository>-->
 		<!--Minecraft-->
 		<repository>
             <id>minecraft-repo</id>
@@ -218,5 +224,19 @@
             <version>6.2.18-3</version>
             <scope>provided</scope>
         </dependency>
+        <!-- FarmingWorld
+		<dependency>
+		  <groupId>farming.world</groupId>
+		  <artifactId>farmingworld</artifactId>
+		  <version>5.2.2.5</version>
+		  <scope>system</scope>
+		  <systemPath>F:\Datein\Dev\#DependedPlugins\farmingworld-2.2.jar</systemPath>
+    	</dependency>-->
+		<dependency>
+		  <groupId>at.srsyntax.farmworld</groupId>
+		  <artifactId>spigot</artifactId>
+		  <version>2.2.2</version>
+		  <scope>provided</scope>
+		</dependency>
 	</dependencies>
 </project>

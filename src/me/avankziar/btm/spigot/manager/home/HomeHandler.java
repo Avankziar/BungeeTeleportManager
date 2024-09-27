@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -17,11 +18,11 @@ import me.avankziar.btm.general.objecthandler.StaticValues;
 import me.avankziar.btm.spigot.BTM;
 import me.avankziar.btm.spigot.database.MysqlHandler;
 import me.avankziar.btm.spigot.handler.ConfigHandler;
-import me.avankziar.btm.spigot.handler.ConvertHandler;
 import me.avankziar.btm.spigot.handler.ConfigHandler.CountType;
+import me.avankziar.btm.spigot.handler.ConvertHandler;
 import me.avankziar.btm.spigot.manager.back.BackHandler;
-import me.avankziar.btm.spigot.modifiervalueentry.ModifierValueEntry;
 import me.avankziar.btm.spigot.modifiervalueentry.Bypass.Counter;
+import me.avankziar.btm.spigot.modifiervalueentry.ModifierValueEntry;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 public class HomeHandler
@@ -72,7 +73,8 @@ public class HomeHandler
 				@Override
 				public void run()
 				{
-					player.teleport(ConvertHandler.getLocation(home.getLocation()));
+					Location h = ConvertHandler.getLocation(home.getLocation());
+					player.teleport(h);
 					if(plugin.getYamlHandler().getConfig().getBoolean("Home.UsePostTeleportMessage"))
 					{
 						player.spigot().sendMessage(ChatApiOld.tctl(plugin.getYamlHandler().getLang().getString("CmdHome.HomeTo")

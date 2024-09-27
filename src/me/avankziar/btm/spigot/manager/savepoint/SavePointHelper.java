@@ -328,7 +328,7 @@ public class SavePointHelper
 				player.spigot().sendMessage(tc);
 			}
 		}
-		plugin.getCommandHelper().pastNextPage(player, "CmdSavePoint.", page, lastpage,
+		plugin.getCommandHelper().pastNextPage(player, "CmdSavePoint", page, lastpage,
 				BTMSettings.settings.getCommands(KeyHandler.SAVEPOINT_LIST));
 		return;
 	}

@@ -342,7 +342,7 @@ public class DeathzoneHelper
 				player.spigot().sendMessage(tc);
 			}
 		}
-		plugin.getCommandHelper().pastNextPage(player, "CmdDeathzone.", page, lastpage,
+		plugin.getCommandHelper().pastNextPage(player, "CmdDeathzone", page, lastpage,
 				BTMSettings.settings.getCommands(KeyHandler.DEATHZONE_LIST));
 		return;
 	}

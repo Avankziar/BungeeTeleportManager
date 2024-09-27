@@ -1,6 +1,7 @@
 /.classpath
 /.gitignore
 /.project
+/lib/
 /target/
 /.settings/
 /bin/

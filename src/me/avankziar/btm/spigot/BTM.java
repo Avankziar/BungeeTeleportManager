@@ -56,6 +56,7 @@ import me.avankziar.btm.spigot.database.MysqlSetup;
 import me.avankziar.btm.spigot.handler.ConfigHandler;
 import me.avankziar.btm.spigot.handler.SafeLocationHandler;
 import me.avankziar.btm.spigot.handler.SafeLocationMessageListener;
+import me.avankziar.btm.spigot.hook.FarmingWorldHook;
 import me.avankziar.btm.spigot.hook.WorldGuardHook;
 import me.avankziar.btm.spigot.ifh.HomeProvider;
 import me.avankziar.btm.spigot.ifh.LastKnownPositionProvider;
@@ -1248,6 +1249,10 @@ public class BTM extends JavaPlugin
 		pm.registerEvents(new EntityTransportListener(plugin), plugin);
 		pm.registerEvents(new RespawnListener(plugin), plugin);
 		pm.registerEvents(new PortalListener(plugin), plugin);
+		if(plugin.getServer().getPluginManager().isPluginEnabled("FarmingWorld")) 
+	    {
+			pm.registerEvents(new FarmingWorldHook(plugin), plugin);
+	    }
 	}
 	
 	public boolean reload() throws IOException

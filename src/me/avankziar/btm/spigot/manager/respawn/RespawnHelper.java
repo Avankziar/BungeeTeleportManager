@@ -246,7 +246,7 @@ public class RespawnHelper
 				player.spigot().sendMessage(tc);
 			}
 		}
-		plugin.getCommandHelper().pastNextPage(player, "CmdRespawn.", page, lastpage,
+		plugin.getCommandHelper().pastNextPage(player, "CmdRespawn", page, lastpage,
 				BTMSettings.settings.getCommands(KeyHandler.RESPAWN_LIST));
 		return;
 	}

@@ -1163,11 +1163,11 @@ public class PortalHelper
 		}
 		if(category != null)
 		{
-			plugin.getCommandHelper().pastNextPage(player, "CmdPortal.", page, lastpage,
+			plugin.getCommandHelper().pastNextPage(player, "CmdPortal", page, lastpage,
 					BTMSettings.settings.getCommands(KeyHandler.PORTAL_LIST), category);
 		} else
 		{
-			plugin.getCommandHelper().pastNextPage(player, "CmdPortal.", page, lastpage,
+			plugin.getCommandHelper().pastNextPage(player, "CmdPortal", page, lastpage,
 					BTMSettings.settings.getCommands(KeyHandler.PORTAL_LIST));
 		}
 		return;
@@ -1602,7 +1602,7 @@ public class PortalHelper
 				player.spigot().sendMessage(tc);
 			}
 		}
-		plugin.getCommandHelper().pastNextPage(player, "CmdPortal.", page, lastpage,
+		plugin.getCommandHelper().pastNextPage(player, "CmdPortal", page, lastpage,
 				BTMSettings.settings.getCommands(KeyHandler.PORTAL_SEARCH), argPagination);
 		return;
 	}

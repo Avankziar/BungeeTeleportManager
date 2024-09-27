@@ -793,11 +793,11 @@ public class WarpHelper
 		}
 		if(category != null)
 		{
-			plugin.getCommandHelper().pastNextPage(player, "CmdWarp.", page, lastpage,
+			plugin.getCommandHelper().pastNextPage(player, "CmdWarp", page, lastpage,
 					BTMSettings.settings.getCommands(KeyHandler.WARPS), playername, category);
 		} else
 		{
-			plugin.getCommandHelper().pastNextPage(player, "CmdWarp.", page, lastpage,
+			plugin.getCommandHelper().pastNextPage(player, "CmdWarp", page, lastpage,
 					BTMSettings.settings.getCommands(KeyHandler.WARPS), playername);
 		}
 		return;
@@ -961,11 +961,11 @@ public class WarpHelper
 		}
 		if(category != null)
 		{
-			plugin.getCommandHelper().pastNextPage(player, "CmdWarp.", page, lastpage,
+			plugin.getCommandHelper().pastNextPage(player, "CmdWarp", page, lastpage,
 					BTMSettings.settings.getCommands(KeyHandler.WARP_LIST), category);
 		} else
 		{
-			plugin.getCommandHelper().pastNextPage(player, "CmdWarp.", page, lastpage,
+			plugin.getCommandHelper().pastNextPage(player, "CmdWarp", page, lastpage,
 					BTMSettings.settings.getCommands(KeyHandler.WARP_LIST));
 		}
 		return;
