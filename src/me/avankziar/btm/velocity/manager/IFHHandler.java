@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future.State;
@@ -36,11 +37,10 @@ public class IFHHandler
 	{
 		DataInputStream in = new DataInputStream(new ByteArrayInputStream(event.getData()));
         String task = in.readUTF();
-        if(task.equals(StaticValues.HOME_PLAYERTOPOSITION))
+        if(task.equals(StaticValues.IFH_PLAYERTOPOSITION))
         {
         	String uuid = in.readUTF();
         	String playerName = in.readUTF();
-        	String homeName = in.readUTF();
         	String server = in.readUTF();
         	String worldName = in.readUTF();
         	double x = in.readDouble();
@@ -48,16 +48,26 @@ public class IFHHandler
         	double z = in.readDouble();
         	float yaw = in.readFloat();
         	float pitch = in.readFloat();
-        	int delayed = in.readInt();
-        	BackHandler.getBack(in, uuid, playerName, Mechanics.HOME);
-        	ServerLocation location = new ServerLocation(server, worldName, x, y, z, yaw, pitch);
-        	teleportPlayer(playerName, delayed, location, homeName);
+        	int size = in.readInt();
+        	ArrayList<String> post = new ArrayList<>();
+        	for(int i = 0; i < size; i++)
+        	{
+        		String s = in.readUTF();
+        		post.add(s);
+        	}
+        	String errormessage = in.readUTF();
+        	boolean createBack = in.readBoolean();
+        	if(createBack)
+        	{
+        		BackHandler.getBack(in, uuid, playerName, Mechanics.CUSTOM);
+        	}
+        	teleportPlayer(playerName, new ServerLocation(server, worldName, x, y, z, yaw, pitch), post, errormessage);
         	return;
         }
         return;
 	}
 	
-	public void teleportPlayer(String playerName, int delay, ServerLocation location, String homeName)
+	public void teleportPlayer(String playerName, ServerLocation location, ArrayList<String> post, String errormessage)
 	{
 		Optional<Player> opplayer = plugin.getServer().getPlayer(playerName);
 		if(opplayer.isEmpty())
@@ -96,11 +106,12 @@ public class IFHHandler
 			{
 				r = player.createConnectionRequest(server.get()).connect();
 			}
-	        sendPluginMessage(player, server.get(), r, homeName, location);
-		}).delay(delay, TimeUnit.MILLISECONDS).schedule();
+	        sendPluginMessage(player, server.get(), r, location, post, errormessage);
+		}).delay(20, TimeUnit.MILLISECONDS).schedule();
 	}
 	
-	private void sendPluginMessage(Player player, RegisteredServer server, CompletableFuture<Result> result, String homeName, ServerLocation location)
+	private void sendPluginMessage(Player player, RegisteredServer server, CompletableFuture<Result> result,
+			ServerLocation location, ArrayList<String> post, String errormessage)
 	{
 		plugin.getServer().getScheduler().buildTask(plugin, (task) ->
 		{
@@ -119,19 +130,24 @@ public class IFHHandler
 			ByteArrayOutputStream streamout = new ByteArrayOutputStream();
 	        DataOutputStream out = new DataOutputStream(streamout);
 	        try {
-	        	out.writeUTF(StaticValues.HOME_PLAYERTOPOSITION);
+	        	out.writeUTF(StaticValues.IFH_PLAYERTOPOSITION);
 				out.writeUTF(player.getUsername());
-				out.writeUTF(homeName);
 				out.writeUTF(location.getWorldName());
 				out.writeDouble(location.getX());
 				out.writeDouble(location.getY());
 				out.writeDouble(location.getZ());
 				out.writeFloat(location.getYaw());
 				out.writeFloat(location.getPitch());
+				out.writeInt(post.size());
+				for(String s : post)
+				{
+					out.writeUTF(s);
+				}
+				out.writeUTF(errormessage != null ? errormessage : "");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-	        server.sendPluginMessage(BTM.getMCID(StaticValues.HOME_TOSPIGOT), streamout.toByteArray());
+	        server.sendPluginMessage(BTM.getMCID(StaticValues.IFH_TOSPIGOT), streamout.toByteArray());
 		}).repeat(20, TimeUnit.MILLISECONDS).schedule();
 	}
 }

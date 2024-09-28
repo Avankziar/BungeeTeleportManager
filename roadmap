@@ -35,6 +35,9 @@ X /homes, bei einem Home das trennzeichen weg machen. (Code müsste dafür kompl
 - Bei den Mechaniken wie /tpa für jede Welt eines jeden Server eine Zugangspermission hinterlegen können.
 - Der RespawnPoint Ausführung soll harken. Zwar wird man zum Server hinteleportiert, aber nicht zum eigentlichen punkt.
 
+Build 7-7-1
+- IFH Api Provider fix
+
 Build 7-7-0
 - Support fur farmingworld https://www.spigotmc.org/resources/farmingworld.100640/
   - Wenn nun die Farmwelt gewechselt wird passiert folgendes:
