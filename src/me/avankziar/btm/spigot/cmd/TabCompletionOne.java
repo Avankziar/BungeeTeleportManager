@@ -6,6 +6,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.command.Command;
@@ -13,12 +14,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import com.google.common.collect.Lists;
+
 import me.avankziar.btm.general.object.Deathzone;
 import me.avankziar.btm.general.object.FirstSpawn;
 import me.avankziar.btm.general.object.Mechanics;
 import me.avankziar.btm.general.object.Portal;
-import me.avankziar.btm.general.object.Respawn;
 import me.avankziar.btm.general.object.Portal.PostTeleportExecuterCommand;
+import me.avankziar.btm.general.object.Respawn;
 import me.avankziar.btm.general.objecthandler.KeyHandler;
 import me.avankziar.btm.spigot.BTM;
 import me.avankziar.btm.spigot.database.MysqlHandler;
@@ -88,9 +91,9 @@ public class TabCompletionOne implements TabCompleter
 				targettype.add(ptt.toString());
 			}
 			Collections.sort(targettype);
-			for(Sound s : new ArrayList<Sound>(EnumSet.allOf(Sound.class)))
+			for(Sound s : Lists.newArrayList(Registry.SOUNDS))
 			{
-				sound.add(s.toString());
+				sound.add(s.getKey().getKey());
 			}
 			Collections.sort(sound);
 			for(SoundCategory s : new ArrayList<SoundCategory>(EnumSet.allOf(SoundCategory.class)))

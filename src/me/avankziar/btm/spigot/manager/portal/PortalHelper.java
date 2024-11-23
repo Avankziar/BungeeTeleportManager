@@ -2594,15 +2594,13 @@ public class PortalHelper
 			return;
 		}
 		Sound s = Sound.BLOCK_ANVIL_FALL;
-		try
-		{
-			s = Sound.valueOf(args[1].toUpperCase());
-		} catch(Exception e)
-		{
-			player.spigot().sendMessage(ChatApiOld.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoSound")
+		try {
+            s = (Sound) Sound.class.getField(args[1].toUpperCase()).get(null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+        	player.spigot().sendMessage(ChatApiOld.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoSound")
 					.replace("%value%", args[1])));
 			return;
-		}
+        }
 		SoundCategory sc = SoundCategory.AMBIENT;
 		try
 		{

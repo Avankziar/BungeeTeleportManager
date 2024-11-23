@@ -92,7 +92,7 @@ public class HomeHandler
 		plugin.getServer().getScheduler().buildTask(plugin, (task) ->
 		{
 			CompletableFuture<Result> r = null;
-			if(!player.getCurrentServer().get().getServerInfo().getName().equals(location.getServer()))
+			if(!playerserver.get().getServerInfo().getName().equals(location.getServer()))
 			{
 				r = player.createConnectionRequest(server.get()).connect();
 			}

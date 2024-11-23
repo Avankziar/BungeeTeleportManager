@@ -7,7 +7,7 @@ import me.avankziar.btm.spigot.BTM;
 
 public class BTMSettings
 {
-	private boolean isBungee;
+	private boolean isProxy;
 	private boolean isMysql;
 	
 	private static LinkedHashMap<String, String> commands = new LinkedHashMap<>(); //To save commandstrings
@@ -16,26 +16,26 @@ public class BTMSettings
 	
 	public BTMSettings(boolean isBungee, boolean isMysql)
 	{
-		setBungee(isBungee);
+		setProxy(isBungee);
 		setMysql(isMysql);
 	}
 	
 	public static void initSettings(BTM plugin)
 	{
 		YamlHandler yh = plugin.getYamlHandler();
-		boolean isBungee = yh.getConfig().getBoolean("Bungee", false);
+		boolean isProxy = yh.getConfig().getBoolean("Proxy", false);
 		boolean isMysql = yh.getConfig().getBoolean("Mysql.Status", false);
-		settings = new BTMSettings(isBungee, isMysql);
+		settings = new BTMSettings(isProxy, isMysql);
 	}
 
-	public boolean isBungee()
+	public boolean isProxy()
 	{
-		return isBungee;
+		return isProxy;
 	}
 
-	public void setBungee(boolean isBungee)
+	public void setProxy(boolean isBungee)
 	{
-		this.isBungee = isBungee;
+		this.isProxy = isBungee;
 	}
 
 	public boolean isMysql()

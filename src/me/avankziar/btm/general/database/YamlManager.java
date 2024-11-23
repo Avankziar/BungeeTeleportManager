@@ -409,55 +409,168 @@ public class YamlManager
 					"If true, the /deathback command can only be used once per death."});
 			return;
 		}
-		
-		configKeys.put("useIFHAdministration"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configKeys.put("IFHAdministrationPath"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"btm"}));
-		configKeys.put("Language"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"ENG"}));
-		configKeys.put("Bungee"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configKeys.put("ServerName"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"hub"}));
+		addConfig("useIFHAdministration",
+				new Object[] {
+				true},
+				new Object[] {
+				"Boolean um auf das IFH Interface Administration zugreifen soll.",
+				"Wenn 'true' eingegeben ist, aber IFH Administration ist nicht vorhanden, so werden automatisch die eigenen Configwerte genommen.",
+				"Boolean to access the IFH Interface Administration.",
+				"If 'true' is entered, but IFH Administration is not available, the own config values are automatically used."});
+		addConfig("IFHAdministrationPath", 
+				new Object[] {
+				"btm"},
+				new Object[] {
+				"",
+				"Diese Funktion sorgt dafür, dass das Plugin auf das IFH Interface Administration zugreifen kann.",
+				"Das IFH Interface Administration ist eine Zentrale für die Daten von Sprache, Servername und Mysqldaten.",
+				"Diese Zentralisierung erlaubt für einfache Änderung/Anpassungen genau dieser Daten.",
+				"Sollte das Plugin darauf zugreifen, werden die Werte in der eigenen Config dafür ignoriert.",
+				"",
+				"This function ensures that the plugin can access the IFH Interface Administration.",
+				"The IFH Interface Administration is a central point for the language, server name and mysql data.",
+				"This centralization allows for simple changes/adjustments to precisely this data.",
+				"If the plugin accesses it, the values in its own config are ignored."});
+		addConfig("Proxy", 
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Im nicht empfohlenen Fall, dass BTM ohne Proxy(Bungee/Velocity) benutzt wird, kann man hier dies auf 'false' setzten.",
+				"Bedenke ohne Proxy, funktioniert Back und Deathback nicht!",
+				"",
+				"In the not recommended case that BTM is used without a proxy (Bungee/Velocity), you can set this to 'false'.",
+				"Remember, without a proxy, Back and Deathback wont work!"});
+		addConfig("Language",
+				new Object[] {
+				"ENG"},
+				new Object[] {
+				"",
+				"Die eingestellte Sprache. Von Haus aus sind 'ENG=Englisch' und 'GER=Deutsch' mit dabei.",
+				"Falls andere Sprachen gewünsch sind, kann man unter den folgenden Links nachschauen, welchs Kürzel für welche Sprache gedacht ist.",
+				"Siehe hier nach, sowie den Link, welche dort auch für Wikipedia steht.",
+				"https://github.com/Avankziar/RootAdministration/blob/main/src/main/java/me/avankziar/roota/general/Language.java",
+				"",
+				"The set language. By default, ENG=English and GER=German are included.",
+				"If other languages are required, you can check the following links to see which abbreviation is intended for which language.",
+				"See here, as well as the link, which is also there for Wikipedia.",
+				"https://github.com/Avankziar/RootAdministration/blob/main/src/main/java/me/avankziar/roota/general/Language.java"});
+		addConfig("ServerName",
+				new Object[] {
+				"hub"},
+				new Object[] {
+				"",
+				"Der Server steht für den Namen des Spigotservers, wie er in BungeeCord/Waterfall/Velocity config.yml unter dem Pfad 'servers' angegeben ist.",
+				"Sollte kein BungeeCord/Waterfall oder andere Proxys vorhanden sein oder du nutzt IFH Administration, so kannst du diesen Bereich ignorieren.",
+				"",
+				"The server stands for the name of the spigot server as specified in BungeeCord/Waterfall/Velocity config.yml under the path 'servers'.",
+				"If no BungeeCord/Waterfall or other proxies are available or you are using IFH Administration, you can ignore this area."});
 	
 	
-		configKeys.put("Mysql.Status"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
-		configKeys.put("Mysql.Host"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"127.0.0.1"}));
-		configKeys.put("Mysql.Port"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				3306}));
-		configKeys.put("Mysql.DatabaseName"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"mydatabase"}));
-		configKeys.put("Mysql.SSLEnabled"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
-		configKeys.put("Mysql.AutoReconnect"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configKeys.put("Mysql.VerifyServerCertificate"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
-		configKeys.put("Mysql.User"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"admin"}));
-		configKeys.put("Mysql.Password"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"not_0123456789"}));
+		addConfig("Mysql.Status",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"'Status' ist ein simple Sicherheitsfunktion, damit nicht unnötige Fehler in der Konsole geworfen werden.",
+				"Stelle diesen Wert auf 'true', wenn alle Daten korrekt eingetragen wurden.",
+				"",
+				"'Status' is a simple security function so that unnecessary errors are not thrown in the console.",
+				"Set this value to 'true' if all data has been entered correctly."});
+		addComments(configKeys, "#Mysql", 
+				new Object[] {
+				"",
+				"Mysql ist ein relationales Open-Source-SQL-Databaseverwaltungssystem, das von Oracle entwickelt und unterstützt wird.",
+				"'My' ist ein Namenkürzel und 'SQL' steht für Structured Query Language. Eine Programmsprache mit der man Daten auf einer relationalen Datenbank zugreifen und diese verwalten kann.",
+				"Link https://www.mysql.com/de/",
+				"Wenn du IFH Administration nutzt, kann du diesen Bereich ignorieren.",
+				"",
+				"Mysql is an open source relational SQL database management system developed and supported by Oracle.",
+				"'My' is a name abbreviation and 'SQL' stands for Structured Query Language. A program language that can be used to access and manage data in a relational database.",
+				"Link https://www.mysql.com",
+				"If you use IFH Administration, you can ignore this section."});
+		addConfig("Mysql.Host",
+				new Object[] {
+				"127.0.0.1"},
+				new Object[] {
+				"",
+				"Der Host, oder auch die IP. Sie kann aus einer Zahlenkombination oder aus einer Adresse bestehen.",
+				"Für den Lokalhost, ist es möglich entweder 127.0.0.1 oder 'localhost' einzugeben. Bedenke, manchmal kann es vorkommen,",
+				"das bei gehosteten Server die ServerIp oder Lokalhost möglich ist.",
+				"",
+				"The host, or IP. It can consist of a number combination or an address.",
+				"For the local host, it is possible to enter either 127.0.0.1 or >localhost<.",
+				"Please note that sometimes the serverIp or localhost is possible for hosted servers."});
+		addConfig("Mysql.Port",
+				new Object[] {
+				3306},
+				new Object[] {
+				"",
+				"Ein Port oder eine Portnummer ist in Rechnernetzen eine Netzwerkadresse,",
+				"mit der das Betriebssystem die Datenpakete eines Transportprotokolls zu einem Prozess zuordnet.",
+				"Ein Port für Mysql ist standart gemäß 3306.",
+				"",
+				"In computer networks, a port or port number ",
+				"is a network address with which the operating system assigns the data packets of a transport protocol to a process.",
+				"A port for Mysql is standard according to 3306."});
+		addConfig("Mysql.DatabaseName",
+				new Object[] {
+				"mydatabase"},
+				new Object[] {
+				"",
+				"Name der Datenbank in Mysql.",
+				"",
+				"Name of the database in Mysql."});
+		addConfig("Mysql.SSLEnabled",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"SSL ist einer der drei Möglichkeiten, welcher, solang man nicht weiß, was es ist, es so lassen sollte wie es ist.",
+				"",
+				"SSL is one of the three options which, as long as you don't know what it is, you should leave it as it is."});
+		addConfig("Mysql.AutoReconnect",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"AutoReconnect ist einer der drei Möglichkeiten, welcher, solang man nicht weiß, was es ist, es so lassen sollte wie es ist.",
+				"",
+				"AutoReconnect is one of the three options which, as long as you don't know what it is, you should leave it as it is."});
+		addConfig("Mysql.VerifyServerCertificate",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"VerifyServerCertificate ist einer der drei Möglichkeiten, welcher, solang man nicht weiß, was es ist, es so lassen sollte wie es ist.",
+				"",
+				"VerifyServerCertificate is one of the three options which, as long as you don't know what it is, you should leave it as it is."});
+		addConfig("Mysql.User",
+				new Object[] {
+				"admin"},
+				new Object[] {
+				"",
+				"Der User, welcher auf die Mysql zugreifen soll.",
+				"",
+				"The user who should access the Mysql."});
+		addConfig("Mysql.Password",
+				new Object[] {
+				"not_0123456789"},
+				new Object[] {
+				"",
+				"Das Passwort des Users, womit er Zugang zu Mysql bekommt.",
+				"",
+				"The user's password, with which he gets access to Mysql."});
 		
 		configKeys.put("EnableCommands.Back"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
+		addComments(configKeys, "#EnableCommands", 
+				new Object[] {
+				"",
+				"Aktiviert oder deaktiviert die Befehle. Deaktivert bedeutet, keiner kann diese nutzten.",
+				"",
+				"Enables or disables the commands. Disabled means no one can use them."});
 		configKeys.put("EnableCommands.Deathback"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
@@ -497,9 +610,16 @@ public class YamlManager
 		configKeys.put("EnableCommands.Warp"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
-		configKeys.put("Enable.AccessPermission"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
+		addConfig("Enable.AccessPermission",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"Aktiviert/Deaktivert SubMechanik 'AccessPermission'.",
+				"Siehe https://github.com/Avankziar/BungeeTeleportManager/wiki/GER-AccessPermission",
+				"",
+				"Enables/Disables submechanic 'AccessPermission'.",
+				"See https://github.com/Avankziar/BungeeTeleportManager/wiki/ENG-AccessPermission"});
 		configKeys.put("Enable.InterfaceHub.Providing.Teleport"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
@@ -1047,8 +1167,8 @@ public class YamlManager
 	{
 		commandsInput("deathzonecreate", "deathzonecreate", "btm.cmd.staff.deathzone.create", 
 				"/deathzonecreate <deathzonename> ", "/deathzonecreate", false,
-				"&c/deathzonecreate <Deathzonename> &f| Erstellt eine Deathzone.",
-				"&c/deathzonecreate <deathzonename> &f| Create a deathzone.",
+				"&c/deathzonecreate <Deathzonename> <Deathzonepfad> <Kategorie> <SubKategorie> &f| Erstellt eine Deathzone.",
+				"&c/deathzonecreate <deathzonename> <Deathzonepath> <Category> <SubCategory> &f| Create a deathzone.",
 				"&bBefehlsrecht für &f/deathzonecreate",
 				"&bCommandright for &f/deathzonecreate",
 				"&eErstellt eine Todeszone.",

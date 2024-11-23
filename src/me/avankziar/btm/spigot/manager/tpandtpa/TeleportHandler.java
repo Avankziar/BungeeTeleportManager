@@ -38,7 +38,7 @@ public class TeleportHandler
 	public void sendMessage(Player player, String fromName, String toName, String message,
 			boolean returnplayeronline, String returnmessage)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -60,7 +60,7 @@ public class TeleportHandler
 	public void sendTextComponent(Player player, String fromName, String toName, String message,
 			boolean returnplayeronline, String returnmessage)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -81,7 +81,7 @@ public class TeleportHandler
 	
 	public void sendExistPeninding(Player player, Teleport teleport)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -105,7 +105,7 @@ public class TeleportHandler
 	
 	public void sendObject(Player player, Teleport teleport)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -127,7 +127,7 @@ public class TeleportHandler
 	public void sendCancelInvite(Player player, Teleport teleport, int runTask, boolean sendMessage,
 			String messageFrom, String messageTo)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -150,7 +150,7 @@ public class TeleportHandler
 	public void sendAccept(Player player, Teleport teleport,
 			String returnmessage)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -177,7 +177,7 @@ public class TeleportHandler
 	public void sendDeny(Player player, Teleport teleport, String message,
 			boolean returns, String returnmessage)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -199,7 +199,7 @@ public class TeleportHandler
 	public void sendCancel(Player player, String message,
 			boolean returns, String returnmessage)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -305,7 +305,7 @@ public class TeleportHandler
 	
 	public void sendTpAll(Player player, boolean isSpecific, String server, String world)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -391,7 +391,7 @@ public class TeleportHandler
 	
 	public void sendWorldName(Player player)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}		

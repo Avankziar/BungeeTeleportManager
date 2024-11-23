@@ -180,7 +180,7 @@ public class RandomTeleportHandler
 		{
 			try
 			{
-				Biome bio = Biome.valueOf(s);
+				Biome bio = (Biome) Biome.class.getField(s).get(null);
 				forbiddenBiomes.add(bio);
 			} catch(Exception e)
 			{

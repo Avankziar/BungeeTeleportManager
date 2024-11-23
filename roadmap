@@ -29,11 +29,16 @@ Future =========================================================================
 - Registerierte EntitytsTeleporter dürfen nicht benannt oder teleportiert werden.
 - Mit Minecarts durch Portale fahren können (VehicelMoveEvent), die Problematik mit den Entitys.
   Guter Testboden, um eine Mechanik zu entwickeln, um einzelne Entitys mit Spieler zu teleportieren.
-
 - /btm <Mechanic>, zum öffnen nur der jeweiligen Befehle
 X /homes, bei einem Home das trennzeichen weg machen. (Code müsste dafür komplett erneuert werden)
 - Bei den Mechaniken wie /tpa für jede Welt eines jeden Server eine Zugangspermission hinterlegen können.
 - Der RespawnPoint Ausführung soll harken. Zwar wird man zum Server hinteleportiert, aber nicht zum eigentlichen punkt.
+
+Build 7-8-0
+- Config Kommentare hinzugefügt.
+- /deathzonecreate Befehlsvorgschlag fix
+- Biom Code (RandomTeleport) Änderung bezüglich der Spigot 1.21.3 Anpassung
+- Sound Code (Portal) Änderung bezüglich der Spigot 1.21.3 Anpassung
 
 Build 7-7-1
 - IFH Api Provider fix

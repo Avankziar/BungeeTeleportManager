@@ -77,7 +77,7 @@ public class BackHandler
 	
 	public void sendBackObject(Player player, Back back, boolean mysqlUpdate)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -107,7 +107,7 @@ public class BackHandler
 	
 	public void sendDeathBackObject(Player player, Back back)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -133,7 +133,7 @@ public class BackHandler
 	
 	public void sendJoinBackObject(Player player, Back back)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -160,7 +160,7 @@ public class BackHandler
 	public void sendPlayerBack(Player player, Back back)
 	{
 		//Hier KEINEN Server internen Teleport!
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}
@@ -194,7 +194,7 @@ public class BackHandler
 	
 	public void sendPlayerDeathBack(Player player, Back back)
 	{
-		if(!BTMSettings.settings.isBungee())
+		if(!BTMSettings.settings.isProxy())
 		{
 			return;
 		}

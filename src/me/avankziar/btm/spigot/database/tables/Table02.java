@@ -12,8 +12,8 @@ import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 
 import me.avankziar.btm.general.object.Portal;
-import me.avankziar.btm.general.object.ServerLocation;
 import me.avankziar.btm.general.object.Portal.AccessType;
+import me.avankziar.btm.general.object.ServerLocation;
 import me.avankziar.btm.spigot.BTM;
 import me.avankziar.btm.spigot.database.MysqlHandler;
 
@@ -73,7 +73,7 @@ public interface Table02
 		        preparedStatement.setDouble(10, w.getThrowback());
 		        preparedStatement.setInt(11, w.getPortalProtectionRadius());
 		        preparedStatement.setLong(12, w.getCooldown());
-		        preparedStatement.setString(13, w.getPortalSound().toString());
+		        preparedStatement.setString(13, w.getPortalSound().getKey().getKey());
 		        preparedStatement.setString(14, w.getPortalSoundCategory().toString());
 		        
 		        preparedStatement.setString(15, w.getTargetType().toString());
@@ -183,7 +183,7 @@ public interface Table02
 		        preparedStatement.setDouble(10, w.getThrowback());
 		        preparedStatement.setInt(11, w.getPortalProtectionRadius());
 		        preparedStatement.setLong(12, w.getCooldown());
-		        preparedStatement.setString(13, w.getPortalSound().toString());
+		        preparedStatement.setString(13, w.getPortalSound().getKey().getKey());
 		        preparedStatement.setString(14, w.getPortalSoundCategory().toString());
 		        
 		        preparedStatement.setString(15, w.getTargetType().toString());
@@ -270,6 +270,12 @@ public interface Table02
 					{
 						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
 					}
+					Sound sound = null;
+					try {
+			            sound = (Sound) Sound.class.getField(result.getString("sound")).get(null);
+			        } catch (NoSuchFieldException | IllegalAccessException e) {
+			            sound = Sound.AMBIENT_CAVE;
+			        }
 		        	return new Portal(
 		        			result.getInt("id"),
 		        			result.getString("portalname"),
@@ -284,7 +290,7 @@ public interface Table02
 		        			result.getDouble("throwback"),
 		        			result.getInt("portalprotectionradius"),
 		        			result.getLong("cooldown"),
-		        			Sound.valueOf(result.getString("sound")),
+		        			sound,
 		        			SoundCategory.valueOf(result.getString("soundcategory")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
@@ -374,6 +380,12 @@ public interface Table02
 					{
 						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
 					}
+					Sound sound = null;
+					try {
+			            sound = (Sound) Sound.class.getField(result.getString("sound")).get(null);
+			        } catch (NoSuchFieldException | IllegalAccessException e) {
+			            sound = Sound.AMBIENT_CAVE;
+			        }
 		        	Portal w = new Portal(
 		        			result.getInt("id"),
 		        			result.getString("portalname"),
@@ -388,7 +400,7 @@ public interface Table02
 		        			result.getDouble("throwback"),
 		        			result.getInt("portalprotectionradius"),
 		        			result.getLong("cooldown"),
-		        			Sound.valueOf(result.getString("sound")),
+		        			sound,
 		        			SoundCategory.valueOf(result.getString("soundcategory")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
@@ -475,6 +487,12 @@ public interface Table02
 					{
 						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
 					}
+					Sound sound = null;
+					try {
+			            sound = (Sound) Sound.class.getField(result.getString("sound")).get(null);
+			        } catch (NoSuchFieldException | IllegalAccessException e) {
+			            sound = Sound.AMBIENT_CAVE;
+			        }
 		        	Portal w = new Portal(
 		        			result.getInt("id"),
 		        			result.getString("portalname"),
@@ -489,7 +507,7 @@ public interface Table02
 		        			result.getDouble("throwback"),
 		        			result.getInt("portalprotectionradius"),
 		        			result.getLong("cooldown"),
-		        			Sound.valueOf(result.getString("sound")),
+		        			sound,
 		        			SoundCategory.valueOf(result.getString("soundcategory")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
@@ -589,6 +607,12 @@ public interface Table02
 					{
 						b = new ArrayList<String>(Arrays.asList(result.getString("blacklist").split(";")));
 					}
+					Sound sound = null;
+					try {
+			            sound = (Sound) Sound.class.getField(result.getString("sound")).get(null);
+			        } catch (NoSuchFieldException | IllegalAccessException e) {
+			            sound = Sound.AMBIENT_CAVE;
+			        }
 		        	Portal w = new Portal(
 		        			result.getInt("id"),
 		        			result.getString("portalname"),
@@ -603,7 +627,7 @@ public interface Table02
 		        			result.getDouble("throwback"),
 		        			result.getInt("portalprotectionradius"),
 		        			result.getLong("cooldown"),
-		        			Sound.valueOf(result.getString("sound")),
+		        			sound,
 		        			SoundCategory.valueOf(result.getString("soundcategory")),
 		        			Portal.TargetType.valueOf(result.getString("targettype")),
 		        			result.getString("targetinformation"),
