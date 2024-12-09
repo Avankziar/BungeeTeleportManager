@@ -2413,6 +2413,14 @@ public class YamlManager
 				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
 						"&eDer Import der Homes des Plugins CMI ist abgeschlossen! Importierte Homes: &f%valueI% &e| Fehlgeschlagene Homeimporte: &f%valueII%",
 						"&eThe import of the homes of the CMI plugin is completed! Imported homes: &f%valueI% &e| Failed homeimports: &f%valueII%"}));
+		languageKeys.put(path+"HuskHomeHomeImportFinish", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Import der Homes des Plugins HuskHomes ist abgeschlossen! Importierte Homes: &f%valueI% &e| Fehlgeschlagene Homeimporte: &f%valueII%",
+						"&eThe import of the homes of the HuskHome plugin is completed! Imported homes: &f%valueI% &e| Failed homeimports: &f%valueII%"}));
+		languageKeys.put(path+"HuskHomeWarpImportFinish", 
+				new Language(new ISO639_2B[] {ISO639_2B.GER, ISO639_2B.ENG}, new Object[] {
+						"&eDer Import der Warps des Plugins HuskHomes ist abgeschlossen! Importierte Warps: &f%valueI% &e| Fehlgeschlagene Warpimporte: &f%valueII%",
+						"&eThe import of the warps of the HuskHome plugin is completed! Imported warps: &f%valueI% &e| Failed warpimports: &f%valueII%"}));
 	}
 	
 	private void langDeathzone()

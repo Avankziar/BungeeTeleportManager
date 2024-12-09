@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.command.Command;
@@ -21,10 +22,12 @@ import org.bukkit.entity.Player;
 import me.avankziar.btm.general.assistance.ChatApiOld;
 import me.avankziar.btm.general.object.Home;
 import me.avankziar.btm.general.object.Portal;
-import me.avankziar.btm.general.object.ServerLocation;
 import me.avankziar.btm.general.object.Portal.AccessType;
 import me.avankziar.btm.general.object.Portal.PostTeleportExecuterCommand;
 import me.avankziar.btm.general.object.Portal.TargetType;
+import me.avankziar.btm.general.object.ServerLocation;
+import me.avankziar.btm.general.object.Warp;
+import me.avankziar.btm.general.object.Warp.PortalAccess;
 import me.avankziar.btm.general.objecthandler.KeyHandler;
 import me.avankziar.btm.spigot.BTM;
 import me.avankziar.btm.spigot.assistance.Utility;
@@ -102,22 +105,34 @@ public class BTMImportCmdExecutor implements CommandExecutor
 		case HOME:
 			switch(plugins)
 			{
-			case CMI:
-				return cmiHomes(player);
-			case ADVANCEDPORTALS:
+			default:
 				player.spigot().sendMessage(ChatApiOld.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.PluginDontSupportThatMechanic")));
 				inProcess = false;
 				return false;
+			case CMI:
+				return cmiHomes(player);
+			case HUSKHOME:
+				return huskHomeHome(player);
 			}
 		case PORTAL:
 			switch(plugins)
 			{
-			case CMI:
+			default:
 				player.spigot().sendMessage(ChatApiOld.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.PluginDontSupportThatMechanic")));
 				inProcess = false;
 				return false;
 			case ADVANCEDPORTALS:
 				return advancedPortal(player);
+			}
+		case WARP:
+			switch(plugins)
+			{
+			default:
+				player.spigot().sendMessage(ChatApiOld.tctl(plugin.getYamlHandler().getLang().getString("CmdImport.PluginDontSupportThatMechanic")));
+				inProcess = false;
+				return false;
+			case HUSKHOME:
+				return huskHomeWarp(player);
 			}
 		}
 		inProcess = false;
@@ -311,14 +326,271 @@ public class BTMImportCmdExecutor implements CommandExecutor
 		return true;
 	}
 	
+	private boolean huskHomeHome(Player player)
+	{
+		ArrayList<Home> list = new ArrayList<>();
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+		Connection conn = plugin.getMysqlSetup().getConnection();
+		int normalhomes = 0;
+		int errorhomes = 0;
+		if (conn != null) 
+		{
+			try 
+			{			
+				String sql = "SELECT * FROM `huskhomes_homes` WHERE 1";
+		        preparedStatement = conn.prepareStatement(sql);
+		        result = preparedStatement.executeQuery();
+		        while (result.next()) 
+		        {
+		        	UUID uuid = UUID.fromString(result.getString("owner_uuid"));
+		        	int savedPositionID = result.getInt("saved_position_id");
+		        	String[] s = getHuskHomesPositionID(savedPositionID);
+		        	if(s == null)
+		        	{
+		        		errorhomes++;
+		        		continue;
+		        	}
+		        	String name = s[0];
+		        	int positionID = Integer.valueOf(s[1]);
+		        	ServerLocation sl = getHuskHomeLocation(positionID);
+		        	if(sl == null)
+		        	{
+		        		errorhomes++;
+		        		continue;
+		        	}
+		        	OfflinePlayer op = player;
+		        	String playername = "";
+		        	if(op.hasPlayedBefore())
+		        	{
+		        		playername = op.getName();
+		        	}
+		        	Home h = new Home(uuid, playername, name, sl);
+		        	list.add(h);
+		        	normalhomes++;
+		        }
+		    } catch (SQLException e) 
+			{
+				  BTM.logger.warning("Error: " + e.getMessage());
+				  e.printStackTrace();
+				  errorhomes++;
+		    } finally 
+			{
+		    	  try 
+		    	  {
+		    		  if (result != null) 
+		    		  {
+		    			  result.close();
+		    		  }
+		    		  if (preparedStatement != null) 
+		    		  {
+		    			  preparedStatement.close();
+		    		  }
+		    	  } catch (Exception e) {
+		    		  e.printStackTrace();
+		    	  }
+		      }
+		}
+		
+		for(Home h : list)
+		{
+			if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.HOME, "`player_uuid` = ? AND `home_name` = ?",
+					h.getUuid().toString(), h.getHomeName()))
+			{
+				plugin.getMysqlHandler().create(MysqlHandler.Type.HOME, h);
+			}
+		}
+		player.spigot().sendMessage(ChatApiOld.tctl(plugin.getYamlHandler().getLang()
+				.getString("CmdImport.HuskHomeHomeImportFinish")
+				.replace("%valueI%", String.valueOf(normalhomes))
+				.replace("%valueII%", String.valueOf(errorhomes))));
+		inProcess = false;
+		return true;
+	}
+	
+	private String[] getHuskHomesPositionID(int savedPositionID)
+	{
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection conn = plugin.getMysqlSetup().getConnection();
+		String[] s = null;
+		if (conn != null) 
+		{
+			try 
+			{			
+				String sql = "SELECT * FROM `huskhomes_saved_positions` WHERE `position_id` = ?";
+		        ps = conn.prepareStatement(sql);
+		        ps.setInt(1, savedPositionID);
+		        rs = ps.executeQuery();
+		        while (rs.next()) 
+		        {
+		        	String name = rs.getString("name");
+		        	int positionID = rs.getInt("saved_position_id");
+		        	s = new String[] {name, String.valueOf(positionID)};
+		        	break;
+		        }
+		    } catch (SQLException e) 
+			{
+				  BTM.logger.warning("Error: " + e.getMessage());
+				  e.printStackTrace();
+		    } finally 
+			{
+		    	  try 
+		    	  {
+		    		  if (rs != null) 
+		    		  {
+		    			  rs.close();
+		    		  }
+		    		  if (ps != null) 
+		    		  {
+		    			  ps.close();
+		    		  }
+		    	  } catch (Exception e) {
+		    		  e.printStackTrace();
+		    	  }
+		      }
+		}
+		return s;
+	}
+	
+	private ServerLocation getHuskHomeLocation(int positionID)
+	{
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		Connection conn = plugin.getMysqlSetup().getConnection();
+		ServerLocation s = null;
+		if (conn != null) 
+		{
+			try 
+			{			
+				String sql = "SELECT * FROM `huskhomes_position_data` WHERE `id` = ?";
+		        ps = conn.prepareStatement(sql);
+		        ps.setInt(1, positionID);
+		        rs = ps.executeQuery();
+		        while (rs.next()) 
+		        {
+		        	s = new ServerLocation(
+		        			rs.getString("server_name"),
+		        			rs.getString("world_name"),
+		        			rs.getDouble("x"),
+		        			rs.getDouble("y"),
+		        			rs.getDouble("z"),
+		        			rs.getFloat("yaw"),
+		        			rs.getFloat("pitch")
+		        			);
+		        	break;
+		        }
+		    } catch (SQLException e) 
+			{
+				  BTM.logger.warning("Error: " + e.getMessage());
+				  e.printStackTrace();
+		    } finally 
+			{
+		    	  try 
+		    	  {
+		    		  if (rs != null) 
+		    		  {
+		    			  rs.close();
+		    		  }
+		    		  if (ps != null) 
+		    		  {
+		    			  ps.close();
+		    		  }
+		    	  } catch (Exception e) {
+		    		  e.printStackTrace();
+		    	  }
+		      }
+		}
+		return s;
+	}
+	
+	private boolean huskHomeWarp(Player player)
+	{
+		ArrayList<Warp> list = new ArrayList<>();
+		PreparedStatement preparedStatement = null;
+		ResultSet result = null;
+		Connection conn = plugin.getMysqlSetup().getConnection();
+		int normalhomes = 0;
+		int errorhomes = 0;
+		if (conn != null) 
+		{
+			try 
+			{			
+				String sql = "SELECT * FROM `huskhomes_warps` WHERE 1";
+		        preparedStatement = conn.prepareStatement(sql);
+		        result = preparedStatement.executeQuery();
+		        while (result.next()) 
+		        {
+		        	UUID uuid = UUID.fromString(result.getString("uuid"));
+		        	int savedPositionID = result.getInt("saved_position_id");
+		        	String[] s = getHuskHomesPositionID(savedPositionID);
+		        	if(s == null)
+		        	{
+		        		errorhomes++;
+		        		continue;
+		        	}
+		        	String name = s[0];
+		        	int positionID = Integer.valueOf(s[1]);
+		        	ServerLocation sl = getHuskHomeLocation(positionID);
+		        	if(sl == null)
+		        	{
+		        		errorhomes++;
+		        		continue;
+		        	}
+		        	Warp warp = new Warp(name, sl,
+		    				false, uuid.toString(), null, null, null, null, 0.0,
+		    				"default", PortalAccess.IRRELEVANT,
+		    				Warp.PostTeleportExecuterCommand.PLAYER, null);
+		        	list.add(warp);
+		        	normalhomes++;
+		        }
+		    } catch (SQLException e) 
+			{
+				  BTM.logger.warning("Error: " + e.getMessage());
+				  e.printStackTrace();
+				  errorhomes++;
+		    } finally 
+			{
+		    	  try 
+		    	  {
+		    		  if (result != null) 
+		    		  {
+		    			  result.close();
+		    		  }
+		    		  if (preparedStatement != null) 
+		    		  {
+		    			  preparedStatement.close();
+		    		  }
+		    	  } catch (Exception e) {
+		    		  e.printStackTrace();
+		    	  }
+		      }
+		}
+		
+		for(Warp w : list)
+		{
+			if(!plugin.getMysqlHandler().exist(MysqlHandler.Type.WARP, "`owner` = ? AND `warpname` = ?",
+					w.getOwner(), w.getName()))
+			{
+				plugin.getMysqlHandler().create(MysqlHandler.Type.WARP, w);
+			}
+		}
+		player.spigot().sendMessage(ChatApiOld.tctl(plugin.getYamlHandler().getLang()
+				.getString("CmdImport.HuskHomeWarpImportFinish")
+				.replace("%valueI%", String.valueOf(normalhomes))
+				.replace("%valueII%", String.valueOf(errorhomes))));
+		inProcess = false;
+		return true;
+	}
+	
 	public enum Convert
 	{
-		HOME, PORTAL
+		HOME, PORTAL, WARP
 	}
 	
 	public enum Plugins
 	{
-		ADVANCEDPORTALS, CMI
+		ADVANCEDPORTALS, CMI, HUSKHOME
 	}
 	
 	private class AdvancedPortals
