@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.command.ConsoleCommandSender;
@@ -2594,9 +2596,10 @@ public class PortalHelper
 			return;
 		}
 		Sound s = Sound.BLOCK_ANVIL_FALL;
-		try {
-            s = (Sound) Sound.class.getField(args[1].toUpperCase()).get(null);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+		try 
+		{
+            s = Registry.SOUNDS.get(NamespacedKey.minecraft(args[1]));
+        } catch (Exception e) {
         	player.spigot().sendMessage(ChatApiOld.tctl(plugin.getYamlHandler().getLang().getString("CmdPortal.NoSound")
 					.replace("%value%", args[1])));
 			return;

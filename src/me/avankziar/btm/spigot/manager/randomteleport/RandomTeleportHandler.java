@@ -9,6 +9,8 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -142,29 +144,6 @@ public class RandomTeleportHandler
 		return loc;
 	}
 	
-	/*public static void main(String...args)
-	{
-		double x1 = 100;
-		double x2 = -100;
-		for(int i = 0; i < 100; i++)
-		{
-			System.out.println(i+" ======"); //REMOVEME
-			int xmin = (int) Math.min(x1, x2);
-			int rmax = (int) getPositiveInt(Math.max(x1, x2));
-			int rmin = (int) getPositiveInt(Math.min(x1, x2));
-			int rm = ((int) getPositiveInt(Math.max(x1, x2)-Math.min(x1, x2)));
-			int r = getRandom(new Random(), 0, (int) getPositiveInt(Math.max(x1, x2) - Math.min(x1, x2)));
-			int xout = xmin + r;
-			System.out.println("xmin: "+xmin); //REMOVEME
-			System.out.println("rmax: "+rmax); //REMOVEME
-			System.out.println("rmin: "+rmin); //REMOVEME
-			System.out.println("r-: "+rm); //REMOVEME
-			System.out.println("r: "+r); //REMOVEME
-			System.out.println("xout: "+xout); //REMOVEME
-			System.out.println("OutOfBorder: "+(xout > x1 || xout < x2)); //REMOVEME
-		}
-	}*/
-	
 	private Location isSafe(String rtpPath, Location loc, double minY)
 	{
 		Location l = loc;
@@ -180,7 +159,7 @@ public class RandomTeleportHandler
 		{
 			try
 			{
-				Biome bio = (Biome) Biome.class.getField(s).get(null);
+				Biome bio = Registry.BIOME.get(NamespacedKey.minecraft(s));
 				forbiddenBiomes.add(bio);
 			} catch(Exception e)
 			{

@@ -620,24 +620,58 @@ public class YamlManager
 				"",
 				"Enables/Disables submechanic 'AccessPermission'.",
 				"See https://github.com/Avankziar/BungeeTeleportManager/wiki/ENG-AccessPermission"});
-		configKeys.put("Enable.InterfaceHub.Providing.Teleport"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configKeys.put("Enable.InterfaceHub.Providing.Home"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configKeys.put("Enable.InterfaceHub.Providing.Warp"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configKeys.put("Enable.InterfaceHub.Consuming.Vanish"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configKeys.put("Enable.VanillaNetherportal"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
-		configKeys.put("Enable.VanillaEndportal"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				false}));
+		addConfig("Enable.InterfaceHub.Providing.Teleport",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn `true`, dann wird BTM über IFH das Interface Telport anbieten.",
+				"",
+				"If 'true', then BTM will offer the Telport interface via IFH."});
+		addConfig("Enable.InterfaceHub.Providing.Home",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn `true`, dann wird BTM über IFH das Interface Home anbieten.",
+				"",
+				"If 'true', then BTM will offer the Home interface via IFH."});
+		addConfig("Enable.InterfaceHub.Providing.Warp",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn `true`, dann wird BTM über IFH das Interface Warp anbieten.",
+				"",
+				"If 'true', then BTM will offer the Warp interface via IFH."});
+		addConfig("Enable.InterfaceHub.Consuming.Vanish",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn `true`, dann wird BTM über IFH das Interface Vanish konsumieren und benutzten.",
+				"",
+				"If 'true', then BTM will consume and use the Vanish interface via IFH."});
+		addConfig("Enable.VanillaNetherportal",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"Wenn `true`, dann wird BTM die normalen Netherportale zulassen. Jedoch kann kein Triggerblock mit dem Netherportal mehr,",
+				"bei BTM Portalen genutzten werden!",
+				"",
+				"If 'true', then BTM will allow the normal nether portals.",
+				"However, no trigger block with the nether portal can be used with BTM portals!"});
+		addConfig("Enable.VanillaEndportal",
+				new Object[] {
+				false},
+				new Object[] {
+				"",
+				"Wenn `true`, dann wird BTM die normalen Endportale zulassen. Jedoch kann kein Triggerblock mit dem Endportal mehr,",
+				"bei BTM Portalen genutzten werden!",
+				"",
+				"If `true`, then BTM will allow the normal end portals.",
+				"However, a trigger block with the end portal can no longer be used with BTM portals!"});
 		configKeys.put("EnableMechanic.Modifier"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
@@ -647,19 +681,44 @@ public class YamlManager
 		configKeys.put("ValueEntry.OverrulePermission"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				false}));
-		configKeys.put("SilentTp.DoVanish"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configKeys.put("SilentTp.VanishCommand"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				"vanish"}));
+		addConfig("SilentTp.DoVanish",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn `true`, dann wird BTM bei einem /tpsilent den Spieler ins Vanish setzten.",
+				"",
+				"If `true`, then BTM will vanish the player on a /tpsilent."});
+		addConfig("SilentTp.VanishCommand",
+				new Object[] {
+				"vanish"},
+				new Object[] {
+				"",
+				"Der Befehl, welcher genutzt wird, um Spieler beim /tpsilent den Spieler in Vanish zu setzten.",
+				"",
+				"The command used to vanish players at /tpsilent."});
 		
-		configKeys.put("TPJoinCooldown"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				5}));
+		addConfig("TPJoinCooldown",
+				new Object[] {
+				5},
+				new Object[] {
+				"",
+				"Eine Abklingzeit, in Sekunden, welche nach dem Joinen auf einen Server dazuführt,",
+				"keine Befehle auzuführen mit Blöcken zu interagieren etc.",
+				"",
+				"A cooldown time, in seconds, which after joining a server leads to not executing commands,",
+				"interacting with blocks, etc."});
 		configKeys.put("Effects.BACK.Give.Before"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
+		addComments(configKeys, "#Effects", 
+				new Object[] {
+				"",
+				"Deklariert die Effekte bevor und nach dem Teleport in der jeweiligen Mechanik.",
+				"Bsp.: FIRE_RESISTANCE;40;1 bedeutet Effekt Feuerresistenz 40 Ticks (2 Sekunden) Stufe 1",
+				"",
+				"Declares the effects before and after the teleport in the respective mechanic.",
+				"Example: FIRE_RESISTANCE;40;1 means effect fire resistance 40 ticks (2 seconds) level 1",});
 		configKeys.put("Effects.BACK.Give.After"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));
@@ -771,19 +830,42 @@ public class YamlManager
 		configKeys.put("Effects.WARP.After"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"FIRE_RESISTANCE;40;1", "DAMAGE_RESISTANCE;40;1"}));
-		configKeys.put("CancelInviteRun"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				15}));
-		configKeys.put("BackCooldown"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				5}));
-		configKeys.put("TpAcceptCooldown"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				3}));
+		addConfig("CancelInviteRun",
+				new Object[] {
+				15},
+				new Object[] {
+				"",
+				"Zeit in Sekunden, wann eine Teleportanfrage abgebrochen wird.",
+				"",
+				"Time in seconds when a teleport request is canceled."});
+		addConfig("BackCooldown",
+				new Object[] {
+				5},
+				new Object[] {
+				"",
+				"Zeit in Sekunden, nachdem man nach einem /back erneut den Befehl nutzen kann.",
+				"",
+				"Time in seconds after you can use the command again after a /back."});
+		addConfig("TpAcceptCooldown",
+				new Object[] {
+				3},
+				new Object[] {
+				"",
+				"Zeit in Sekunden, nachdem man wieder einem Teleportanfrage akzeptieren kann.",
+				"",
+				"Time in seconds after you can accept a teleport request again."});
 		
 		configKeys.put("MinimumTimeBefore.Back"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				2000}));
+		addComments(configKeys, "MinimumTimeBefore", 
+				new Object[] {
+				"",
+				"Zeit in Millisekunden, wielange man minimum warten muss, bis man Teleportiert wird in der jeweiligen Mechanik.",
+				"Kann mit Permission umgangen werden.",
+				"",
+				"Time in milliseconds, the minimum time you have to wait until you are teleported in the respective mechanic.",
+				"Can be bypassed with permission."});
 		configKeys.put("MinimumTimeBefore.Deathback"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				2000}));
@@ -812,6 +894,12 @@ public class YamlManager
 		configKeys.put("CostPer.Use.Back"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				100.0}));
+		addComments(configKeys, "CostPer", 
+				new Object[] {
+				"",
+				"Kosten, welche bei der Benutzung des Teleport (Use) oder der Erstellung des Teleport (Create) anfallen.",
+				"",
+				"Costs incurred when using the teleport (Use) or creating the teleport (Create)."});
 		configKeys.put("CostPer.Use.EntityTransport"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				100.0}));
@@ -842,6 +930,12 @@ public class YamlManager
 		configKeys.put("CostPer.NotifyAfterWithdraw.Back"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				false}));
+		addComments(configKeys, "CostPer.NotifyAfterWithdraw", 
+				new Object[] {
+				"",
+				"Soll der Spieler darauf hingewiesen werden im Nachhinein, dass die Benutzung etwas gekostet hat?",
+				"",
+				"Should the player be informed afterwards that it cost something to use it?"});
 		configKeys.put("CostPer.NotifyAfterWithdraw.Home"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				false}));
@@ -854,31 +948,64 @@ public class YamlManager
 		configKeys.put("CostPer.NotifyAfterWithdraw.Warp"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				false}));
-		configKeys.put("MustConfirmWarpWhereYouPayForIt"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
+		addConfig("MustConfirmWarpWhereYouPayForIt",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn ein Warpnutzung etwas kostet, muss der Warp per Befehl noch bestätigt werden.",
+				"",
+				"If a warp usage costs something, the warp must still be confirmed by command."});
 		
 		configKeys.put("Use.CountPerm.Home"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"HIGHEST"}));
+		addComments(configKeys, "Use.CountPerm.", 
+				new Object[] {
+				"",
+				"Wie sollen die Permission, welche deklarieren wieviele Homes/Warps/Portale jeder haben, zusammengezählt werden?",
+				"ADDUP, zählt alle Permission respektiv zusammen.",
+				"HIGHEST, zählt nur die höchste vergebene Permission.",
+				"",
+				"How should the permissions, which declare how many homes/warps/portals each have, be added up?",
+				"ADDUP, counts all permission respects together.",
+				"HIGHEST, only the highest assigned permission counts."});
 		configKeys.put("Use.CountPerm.Portal"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"ADDUP"}));
 		configKeys.put("Use.CountPerm.Warp"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"HIGHEST"}));
-		configKeys.put("Use.FirstSpawn.FirstTimePlayedPlayer.SendToFirstSpawn"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
-		configKeys.put("Use.FirstSpawn.Spigot.DoCommandsAtFirstTime"
-				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
-				true}));
+		addConfig("Use.FirstSpawn.FirstTimePlayedPlayer.SendToFirstSpawn",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn `true`, werden Spieler, wenn sie zum ersten Mal joinen, zum FirstSpawn teleportiert.",
+				"",
+				"If `true`, players will be teleported to the FirstSpawn when they join for the first time."});
+		addConfig("Use.FirstSpawn.Spigot.DoCommandsAtFirstTime",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn `true`, werden die folgenden Befehl aus der List ale Spieler oder Konsole auf dem Proxy (Bungee/Velocity) ausgeführt.",
+				"",
+				"If `true`, the following commands from the list of all players or console are executed on the proxy (Bungee/Velocity)."});
 		configKeys.put("Use.FirstSpawn.Spigot.CommandAtFirstTime.AsPlayer"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"dummy", "dummy"}));
 		configKeys.put("Use.FirstSpawn.Spigot.CommandAtFirstTime.AsConsole"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				"dummy", "dummy"}));
+		addConfig("Use.FirstSpawn.BungeeCord.DoCommandsAtFirstTime",
+				new Object[] {
+				true},
+				new Object[] {
+				"",
+				"Wenn `true`, werden die folgenden Befehl aus der List ale Spieler oder Konsole auf dem Proxy (Bungee/Velocity) ausgeführt.",
+				"",
+				"If `true`, the following commands from the list of all players or console are executed on the proxy (Bungee/Velocity)."});
 		configKeys.put("Use.FirstSpawn.BungeeCord.DoCommandsAtFirstTime"
 				, new Language(new ISO639_2B[] {ISO639_2B.GER}, new Object[] {
 				true}));

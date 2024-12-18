@@ -3,6 +3,7 @@ package me.avankziar.btm.spigot.cmd;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Iterator;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -13,8 +14,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-
-import com.google.common.collect.Lists;
 
 import me.avankziar.btm.general.object.Deathzone;
 import me.avankziar.btm.general.object.FirstSpawn;
@@ -91,8 +90,10 @@ public class TabCompletionOne implements TabCompleter
 				targettype.add(ptt.toString());
 			}
 			Collections.sort(targettype);
-			for(Sound s : Lists.newArrayList(Registry.SOUNDS))
+			
+			for(Iterator<Sound> iter = Registry.SOUNDS.iterator(); iter.hasNext();) 
 			{
+				Sound s = iter.next();
 				sound.add(s.getKey().getKey());
 			}
 			Collections.sort(sound);
