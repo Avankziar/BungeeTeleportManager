@@ -3,5 +3,11 @@
 "version":"${version}",
 "description":"Teleportsystem for Bungee/Velocity & Spigot with Back/Deathback/Home/Warp/Portal/Tp/Tpa and more!",
 "authors":["Avankziar"],
-"dependencies":[{id='interfacehub', version='null', optional=false}],
+"dependencies":[
+  {
+    id='interfacehub',
+    version='null',
+    optional=false
+  }
+],
 "main":"me.avankziar.btm.velocity.BTM"}
