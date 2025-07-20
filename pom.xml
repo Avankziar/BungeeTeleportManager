@@ -88,7 +88,7 @@
 			    <artifactId>maven-jar-plugin</artifactId>
 			    <version>2.4</version>
 			    <configuration>
-			      <outputDirectory>F:\Datein\Dev\Dev Server 1.21.4</outputDirectory>
+			      <outputDirectory>F:\Datein\Dev\Dev Server 1.21.8</outputDirectory>
 			      <finalName>${project.artifactId}-${project.version}</finalName>
 			    </configuration>
 			    <executions>
@@ -154,7 +154,7 @@
 		<dependency>
 			<groupId>org.spigotmc</groupId>
 			<artifactId>spigot-api</artifactId>
-			<version>1.21.4-R0.1-SNAPSHOT</version>
+			<version>1.21.8-R0.1-20250717.204516-1</version>
 			<scope>provided</scope>
 		</dependency>
 		<!-- Bungeecord -->
@@ -218,7 +218,7 @@
 		<dependency>
 		  <groupId>me.avankziar</groupId>
 		  <artifactId>interfacehub</artifactId>
-		  <version>2-2-0-Pre1</version>
+		  <version>2-7-3</version>
 		  <scope>provided</scope>
 		</dependency>
 		<!-- SuperVanish -->
